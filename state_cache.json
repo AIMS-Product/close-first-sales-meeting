@@ -74994,7 +74994,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Website",
+      "funnel_name": null,
       "vendhub": null
     },
     "lead_pFhMHYCfIZbYUb7lYpTHFmJ62ym2QLuJ9XN5U1EY4ax": {
@@ -75961,6 +75961,6 @@
       "vendhub": null
     }
   },
-  "saved_at": "2026-07-24 22:09:59 UTC",
+  "saved_at": "2026-07-24 22:39:37 UTC",
   "count": 8549
 }
