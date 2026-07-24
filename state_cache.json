@@ -75896,8 +75896,44 @@
       "reactivation": "William Nowak",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null
+    },
+    "lead_O7muSULrytOhyp08ZmM35T5DO5KXtKGVNeJ4QYBMkE5": {
+      "date": "2026-07-29",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Instagram",
+      "vendhub": null
+    },
+    "lead_0QGWWdtGvN6lfs5sF0MRxFdKVw8ODufZxfGG0agaest": {
+      "date": "2026-07-27",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Instagram",
+      "vendhub": null
+    },
+    "lead_UsDpTklTu6CfuACYR0qOZijxC9v8r4dQtZcQtcX63gx": {
+      "date": "2026-07-27",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Instagram",
+      "vendhub": null
+    },
+    "lead_vvuJj9oxv6hEYD2cjTZGkDQHSlySoImIWjwskSwW848": {
+      "date": "2026-07-27",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "YouTube",
+      "vendhub": null
     }
   },
-  "saved_at": "2026-07-24 20:39:49 UTC",
-  "count": 8542
+  "saved_at": "2026-07-24 21:09:30 UTC",
+  "count": 8546
 }
