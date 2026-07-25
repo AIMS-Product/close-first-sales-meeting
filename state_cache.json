@@ -6710,7 +6710,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "LTF - In-House",
+      "funnel_name": null,
       "vendhub": "Standard Booking"
     },
     "lead_o2GL19T0z3XZYoulER5GtUjvBrfPPP2nRNEFto54Uny": {
@@ -75983,11 +75983,20 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "funnel_name": "Meta Ads",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": "Standard Booking"
+    },
+    "lead_QuH8HCHF2XYwMB06IR0gLr8ZzD8VjVmyNl1qv2HoRAv": {
+      "date": "2026-07-28",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Instagram",
+      "vendhub": null
     }
   },
-  "saved_at": "2026-07-25 00:10:38 UTC",
-  "count": 8552
+  "saved_at": "2026-07-25 00:40:31 UTC",
+  "count": 8553
 }
