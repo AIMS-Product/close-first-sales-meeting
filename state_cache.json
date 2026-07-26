@@ -76229,8 +76229,17 @@
       "reactivation": null,
       "funnel_name": null,
       "vendhub": null
+    },
+    "lead_8txVEyc5mRkLFrogSNPcLspyirzAmPYggjD8REC2QQv": {
+      "date": "2026-07-31",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "LTF - In-House",
+      "vendhub": null
     }
   },
-  "saved_at": "2026-07-26 16:06:47 UTC",
-  "count": 8579
+  "saved_at": "2026-07-26 16:39:38 UTC",
+  "count": 8580
 }
