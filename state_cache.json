@@ -76024,12 +76024,12 @@
       "vendhub": null
     },
     "lead_mGLKPz64RiLjGzVv2JBeuKSioQhi1KIxHIwVvpC44j9": {
-      "date": "2026-07-27",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": null,
+      "funnel_name": "YouTube",
       "vendhub": null
     },
     "lead_pXNOciNIbcUMNyX14FvIZxbOdCWOprdtiD1tJqCKS0a": {
@@ -76222,6 +76222,6 @@
       "vendhub": null
     }
   },
-  "saved_at": "2026-07-26 12:10:21 UTC",
+  "saved_at": "2026-07-26 12:39:19 UTC",
   "count": 8578
 }
