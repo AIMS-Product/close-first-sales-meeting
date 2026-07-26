@@ -76236,10 +76236,19 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "LTF - In-House",
+      "funnel_name": null,
+      "vendhub": null
+    },
+    "lead_crl45TqaTVwH3QfiZeHYisYl1OsHUZgPy2FCcSocPUJ": {
+      "date": "2026-07-26",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": null
     }
   },
-  "saved_at": "2026-07-26 16:39:38 UTC",
-  "count": 8580
+  "saved_at": "2026-07-26 17:09:57 UTC",
+  "count": 8581
 }
