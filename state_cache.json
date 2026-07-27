@@ -76388,8 +76388,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "funnel_name": "LTF - In-House",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": "Standard Booking"
     },
     "lead_JoRTRL0HsMcVUzSRBYuwNsptqCDJfLmCXRkZHgqEdIN": {
@@ -76409,8 +76409,17 @@
       "reactivation": "Vince Bartolini",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null
+    },
+    "lead_1OxY6l106zkYdE9GtjSS4JnOlhs6hCVMYTyOSLR0HSd": {
+      "date": "2026-07-29",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null
     }
   },
-  "saved_at": "2026-07-27 16:10:35 UTC",
-  "count": 8599
+  "saved_at": "2026-07-27 17:11:25 UTC",
+  "count": 8600
 }
