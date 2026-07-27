@@ -76425,7 +76425,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Instagram",
+      "funnel_name": null,
       "vendhub": null
     },
     "lead_D6F3CXyz43R7fug9TsJEK0akDw8e0dZyXTjCr9ocpNq": {
@@ -76517,8 +76517,17 @@
       "reactivation": null,
       "funnel_name": null,
       "vendhub": null
+    },
+    "lead_fShE5g3bmHAettZUzCzJZ8QPUE7nYSMfOmnWcZCOkFw": {
+      "date": "2026-07-28",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null
     }
   },
-  "saved_at": "2026-07-27 20:40:43 UTC",
-  "count": 8611
+  "saved_at": "2026-07-27 21:10:56 UTC",
+  "count": 8612
 }
