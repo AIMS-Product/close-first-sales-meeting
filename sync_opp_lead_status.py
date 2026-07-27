@@ -19,15 +19,34 @@ Rule set:
   - Re-runs are idempotent: a lead whose status already matches the
     mapped value is skipped (no write, no log noise beyond a debug line).
 
+Performance note: this fetches leads via ONE paginated scan with each
+lead's opportunities embedded (same call), instead of listing opportunities
+and then issuing a separate GET per lead. At ~56k leads that's ~560 pages
+total, not tens of thousands of individual API calls. Validate this
+assumption in your first --dry-run --limit 20: check that each printed
+lead actually has its opportunities populated. If Close's API doesn't
+embed opportunities by default for your account, add
+"opportunities.status_id,opportunities.date_updated,opportunities.id" to
+the _fields param in paginate_leads_with_opportunities().
+
+LOOKBACK_DAYS (optional) skips evaluating leads whose winning opportunity
+hasn't been updated recently -- it doesn't reduce API calls (the bulk
+fetch already scans everything cheaply), it just cuts down repeat FLAG/SET
+log noise on records that haven't changed. Leave it at 0 (default: no
+filter) for the first run so any pre-existing mismatches get caught, then
+optionally set it once you've done that initial pass.
+
 Usage:
-    python sync_opp_lead_status.py              # live
-    python sync_opp_lead_status.py --dry-run     # report only, zero writes
-    python sync_opp_lead_status.py --limit 200   # only scan first N opportunities (quick test)
-    python sync_opp_lead_status.py --selftest    # pure-logic tests, no network
+    python sync_opp_lead_status.py                    # live, full scan
+    python sync_opp_lead_status.py --dry-run           # report only, zero writes
+    python sync_opp_lead_status.py --limit 200         # only scan first N leads (quick test)
+    python sync_opp_lead_status.py --lookback-days 3   # only evaluate recently-changed opportunities
+    python sync_opp_lead_status.py --selftest          # pure-logic tests, no network
 
 Env vars:
     CLOSE_API_KEY   required (unless --selftest)
     DRY_RUN         "1" or "0" -- same effect as --dry-run, workflow-friendly
+    LOOKBACK_DAYS   same effect as --lookback-days, workflow-friendly (default 0 = no filter)
 """
 
 import os
@@ -35,6 +54,7 @@ import sys
 import argparse
 import time
 from collections import defaultdict
+from datetime import datetime, timedelta, timezone
 
 import requests
 
@@ -109,8 +129,10 @@ class CloseClient:
             return resp.json() if resp.content else {}
         resp.raise_for_status()
 
-    def paginate_opportunities(self, limit=None):
-        """Yields every opportunity dict with id, lead_id, status_id, date_updated."""
+    def paginate_leads_with_opportunities(self, limit=None):
+        """Yields every lead dict with id, status_id, display_name, and its
+        opportunities embedded (each with at least id, status_id,
+        date_updated). One paginated scan -- no per-lead follow-up call."""
         skip = 0
         page_size = 100
         fetched = 0
@@ -118,22 +140,17 @@ class CloseClient:
             params = {
                 "_skip": skip,
                 "_limit": page_size,
-                "_fields": "id,lead_id,status_id,status_type,date_updated,user_id",
+                "_fields": "id,status_id,display_name,opportunities",
             }
-            data = self._request("GET", "/opportunity/", params=params)
-            for opp in data.get("data", []):
-                yield opp
+            data = self._request("GET", "/lead/", params=params)
+            for lead in data.get("data", []):
+                yield lead
                 fetched += 1
                 if limit and fetched >= limit:
                     return
             if not data.get("has_more"):
                 return
             skip += page_size
-
-    def get_lead(self, lead_id):
-        return self._request(
-            "GET", f"/lead/{lead_id}/", params={"_fields": "id,status_id,display_name"}
-        )
 
     def set_lead_status(self, lead_id, status_id):
         return self._request(
@@ -145,26 +162,39 @@ class CloseClient:
 # Main run
 # ---------------------------------------------------------------------------
 
-def run(dry_run, limit):
+def run(dry_run, limit, lookback_days):
     api_key = os.environ.get("CLOSE_API_KEY")
     if not api_key:
         sys.exit("CLOSE_API_KEY environment variable is required")
 
     client = CloseClient(api_key)
+    cutoff = None
+    if lookback_days:
+        cutoff = datetime.now(timezone.utc) - timedelta(days=lookback_days)
+        print(f"Lookback active: only evaluating opportunities updated since {cutoff.isoformat()}")
 
-    print(f"Fetching opportunities{f' (limit {limit})' if limit else ''}...")
-    by_lead = defaultdict(list)
-    total_opps = 0
-    for opp in client.paginate_opportunities(limit=limit):
-        by_lead[opp["lead_id"]].append(opp)
-        total_opps += 1
-    print(f"  {total_opps} opportunities across {len(by_lead)} leads")
+    print(f"Fetching leads (with opportunities embedded){f', limit {limit}' if limit else ''}...")
+    leads_scanned = 0
+    leads_with_opps = 0
+    updated = already_correct = orphan_skipped = stale_skipped = failed = 0
 
-    updated = already_correct = orphan_skipped = failed = 0
+    for lead in client.paginate_leads_with_opportunities(limit=limit):
+        leads_scanned += 1
+        opps = lead.get("opportunities") or []
+        if not opps:
+            continue
+        leads_with_opps += 1
 
-    for lead_id, opps in by_lead.items():
         winner = pick_winning_opportunity(opps)
         opp_status_id = winner["status_id"]
+
+        if cutoff is not None:
+            winner_updated = datetime.fromisoformat(winner["date_updated"].replace("Z", "+00:00"))
+            if winner_updated < cutoff:
+                stale_skipped += 1
+                continue
+
+        lead_id = lead["id"]
 
         if opp_status_id in ORPHAN_OPP_STATUS_IDS:
             orphan_skipped += 1
@@ -180,13 +210,6 @@ def run(dry_run, limit):
             orphan_skipped += 1
             print(f"WARN  lead {lead_id}: opp status_id {opp_status_id} not in STATUS_MAP or "
                   f"ORPHAN_OPP_STATUS_IDS -- status lists may have changed in Close. Skipped.")
-            continue
-
-        try:
-            lead = client.get_lead(lead_id)
-        except requests.HTTPError as e:
-            failed += 1
-            print(f"ERROR fetching lead {lead_id}: {e}")
             continue
 
         if lead["status_id"] == mapped_status_id:
@@ -215,10 +238,12 @@ def run(dry_run, limit):
         print(f"SET   lead {lead_id} ({lead.get('display_name', '')}) -> {mapped_status_id}")
 
     print("\n--- Summary ---")
-    print(f"Leads with opportunities scanned: {len(by_lead)}")
-    print(f"Updated:                          {updated}")
-    print(f"Already correct:                  {already_correct}")
-    print(f"Orphan / unmapped status (flag):  {orphan_skipped}")
+    print(f"Leads scanned:                     {leads_scanned}")
+    print(f"Leads with >=1 opportunity:        {leads_with_opps}")
+    print(f"Updated:                           {updated}")
+    print(f"Already correct:                   {already_correct}")
+    print(f"Orphan / unmapped status (flag):   {orphan_skipped}")
+    print(f"Skipped (outside lookback window): {stale_skipped}")
     print(f"Failed:                            {failed}")
     if dry_run:
         print("\nDRY RUN -- no writes were made.")
@@ -265,7 +290,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--limit", type=int, default=None,
-                         help="only scan first N opportunities (quick test)")
+                         help="only scan first N leads (quick test)")
+    parser.add_argument("--lookback-days", type=int, default=None,
+                         help="only evaluate opportunities updated in the last N days "
+                              "(0 or omitted = no filter, full history)")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
 
@@ -273,4 +301,7 @@ if __name__ == "__main__":
         selftest()
 
     dry_run = args.dry_run or os.environ.get("DRY_RUN", "0") == "1"
-    run(dry_run=dry_run, limit=args.limit)
+    lookback_days = args.lookback_days
+    if lookback_days is None:
+        lookback_days = int(os.environ.get("LOOKBACK_DAYS", "0"))
+    run(dry_run=dry_run, limit=args.limit, lookback_days=lookback_days)
