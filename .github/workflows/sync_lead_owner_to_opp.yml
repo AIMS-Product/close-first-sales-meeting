@@ -10,7 +10,7 @@ on:
         type: boolean
         default: false
       limit:
-        description: "Only scan first N opportunities (quick test, optional)"
+        description: "Only scan first N leads (quick test, optional -- try 20 first)"
         type: string
         default: ""
 
