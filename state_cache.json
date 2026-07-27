@@ -73338,8 +73338,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": null,
-      "vendhub": null
+      "funnel_name": "Internal Webinar",
+      "vendhub": "Standard Booking"
     },
     "lead_Pd0RYbqkh4iR1PHWC5Xoh4M65aNbetxrtPUZYoodIdx": {
       "date": "2026-07-15",
@@ -76555,6 +76555,6 @@
       "vendhub": null
     }
   },
-  "saved_at": "2026-07-27 22:09:52 UTC",
+  "saved_at": "2026-07-27 22:39:41 UTC",
   "count": 8615
 }
