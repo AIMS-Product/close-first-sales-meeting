@@ -1,0 +1,41 @@
+name: Sync Lead Owner -> Opportunity Owner
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # fallback -- primary trigger is cron-job.org (see setup doc)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (log only, zero writes)"
+        type: boolean
+        default: false
+      limit:
+        description: "Only scan first N opportunities (quick test, optional)"
+        type: string
+        default: ""
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run sync
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: |
+          ARGS=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          if [ -n "${{ inputs.limit }}" ]; then
+            ARGS="$ARGS --limit ${{ inputs.limit }}"
+          fi
+          python sync_lead_owner_to_opp.py $ARGS
