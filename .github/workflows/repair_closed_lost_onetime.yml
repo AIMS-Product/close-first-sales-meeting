@@ -1,0 +1,39 @@
+name: Repair Closed Lost Opportunities (one-time)
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (log only, zero writes)"
+        type: boolean
+        default: true
+      limit:
+        description: "Only scan first N leads (quick test, optional -- try 20 first)"
+        type: string
+        default: ""
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run repair
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: |
+          ARGS=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          if [ -n "${{ inputs.limit }}" ]; then
+            ARGS="$ARGS --limit ${{ inputs.limit }}"
+          fi
+          python repair_closed_lost_opportunities.py $ARGS
