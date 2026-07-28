@@ -76803,10 +76803,19 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Instagram",
+      "funnel_name": null,
       "vendhub": null
+    },
+    "lead_tmODLeyPv1xyWzcduNDgONMP9EzgVtColznJUBV1LY7": {
+      "date": "2026-07-28",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": "Standard Booking"
     }
   },
-  "saved_at": "2026-07-28 21:10:36 UTC",
-  "count": 8643
+  "saved_at": "2026-07-28 21:40:22 UTC",
+  "count": 8644
 }
