@@ -76703,8 +76703,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "funnel_name": "YouTube",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": "Standard Booking"
     },
     "lead_kAtvY7s8wLXapPmshpAz0dhGvXTHAKO9lX5ao82yG8S": {
@@ -76713,10 +76713,19 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null
+    },
+    "lead_CWwQqnBcIiMjaI1EWy60Hb3IQHRPPuaVoahWybhIbW7": {
+      "date": "2026-07-29",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
       "funnel_name": "Instagram",
       "vendhub": null
     }
   },
-  "saved_at": "2026-07-28 17:10:46 UTC",
-  "count": 8633
+  "saved_at": "2026-07-28 17:40:39 UTC",
+  "count": 8634
 }
