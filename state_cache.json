@@ -76679,8 +76679,17 @@
       "reactivation": "Vince Bartolini",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null
+    },
+    "lead_5wRD57lyRG9hid4JhadDV51VDX7JN8y4PKawIX251wf": {
+      "date": "2026-07-29",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Jacob Hepner",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null
     }
   },
-  "saved_at": "2026-07-28 16:11:11 UTC",
-  "count": 8629
+  "saved_at": "2026-07-28 16:40:59 UTC",
+  "count": 8630
 }
