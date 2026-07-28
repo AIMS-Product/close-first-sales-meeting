@@ -64,9 +64,11 @@ FIELD_REACTIVATION_KEY = f"custom.{FIELD_REACTIVATION_ID}"
 FIELD_FUNNEL_ID       = "cf_xqDQE8fkPsWa0RNEve7hcaxKblCe6489XeZGRDzyPdX"
 FIELD_FUNNEL_KEY      = f"custom.{FIELD_FUNNEL_ID}"
 
-FIELD_VENDHUB_ID       = "cf_2oYFNCsi4dcrjcIS6xFvGf37RGtraixl8jHYinwta9m"
-FIELD_VENDHUB_KEY      = f"custom.{FIELD_VENDHUB_ID}"
-FIELDS_PARAM           = f"id,display_name,{FIELD_DATE_KEY},{FIELD_CALLTYPE_KEY},{FIELD_SCRAPER_KEY},{FIELD_POSTWEBINAR_KEY},{FIELD_REACTIVATION_KEY},{FIELD_FUNNEL_KEY},{FIELD_VENDHUB_KEY}"
+FIELD_VENDHUB_ID          = "cf_2oYFNCsi4dcrjcIS6xFvGf37RGtraixl8jHYinwta9m"
+FIELD_VENDHUB_KEY         = f"custom.{FIELD_VENDHUB_ID}"
+FIELD_VENDHUB_DATE_ID     = "cf_qScR8i96dqsMDMirfPqPn8woMkeJrpl41mc4TmoU78q"
+FIELD_VENDHUB_DATE_KEY    = f"custom.{FIELD_VENDHUB_DATE_ID}"
+FIELDS_PARAM           = f"id,display_name,{FIELD_DATE_KEY},{FIELD_CALLTYPE_KEY},{FIELD_SCRAPER_KEY},{FIELD_POSTWEBINAR_KEY},{FIELD_REACTIVATION_KEY},{FIELD_FUNNEL_KEY},{FIELD_VENDHUB_KEY},{FIELD_VENDHUB_DATE_KEY}"
 
 # Reactivation dropdown — Close accepts label strings directly for choice fields
 
@@ -108,6 +110,10 @@ RE_ROUTE_PLANNING_TITLE   = re.compile(r"route\s+planning\s+call", re.IGNORECASE
 # VendHub titles — checked before hard excludes (Next Steps Call would hit followup filter)
 RE_VENDHUB_CONSULTATION   = re.compile(r"vendhub\s+consultation\s+call", re.IGNORECASE)
 RE_VENDHUB_NEXTSTEPS      = re.compile(r"vendhub\s+next\s+steps\s+call", re.IGNORECASE)
+
+# Any VendHub meeting — for First VendHub Call Booked Date field
+# Catches: VendHub, Vendhub, Vend Hub (with space), vend_hub etc.
+RE_VENDHUB_ANY            = re.compile(r"vend[\s-]?hub", re.IGNORECASE)
 
 # Scraper meeting titles — all contain "Next Steps" so checked before hard excludes.
 # Each maps to a setter label for the Reactivation - Setter Name field.
@@ -269,6 +275,7 @@ def calculate_desired_state(all_meetings: list) -> dict:
         earliest_scraper   = None  # earliest scraper meeting date (for SCRAPER_FUNNEL_CUTOFF)
         earliest_vsl       = None  # earliest route planning call date (for VSL_FUNNEL_CUTOFF)
         vendhub_value      = None  # "Standard Booking" or "VendHub Q&A Booking"
+        vendhub_dates      = []    # dates of any VendHub meeting (for First VendHub Call Booked)
 
         for m in meetings:
             tier, setter_name = classify_meeting(m)
@@ -291,13 +298,31 @@ def calculate_desired_state(all_meetings: list) -> dict:
                         earliest_scraper = date
                 elif tier == "vendhub_consultation":
                     vendhub_value = "Standard Booking"
+                    if date:
+                        vendhub_dates.append(date)
                 elif tier == "vendhub_nextsteps":
                     vendhub_value = "VendHub Q&A Booking"
+                    if date:
+                        vendhub_dates.append(date)
             elif tier == "setter":
                 has_setter = True
             elif tier == "route_planning":
                 if date and (earliest_vsl is None or date < earliest_vsl):
                     earliest_vsl = date
+
+            # Track any VendHub meeting date regardless of tier
+            # (catches VendHub titles that weren't hard-excluded, even if not a specific tier)
+            title_raw = (m.get("title") or "").strip()
+            user_id_raw = m.get("user_id") or ""
+            if (
+                date
+                and RE_VENDHUB_ANY.search(title_raw)
+                and user_id_raw not in EXCLUDED_OWNERS
+                and not RE_CANCELED.match(title_raw)
+                and not RE_FOLLOWUP.search(title_raw)
+                and date not in vendhub_dates
+            ):
+                vendhub_dates.append(date)
 
         # Determine Funnel Name DEAL value for this lead
         # Scraper wins over VSL if both exist; each has its own date cutoff
@@ -314,7 +339,9 @@ def calculate_desired_state(all_meetings: list) -> dict:
         else:
             call_type = None
 
-        if call_type is not None or has_scraper or has_postwebinar or funnel_name or vendhub_value:
+        vendhub_date = min(vendhub_dates) if vendhub_dates else None
+
+        if call_type is not None or has_scraper or has_postwebinar or funnel_name or vendhub_value or vendhub_date:
             desired[lead_id] = {
                 "date":         min(closer_dates) if closer_dates else None,
                 "call_type":    call_type,
@@ -323,6 +350,7 @@ def calculate_desired_state(all_meetings: list) -> dict:
                 "reactivation": reactivation,
                 "funnel_name":  funnel_name,
                 "vendhub":      vendhub_value,
+                "vendhub_date": vendhub_date,
             }
 
     return desired
@@ -587,6 +615,13 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
     if not cur_vendhub and new_vendhub:
         payload[FIELD_VENDHUB_KEY] = new_vendhub
 
+    # ── First VendHub Call Booked Date ────────────────────────────────────────
+    cur_vendhub_date = (current.get("vendhub_date") or "")[:10] or None
+    new_vendhub_date = desired.get("vendhub_date")
+
+    if cur_vendhub_date != new_vendhub_date:
+        payload[FIELD_VENDHUB_DATE_KEY] = new_vendhub_date
+
     if not payload:
         return None  # Nothing to write
 
@@ -607,12 +642,15 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
         changes.append(f"funnel: {cur_funnel or 'blank'} → {new_funnel}")
     if FIELD_VENDHUB_KEY in payload:
         changes.append(f"vendhub: {cur_vendhub or 'blank'} → {new_vendhub}")
+    if FIELD_VENDHUB_DATE_KEY in payload:
+        changes.append(f"vendhub date: {cur_vendhub_date or 'blank'} → {new_vendhub_date or 'cleared'}")
 
     print(f"  Updated: {lead_name} | {' | '.join(changes)}", flush=True)
 
-    final_reactivation = new_reactivation_label if FIELD_REACTIVATION_KEY in payload else cur_reactivation
-    final_funnel       = new_funnel if FIELD_FUNNEL_KEY in payload else cur_funnel
-    final_vendhub      = new_vendhub if FIELD_VENDHUB_KEY in payload else cur_vendhub
+    final_reactivation  = new_reactivation_label if FIELD_REACTIVATION_KEY in payload else cur_reactivation
+    final_funnel        = new_funnel if FIELD_FUNNEL_KEY in payload else cur_funnel
+    final_vendhub       = new_vendhub if FIELD_VENDHUB_KEY in payload else cur_vendhub
+    final_vendhub_date  = new_vendhub_date if FIELD_VENDHUB_DATE_KEY in payload else cur_vendhub_date
 
     return {
         "date":         new_date if FIELD_DATE_KEY in payload else cur_date,
@@ -622,6 +660,7 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
         "reactivation": final_reactivation,
         "funnel_name":  final_funnel,
         "vendhub":      final_vendhub,
+        "vendhub_date": final_vendhub_date,
     }
 
 
@@ -643,7 +682,7 @@ def routine_update(desired_state: dict, cached_state: dict) -> dict:
 
     # Leads cached as having a value but no longer in desired (stale)
     stale = {
-        lead_id: {"date": None, "call_type": None, "scraper": None, "post_webinar": None, "reactivation": None, "funnel_name": None, "vendhub": None}
+        lead_id: {"date": None, "call_type": None, "scraper": None, "post_webinar": None, "reactivation": None, "funnel_name": None, "vendhub": None, "vendhub_date": None}
         for lead_id, cached in cached_state.items()
         if lead_id not in desired_state
         and (cached.get("date") or cached.get("call_type"))
@@ -684,6 +723,7 @@ def routine_update(desired_state: dict, cached_state: dict) -> dict:
                 "reactivation": lead_data.get(FIELD_REACTIVATION_KEY),
                 "funnel_name":  lead_data.get(FIELD_FUNNEL_KEY),
                 "vendhub":      lead_data.get(FIELD_VENDHUB_KEY),
+                "vendhub_date": lead_data.get(FIELD_VENDHUB_DATE_KEY),
             }
 
             result = write_lead(lead_id, lead_name, current, desired)
@@ -742,6 +782,7 @@ def backfill(desired_state: dict, already_processed: set) -> tuple[dict, set]:
                 "reactivation": lead_data.get(FIELD_REACTIVATION_KEY),
                 "funnel_name":  lead_data.get(FIELD_FUNNEL_KEY),
                 "vendhub":      lead_data.get(FIELD_VENDHUB_KEY),
+                "vendhub_date": lead_data.get(FIELD_VENDHUB_DATE_KEY),
             }
 
             result = write_lead(lead_id, lead_name, current, desired)
