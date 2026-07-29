@@ -84872,8 +84872,28 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_wSJIP2YFcXXqQyEZG8YwAKYniybEVYM73frLhFTYd7C": {
+      "date": "2026-07-29",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_4tB91bMlkeToGVTRLMaDZsWhFIgQiHCSR6OatHPKURe": {
+      "date": "2026-08-03",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "LTF - In-House",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-29 18:10:37 UTC",
-  "count": 8660
+  "saved_at": "2026-07-29 18:40:11 UTC",
+  "count": 8662
 }
