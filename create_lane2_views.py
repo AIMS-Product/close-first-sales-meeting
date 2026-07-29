@@ -171,9 +171,11 @@ VIEWS = [
      sort_by("last_communication_date"), cols(F_ANGLE, F_ENTRY)),
 
     # ---------------- Ops / marketing ----------------
-    ("Ops · Deep Nurture → Instantly Export",
-     "Quiet 6+ months. Low-touch content drip whose only job is to manufacture a fresh hand-raise. "
-     "This view feeds the Instantly sync.",
+    ("Ops · Deep Nurture (6mo+ quiet)",
+     "No communication in 6+ months. Intended as the source list for the low-touch content drip "
+     "(Instantly) once that sync is built — nothing is exporting yet. NOTE: this cohort mixes "
+     "'went quiet after engaging with us' and 'imported and never contacted', which want different "
+     "treatment. Segment before sending.",
      view(choice(F_STATE, ["Deep-Nurture"])),
      sort_by("last_communication_date", "asc"), cols(F_ENTRY, F_RESOURCE)),
 
