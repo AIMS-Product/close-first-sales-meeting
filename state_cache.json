@@ -1058,7 +1058,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "YouTube",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": "2026-07-23"
     },
@@ -1374,8 +1374,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "funnel_name": "Instagram",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-15"
     },
@@ -7422,7 +7422,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "LTF - In-House",
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-29"
     },
@@ -8110,7 +8110,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Q4 Misc Traffic Cam",
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-20"
     },
@@ -13890,7 +13890,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "LTF - In-House",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -20389,7 +20389,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "YouTube",
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-15"
     },
@@ -42721,7 +42721,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Website",
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-16"
     },
@@ -50602,7 +50602,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "YouTube",
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-20"
     },
@@ -54435,7 +54435,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Website",
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-20"
     },
@@ -57202,7 +57202,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Instagram",
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-23"
     },
@@ -60499,7 +60499,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "LTF - In-House",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -65027,8 +65027,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "funnel_name": "Reactivation Scrapers",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-15"
     },
@@ -74537,7 +74537,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Instagram",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -74745,7 +74745,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "YouTube",
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-23"
     },
@@ -78944,8 +78944,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "funnel_name": "LTF - In-House",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": "VendHub Q&A Booking",
       "vendhub_date": "2026-07-09"
     },
@@ -79080,8 +79080,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "funnel_name": "Reactivation Scrapers",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-10"
     },
@@ -80870,7 +80870,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-29"
     },
@@ -82062,7 +82062,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Website",
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-27"
     },
@@ -82272,7 +82272,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "YouTube",
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-24"
     },
@@ -83790,8 +83790,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "funnel_name": "Meta Ads",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-27"
     },
@@ -84239,8 +84239,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "funnel_name": "Reactivation Scrapers",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-27"
     },
@@ -84588,8 +84588,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "funnel_name": "Reactivation Scrapers",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-28"
     },
@@ -84708,8 +84708,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "funnel_name": "Reactivation Scrapers",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-28"
     },
@@ -84732,8 +84732,68 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_P66Tgi5xsT7Pr9SfdSu7ZzUTHqaxfUQ6Or4JKrr0Vj8": {
+      "date": "2026-07-30",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_xkrkCDVxy4gjJXtc5qPAS0CglCtdC4NZRFHygXtyugH": {
+      "date": "2026-07-29",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_8vUA2b4iNgeth6wFw83PJLd8Hzm6o46UoHSTPekIRPx": {
+      "date": "2026-07-30",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_plbofvORchpBwNUNLnymCSJRCt3TvrmwXGfZ0zBgew5": {
+      "date": "2026-07-29",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_yEWWizulANORVLd56geH90QQdrJZVVahwjJ8usggHso": {
+      "date": "2026-07-29",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_SrSO7QKbwSOWGG8WRGgJgj11VjRzTj2adI61dVd4syr": {
+      "date": "2026-07-31",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-29 01:01:57 UTC",
-  "count": 8646
+  "saved_at": "2026-07-29 01:39:56 UTC",
+  "count": 8652
 }
