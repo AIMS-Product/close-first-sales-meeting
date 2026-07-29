@@ -84822,8 +84822,18 @@
       "funnel_name": "VSL",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_ijzPWT03VWj1eOAbgjX3B6fQNUqL3JiBK3SaGGzSteH": {
+      "date": "2026-07-30",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Meta Ads",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-29 06:10:36 UTC",
-  "count": 8655
+  "saved_at": "2026-07-29 06:39:38 UTC",
+  "count": 8656
 }
