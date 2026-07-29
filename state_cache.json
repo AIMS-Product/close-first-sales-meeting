@@ -83589,11 +83589,11 @@
     },
     "lead_oFkJmBEKVQYQOtueet9oOKJ3MaCvVj7lBbwC9gSXNFQ": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -84834,6 +84834,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-29 10:09:52 UTC",
+  "saved_at": "2026-07-29 10:40:00 UTC",
   "count": 8656
 }
