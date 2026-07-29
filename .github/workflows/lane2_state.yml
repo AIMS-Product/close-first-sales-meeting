@@ -19,6 +19,11 @@ on:
         required: false
         default: ""
         type: string
+      max_writes:
+        description: "Cap writes this run (blank = no cap). Safe to chunk — re-run to continue."
+        required: false
+        default: ""
+        type: string
 
   # Enable once the dry run looks right. Every 2h on weekdays, 7am-7pm PT.
   # schedule:
@@ -27,7 +32,7 @@ on:
 jobs:
   reconcile:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 350   # first backfill writes ~56k leads
 
     steps:
       - name: Checkout
@@ -51,6 +56,7 @@ jobs:
           ARGS=""
           if [ "${{ inputs.apply }}" = "true" ]; then ARGS="$ARGS --apply"; fi
           if [ -n "${{ inputs.limit }}" ]; then ARGS="$ARGS --limit ${{ inputs.limit }}"; fi
+          if [ -n "${{ inputs.max_writes }}" ]; then ARGS="$ARGS --max-writes ${{ inputs.max_writes }}"; fi
           # scheduled runs always apply
           if [ "${{ github.event_name }}" = "schedule" ]; then ARGS="--apply"; fi
           echo "Running: lane2_state.py $ARGS"
