@@ -174,10 +174,9 @@ VIEWS = [
 
     # ---------------- Ops / marketing ----------------
     ("Ops · Deep Nurture (6mo+ quiet)",
-     "No communication in 6+ months. Intended as the source list for the low-touch content drip "
-     "(Instantly) once that sync is built — nothing is exporting yet. NOTE: this cohort mixes "
-     "'went quiet after engaging with us' and 'imported and never contacted', which want different "
-     "treatment. Segment before sending.",
+     "No communication in 6+ months. Intended source list for the low-touch content drip "
+     "(Instantly) once that sync is built — nothing exports yet. Mixes 'went quiet after "
+     "engaging' with 'imported, never contacted' — segment before sending.",
      view(choice(F_STATE, ["Deep-Nurture"])),
      sort_by("last_communication_date", "asc"), cols(F_ENTRY, F_RESOURCE)),
 
@@ -224,6 +223,23 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true", help="create/update in Close")
     args = ap.parse_args()
+
+    # Pre-flight: validate everything BEFORE any API call, so a limit violation
+    # can't leave half the view set created.
+    MAX_DESC, MAX_FIELD_ID = 300, 48
+    problems = []
+    for short, desc, _q, _s, selected in VIEWS:
+        if len(desc) > MAX_DESC:
+            problems.append(f"{short}: description {len(desc)} chars (max {MAX_DESC})")
+        for f in selected:
+            if len(f["field_id"]) > MAX_FIELD_ID:
+                problems.append(f"{short}: field_id {f['field_id']} "
+                                f"is {len(f['field_id'])} chars (max {MAX_FIELD_ID})")
+    if problems:
+        print("Validation failed — nothing sent to Close:", file=sys.stderr)
+        for p in problems:
+            print(f"  {p}", file=sys.stderr)
+        sys.exit(1)
 
     print("Reading existing views...", file=sys.stderr)
     have = existing_views()
