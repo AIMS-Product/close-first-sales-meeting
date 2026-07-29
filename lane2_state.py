@@ -40,6 +40,11 @@ AUTH = (API_KEY, "")
 # CONFIG — everything tunable lives here
 # ============================================================================
 
+# Close caps search pagination at 10,000 results, so every full query is sliced
+# by month of date_created. This must predate the oldest lead in the account or
+# those leads are invisible to the reconciler.
+LEAD_HISTORY_START = "2021-01-01"
+
 HOT_WINDOW_DAYS = 14        # Setter owns a fresh inbound signal this long
 BLITZ_DAYS = 14             # all-angles push after going cold
 DEEP_NURTURE_MONTHS = 6     # active -> deep (months, not days — see within())
@@ -207,6 +212,23 @@ def num_range(field_name, gte=None, lte=None):
             "field": {"type": "regular_field", "object_type": "lead", "field_name": field_name},
             "condition": c}
 
+def created_between(start, end):
+    """Absolute date_created window — used to partition around the 10k skip cap."""
+    return {"type": "field_condition", "negate": False,
+            "field": {"type": "regular_field", "object_type": "lead",
+                      "field_name": "date_created"},
+            "condition": {"type": "moment_range",
+                          "on_or_after": {"type": "fixed_local_date", "value": start,
+                                          "which": "start"},
+                          "before": {"type": "fixed_local_date", "value": end,
+                                     "which": "start"}}}
+
+def add_condition(query, extra):
+    """Return a copy of `query` with one more ANDed condition."""
+    q = json.loads(json.dumps(query))
+    q["queries"][1]["queries"].append(extra)
+    return q
+
 def has_completed_meeting(negate=False):
     return {"type": "has_related", "negate": negate,
             "this_object_type": "lead", "related_object_type": "activity.meeting",
@@ -266,8 +288,10 @@ def _req(method, url, **kw):
         return r
     raise CloseError(f"gave up after retries: {r.status_code if r else '?'} {url}")
 
-def search(query, fields=None, limit=None):
-    """Run a Close search, return list of lead dicts."""
+SKIP_CAP = 10000   # Close rejects cursor skip > 10,000. Hard API limit.
+
+def _search_page(query, fields=None, limit=None):
+    """Single un-partitioned search. Only safe when the result set is < SKIP_CAP."""
     out, cursor = [], None
     body = {"query": query, "_limit": 200}
     if fields:
@@ -275,13 +299,52 @@ def search(query, fields=None, limit=None):
     while True:
         if cursor:
             body["cursor"] = cursor
-        r = _req("POST", f"{BASE}/data/search/", json=body)
-        j = r.json()
+        j = _req("POST", f"{BASE}/data/search/", json=body).json()
         out.extend(j.get("data", []))
         cursor = j.get("cursor")
-        if not cursor or (limit and len(out) >= limit):
+        if not cursor or (limit and len(out) >= limit) or len(out) >= SKIP_CAP:
             break
     return out[:limit] if limit else out
+
+
+def _month_windows(start=None):
+    """Month boundaries from `start` to just past today, as (from, to) strings."""
+    start = start or LEAD_HISTORY_START
+    y, m = int(start[:4]), int(start[5:7])
+    today = time.gmtime()
+    out = []
+    while (y, m) <= (today.tm_year, today.tm_mon):
+        ny, nm = (y + 1, 1) if m == 12 else (y, m + 1)
+        out.append((f"{y:04d}-{m:02d}-01", f"{ny:04d}-{nm:02d}-01"))
+        y, m = ny, nm
+    return out
+
+
+def search(query, fields=None, limit=None):
+    """
+    Run a Close search, partitioning by month of date_created.
+
+    Close caps cursor skip at 10,000 results, so any query matching more than
+    that cannot be paged straight through. Slicing by creation month keeps every
+    slice well under the cap and covers the whole database.
+    """
+    if limit and limit <= SKIP_CAP:
+        # Small sample — one pass is enough and much faster.
+        return _search_page(query, fields=fields, limit=limit)
+
+    seen, out = set(), []
+    for i, (a, b) in enumerate(_month_windows(), 1):
+        rows = _search_page(add_condition(query, created_between(a, b)), fields=fields)
+        if len(rows) >= SKIP_CAP:
+            print(f"    ⚠️  {a} hit the {SKIP_CAP:,} cap — window too wide, results truncated",
+                  file=sys.stderr)
+        for r in rows:
+            if r["id"] not in seen:
+                seen.add(r["id"])
+                out.append(r)
+        if i % 12 == 0:
+            print(f"    ...{a[:4]}: {len(out):,} so far", file=sys.stderr)
+    return out
 
 def cf(lead, fid):
     return lead.get(f"custom.{fid}") or lead.get("custom", {}).get(fid)
@@ -366,19 +429,23 @@ def main():
         read_fields.append(f"custom.{F_EVERCALL}")
 
     print("Loading leads...", file=sys.stderr)
-    everything = _wrap(status_in([], negate=True)) if False else {
-        "negate": False, "type": "and",
-        "queries": [{"negate": False, "object_type": "lead", "type": "object_type"}]}
-    leads = search(everything, fields=read_fields, limit=args.limit)
+    leads = search(_wrap(), fields=read_fields, limit=args.limit)
     print(f"  {len(leads)} leads\n", file=sys.stderr)
     by_id = {l["id"]: l for l in leads}
 
     # --- state, by precedence ---
+    # A --limit run is a smoke test: bucket queries run un-partitioned (one fast
+    # pass) so they may be incomplete. Never judge correctness from a sample run.
+    bucket_limit = SKIP_CAP if args.limit else None
+    if args.limit:
+        print("  (sample run — bucket queries un-partitioned, counts are indicative only)\n",
+              file=sys.stderr)
+
     state_of, claimed, failed = {}, set(), []
     print("Resolving buckets...", file=sys.stderr)
     for name, q in BUCKETS:
         try:
-            ids = {l["id"] for l in search(q, fields=["id"])}
+            ids = {l["id"] for l in search(q, fields=["id"], limit=bucket_limit)}
         except CloseError as e:
             # Don't lose the whole run to one bad bucket — report and continue.
             # Leads that would have matched fall through to a later bucket.
@@ -400,7 +467,8 @@ def main():
     if F_EVERCALL:
         print("Resolving Ever Had Call...", file=sys.stderr)
         try:
-            ever = {l["id"] for l in search(_wrap(has_completed_meeting()), fields=["id"])}
+            ever = {l["id"] for l in search(_wrap(has_completed_meeting()),
+                                            fields=["id"], limit=bucket_limit)}
             ever_ok = True
             print(f"  {len(ever):,} leads with a completed meeting\n", file=sys.stderr)
         except CloseError as e:
