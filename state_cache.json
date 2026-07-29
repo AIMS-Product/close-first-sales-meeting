@@ -84674,8 +84674,8 @@
       "vendhub_date": null
     },
     "lead_RT4xWHL3yYLOKDPzcTVv6cb8fQ7XukGh0I0qKnp9FOF": {
-      "date": "2026-07-30",
-      "call_type": "Closer",
+      "date": null,
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
@@ -84874,6 +84874,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-29 17:11:02 UTC",
+  "saved_at": "2026-07-29 18:10:37 UTC",
   "count": 8660
 }
