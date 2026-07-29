@@ -84266,11 +84266,11 @@
     },
     "lead_1OxY6l106zkYdE9GtjSS4JnOlhs6hCVMYTyOSLR0HSd": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Website",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -84842,8 +84842,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_66IatFSUVTVs1JaQwLM23p83V5Yv00sckct6Lk5VrXJ": {
+      "date": "2026-07-31",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-29 14:51:48 UTC",
-  "count": 8657
+  "saved_at": "2026-07-29 15:10:51 UTC",
+  "count": 8658
 }
