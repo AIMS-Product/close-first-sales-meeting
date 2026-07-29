@@ -29,6 +29,12 @@ on:
   # the workflow_dispatch endpoint, matching the pattern used by the other scripts
   # in this repo. Recommended cadence: hourly on weekdays, 06:00–20:00 PT.
 
+# Hourly triggers plus a ~12-minute run shouldn't overlap, but if one ever runs
+# long, queue the next rather than having two reconcilers writing at once.
+concurrency:
+  group: lane2-state-reconciler
+  cancel-in-progress: false
+
 jobs:
   reconcile:
     runs-on: ubuntu-latest
