@@ -1,0 +1,59 @@
+name: Create Lane 2 Smart Views
+
+# One-off / on-demand. Creates or updates the "L2 · " smart view set in Close.
+# Idempotent — matches on view name, updates in place, never touches a view it
+# didn't create. Defaults to DRY RUN.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Create/update in Close (unticked = dry run)"
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  views:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install requests
+
+      - name: Create views
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: |
+          ARGS=""
+          if [ "${{ inputs.apply }}" = "true" ]; then ARGS="--apply"; fi
+          python create_lane2_views.py $ARGS | tee views.txt
+
+      - name: Publish report
+        if: always()
+        run: |
+          {
+            echo "## Lane 2 Smart Views"
+            echo ""
+            if [ "${{ inputs.apply }}" = "true" ]; then
+              echo "**Mode: APPLY**"
+            else
+              echo "**Mode: DRY RUN** — nothing changed."
+            fi
+            echo ""
+            echo '```'
+            cat views.txt 2>/dev/null || echo "(see job log)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
