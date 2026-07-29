@@ -84802,8 +84802,28 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_uq9bjJnv8AXxA2oFHhlV1Eug3VhhRDHxsPXC8M3pUge": {
+      "date": null,
+      "call_type": null,
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "VSL",
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_PCpfnYrk0m3H6CylLuq7LekFyDRPOWGQfS0wu7HqdcG": {
+      "date": null,
+      "call_type": null,
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "VSL",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-29 03:09:55 UTC",
-  "count": 8653
+  "saved_at": "2026-07-29 03:40:27 UTC",
+  "count": 8655
 }
