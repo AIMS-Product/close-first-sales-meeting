@@ -9,8 +9,8 @@ name: Lane 2 State Reconciler
 on:
   workflow_dispatch:
     inputs:
-      apply:
-        description: "Write changes (unticked = dry run, writes nothing)"
+      dry_run:
+        description: "Tick to PREVIEW only. Left unticked (the default) it writes changes."
         required: false
         default: false
         type: boolean
@@ -53,13 +53,13 @@ jobs:
         env:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
         run: |
-          ARGS=""
-          if [ "${{ inputs.apply }}" = "true" ]; then ARGS="$ARGS --apply"; fi
+          # Applies by DEFAULT. An external trigger (cron-job.org) that sends no
+          # inputs must still write — a scheduled job that silently dry-runs for
+          # a week is the worst failure mode here.
+          ARGS="--apply"
+          if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS=""; fi
           if [ -n "${{ inputs.limit }}" ]; then ARGS="$ARGS --limit ${{ inputs.limit }}"; fi
           if [ -n "${{ inputs.max_writes }}" ]; then ARGS="$ARGS --max-writes ${{ inputs.max_writes }}"; fi
-          # externally-triggered runs (cron-job.org) pass apply=true in the payload;
-          # a native schedule, if one is ever added, always applies
-          if [ "${{ github.event_name }}" = "schedule" ]; then ARGS="--apply"; fi
           echo "Running: lane2_state.py $ARGS"
           python lane2_state.py $ARGS | tee report.txt
 
@@ -69,10 +69,10 @@ jobs:
           {
             echo "## Lane 2 State Reconciler"
             echo ""
-            if [ "${{ inputs.apply }}" = "true" ] || [ "${{ github.event_name }}" = "schedule" ]; then
-              echo "**Mode: APPLY** — changes written to Close."
-            else
+            if [ "${{ inputs.dry_run }}" = "true" ]; then
               echo "**Mode: DRY RUN** — nothing written."
+            else
+              echo "**Mode: APPLY** — changes written to Close."
             fi
             echo ""
             echo '```'
