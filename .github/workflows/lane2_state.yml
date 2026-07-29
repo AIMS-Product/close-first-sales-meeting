@@ -25,9 +25,9 @@ on:
         default: ""
         type: string
 
-  # Enable once the dry run looks right. Every 2h on weekdays, 7am-7pm PT.
-  # schedule:
-  #   - cron: "0 14-23/2 * * 1-5"
+  # No native `schedule:` by design — triggered externally by cron-job.org hitting
+  # the workflow_dispatch endpoint, matching the pattern used by the other scripts
+  # in this repo. Recommended cadence: hourly on weekdays, 06:00–20:00 PT.
 
 jobs:
   reconcile:
@@ -57,7 +57,8 @@ jobs:
           if [ "${{ inputs.apply }}" = "true" ]; then ARGS="$ARGS --apply"; fi
           if [ -n "${{ inputs.limit }}" ]; then ARGS="$ARGS --limit ${{ inputs.limit }}"; fi
           if [ -n "${{ inputs.max_writes }}" ]; then ARGS="$ARGS --max-writes ${{ inputs.max_writes }}"; fi
-          # scheduled runs always apply
+          # externally-triggered runs (cron-job.org) pass apply=true in the payload;
+          # a native schedule, if one is ever added, always applies
           if [ "${{ github.event_name }}" = "schedule" ]; then ARGS="--apply"; fi
           echo "Running: lane2_state.py $ARGS"
           python lane2_state.py $ARGS | tee report.txt
