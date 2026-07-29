@@ -26,6 +26,7 @@ import os
 import sys
 import time
 from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
@@ -43,7 +44,9 @@ AUTH = (API_KEY, "")
 # Close caps search pagination at 10,000 results, so every full query is sliced
 # by month of date_created. This must predate the oldest lead in the account or
 # those leads are invisible to the reconciler.
-LEAD_HISTORY_START = "2021-01-01"
+LEAD_HISTORY_START = "2019-01-01"
+
+WRITE_WORKERS = 8      # parallel PUTs. 56k sequential writes will not finish in one job.
 
 HOT_WINDOW_DAYS = 14        # Setter owns a fresh inbound signal this long
 BLITZ_DAYS = 14             # all-angles push after going cold
@@ -244,14 +247,19 @@ BUCKETS = [
     ("Suppressed",     _wrap(status_in(SUPPRESS_STATUSES))),
     ("Booked",         _wrap(status_in(SUPPRESS_STATUSES, negate=True),
                              num_range("num_upcoming_meetings", gte=1))),
-    ("Hot-Inbound",    _wrap(status_in(SUPPRESS_STATUSES, negate=True),
-                             num_range("num_upcoming_meetings", lte=0),
-                             status_in([S_NEW]),
-                             within("date_created", days=HOT_WINDOW_DAYS))),
+    # Blitz outranks Hot-Inbound: a lead created 3 days ago that already
+    # no-showed belongs in the no-show push, not the fresh-hand-raise queue.
     ("Blitz",          _wrap(status_in(SUPPRESS_STATUSES, negate=True),
                              num_range("num_upcoming_meetings", lte=0),
                              status_in([S_LOST, S_NOSHOW, S_CANCELED]),
                              within("last_lead_status_change_date", days=BLITZ_DAYS))),
+    # Deliberately NOT keyed on status = New. A rep moving a 2-day-old lead to
+    # "Follow Up" shouldn't drop it out of the Setter's hot window — recency plus
+    # "hasn't spoken to us yet" is what actually defines a fresh hand-raise.
+    ("Hot-Inbound",    _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+                             num_range("num_upcoming_meetings", lte=0),
+                             has_completed_meeting(negate=True),
+                             within("date_created", days=HOT_WINDOW_DAYS))),
     ("Active-Nurture", _wrap(status_in(SUPPRESS_STATUSES, negate=True),
                              num_range("num_upcoming_meetings", lte=0),
                              within("last_communication_date", months=DEEP_NURTURE_MONTHS))),
@@ -408,6 +416,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true", help="write changes (default: dry run)")
     ap.add_argument("--limit", type=int, help="only process N leads (testing)")
+    ap.add_argument("--max-writes", type=int,
+                    help="cap writes this run; re-run to continue (idempotent)")
     ap.add_argument("--emit-views", action="store_true",
                     help="print each bucket's query JSON (paste into a smart view) and exit")
     args = ap.parse_args()
@@ -559,18 +569,43 @@ def main():
     if failed:
         sys.exit("\nRefusing to --apply while bucket queries are failing.")
 
-    print(f"\nApplying to {len(changes):,} leads...")
-    ok = err = 0
-    for n, (lid, payload) in enumerate(changes.items(), 1):
+    todo = list(changes.items())
+    if args.max_writes:
+        todo = todo[:args.max_writes]
+        print(f"\n--max-writes {args.max_writes:,}: writing a chunk of "
+              f"{len(todo):,} of {len(changes):,}. Re-run to continue "
+              f"(the reconciler only ever writes what still differs).")
+
+    print(f"\nApplying to {len(todo):,} leads with {WRITE_WORKERS} workers...")
+    ok = err = done = 0
+    errors = []
+
+    def _write(item):
+        lid, payload = item
         try:
             _req("PUT", f"{BASE}/lead/{lid}/", json=payload)
-            ok += 1
+            return lid, None
         except Exception as e:
-            err += 1
-            print(f"  {lid}: {e}", file=sys.stderr)
-        if n % 250 == 0:
-            print(f"  {n:,}/{len(changes):,}", file=sys.stderr)
+            return lid, str(e)
+
+    with ThreadPoolExecutor(max_workers=WRITE_WORKERS) as pool:
+        for lid, e in pool.map(_write, todo):
+            done += 1
+            if e:
+                err += 1
+                if len(errors) < 20:
+                    errors.append(f"  {lid}: {e[:200]}")
+            else:
+                ok += 1
+            if done % 1000 == 0:
+                print(f"  {done:,}/{len(todo):,}", file=sys.stderr)
+
     print(f"\nDone. {ok:,} updated, {err:,} failed.")
+    if errors:
+        print("First errors:")
+        print("\n".join(errors))
+    if len(todo) < len(changes):
+        print(f"\n{len(changes) - len(todo):,} leads still pending — run again.")
 
 
 if __name__ == "__main__":
