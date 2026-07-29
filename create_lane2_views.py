@@ -118,8 +118,10 @@ def sort_by(field_name, direction="desc"):
 DIAL_COLS = ["display_name", "primary_phone", "primary_email", "status_id", "date_created"]
 
 def cols(*extra):
+    # Custom-field columns use the bare cf_ id — NOT "custom.<id>". The prefixed
+    # form is 53 chars and Close caps selected_fields.field_id at 48.
     return [{"type_id": "lead", "field_id": f} for f in DIAL_COLS] + \
-           [{"type_id": "lead", "field_id": f"custom.{f}"} for f in extra]
+           [{"type_id": "lead", "field_id": f} for f in extra]
 
 # ============================================================================
 # THE VIEW SET
