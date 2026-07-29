@@ -44,7 +44,10 @@ AUTH = (API_KEY, "")
 # Close caps search pagination at 10,000 results, so every full query is sliced
 # by month of date_created. This must predate the oldest lead in the account or
 # those leads are invisible to the reconciler.
-LEAD_HISTORY_START = "2019-01-01"
+# Three full runs confirmed zero leads created before 2024, so start there and
+# skip ~60 empty windows per query (roughly halves runtime — matters on an hourly
+# schedule). The guard below shouts if that assumption ever stops holding.
+LEAD_HISTORY_START = "2024-01-01"
 
 WRITE_WORKERS = 8      # parallel PUTs. 56k sequential writes will not finish in one job.
 
@@ -343,6 +346,11 @@ def search(query, fields=None, limit=None):
     seen, out = set(), []
     for i, (a, b) in enumerate(_month_windows(), 1):
         rows = _search_page(add_condition(query, created_between(a, b)), fields=fields)
+        if i == 1 and rows:
+            # Leads exist in the very first window, so older ones probably do too
+            # and they'd be invisible. Push LEAD_HISTORY_START back.
+            print(f"    ⚠️  {len(rows)} leads in the first window ({a}) — leads may predate "
+                  f"LEAD_HISTORY_START and be missed. Move it earlier.", file=sys.stderr)
         if len(rows) >= SKIP_CAP:
             print(f"    ⚠️  {a} hit the {SKIP_CAP:,} cap — window too wide, results truncated",
                   file=sys.stderr)
