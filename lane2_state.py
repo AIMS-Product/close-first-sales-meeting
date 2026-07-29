@@ -40,9 +40,9 @@ AUTH = (API_KEY, "")
 # CONFIG — everything tunable lives here
 # ============================================================================
 
-HOT_WINDOW_DAYS = 14      # Setter owns a fresh inbound signal this long
-BLITZ_DAYS = 14           # all-angles push after going cold
-DEEP_NURTURE_DAYS = 180   # active -> deep
+HOT_WINDOW_DAYS = 14        # Setter owns a fresh inbound signal this long
+BLITZ_DAYS = 14             # all-angles push after going cold
+DEEP_NURTURE_MONTHS = 6     # active -> deep (months, not days — see within())
 
 # --- fields we write --------------------------------------------------------
 F_STATE = "cf_hKcyx4tQSMvHd7llfLX363bx3LGXMxVEmFHEtjpR5C2"   # Recapture State
@@ -187,8 +187,10 @@ def status_in(ids, negate=False):
             "field": {"type": "regular_field", "object_type": "lead", "field_name": "status_id"},
             "condition": {"type": "reference", "reference_type": "status.lead", "object_ids": ids}}
 
-def within(field_name, days=None, hours=None, negate=False):
-    off = {"years": 0, "months": 0, "weeks": 0, "days": days or 0,
+def within(field_name, days=None, hours=None, months=None, negate=False):
+    # Close appears to reject large `days` offsets — no exported smart view uses
+    # more than 60. Express anything longer in months.
+    off = {"years": 0, "months": months or 0, "weeks": 0, "days": days or 0,
            "hours": hours or 0, "minutes": 0, "seconds": 0}
     return {"type": "field_condition", "negate": negate,
             "field": {"type": "regular_field", "object_type": "lead", "field_name": field_name},
@@ -230,7 +232,7 @@ BUCKETS = [
                              within("last_lead_status_change_date", days=BLITZ_DAYS))),
     ("Active-Nurture", _wrap(status_in(SUPPRESS_STATUSES, negate=True),
                              num_range("num_upcoming_meetings", lte=0),
-                             within("last_communication_date", days=DEEP_NURTURE_DAYS))),
+                             within("last_communication_date", months=DEEP_NURTURE_MONTHS))),
     # Deep-Nurture is the fallthrough — anything contactable not caught above.
     # List-Swap is terminal and needs a drip-exhaustion signal we don't have yet.
 ]
@@ -240,7 +242,11 @@ FALLTHROUGH = "Deep-Nurture"
 # API
 # ============================================================================
 
+class CloseError(Exception):
+    pass
+
 def _req(method, url, **kw):
+    r = None
     for attempt in range(6):
         r = requests.request(method, url, auth=AUTH, timeout=45, **kw)
         if r.status_code == 429:
@@ -249,9 +255,16 @@ def _req(method, url, **kw):
         if r.status_code >= 500:
             time.sleep(2 ** attempt)
             continue
-        r.raise_for_status()
+        if r.status_code >= 400:
+            # Close returns useful field-level detail — surface it instead of
+            # a bare "400 Bad Request".
+            try:
+                detail = json.dumps(r.json(), indent=1)[:1500]
+            except Exception:
+                detail = r.text[:1500]
+            raise CloseError(f"{r.status_code} from {url}\n{detail}")
         return r
-    r.raise_for_status()
+    raise CloseError(f"gave up after retries: {r.status_code if r else '?'} {url}")
 
 def search(query, fields=None, limit=None):
     """Run a Close search, return list of lead dicts."""
@@ -332,7 +345,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true", help="write changes (default: dry run)")
     ap.add_argument("--limit", type=int, help="only process N leads (testing)")
+    ap.add_argument("--emit-views", action="store_true",
+                    help="print each bucket's query JSON (paste into a smart view) and exit")
     args = ap.parse_args()
+
+    if args.emit_views:
+        for name, q in BUCKETS:
+            print(f"\n===== {name} =====")
+            print(json.dumps({"query": q, "results_limit": None, "sort": []}, indent=1))
+        print(f"\n===== {FALLTHROUGH} =====\n(fallthrough — everything not matched above)")
+        return
 
     read_fields = ["id", "display_name", "status_id",
                    f"custom.{F_OWNER}", f"custom.{F_HANDRAISER}", f"custom.{F_FUNNEL}",
@@ -352,10 +374,17 @@ def main():
     by_id = {l["id"]: l for l in leads}
 
     # --- state, by precedence ---
-    state_of, claimed = {}, set()
+    state_of, claimed, failed = {}, set(), []
     print("Resolving buckets...", file=sys.stderr)
     for name, q in BUCKETS:
-        ids = {l["id"] for l in search(q, fields=["id"])}
+        try:
+            ids = {l["id"] for l in search(q, fields=["id"])}
+        except CloseError as e:
+            # Don't lose the whole run to one bad bucket — report and continue.
+            # Leads that would have matched fall through to a later bucket.
+            failed.append(name)
+            print(f"  {name:<16}   QUERY FAILED\n{e}\n", file=sys.stderr)
+            continue
         fresh = (ids & set(by_id)) - claimed
         for i in fresh:
             state_of[i] = name
@@ -367,11 +396,15 @@ def main():
           file=sys.stderr)
 
     # --- ever had call ---
-    ever = set()
+    ever, ever_ok = set(), False
     if F_EVERCALL:
         print("Resolving Ever Had Call...", file=sys.stderr)
-        ever = {l["id"] for l in search(_wrap(has_completed_meeting()), fields=["id"])}
-        print(f"  {len(ever):,} leads with a completed meeting\n", file=sys.stderr)
+        try:
+            ever = {l["id"] for l in search(_wrap(has_completed_meeting()), fields=["id"])}
+            ever_ok = True
+            print(f"  {len(ever):,} leads with a completed meeting\n", file=sys.stderr)
+        except CloseError as e:
+            print(f"  QUERY FAILED — Ever Had Call skipped this run\n{e}\n", file=sys.stderr)
 
     # --- diff ---
     changes = defaultdict(dict)
@@ -383,7 +416,7 @@ def main():
             F_ENTRY: entry_source(lead),
             F_ANGLE: objection_angle(lead),
         }
-        if F_EVERCALL:
+        if F_EVERCALL and ever_ok:
             desired[F_EVERCALL] = "Yes" if lid in ever else "No"
         if WRITE_SALES_LANE:
             desired[F_SALESLANE] = sales_lane(lead)
@@ -441,6 +474,11 @@ def main():
     if WRITE_SALES_LANE:
         print("\nSales Team Lane is written from the same roster — retire update_sales_lane.py.")
 
+    if failed:
+        print(f"\n⚠️  {len(failed)} bucket quer{'y' if len(failed)==1 else 'ies'} failed: "
+              f"{', '.join(failed)}")
+        print("   Those leads fell through to a later bucket — DO NOT --apply until fixed.")
+
     if not args.apply:
         print("\nDRY RUN — nothing written. Re-run with --apply.")
         sample = list(changes.items())[:5]
@@ -449,6 +487,9 @@ def main():
             for lid, ch in sample:
                 print(f"  {by_id[lid].get('display_name','?')[:35]:<35} {ch}")
         return
+
+    if failed:
+        sys.exit("\nRefusing to --apply while bucket queries are failing.")
 
     print(f"\nApplying to {len(changes):,} leads...")
     ok = err = 0
