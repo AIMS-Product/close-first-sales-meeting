@@ -85272,8 +85272,18 @@
       "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-07-30"
+    },
+    "lead_aWoXjID2RlwmRtCQav9LwEyW9m7CCsOYAziCXGMtWXf": {
+      "date": "2026-07-30",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-30 19:40:59 UTC",
-  "count": 8700
+  "saved_at": "2026-07-30 20:10:23 UTC",
+  "count": 8701
 }
