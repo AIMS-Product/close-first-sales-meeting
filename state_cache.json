@@ -85172,8 +85172,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_McamRuIdVb3msMiluxC32ay2j9DYHSLaxkxcUQM9eKC": {
+      "date": null,
+      "call_type": "Setter",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-30 05:40:32 UTC",
-  "count": 8690
+  "saved_at": "2026-07-30 06:10:00 UTC",
+  "count": 8691
 }
