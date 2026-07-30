@@ -84804,22 +84804,22 @@
       "vendhub_date": null
     },
     "lead_uq9bjJnv8AXxA2oFHhlV1Eug3VhhRDHxsPXC8M3pUge": {
-      "date": null,
-      "call_type": null,
-      "scraper": null,
+      "date": "2026-08-01",
+      "call_type": "Closer",
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": "VSL",
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
     },
     "lead_PCpfnYrk0m3H6CylLuq7LekFyDRPOWGQfS0wu7HqdcG": {
-      "date": null,
-      "call_type": null,
-      "scraper": null,
+      "date": "2026-08-01",
+      "call_type": "Closer",
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": "VSL",
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -85124,6 +85124,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-30 01:10:30 UTC",
+  "saved_at": "2026-07-30 01:39:31 UTC",
   "count": 8685
 }
