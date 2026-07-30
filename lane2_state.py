@@ -53,6 +53,7 @@ WRITE_WORKERS = 8      # parallel PUTs. 56k sequential writes will not finish in
 
 HOT_WINDOW_DAYS = 14        # Setter owns a fresh inbound signal this long
 BLITZ_DAYS = 14             # all-angles push after going cold
+REENGAGE_DAYS = 7           # an inbound reply keeps them "hot" this long
 DEEP_NURTURE_MONTHS = 6     # active -> deep (months, not days — see within())
 
 # --- fields we write --------------------------------------------------------
@@ -235,6 +236,31 @@ def add_condition(query, extra):
     q["queries"][1]["queries"].append(extra)
     return q
 
+def has_incoming(kind, days):
+    """Lead received an inbound sms / email / call in the last N days."""
+    off = {"years": 0, "months": 0, "weeks": 0, "days": days,
+           "hours": 0, "minutes": 0, "seconds": 0}
+    ot = f"activity.{kind}"
+    return {"type": "has_related", "negate": False,
+            "this_object_type": "lead", "related_object_type": ot,
+            "related_query": {"negate": False, "type": "and", "queries": [
+                {"type": "field_condition", "negate": False,
+                 "field": {"type": "regular_field", "object_type": ot,
+                           "field_name": "direction"},
+                 "condition": {"type": "term", "values": ["incoming"]}},
+                {"type": "field_condition", "negate": False,
+                 "field": {"type": "regular_field", "object_type": ot,
+                           "field_name": "date_created"},
+                 "condition": {"type": "moment_range", "before": {"type": "now"},
+                               "on_or_after": {"type": "offset", "direction": "past",
+                                               "moment": {"type": "now"}, "offset": off,
+                                               "which_day_end": "start"}}}]}}
+
+def any_inbound(days):
+    """A fresh hand-raise: they contacted US, by any channel."""
+    return {"negate": False, "type": "or",
+            "queries": [has_incoming(k, days) for k in ("sms", "email", "call")]}
+
 def has_completed_meeting(negate=False):
     return {"type": "has_related", "negate": negate,
             "this_object_type": "lead", "related_object_type": "activity.meeting",
@@ -246,26 +272,54 @@ def has_completed_meeting(negate=False):
 
 # ---- the buckets, in precedence order (first match wins) -------------------
 
+# (report label, Recapture State written, query) — first match wins.
 BUCKETS = [
-    ("Suppressed",     _wrap(status_in(SUPPRESS_STATUSES))),
-    ("Booked",         _wrap(status_in(SUPPRESS_STATUSES, negate=True),
-                             num_range("num_upcoming_meetings", gte=1))),
+    ("Suppressed", "Suppressed",
+     _wrap(status_in(SUPPRESS_STATUSES))),
+
+    ("Booked", "Booked",
+     _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+           num_range("num_upcoming_meetings", gte=1))),
+
+    # --- the one arrow back up ------------------------------------------------
+    # A fresh hand-raise outranks everything except a booking. Jess's model: reset
+    # to Hot if they've never spoken to us, to the warm/Blitz queue if they have.
+    # Uses the live completed-meeting query rather than the stored Ever Had Call
+    # flag, so it can't lag a run behind.
+    ("Re-engaged → Hot", "Hot-Inbound",
+     _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+           num_range("num_upcoming_meetings", lte=0),
+           any_inbound(REENGAGE_DAYS),
+           has_completed_meeting(negate=True))),
+
+    ("Re-engaged → Blitz", "Blitz",
+     _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+           num_range("num_upcoming_meetings", lte=0),
+           any_inbound(REENGAGE_DAYS),
+           has_completed_meeting())),
+    # -------------------------------------------------------------------------
+
     # Blitz outranks Hot-Inbound: a lead created 3 days ago that already
     # no-showed belongs in the no-show push, not the fresh-hand-raise queue.
-    ("Blitz",          _wrap(status_in(SUPPRESS_STATUSES, negate=True),
-                             num_range("num_upcoming_meetings", lte=0),
-                             status_in([S_LOST, S_NOSHOW, S_CANCELED]),
-                             within("last_lead_status_change_date", days=BLITZ_DAYS))),
+    ("Blitz", "Blitz",
+     _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+           num_range("num_upcoming_meetings", lte=0),
+           status_in([S_LOST, S_NOSHOW, S_CANCELED]),
+           within("last_lead_status_change_date", days=BLITZ_DAYS))),
+
     # Deliberately NOT keyed on status = New. A rep moving a 2-day-old lead to
     # "Follow Up" shouldn't drop it out of the Setter's hot window — recency plus
     # "hasn't spoken to us yet" is what actually defines a fresh hand-raise.
-    ("Hot-Inbound",    _wrap(status_in(SUPPRESS_STATUSES, negate=True),
-                             num_range("num_upcoming_meetings", lte=0),
-                             has_completed_meeting(negate=True),
-                             within("date_created", days=HOT_WINDOW_DAYS))),
-    ("Active-Nurture", _wrap(status_in(SUPPRESS_STATUSES, negate=True),
-                             num_range("num_upcoming_meetings", lte=0),
-                             within("last_communication_date", months=DEEP_NURTURE_MONTHS))),
+    ("Hot-Inbound", "Hot-Inbound",
+     _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+           num_range("num_upcoming_meetings", lte=0),
+           has_completed_meeting(negate=True),
+           within("date_created", days=HOT_WINDOW_DAYS))),
+
+    ("Active-Nurture", "Active-Nurture",
+     _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+           num_range("num_upcoming_meetings", lte=0),
+           within("last_communication_date", months=DEEP_NURTURE_MONTHS))),
     # Deep-Nurture is the fallthrough — anything contactable not caught above.
     # List-Swap is terminal and needs a drip-exhaustion signal we don't have yet.
 ]
@@ -431,8 +485,8 @@ def main():
     args = ap.parse_args()
 
     if args.emit_views:
-        for name, q in BUCKETS:
-            print(f"\n===== {name} =====")
+        for label, state, q in BUCKETS:
+            print(f"\n===== {label}  (writes Recapture State = {state}) =====")
             print(json.dumps({"query": q, "results_limit": None, "sort": []}, indent=1))
         print(f"\n===== {FALLTHROUGH} =====\n(fallthrough — everything not matched above)")
         return
@@ -461,20 +515,20 @@ def main():
 
     state_of, claimed, failed = {}, set(), []
     print("Resolving buckets...", file=sys.stderr)
-    for name, q in BUCKETS:
+    for label, state, q in BUCKETS:
         try:
             ids = {l["id"] for l in search(q, fields=["id"], limit=bucket_limit)}
         except CloseError as e:
             # Don't lose the whole run to one bad bucket — report and continue.
             # Leads that would have matched fall through to a later bucket.
-            failed.append(name)
-            print(f"  {name:<16}   QUERY FAILED\n{e}\n", file=sys.stderr)
+            failed.append(label)
+            print(f"  {label:<20}   QUERY FAILED\n{e}\n", file=sys.stderr)
             continue
         fresh = (ids & set(by_id)) - claimed
         for i in fresh:
-            state_of[i] = name
+            state_of[i] = state
         claimed |= fresh
-        print(f"  {name:<16} {len(fresh):>7,}", file=sys.stderr)
+        print(f"  {label:<20} {len(fresh):>7,}", file=sys.stderr)
     for i in by_id:
         state_of.setdefault(i, FALLTHROUGH)
     print(f"  {FALLTHROUGH:<16} {sum(1 for v in state_of.values() if v==FALLTHROUGH):>7,}\n",
