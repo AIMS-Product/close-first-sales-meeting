@@ -172,6 +172,13 @@ VIEWS = [
      view(NO_UPCOMING, choice(F_STATE, ["Active-Nurture"]), cool_off(), calling_hours()),
      sort_by("last_communication_date"), cols(F_ANGLE, F_ENTRY)),
 
+    ("Scraper · Deep Nurture — Revival Dials",
+     "6mo+ quiet AND assigned to a rep. The dial list for the cold/stale universe — the Ops "
+     "Deep Nurture view is the whole 29k cohort, this is only what's owned and workable now.",
+     view(NO_UPCOMING, choice(F_STATE, ["Deep-Nurture"]), exists(F_TEAM),
+          cool_off(), calling_hours()),
+     sort_by("last_communication_date", "asc"), cols(F_ANGLE, F_ENTRY, F_RESOURCE)),
+
     # ---------------- Ops / marketing ----------------
     ("Ops · Deep Nurture (6mo+ quiet)",
      "No communication in 6+ months. Intended source list for the low-touch content drip "
