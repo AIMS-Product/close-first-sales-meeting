@@ -82545,11 +82545,11 @@
     },
     "lead_y0hVZe61x3ioQMQbGdZDI1s2E4mEJyA0s2A3vwySIJA": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Website",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -85154,6 +85154,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-30 04:10:11 UTC",
+  "saved_at": "2026-07-30 04:39:50 UTC",
   "count": 8688
 }
