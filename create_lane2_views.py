@@ -100,6 +100,33 @@ def calling_hours():
 def cool_off():
     return within("last_outgoing_call_date", hours=COOL_OFF_HOURS, negate=True)
 
+def has_incoming(kind, days):
+    """Lead contacted US by this channel in the last N days."""
+    off = {"years": 0, "months": 0, "weeks": 0, "days": days,
+           "hours": 0, "minutes": 0, "seconds": 0}
+    ot = f"activity.{kind}"
+    return {"type": "has_related", "negate": False,
+            "this_object_type": "lead", "related_object_type": ot,
+            "related_query": {"negate": False, "type": "and", "queries": [
+                {"type": "field_condition", "negate": False,
+                 "field": {"type": "regular_field", "object_type": ot,
+                           "field_name": "direction"},
+                 "condition": {"type": "term", "values": ["incoming"]}},
+                {"type": "field_condition", "negate": False,
+                 "field": {"type": "regular_field", "object_type": ot,
+                           "field_name": "date_created"},
+                 "condition": {"type": "moment_range", "before": {"type": "now"},
+                               "on_or_after": {"type": "offset", "direction": "past",
+                                               "moment": {"type": "now"}, "offset": off,
+                                               "which_day_end": "start"}}}]}}
+
+def any_inbound(days):
+    """A fresh hand-raise, any channel."""
+    return {"negate": False, "type": "or",
+            "queries": [has_incoming(k, days) for k in ("sms", "email", "call")]}
+
+REENGAGE_DAYS = 7
+
 NOT_SUPPRESSED = status_in(SUPPRESS, negate=True)
 NO_UPCOMING = num_range("num_upcoming_meetings", lte=0)
 
@@ -128,6 +155,14 @@ def cols(*extra):
 # ============================================================================
 
 VIEWS = [
+    # ---------------- The one arrow back up ----------------
+    ("⚡ Warm Reply — Hand Raisers (SAME DAY)",
+     "They contacted US in the last 7 days and nothing is booked. The hottest cohort we have and "
+     "historically the biggest leak. Same-day SLA. Whoever owns their stage calls — never-called "
+     "goes to a Setter, had-a-call to a Scraper.",
+     view(NO_UPCOMING, any_inbound(REENGAGE_DAYS), calling_hours()),
+     sort_by("last_communication_date"), cols(F_STATE, F_TEAM, F_EVERCALL, F_ANGLE)),
+
     # ---------------- Setter lane ----------------
     ("Setter · Hot Inbound — SLA (< 1 hour)",
      "Fresh hand-raise, under an hour old, never spoken to us. Same-day-hot: work this first.",
