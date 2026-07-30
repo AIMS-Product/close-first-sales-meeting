@@ -83628,12 +83628,12 @@
       "vendhub_date": null
     },
     "lead_tQj5MtmJLIpB0N0kRnkdZfw3SVIgWbRKxBuBJ5ij2i5": {
-      "date": "2026-07-31",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": null,
+      "funnel_name": "Website",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -84405,11 +84405,11 @@
     },
     "lead_q3i54SQmZYmgGPBCCRF9H7OwdKKAo3HjHS7spo2PX6P": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Instagram",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -84494,12 +84494,12 @@
       "vendhub_date": null
     },
     "lead_wp62PGk0MxX3sH9TcxtsA8inKfadyiVYKcZjElkBO2L": {
-      "date": "2026-07-31",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": null,
+      "funnel_name": "Instagram",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -85342,8 +85342,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_yJ30mJdOC37yBKyI6yiCwwUvS1mKvnEV4ycGKbpsMLL": {
+      "date": null,
+      "call_type": null,
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "VSL",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-30 23:10:03 UTC",
-  "count": 8707
+  "saved_at": "2026-07-30 23:39:31 UTC",
+  "count": 8708
 }
