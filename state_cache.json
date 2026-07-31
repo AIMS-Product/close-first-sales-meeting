@@ -83629,11 +83629,11 @@
     },
     "lead_tQj5MtmJLIpB0N0kRnkdZfw3SVIgWbRKxBuBJ5ij2i5": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Website",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -84495,11 +84495,11 @@
     },
     "lead_wp62PGk0MxX3sH9TcxtsA8inKfadyiVYKcZjElkBO2L": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Instagram",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -85352,8 +85352,18 @@
       "funnel_name": "VSL",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_7jM3ZwIqxUI12kM1QvCRxtTLKAjJoQ0sNurK7nXobRQ": {
+      "date": "2026-07-31",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-30 23:39:31 UTC",
-  "count": 8708
+  "saved_at": "2026-07-31 00:10:11 UTC",
+  "count": 8709
 }
