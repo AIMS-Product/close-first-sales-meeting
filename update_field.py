@@ -119,11 +119,11 @@ RE_VENDHUB_ANY            = re.compile(r"vend[\s-]?hub", re.IGNORECASE)
 # Each maps to a setter label for the Reactivation - Setter Name field.
 # ORDER MATTERS: most specific pattern first (longer title before shorter).
 SCRAPER_TITLE_MAP = [
-    (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps\s+call", re.IGNORECASE),     "Becca Leier"),  # Vendingpreneurs - Next Steps Call (Jennifer replaced Kristin Nelson)
+    (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps\s+call", re.IGNORECASE),     "Charlie Ingram"),  # Vendingpreneurs - Next Steps Call (Jennifer replaced Kristin Nelson)
     (re.compile(r"vendingpren[eu]+rs?\s+call\s+-\s+next\s+steps", re.IGNORECASE),     "Jacob Hepner"),      # Vendingpreneurs Call - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+next\s+steps\s+call", re.IGNORECASE),         "Vince Bartolini"),   # Vendingpreneurs Next Steps Call
     (re.compile(r"vendingpren[eu]+rs?\s+next\s+steps\s+session", re.IGNORECASE),      "Pearl Sathekge"),       # Vendingpreneurs Next Steps Session
-    (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps(?!\s+call)", re.IGNORECASE), "Spencer Reynolds"),  # Vendingpreneurs - Next Steps
+    (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps(?!\s+call)", re.IGNORECASE), "Jacob Herbig"),  # Vendingpreneurs - Next Steps
     (re.compile(r"vendingpren[eu]+r\s+next\s+steps", re.IGNORECASE),                  "William Nowak"),     # Vendingpreneur Next Steps
 ]
 
