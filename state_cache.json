@@ -85422,8 +85422,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_WkQsKMnIpnezFwtLtGgGuFEyV4FfgLDAYJ6bUS3Lb6Z": {
+      "date": "2026-08-03",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Instagram",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-31 12:40:08 UTC",
-  "count": 8715
+  "saved_at": "2026-07-31 13:10:19 UTC",
+  "count": 8716
 }
