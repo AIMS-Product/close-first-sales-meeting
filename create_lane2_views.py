@@ -224,10 +224,12 @@ VIEWS = [
 
     ("Ops · Unassigned Recapture Universe",
      "In a working bucket but owned by nobody on either team. This is the staffing question, "
-     "not a tooling one.",
-     view(exists(F_TEAM, negate=True),
+     "not a tooling one. Catches both an empty Owner Team and an explicit 'None' — a lead that "
+     "loses a roster owner gets set to None rather than blanked.",
+     view({"negate": False, "type": "or",
+           "queries": [exists(F_TEAM, negate=True), choice(F_TEAM, ["None"])]},
           choice(F_STATE, ["Hot-Inbound", "Blitz", "Active-Nurture"])),
-     sort_by("date_created"), cols(F_STATE, F_ANGLE)),
+     sort_by("date_created"), cols(F_STATE, F_TEAM, F_ANGLE)),
 
     ("Ops · Recapture State — Audit",
      "Every non-suppressed lead with its state and team. Use to eyeball the reconciler.",
