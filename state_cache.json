@@ -85532,8 +85532,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_mspMPU7k5fplCPUTRKvWgmEevsUkRPbvlnlJYWo4pNe": {
+      "date": "2026-08-10",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-31 22:40:08 UTC",
-  "count": 8726
+  "saved_at": "2026-07-31 23:05:06 UTC",
+  "count": 8727
 }
