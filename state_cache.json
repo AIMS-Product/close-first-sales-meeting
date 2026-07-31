@@ -83778,10 +83778,10 @@
     "lead_g7TKw8J14fYrmnVvl2bTCjLorZL0Oee6rG282Mm7A26": {
       "date": "2026-07-27",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -85404,6 +85404,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-31 02:39:20 UTC",
+  "saved_at": "2026-07-31 03:09:52 UTC",
   "count": 8713
 }
