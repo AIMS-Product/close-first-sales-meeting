@@ -85462,8 +85462,28 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_9A8E4zQhxpnCUG5FhArljatUWijJqcQESTfX2fZtCmT": {
+      "date": "2026-08-04",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_PrmDfDpihIHOxWv8zoJZ3Ta6j9W6BacSFlMB8duEgYe": {
+      "date": "2026-08-01",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-31 19:40:23 UTC",
-  "count": 8719
+  "saved_at": "2026-07-31 20:10:04 UTC",
+  "count": 8721
 }
