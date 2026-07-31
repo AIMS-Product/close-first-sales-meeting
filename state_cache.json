@@ -85439,7 +85439,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Meta Ads",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -85454,6 +85454,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-07-31 16:39:30 UTC",
+  "saved_at": "2026-07-31 17:09:55 UTC",
   "count": 8718
 }
