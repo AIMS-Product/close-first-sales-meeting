@@ -85732,8 +85732,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_lOVPlQ27O4lxNkyp7TiP9M4VzrWqbXxlnhl84nUzwz1": {
+      "date": "2026-08-03",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-02 00:01:27 UTC",
-  "count": 8746
+  "saved_at": "2026-08-02 00:40:20 UTC",
+  "count": 8747
 }
