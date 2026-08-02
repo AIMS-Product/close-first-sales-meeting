@@ -85742,8 +85742,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_VNYozqqpfP38jcwMpwlX8j5dEeawL1dZBdMsPKljqiZ": {
+      "date": "2026-08-04",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-02 13:10:25 UTC",
-  "count": 8747
+  "saved_at": "2026-08-02 13:40:11 UTC",
+  "count": 8748
 }
