@@ -85802,8 +85802,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_1nBMEALgZ84UpI0NPTWlv1b22iX1BqxXVJ8Gk7PBfh4": {
+      "date": "2026-08-05",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Instagram",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-03 16:11:45 UTC",
-  "count": 8753
+  "saved_at": "2026-08-03 16:40:28 UTC",
+  "count": 8754
 }
