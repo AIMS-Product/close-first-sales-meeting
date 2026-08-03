@@ -33,7 +33,32 @@ BASE = "https://api.close.com/api/v1"
 AUTH = (API_KEY, "")
 
 PREFIX = "L2 · "          # every view this script owns starts with this
-SHARE_VIEWS = True        # visible to the whole org, not just the API user
+
+# ---------------------------------------------------------------------------
+# Sharing
+#
+# Close models this two ways and they're mutually exclusive in practice:
+#   whole_org = True            -> everyone in the org
+#   user_ids  = [...]           -> only these people (is_shared stays False)
+#
+# The view owner (whoever's API key runs this) always sees them regardless.
+# ---------------------------------------------------------------------------
+SHARE_WHOLE_ORG = False
+
+SHARE_WITH = [
+    "user_lUjlATIIgFg8mELa0GFzZUj0lG4Cs7PwQsxbi34I6Su",   # Joe Dysert
+    "user_Xoi7ztP2y5IeCIRhObWx8E6eKZO6B9GvPze5WMAgP1e",   # Jess Mayo
+    "user_hqv8aEy844FqW29HDFof8hPyBiJx1XBxaDkdUtqc1Qp",   # Dom Ellis
+
+    # --- Lane 2 reps — uncomment at rollout so they can work their lists ---
+    # "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",   # William Nowak (Setter)
+    # "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",   # Pearl Sathekge (Setter)
+    # "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",   # Vince Bartolini (Scraper)
+    # "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",   # Jacob Hepner (Scraper)
+    # "user_lXtgDE8eKS8s3tKDQrl8eUP7tYCXuNNJATddPUkuLlQ",   # Becca Leier (Scraper)
+    # "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",   # Jacob Herbig (Scraper)
+    # "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj",   # Jason Aaron (Lane 2 lead)
+]
 
 # ---- field / status ids ----------------------------------------------------
 F_STATE = "cf_hKcyx4tQSMvHd7llfLX363bx3LGXMxVEmFHEtjpR5C2"
@@ -125,6 +150,21 @@ def any_inbound(days):
     return {"negate": False, "type": "or",
             "queries": [has_incoming(k, days) for k in ("sms", "email", "call")]}
 
+def has_outgoing(kind):
+    ot = f"activity.{kind}"
+    return {"type": "has_related", "negate": False,
+            "this_object_type": "lead", "related_object_type": ot,
+            "related_query": {"negate": False, "type": "and", "queries": [
+                {"type": "field_condition", "negate": False,
+                 "field": {"type": "regular_field", "object_type": ot,
+                           "field_name": "direction"},
+                 "condition": {"type": "term", "values": ["outgoing"]}}]}}
+
+def never_touched():
+    """No outbound call, SMS or email has EVER gone to this lead."""
+    return {"negate": True, "type": "or",
+            "queries": [has_outgoing(k) for k in ("sms", "email", "call")]}
+
 REENGAGE_DAYS = 7
 
 NOT_SUPPRESSED = status_in(SUPPRESS, negate=True)
@@ -164,6 +204,15 @@ VIEWS = [
      sort_by("last_communication_date"), cols(F_STATE, F_TEAM, F_EVERCALL, F_ANGLE)),
 
     # ---------------- Setter lane ----------------
+    ("🚨 SLA BREACH — Untouched Hot Inbound",
+     "Hot inbound leads over an hour old that have never received a call, SMS or email from us. "
+     "Not a worklist — an escalation list. Anything sitting here is being dropped. "
+     "Empty is the target.",
+     view(NO_UPCOMING, choice(F_STATE, ["Hot-Inbound"]),
+          within("date_created", hours=1, negate=True),
+          never_touched(), calling_hours()),
+     sort_by("date_created", "asc"), cols(F_TEAM, F_ENTRY, F_RESOURCE)),
+
     ("Setter · Hot Inbound — SLA (< 1 hour)",
      "Fresh hand-raise, under an hour old, never spoken to us. Same-day-hot: work this first.",
      view(NO_UPCOMING, choice(F_EVERCALL, ["No"]),
@@ -285,6 +334,11 @@ def main():
             print(f"  {p}", file=sys.stderr)
         sys.exit(1)
 
+    if SHARE_WHOLE_ORG:
+        print("Sharing: WHOLE ORG\n", file=sys.stderr)
+    else:
+        print(f"Sharing: {len(SHARE_WITH)} named user(s) + the view owner\n", file=sys.stderr)
+
     print("Reading existing views...", file=sys.stderr)
     have = existing_views()
 
@@ -297,7 +351,12 @@ def main():
             "type": "lead",
             "s_query": {"query": query, "results_limit": None, "sort": sort},
             "selected_fields": selected,
-            "is_shared": SHARE_VIEWS,
+            "is_shared": SHARE_WHOLE_ORG,
+            "sharing_settings": {
+                "whole_org": SHARE_WHOLE_ORG,
+                "user_ids": [] if SHARE_WHOLE_ORG else SHARE_WITH,
+                "group_ids": [],
+            },
         }
         found = have.get(name)
         action = "UPDATE" if found else "CREATE"
