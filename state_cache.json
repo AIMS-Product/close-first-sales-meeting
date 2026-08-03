@@ -65015,10 +65015,10 @@
     "lead_UvV5g3jSViUE5C0gKYEkp7ULWvsOQTG4Y6ZvZiR2688": {
       "date": "2026-05-18",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -85524,12 +85524,12 @@
       "vendhub_date": null
     },
     "lead_i0D3GLptc4gKWX3wiiGbpgTBmJsw7SRiBNdo8eZliDC": {
-      "date": "2026-08-03",
+      "date": "2026-08-05",
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": null,
+      "funnel_name": "YouTube",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -85842,8 +85842,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_lHERGWzJMVaerQRYys7SLiBpeiKtvT325C88fyFCPnz": {
+      "date": "2026-08-05",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "LTF - In-House",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-03 19:10:40 UTC",
-  "count": 8757
+  "saved_at": "2026-08-03 19:35:02 UTC",
+  "count": 8758
 }
