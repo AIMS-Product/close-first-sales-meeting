@@ -85882,8 +85882,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_TDFfy9hXHI3SwOy6k4Mn0MnhmGG0TMR2E8SfRxzr6At": {
+      "date": null,
+      "call_type": null,
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "VSL",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-03 21:10:26 UTC",
-  "count": 8761
+  "saved_at": "2026-08-03 21:39:42 UTC",
+  "count": 8762
 }
