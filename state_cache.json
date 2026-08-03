@@ -85892,8 +85892,18 @@
       "funnel_name": "VSL",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_juawYpV8z0S8hQ3FWSXIdb1w3YtDf9suN2WyRaPcInx": {
+      "date": "2026-08-04",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Jacob Hepner",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-03 21:39:42 UTC",
-  "count": 8762
+  "saved_at": "2026-08-03 22:10:25 UTC",
+  "count": 8763
 }
