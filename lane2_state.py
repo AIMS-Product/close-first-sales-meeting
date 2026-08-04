@@ -96,6 +96,23 @@ S_OUTSIDE_US = "stat_YV4ZngDB4IGjLjlOf0YTFEWuKZJ6fhNxVkzQkvKYfdB"
 
 SUPPRESS_STATUSES = [S_WON, S_DNC, S_DQ, S_OUTSIDE_US]
 
+# --- Lane 1 protection ------------------------------------------------------
+# Opportunity statuses that mean a closer is genuinely working the deal.
+#
+# NOT the same as Close's status_type = "active" — that spans 9 statuses and
+# 30,001 leads, including No Show, Canceled, Non-responsive, Do Not Contact and
+# the 21,910-lead "Call Booked" graveyard. Those are exactly the dormant states
+# Scrapers SHOULD work. Gating on status_type would hide most of the recapture
+# universe.
+OPP_CONTRACT_SENT = "stat_csQPyVHTXpTFBSDAK8kx10yGCtX40H0ONbD4QNXbJBI"
+OPP_FOLLOW_UP = "stat_mApYfeCdMszhTCCp6TJMWBRCRtmMilVyvaMpVlzbZZR"
+OPP_RESCHEDULE = "stat_cqwPKIAezUGp8sJ4May80zRjJAlzCQzVXtAc4P9xyPd"
+LANE1_OPP_STATUSES = [OPP_CONTRACT_SENT, OPP_FOLLOW_UP, OPP_RESCHEDULE]
+
+# ...and only while the deal is warm. A "Follow Up" opp untouched for months is
+# stale pipeline, which Jess's punch list #7 wants Scrapers to work, not avoid.
+LANE1_ACTIVE_DAYS = 30
+
 # --- rosters (user_id -> Owner Team) ----------------------------------------
 SETTERS = {
     "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F": "William Nowak",
@@ -104,7 +121,6 @@ SETTERS = {
 SCRAPERS = {
     "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy": "Vince Bartolini",
     "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z": "Jacob Hepner",
-    "user_lXtgDE8eKS8s3tKDQrl8eUP7tYCXuNNJATddPUkuLlQ": "Becca Leier",
     "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ": "Jacob Herbig",
     "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb": "Charlie Ingram",
     "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ": "Pearl Sathekge",
@@ -266,6 +282,31 @@ def any_inbound(days):
     return {"negate": False, "type": "or",
             "queries": [has_incoming(k, days) for k in ("sms", "email", "call")]}
 
+def has_opp_status(status_ids):
+    """Lead has an opportunity sitting in one of these statuses."""
+    return {"type": "has_related", "negate": False,
+            "this_object_type": "lead", "related_object_type": "opportunity",
+            "related_query": {"negate": False, "type": "and", "queries": [
+                {"type": "field_condition", "negate": False,
+                 "field": {"type": "regular_field", "object_type": "opportunity",
+                           "field_name": "opp_status_id"},
+                 "condition": {"type": "reference",
+                               "reference_type": "status.opportunity",
+                               "object_ids": status_ids}}]}}
+
+def lane1_working():
+    """
+    A closer is actively on this deal: a live opp status AND recent activity.
+
+    Both halves matter. Status alone would protect months-old 'Follow Up' opps
+    that are really stale pipeline; recency alone would protect any lead someone
+    happened to touch.
+    """
+    return {"negate": False, "type": "and", "queries": [
+        has_opp_status(LANE1_OPP_STATUSES),
+        within("last_activity_date", days=LANE1_ACTIVE_DAYS),
+    ]}
+
 def has_completed_meeting(negate=False):
     return {"type": "has_related", "negate": negate,
             "this_object_type": "lead", "related_object_type": "activity.meeting",
@@ -282,9 +323,16 @@ BUCKETS = [
     ("Suppressed", "Suppressed",
      _wrap(status_in(SUPPRESS_STATUSES))),
 
-    ("Booked", "Booked",
+    # "Booked" means Lane 1 has it — a meeting on the calendar, OR a closer
+    # actively working a live opportunity. Placing the protection HERE rather
+    # than in each view means it holds everywhere at once: the assigner skips
+    # Booked, reclaim skips Booked, and no Scraper view touches it.
+    ("Booked / Lane 1", "Booked",
      _wrap(status_in(SUPPRESS_STATUSES, negate=True),
-           num_range("num_upcoming_meetings", gte=1))),
+           {"negate": False, "type": "or", "queries": [
+               num_range("num_upcoming_meetings", gte=1),
+               lane1_working(),
+           ]})),
 
     # --- the one arrow back up ------------------------------------------------
     # A fresh hand-raise outranks everything except a booking. Jess's model: reset
