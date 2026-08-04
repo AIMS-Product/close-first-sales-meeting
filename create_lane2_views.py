@@ -123,7 +123,14 @@ def calling_hours():
                           "on_or_after": CALL_WINDOW[0], "before": CALL_WINDOW[1]}}
 
 def cool_off():
-    return within("last_outgoing_call_date", hours=COOL_OFF_HOURS, negate=True)
+    """
+    Hide a lead from the dialer for N hours after a rep touch.
+
+    Covers calls AND SMS. Email is deliberately excluded — marketing emails the
+    same people, and cooling off on that would empty the dial lists.
+    """
+    return {"negate": True, "type": "or",
+            "queries": [has_outgoing(k, hours=COOL_OFF_HOURS) for k in ("call", "sms")]}
 
 def has_incoming(kind, days):
     """Lead contacted US by this channel in the last N days."""
@@ -150,20 +157,47 @@ def any_inbound(days):
     return {"negate": False, "type": "or",
             "queries": [has_incoming(k, days) for k in ("sms", "email", "call")]}
 
-def has_outgoing(kind):
+def has_outgoing(kind, hours=None):
+    """We contacted THEM by this channel — optionally only within the last N hours."""
     ot = f"activity.{kind}"
+    inner = [{"type": "field_condition", "negate": False,
+              "field": {"type": "regular_field", "object_type": ot,
+                        "field_name": "direction"},
+              "condition": {"type": "term", "values": ["outgoing"]}}]
+    if hours:
+        off = {"years": 0, "months": 0, "weeks": 0, "days": 0,
+               "hours": hours, "minutes": 0, "seconds": 0}
+        inner.append({"type": "field_condition", "negate": False,
+                      "field": {"type": "regular_field", "object_type": ot,
+                                "field_name": "date_created"},
+                      "condition": {"type": "moment_range", "before": {"type": "now"},
+                                    "on_or_after": {"type": "offset", "direction": "past",
+                                                    "moment": {"type": "now"}, "offset": off,
+                                                    "which_day_end": "start"}}})
     return {"type": "has_related", "negate": False,
             "this_object_type": "lead", "related_object_type": ot,
-            "related_query": {"negate": False, "type": "and", "queries": [
-                {"type": "field_condition", "negate": False,
-                 "field": {"type": "regular_field", "object_type": ot,
-                           "field_name": "direction"},
-                 "condition": {"type": "term", "values": ["outgoing"]}}]}}
+            "related_query": {"negate": False, "type": "and", "queries": inner}}
 
 def never_touched():
     """No outbound call, SMS or email has EVER gone to this lead."""
     return {"negate": True, "type": "or",
             "queries": [has_outgoing(k) for k in ("sms", "email", "call")]}
+
+def negated(cond):
+    """Flip a condition block's negate flag."""
+    c = json.loads(json.dumps(cond))
+    c["negate"] = not c.get("negate", False)
+    return c
+
+def has_completed_meeting(negate=False):
+    """Live check — does NOT depend on the stamped Ever Had Call field."""
+    return {"type": "has_related", "negate": negate,
+            "this_object_type": "lead", "related_object_type": "activity.meeting",
+            "related_query": {"negate": False, "type": "and", "queries": [
+                {"type": "field_condition", "negate": False,
+                 "field": {"type": "regular_field", "object_type": "activity.meeting",
+                           "field_name": "status"},
+                 "condition": {"type": "term", "values": ["completed"]}}]}}
 
 REENGAGE_DAYS = 7
 
@@ -196,34 +230,46 @@ def cols(*extra):
 
 VIEWS = [
     # ---------------- The one arrow back up ----------------
-    ("⚡ Warm Reply — Hand Raisers (SAME DAY)",
-     "They contacted US in the last 7 days and nothing is booked. The hottest cohort we have and "
-     "historically the biggest leak. Same-day SLA. Whoever owns their stage calls — never-called "
-     "goes to a Setter, had-a-call to a Scraper.",
-     view(NO_UPCOMING, any_inbound(REENGAGE_DAYS), calling_hours()),
+    ("⚡ Warm Reply — TODAY",
+     "They contacted US in the last 24 hours and nothing is booked. The hottest cohort we have and "
+     "historically the biggest leak. Same-day SLA — this list should self-clear overnight. "
+     "Never-called goes to a Setter, had-a-call to a Scraper.",
+     view(NO_UPCOMING, any_inbound(1), calling_hours()),
+     sort_by("last_communication_date"), cols(F_STATE, F_TEAM, F_EVERCALL, F_ANGLE)),
+
+    ("Warm Backlog — 2 to 7 days",
+     "Contacted us in the last week but not in the last 24h — i.e. they slipped past the same-day "
+     "SLA. Work after the TODAY list is clear. If this is consistently large, the same-day queue "
+     "isn't being cleared.",
+     view(NO_UPCOMING, any_inbound(REENGAGE_DAYS), negated(any_inbound(1)), calling_hours()),
      sort_by("last_communication_date"), cols(F_STATE, F_TEAM, F_EVERCALL, F_ANGLE)),
 
     # ---------------- Setter lane ----------------
     ("🚨 SLA BREACH — Untouched Hot Inbound",
-     "Hot inbound leads over an hour old that have never received a call, SMS or email from us. "
-     "Not a worklist — an escalation list. Anything sitting here is being dropped. "
-     "Empty is the target.",
-     view(NO_UPCOMING, choice(F_STATE, ["Hot-Inbound"]),
+     "New leads 1h-14d old, never spoken to us, and never called/texted/emailed by us. Not a "
+     "worklist — an escalation list. Anything here is being dropped. Empty is the target. "
+     "Uses live criteria, not the stamped state, so nothing hides behind reconciler lag.",
+     view(NO_UPCOMING, has_completed_meeting(negate=True),
+          within("date_created", days=14),
           within("date_created", hours=1, negate=True),
           never_touched(), calling_hours()),
      sort_by("date_created", "asc"), cols(F_TEAM, F_ENTRY, F_RESOURCE)),
 
     ("Setter · Hot Inbound — SLA (< 1 hour)",
-     "Fresh hand-raise, under an hour old, never spoken to us. Same-day-hot: work this first.",
-     view(NO_UPCOMING, choice(F_EVERCALL, ["No"]),
+     "Fresh hand-raise, under an hour old, never spoken to us. Work this first. "
+     "Deliberately uses LIVE criteria, not Recapture State or Ever Had Call — the reconciler runs "
+     "hourly, so a lead five minutes old has no stamp yet and a state-based filter would miss "
+     "exactly the leads this view exists to catch.",
+     view(NO_UPCOMING, has_completed_meeting(negate=True),
           within("date_created", hours=1), calling_hours()),
      sort_by("date_created"), cols(F_ENTRY, F_RESOURCE)),
 
-    ("Setter · Hot Inbound — All (< 14 days)",
-     "The full Setter hot window: created within 14 days, no meeting held, nothing booked.",
-     view(NO_UPCOMING, choice(F_EVERCALL, ["No"]),
-          within("date_created", days=14), cool_off(), calling_hours()),
-     sort_by("date_created"), cols(F_ENTRY, F_RESOURCE)),
+    ("Setter · Hot Inbound — All",
+     "The full Setter hot window, read from Recapture State rather than re-derived. This is what "
+     "makes the re-engagement arrow visible: an older never-called lead who replies is re-stamped "
+     "Hot-Inbound and appears here, which a created-date filter would never have caught.",
+     view(NO_UPCOMING, choice(F_STATE, ["Hot-Inbound"]), cool_off(), calling_hours()),
+     sort_by("date_created"), cols(F_ENTRY, F_RESOURCE, F_EVERCALL)),
 
     ("Setter · Booked — Confirm & Disco",
      "Meeting on the calendar. Setter confirms and runs a quick disco before the Lane 1 call — "
@@ -232,17 +278,20 @@ VIEWS = [
      sort_by("date_created"), cols(F_ENTRY)),
 
     # ---------------- Scraper lane ----------------
-    ("Scraper · Blitz — All Angles (14 day)",
-     "Just went cold: lost, no-showed or cancelled in the last 14 days. Max intensity window.",
-     view(NO_UPCOMING, status_in([S_LOST, S_NOSHOW, S_CANCELED]),
-          within("last_lead_status_change_date", days=14), cool_off(), calling_hours()),
-     sort_by("last_lead_status_change_date"), cols(F_ANGLE, F_ENTRY)),
+    # These two are DISJOINT and together cover all of Blitz. Work Recovery first.
+    ("Scraper · Blitz — No-Show Recovery (work first)",
+     "The no-show and cancellation slice of Blitz. Different opener from a lost deal — they never "
+     "heard the pitch. Disjoint from Lost & Re-engaged, so no double-dialling.",
+     view(NO_UPCOMING, choice(F_STATE, ["Blitz"]), status_in([S_NOSHOW, S_CANCELED]),
+          cool_off(), calling_hours()),
+     sort_by("last_lead_status_change_date"), cols(F_ENTRY, F_ANGLE)),
 
-    ("Scraper · Blitz — No-Show Recovery",
-     "The no-show slice of Blitz. Different opener from a lost deal — they never heard the pitch.",
-     view(NO_UPCOMING, status_in([S_NOSHOW, S_CANCELED]),
-          within("last_lead_status_change_date", days=14), cool_off(), calling_hours()),
-     sort_by("last_lead_status_change_date"), cols(F_ENTRY)),
+    ("Scraper · Blitz — Lost & Re-engaged",
+     "The rest of Blitz: recently lost deals, plus anyone who had a call and has just re-engaged. "
+     "Read from Recapture State, so re-engaged leads actually surface here.",
+     view(NO_UPCOMING, choice(F_STATE, ["Blitz"]),
+          status_in([S_NOSHOW, S_CANCELED], negate=True), cool_off(), calling_hours()),
+     sort_by("last_lead_status_change_date"), cols(F_ANGLE, F_ENTRY, F_EVERCALL)),
 
     ("Scraper · VendHub Downsell (Price + DIY)",
      "Showed and didn't close on price, financing, DIY or a competitor. The only objection cut we "
