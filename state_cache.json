@@ -15717,10 +15717,10 @@
     "lead_szlFAIDPkMQ4EU3XPCehj2CdtPmtQ85iaHIFP43VyPf": {
       "date": "2026-01-21",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Jacob Hepner",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -85825,12 +85825,12 @@
       "vendhub_date": null
     },
     "lead_hkaB3Vy45acexvRdnvhuhut3pt6qoFkBHmHkZB5qnVp": {
-      "date": "2026-08-04",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": null,
+      "funnel_name": "YouTube",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -85993,8 +85993,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_IlzIW4rUg42xU7Rhm1v4gj3V3F3cbxVC0eoejAalki3": {
+      "date": "2026-08-04",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-04 15:40:40 UTC",
-  "count": 8772
+  "saved_at": "2026-08-04 16:01:26 UTC",
+  "count": 8773
 }
