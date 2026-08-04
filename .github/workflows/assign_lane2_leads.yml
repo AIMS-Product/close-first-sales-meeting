@@ -1,0 +1,74 @@
+name: Assign Lane 2 Leads (Scraper round robin)
+
+# Tops each Scraper up to a working queue of unowned leads, hottest bucket first.
+# Sets Lead Owner ONLY — never touches Recapture State or Owner Team.
+# Defaults to DRY RUN; tick apply to write.
+#
+# Triggered externally by cron-job.org (same pattern as the reconciler).
+# Recommended cadence: once each weekday morning, before the team starts —
+# e.g. 0 6 * * 1-5 America/Los_Angeles.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Write Lead Owner (unticked = dry run, writes nothing)"
+        required: false
+        default: false
+        type: boolean
+      max_queue:
+        description: "Target queue size per rep (blank = script default 500; 0 = assign everything)"
+        required: false
+        default: ""
+        type: string
+
+concurrency:
+  group: lane2-assign
+  cancel-in-progress: false
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install requests
+
+      - name: Assign
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: |
+          ARGS=""
+          if [ "${{ inputs.apply }}" = "true" ]; then ARGS="$ARGS --apply"; fi
+          if [ -n "${{ inputs.max_queue }}" ]; then ARGS="$ARGS --max-queue ${{ inputs.max_queue }}"; fi
+          echo "Running: assign_lane2_leads.py $ARGS"
+          python assign_lane2_leads.py $ARGS | tee assign.txt
+
+      - name: Publish report
+        if: always()
+        run: |
+          {
+            echo "## Lane 2 Assignment"
+            echo ""
+            if [ "${{ inputs.apply }}" = "true" ]; then
+              echo "**Mode: APPLY** — Lead Owner written."
+            else
+              echo "**Mode: DRY RUN** — nothing written."
+            fi
+            echo ""
+            echo '```'
+            cat assign.txt 2>/dev/null || echo "(see job log)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
