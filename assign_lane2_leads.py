@@ -1,0 +1,250 @@
+#!/usr/bin/env python3
+"""
+Lane 2 Scraper lead assignment — top-up round robin.
+
+Decides WHO owns a lead. It does not touch Recapture State — that's
+`lane2_state.py`'s job. The two are deliberately independent:
+
+    assigner    -> sets Lead Owner (sticky; survives state changes)
+    reconciler  -> sets Recapture State (fluid; moves under the owner)
+    smart views -> the intersection, filtered to CURRENT_USER
+
+So a lead assigned to Vince while it's in Blitz stays Vince's as it ages into
+Active-Nurture. It just moves between *his* views. Nothing is ever reassigned
+on a state change.
+
+TOP-UP, not straight round robin. Each rep holds a working queue of MAX_QUEUE
+leads; the job tops up whoever is furthest below it. That self-balances to
+actual work rate, keeps unworked leads in the pool instead of stranded under a
+departed rep, and hands out the hottest buckets first.
+
+    python3 assign_lane2_leads.py            # dry run
+    python3 assign_lane2_leads.py --apply
+"""
+
+import argparse
+import sys
+from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor
+
+# Reuse the query builders and the month-partitioned search that works around
+# Close's 10,000-row pagination cap.
+from lane2_state import (
+    BASE, F_OWNER, F_STATE, F_OVERRIDE, SUPPRESS_STATUSES,
+    CloseError, _req, _wrap, cf, search, status_in, WRITE_WORKERS,
+)
+
+# ============================================================================
+# CONFIG
+# ============================================================================
+
+# The dialing rotation. Setters are deliberately excluded — William Nowak and
+# Spencer Reynolds work inbound, not the dormant book.
+SCRAPERS = {
+    "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy": "Vince Bartolini",
+    "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z": "Jacob Hepner",
+    "user_lXtgDE8eKS8s3tKDQrl8eUP7tYCXuNNJATddPUkuLlQ": "Becca Leier",
+    "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ": "Jacob Herbig",
+    "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb": "Charlie Ingram",
+    "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ": "Pearl Sathekge",
+
+    # Setters (NOT in this rotation): William Nowak, Spencer Reynolds.
+    # Keep this list in sync with SCRAPERS in lane2_state.py — that one drives
+    # Owner Team, this one drives who gets dealt leads.
+
+    # Not started yet — add when their offers are signed and Close users exist:
+    # "user_...": "Sydney Boyd",
+    # "user_...": "Connor George",
+
+    # Jason Aaron manages Lane 2 and holds lost deals — not a dialing seat.
+    # Uncomment only if he should receive round-robin volume.
+    # "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj": "Jason Aaron",
+}
+
+# None = assign the whole pool, no cap.
+#
+# Deliberate: the views already do the prioritising. A rep opens Blitz first and
+# works down, so a deep Active-Nurture book sits behind the hot lists rather than
+# burying them. Capping would just leave leads unowned and unworkable.
+#
+# Unlimited mode still balances — it levels everyone toward the same holding
+# rather than dealing evenly onto uneven queues (see build_deficits).
+MAX_QUEUE = None
+
+# Handed out in this order — hottest first. A rep's queue fills with Blitz before
+# it ever reaches Active-Nurture.
+PRIORITY_STATES = ["Blitz", "Active-Nurture", "Deep-Nurture"]
+
+# Hot-Inbound is deliberately absent: that's the Setter lane.
+
+# ============================================================================
+
+def owner_is(user_ids, negate=False):
+    return {"type": "field_condition", "negate": negate,
+            "field": {"type": "custom_field", "custom_field_id": F_OWNER},
+            "condition": {"type": "reference", "reference_type": "user_or_group",
+                          "object_ids": list(user_ids)}}
+
+def owner_empty():
+    return {"type": "field_condition", "negate": True,
+            "field": {"type": "custom_field", "custom_field_id": F_OWNER},
+            "condition": {"type": "exists"}}
+
+def state_is(values, negate=False):
+    return {"type": "field_condition", "negate": negate,
+            "field": {"type": "custom_field", "custom_field_id": F_STATE},
+            "condition": {"type": "term", "values": values}}
+
+def override_set():
+    return {"type": "field_condition", "negate": False,
+            "field": {"type": "custom_field", "custom_field_id": F_OVERRIDE},
+            "condition": {"type": "term", "values": ["Yes"]}}
+
+
+def build_deficits(counts, pool_size, target):
+    """
+    How many leads each rep should receive.
+
+    Fixed target  -> top up to that number.
+    No target     -> level everyone toward the same holding once the pool is
+                     distributed. A rep already sitting on 5k doesn't get the
+                     same share as someone starting from zero.
+    """
+    if target:
+        return {u: max(0, target - counts.get(u, 0)) for u in SCRAPERS}, target
+
+    level = (sum(counts.get(u, 0) for u in SCRAPERS) + pool_size) / len(SCRAPERS)
+    deficits = {u: max(0, int(level) - counts.get(u, 0)) for u in SCRAPERS}
+    # Rounding can leave a few unallocated — hand them to whoever is furthest behind.
+    short = pool_size - sum(deficits.values())
+    if short > 0:
+        for u in sorted(SCRAPERS, key=lambda x: -deficits[x])[:short]:
+            deficits[u] += 1
+    return deficits, int(level)
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--apply", action="store_true", help="write Lead Owner (default: dry run)")
+    ap.add_argument("--max-queue", type=int, default=MAX_QUEUE,
+                    help=f"target queue size per rep (default {MAX_QUEUE}; 0 = unlimited)")
+    args = ap.parse_args()
+    target = None if args.max_queue == 0 else args.max_queue
+
+    if not SCRAPERS:
+        sys.exit("No scrapers configured.")
+
+    # ---- 1. what does each rep already hold? -------------------------------
+    print("Counting current queues...", file=sys.stderr)
+    held = search(
+        _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+              owner_is(SCRAPERS.keys()),
+              state_is(PRIORITY_STATES)),
+        fields=["id", f"custom.{F_OWNER}"], limit=9000)
+
+    counts = Counter(cf(l, F_OWNER) for l in held)
+
+    # ---- 2. pull from the unclaimed pool, hottest first --------------------
+    # Capped mode only needs as many as the deficits require; uncapped takes all.
+    cap_need = sum(max(0, target - counts.get(u, 0)) for u in SCRAPERS) if target else None
+    if target and cap_need == 0:
+        print("\nEveryone is at target. Nothing to assign.")
+        return
+
+    print("Pulling from the unclaimed pool...", file=sys.stderr)
+    pool, by_state = [], Counter()
+    for state in PRIORITY_STATES:
+        if target and len(pool) >= cap_need:
+            break
+        remaining = (cap_need - len(pool)) if target else None
+        rows = search(
+            _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+                  owner_empty(), state_is([state])),
+            fields=["id", "display_name", f"custom.{F_OVERRIDE}"],
+            limit=remaining)
+        # never take a lead someone has pinned
+        rows = [r for r in rows if cf(r, F_OVERRIDE) != "Yes"]
+        pool.extend(rows)
+        by_state[state] = len(rows)
+        print(f"  {state:<16} {len(rows):>7,}", file=sys.stderr)
+
+    if not pool:
+        print("\nPool is empty — nothing unowned in a workable state.")
+        return
+
+    # ---- 3. deal them out, furthest-behind first --------------------------
+    deficit, level = build_deficits(counts, len(pool), target)
+
+    print()
+    mode = f"target {level:,}/rep" if target else f"levelling to ~{level:,}/rep (uncapped)"
+    print(f"{'Rep':<20} {'holds':>8} {'gets':>8} {'after':>8}   [{mode}]")
+    print("-" * 52)
+
+    plan = defaultdict(list)
+    order = sorted(SCRAPERS, key=lambda u: -deficit[u])
+    i = 0
+    for lead in pool:
+        for _ in range(len(order)):
+            uid = order[i % len(order)]
+            i += 1
+            if deficit[uid] > 0:
+                plan[uid].append(lead)
+                deficit[uid] -= 1
+                break
+        else:
+            break   # everyone full
+
+    for uid in sorted(SCRAPERS, key=lambda u: -(counts.get(u, 0) + len(plan[u]))):
+        have, gets = counts.get(uid, 0), len(plan[uid])
+        print(f"{SCRAPERS[uid]:<20} {have:>8,} {gets:>+8,} {have+gets:>8,}")
+    print("-" * 52)
+    total = sum(len(v) for v in plan.values())
+    print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {total:>+8,} "
+          f"{sum(counts.values())+total:>8,}")
+    print(f"\nPool by bucket: {', '.join(f'{s} {n:,}' for s, n in by_state.items() if n)}")
+    if total < len(pool):
+        print(f"{len(pool)-total:,} left in the pool (everyone hit target).")
+
+    if not args.apply:
+        print("\nDRY RUN — nothing written. Re-run with --apply.")
+        sample = [(SCRAPERS[u], l) for u, ls in plan.items() for l in ls[:2]][:6]
+        if sample:
+            print("\nSample:")
+            for name, l in sample:
+                print(f"  {l.get('display_name','?')[:38]:<38} -> {name}")
+        return
+
+    # ---- 4. write ----------------------------------------------------------
+    work = [(l["id"], uid) for uid, ls in plan.items() for l in ls]
+    print(f"\nAssigning {len(work):,} leads with {WRITE_WORKERS} workers...")
+    ok = err = 0
+    errors = []
+
+    def _write(item):
+        lid, uid = item
+        try:
+            _req("PUT", f"{BASE}/lead/{lid}/", json={f"custom.{F_OWNER}": uid})
+            return None
+        except Exception as e:
+            return f"  {lid}: {str(e)[:180]}"
+
+    with ThreadPoolExecutor(max_workers=WRITE_WORKERS) as pool_exec:
+        for n, e in enumerate(pool_exec.map(_write, work), 1):
+            if e:
+                err += 1
+                if len(errors) < 15:
+                    errors.append(e)
+            else:
+                ok += 1
+            if n % 500 == 0:
+                print(f"  {n:,}/{len(work):,}", file=sys.stderr)
+
+    print(f"\nDone. {ok:,} assigned, {err:,} failed.")
+    if errors:
+        print("First errors:")
+        print("\n".join(errors))
+    print("\nOwner Team + Recapture State will catch up on the next reconciler run.")
+
+
+if __name__ == "__main__":
+    main()
