@@ -86025,12 +86025,12 @@
       "vendhub_date": null
     },
     "lead_U3CKO00ALnWxze4gVpRpuCMUvIvlw0UslK8K1vFr5DW": {
-      "date": "2026-08-07",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": null,
+      "funnel_name": "LTF - In-House",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -86063,8 +86063,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_P1EOpoogNLqv884HU7QGank9uuS8UWl9KeUbdrqplaF": {
+      "date": "2026-08-09",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Instagram",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-04 19:09:58 UTC",
-  "count": 8779
+  "saved_at": "2026-08-04 19:32:41 UTC",
+  "count": 8780
 }
