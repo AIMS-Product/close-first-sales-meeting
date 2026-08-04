@@ -86023,8 +86023,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_U3CKO00ALnWxze4gVpRpuCMUvIvlw0UslK8K1vFr5DW": {
+      "date": "2026-08-07",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "LTF - In-House",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-04 17:40:19 UTC",
-  "count": 8775
+  "saved_at": "2026-08-04 18:10:05 UTC",
+  "count": 8776
 }
