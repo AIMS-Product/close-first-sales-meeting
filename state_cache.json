@@ -86030,11 +86030,31 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "LTF - In-House",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_fjpfFSLHU5o8fXnGYxjpU0zep1sJGkTJGnVBml4ouhh": {
+      "date": "2026-08-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_e15YI7VpInmFGCtokaFcsaFDecUyU0ChomaWzy7Dc9X": {
+      "date": "2026-08-05",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-04 18:10:05 UTC",
-  "count": 8776
+  "saved_at": "2026-08-04 18:39:07 UTC",
+  "count": 8778
 }
