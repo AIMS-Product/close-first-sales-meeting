@@ -43,7 +43,11 @@ PREFIX = "L2 · "          # every view this script owns starts with this
 #
 # The view owner (whoever's API key runs this) always sees them regardless.
 # ---------------------------------------------------------------------------
-SHARE_WHOLE_ORG = False
+# Org-wide. Safe because the seven PERSONAL views carry Lead Owner = CURRENT_USER,
+# so everyone sees the same view NAME but only their own leads. Verified against
+# existing views in this account (e.g. "CRM Field Check - WTD" is whole_org=True
+# AND is_user_dependent=True).
+SHARE_WHOLE_ORG = True
 
 SHARE_WITH = [
     "user_lUjlATIIgFg8mELa0GFzZUj0lG4Cs7PwQsxbi34I6Su",   # Joe Dysert
@@ -201,6 +205,27 @@ def has_completed_meeting(negate=False):
 
 REENGAGE_DAYS = 7
 
+F_OWNER = "cf_gOfS9pFwext58oberEegLyix8hZzeHrxhCZOVh3P3rd"   # Lead Owner (custom, not assigned_to)
+
+def mine():
+    """
+    Lead Owner = whoever is looking at the view.
+
+    This is how two reps stop working the same lead: one shared view definition,
+    but each person only ever sees their own book. Close resolves CURRENT_USER at
+    read time — the view must also be flagged is_user_dependent.
+    """
+    return {"type": "field_condition", "negate": False,
+            "field": {"type": "custom_field", "custom_field_id": F_OWNER},
+            "condition": {"type": "reference", "reference_type": "user_or_group",
+                          "object_ids": ["CURRENT_USER"]}}
+
+def unclaimed():
+    """No Lead Owner at all — the team pool nobody has picked up yet."""
+    return {"type": "field_condition", "negate": True,
+            "field": {"type": "custom_field", "custom_field_id": F_OWNER},
+            "condition": {"type": "exists"}}
+
 NOT_SUPPRESSED = status_in(SUPPRESS, negate=True)
 NO_UPCOMING = num_range("num_upcoming_meetings", lte=0)
 
@@ -227,6 +252,25 @@ def cols(*extra):
 # ============================================================================
 # THE VIEW SET
 # ============================================================================
+#
+# PERSONAL views get `Lead Owner = CURRENT_USER` appended and are flagged
+# is_user_dependent — one definition, but each rep only sees their own book.
+# That's what stops two people dialling the same lead.
+#
+# Everything else stays SHARED on purpose:
+#   - Warm Reply / SLA Breach are small and speed-critical — race them.
+#   - The SLA (<1hr) view can't be personal: brand-new leads have no owner yet.
+#   - Pool views exist precisely to show unowned work.
+#   - Ops views are for managers.
+PERSONAL = {
+    "Setter · Hot Inbound — All",
+    "Setter · Booked — Confirm & Disco",
+    "Scraper · Blitz — No-Show Recovery (work first)",
+    "Scraper · Blitz — Lost & Re-engaged",
+    "Scraper · VendHub Downsell (Price + DIY)",
+    "Scraper · Active Nurture",
+    "Scraper · Deep Nurture — Revival Dials",
+}
 
 VIEWS = [
     # ---------------- The one arrow back up ----------------
@@ -312,6 +356,22 @@ VIEWS = [
           cool_off(), calling_hours()),
      sort_by("last_communication_date", "asc"), cols(F_ANGLE, F_ENTRY, F_RESOURCE)),
 
+    # ---------------- Team pools — unowned work, anyone can claim ----------------
+    ("Setter · Pool — Unclaimed Hot Inbound",
+     "Hot inbound with NO owner yet. Shared on purpose — this is where new leads land before "
+     "anyone picks them up. Claim by setting yourself as Lead Owner, and it moves into your "
+     "personal Hot Inbound list.",
+     view(NO_UPCOMING, choice(F_STATE, ["Hot-Inbound"]), unclaimed(),
+          cool_off(), calling_hours()),
+     sort_by("date_created"), cols(F_ENTRY, F_RESOURCE)),
+
+    ("Scraper · Pool — Unclaimed Dormant",
+     "Blitz and Active-Nurture leads with NO owner. The overflow bench: work this when your own "
+     "lists are clear. Claim by setting yourself as Lead Owner.",
+     view(NO_UPCOMING, choice(F_STATE, ["Blitz", "Active-Nurture"]), unclaimed(),
+          cool_off(), calling_hours()),
+     sort_by("last_communication_date"), cols(F_STATE, F_ANGLE, F_ENTRY)),
+
     # ---------------- Ops / marketing ----------------
     ("Ops · Deep Nurture (6mo+ quiet)",
      "No communication in 6+ months. Intended source list for the low-touch content drip "
@@ -364,13 +424,17 @@ def existing_views():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true", help="create/update in Close")
+    ap.add_argument("--prune", action="store_true",
+                    help="also DELETE any 'L2 · ' view no longer defined here "
+                         "(e.g. left behind by a rename)")
     args = ap.parse_args()
 
     # Pre-flight: validate everything BEFORE any API call, so a limit violation
     # can't leave half the view set created.
     MAX_DESC, MAX_FIELD_ID = 300, 48
     problems = []
-    for short, desc, _q, _s, selected in VIEWS:
+    for entry in VIEWS:
+        short, desc, _q, _s, selected = entry[:5]
         if len(desc) > MAX_DESC:
             problems.append(f"{short}: description {len(desc)} chars (max {MAX_DESC})")
         for f in selected:
@@ -392,7 +456,12 @@ def main():
     have = existing_views()
 
     created = updated = 0
-    for short, desc, query, sort, selected in VIEWS:
+    for entry in VIEWS:
+        short, desc, query, sort, selected = entry[:5]
+        personal = short in PERSONAL
+        if personal:
+            query = json.loads(json.dumps(query))
+            query["queries"][1]["queries"].append(mine())
         name = PREFIX + short
         payload = {
             "name": name,
@@ -400,6 +469,7 @@ def main():
             "type": "lead",
             "s_query": {"query": query, "results_limit": None, "sort": sort},
             "selected_fields": selected,
+            "is_user_dependent": personal,
             "is_shared": SHARE_WHOLE_ORG,
             "sharing_settings": {
                 "whole_org": SHARE_WHOLE_ORG,
@@ -420,17 +490,28 @@ def main():
             created += 1
 
     print(f"\n{len(VIEWS)} views defined.")
+
+    defined = {PREFIX + v[0] for v in VIEWS}
+    stale = [(n, v["id"]) for n, v in have.items()
+             if n.startswith(PREFIX) and n not in defined]
+
+    if stale:
+        verb = "DELETING" if (args.apply and args.prune) else "STALE"
+        print(f"\n{len(stale)} view(s) carry the '{PREFIX}' prefix but are no longer "
+              f"defined here — {verb}:")
+        for n, vid in stale:
+            print(f"  {n}")
+        if args.apply and args.prune:
+            for n, vid in stale:
+                _req("DELETE", f"{BASE}/saved_search/{vid}/")
+            print(f"  → {len(stale)} deleted.")
+        elif args.apply:
+            print("  (re-run with --prune to delete them)")
+
     if not args.apply:
-        print("DRY RUN — nothing changed. Re-run with --apply.")
-        stale = [n for n in have if n.startswith(PREFIX)
-                 and n not in {PREFIX + v[0] for v in VIEWS}]
-        if stale:
-            print(f"\n{len(stale)} view(s) carry the '{PREFIX}' prefix but are no longer "
-                  f"defined here — delete by hand if unwanted:")
-            for n in stale:
-                print(f"  {n}")
+        print("\nDRY RUN — nothing changed. Re-run with --apply.")
     else:
-        print(f"{created} created, {updated} updated.")
+        print(f"\n{created} created, {updated} updated.")
 
 
 if __name__ == "__main__":
