@@ -99,14 +99,19 @@ SUPPRESS_STATUSES = [S_WON, S_DNC, S_DQ, S_OUTSIDE_US]
 # --- rosters (user_id -> Owner Team) ----------------------------------------
 SETTERS = {
     "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F": "William Nowak",
-    "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ": "Pearl Sathekge",
+    "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM": "Spencer Reynolds",
 }
 SCRAPERS = {
     "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy": "Vince Bartolini",
     "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z": "Jacob Hepner",
     "user_lXtgDE8eKS8s3tKDQrl8eUP7tYCXuNNJATddPUkuLlQ": "Becca Leier",
     "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ": "Jacob Herbig",
+    "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb": "Charlie Ingram",
+    "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ": "Pearl Sathekge",
     "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj": "Jason Aaron",  # lane manager
+    # Not started — add once their Close users exist:
+    # "user_...": "Sydney Boyd",
+    # "user_...": "Connor George",
 }
 LANE_1 = {
     "user_lUjlATIIgFg8mELa0GFzZUj0lG4Cs7PwQsxbi34I6Su": "Joe Dysert",
