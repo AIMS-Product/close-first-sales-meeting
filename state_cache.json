@@ -86290,7 +86290,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -86303,8 +86303,38 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_JDBcx1VhWfc5VHqpIXTFNsXQ3UjqIDKpSDo0YCowm3e": {
+      "date": "2026-08-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_h8x0QhWXM5O60WuV5F8QarBVhufv2SFSu3y3RNQS6e7": {
+      "date": "2026-08-07",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_8nuHI7QL1tEM9SdimtGEV6lmqbQqJ5qBvEMlFhb38sR": {
+      "date": "2026-08-05",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-05 19:39:41 UTC",
-  "count": 8803
+  "saved_at": "2026-08-05 20:39:25 UTC",
+  "count": 8806
 }
