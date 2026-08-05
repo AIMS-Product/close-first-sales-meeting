@@ -124,6 +124,7 @@ SCRAPERS = {
     "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ": "Jacob Herbig",
     "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb": "Charlie Ingram",
     "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ": "Pearl Sathekge",
+    "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7": "Kelly Schrader",  # moved to Lane 2 2026-08-05
     "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj": "Jason Aaron",  # lane manager
     # Not started — add once their Close users exist:
     # "user_...": "Sydney Boyd",
@@ -434,6 +435,9 @@ def _req(method, url, **kw):
 
 SKIP_CAP = 10000   # Close rejects cursor skip > 10,000. Hard API limit.
 
+PROBE_CAP = 6000   # See search(). Must stay comfortably above the largest
+                   # non-partitioned bucket and comfortably below SKIP_CAP.
+
 def _search_page(query, fields=None, limit=None):
     """Single un-partitioned search. Only safe when the result set is < SKIP_CAP."""
     out, cursor = [], None
@@ -466,15 +470,34 @@ def _month_windows(start=None):
 
 def search(query, fields=None, limit=None):
     """
-    Run a Close search, partitioning by month of date_created.
+    Run a Close search, partitioning by month of date_created only when we have to.
 
-    Close caps cursor skip at 10,000 results, so any query matching more than
-    that cannot be paged straight through. Slicing by creation month keeps every
-    slice well under the cap and covers the whole database.
+    Close caps cursor skip at 10,000 results, so a query matching more than that
+    cannot be paged straight through — those get sliced by creation month, which
+    keeps every slice under the cap and still covers the whole database.
+
+    Most buckets are nowhere near 10,000 though, so we probe with a single
+    unpartitioned pass first. If it returns everything, we skip 31 windowed
+    queries — each of which re-evaluates the whole relational predicate.
+
+    The probe is abandoned at PROBE_CAP rather than SKIP_CAP. Once we're past
+    PROBE_CAP the bucket is clearly a big one and the remaining pages would be
+    thrown away, so paging all the way to 10,000 just to confirm it wastes the
+    saving we came for. PROBE_CAP sits above the largest bucket that fits in one
+    pass (~2.4k today) with room to grow, and below SKIP_CAP.
+
+    Failure mode is benign in both directions: a bucket that outgrows PROBE_CAP
+    silently reverts to partitioning (correct, just slower), and one that shrinks
+    starts probing successfully again. Nothing needs updating by hand.
     """
     if limit and limit <= SKIP_CAP:
         # Small sample — one pass is enough and much faster.
         return _search_page(query, fields=fields, limit=limit)
+
+    probe = _search_page(query, fields=fields, limit=PROBE_CAP)
+    if len(probe) < PROBE_CAP:
+        return probe
+    print(f"    (over {PROBE_CAP:,} — partitioning by month)", file=sys.stderr)
 
     seen, out = set(), []
     for i, (a, b) in enumerate(_month_windows(), 1):
