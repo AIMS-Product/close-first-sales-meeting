@@ -43,10 +43,10 @@ from lane2_state import (
 SCRAPERS = {
     "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy": "Vince Bartolini",
     "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z": "Jacob Hepner",
-    "user_lXtgDE8eKS8s3tKDQrl8eUP7tYCXuNNJATddPUkuLlQ": "Becca Leier",
     "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ": "Jacob Herbig",
     "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb": "Charlie Ingram",
     "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ": "Pearl Sathekge",
+    "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7": "Kelly Schrader",  # moved to Lane 2 2026-08-05
 
     # Setters (NOT in this rotation): William Nowak, Spencer Reynolds.
     # Keep this list in sync with SCRAPERS in lane2_state.py — that one drives
@@ -77,6 +77,36 @@ PRIORITY_STATES = ["Blitz", "Active-Nurture", "Deep-Nurture"]
 
 # Hot-Inbound is deliberately absent: that's the Setter lane.
 
+# --- reclaim ----------------------------------------------------------------
+# Leads owned by someone who has left are invisible: they're not in the unclaimed
+# pool (they HAVE an owner) so they're never dealt out, and nobody works them.
+# ~8k leads were sitting like this as of 2026-08-04.
+#
+# Active Close users are fetched live at runtime, so a new hire is never mistaken
+# for a leaver. RECLAIM_EXTRA covers the other case — someone who has left but
+# whose Close seat hasn't been revoked yet.
+#
+# Kelly Schrader was listed here as a leaver. Removed 2026-08-05 — she moved to
+# Lane 2 as a Scraper and now holds Juan's old book. Leaving her here would have
+# made --reclaim strip those leads straight back into the unclaimed pool on the
+# next run, undoing the reassignment.
+#
+# A name must never be in both SCRAPERS and RECLAIM_EXTRA — see the guard below.
+RECLAIM_EXTRA = {
+}
+
+# Never reclaim from these even if they look inactive (service accounts, admins).
+RECLAIM_NEVER = {
+    "user_5cZRqXu8kb4O1IeBVA98UMcMEhYZUhx1fnCHfSL0YMV",   # Stephen Olivas
+}
+
+# A rep in both lists would be dealt leads and then have them stripped away again
+# on the next --reclaim, silently churning their queue. Fail loudly instead.
+_conflict = set(SCRAPERS) & set(RECLAIM_EXTRA)
+if _conflict:
+    sys.exit("CONFIG ERROR — in SCRAPERS and RECLAIM_EXTRA at once: "
+             + ", ".join(SCRAPERS[u] for u in _conflict))
+
 # ============================================================================
 
 def owner_is(user_ids, negate=False):
@@ -99,6 +129,42 @@ def override_set():
     return {"type": "field_condition", "negate": False,
             "field": {"type": "custom_field", "custom_field_id": F_OVERRIDE},
             "condition": {"type": "term", "values": ["Yes"]}}
+
+
+def active_user_ids():
+    """Live list of Close users, so new hires aren't mistaken for leavers."""
+    out, skip = set(), 0
+    while True:
+        j = _req("GET", f"{BASE}/user/", params={"_skip": skip, "_limit": 100}).json()
+        for u in j.get("data", []):
+            out.add(u["id"])
+        if not j.get("has_more"):
+            break
+        skip += 100
+    return out
+
+
+def find_stranded(active):
+    """
+    Leads in a workable state whose owner has left.
+
+    Owner is set (so they're not in the pool) but that person is gone (so nobody
+    works them). Clearing Lead Owner returns them to the pool for redistribution.
+    """
+    rows = search(
+        _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+              state_is(PRIORITY_STATES)),
+        fields=["id", "display_name", f"custom.{F_OWNER}", f"custom.{F_OVERRIDE}"])
+    out = []
+    for r in rows:
+        owner = cf(r, F_OWNER)
+        if not owner or owner in RECLAIM_NEVER:
+            continue
+        if cf(r, F_OVERRIDE) == "Yes":       # pinned — leave it alone
+            continue
+        if owner not in active or owner in RECLAIM_EXTRA:
+            out.append((r, owner))
+    return out
 
 
 def build_deficits(counts, pool_size, target):
@@ -128,11 +194,44 @@ def main():
     ap.add_argument("--apply", action="store_true", help="write Lead Owner (default: dry run)")
     ap.add_argument("--max-queue", type=int, default=MAX_QUEUE,
                     help=f"target queue size per rep (default {MAX_QUEUE}; 0 = unlimited)")
+    ap.add_argument("--reclaim", action="store_true",
+                    help="first clear Lead Owner on leads held by departed users, "
+                         "returning them to the pool")
     args = ap.parse_args()
     target = None if args.max_queue == 0 else args.max_queue
 
     if not SCRAPERS:
         sys.exit("No scrapers configured.")
+
+    # ---- 0. reclaim from leavers ------------------------------------------
+    if args.reclaim:
+        print("Checking for leads stranded under departed users...", file=sys.stderr)
+        active = active_user_ids()
+        stranded = find_stranded(active)
+        if not stranded:
+            print("No stranded leads found.\n")
+        else:
+            by_owner = Counter(o for _, o in stranded)
+            print(f"\n{len(stranded):,} leads held by {len(by_owner)} departed user(s):")
+            for owner, n in by_owner.most_common():
+                label = RECLAIM_EXTRA.get(owner, owner[:28] + "…")
+                print(f"  {label:<32} {n:>6,}")
+            if args.apply:
+                print(f"\nReleasing {len(stranded):,} leads back to the pool...")
+                ok = err = 0
+                def _clear(item):
+                    lid = item[0]["id"]
+                    try:
+                        _req("PUT", f"{BASE}/lead/{lid}/", json={f"custom.{F_OWNER}": None})
+                        return True
+                    except Exception:
+                        return False
+                with ThreadPoolExecutor(max_workers=WRITE_WORKERS) as ex:
+                    for good in ex.map(_clear, stranded):
+                        ok, err = (ok + 1, err) if good else (ok, err + 1)
+                print(f"  {ok:,} released, {err:,} failed.\n")
+            else:
+                print("  (dry run — not released)\n")
 
     # ---- 1. what does each rep already hold? -------------------------------
     print("Counting current queues...", file=sys.stderr)
