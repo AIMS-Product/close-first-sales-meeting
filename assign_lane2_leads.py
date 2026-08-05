@@ -199,6 +199,9 @@ def main():
     ap.add_argument("--apply", action="store_true", help="write Lead Owner (default: dry run)")
     ap.add_argument("--max-queue", type=int, default=MAX_QUEUE,
                     help=f"target queue size per rep (default {MAX_QUEUE}; 0 = unlimited)")
+    ap.add_argument("--no-census", action="store_true",
+                    help="stop reading each bucket once deficits are filled. Faster, "
+                         "but the summary can't report how much backlog is left")
     ap.add_argument("--reclaim", action="store_true",
                     help="first clear Lead Owner on leads held by departed users, "
                          "returning them to the pool")
@@ -255,12 +258,21 @@ def main():
         print("\nEveryone is at target. Nothing to assign.")
         return
 
-    print("Pulling from the unclaimed pool...", file=sys.stderr)
-    pool, by_state = [], Counter()
+    # Fetch the WHOLE unowned pool per state, not just enough to fill deficits.
+    #
+    # Capped mode used to stop early, which was cheaper but reported a pool size
+    # that was really "how many we happened to fetch" — the summary read
+    # "Active-Nurture 6" when thousands remained. Reading the full pool costs a
+    # slower run (this is a once-a-weekday job) and buys an honest census of what
+    # is left to work. --no-census restores the early-break behaviour.
+    print("Reading the unclaimed pool...", file=sys.stderr)
+    pool, available, taken_from = [], Counter(), Counter()
     for state in PRIORITY_STATES:
-        if target and len(pool) >= cap_need:
-            break
-        remaining = (cap_need - len(pool)) if target else None
+        early_stop = args.no_census and target and len(pool) >= cap_need
+        if early_stop:
+            available[state] = None       # genuinely unknown — never print a guess
+            continue
+        remaining = (cap_need - len(pool)) if (args.no_census and target) else None
         rows = search(
             _wrap(status_in(SUPPRESS_STATUSES, negate=True),
                   owner_empty(), state_is([state])),
@@ -268,9 +280,11 @@ def main():
             limit=remaining)
         # never take a lead someone has pinned
         rows = [r for r in rows if cf(r, F_OVERRIDE) != "Yes"]
+        available[state] = len(rows)
+        for r in rows:
+            r["_state"] = state       # so we can report what came from where
         pool.extend(rows)
-        by_state[state] = len(rows)
-        print(f"  {state:<16} {len(rows):>7,}", file=sys.stderr)
+        print(f"  {state:<16} {len(rows):>7,} unowned", file=sys.stderr)
 
     if not pool:
         print("\nPool is empty — nothing unowned in a workable state.")
@@ -293,6 +307,7 @@ def main():
             i += 1
             if deficit[uid] > 0:
                 plan[uid].append(lead)
+                taken_from[lead["_state"]] += 1
                 deficit[uid] -= 1
                 break
         else:
@@ -305,9 +320,26 @@ def main():
     total = sum(len(v) for v in plan.values())
     print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {total:>+8,} "
           f"{sum(counts.values())+total:>8,}")
-    print(f"\nPool by bucket: {', '.join(f'{s} {n:,}' for s, n in by_state.items() if n)}")
-    if total < len(pool):
-        print(f"{len(pool)-total:,} left in the pool (everyone hit target).")
+    # ---- bucket census -----------------------------------------------------
+    # "unowned" is the whole unclaimed pool in that bucket BEFORE this run.
+    # "left" is what nobody owns once this run's assignments land — i.e. the
+    # backlog still waiting for capacity.
+    print()
+    print(f"{'Bucket':<18} {'unowned':>10} {'assigned':>10} {'left':>10}")
+    print("-" * 52)
+    t_av = t_tk = t_lf = 0
+    for state in PRIORITY_STATES:
+        av, tk = available.get(state), taken_from.get(state, 0)
+        if av is None:
+            print(f"{state:<18} {'not read':>10} {tk:>10,} {'—':>10}")
+            continue
+        left = av - tk
+        t_av += av; t_tk += tk; t_lf += left
+        print(f"{state:<18} {av:>10,} {tk:>10,} {left:>10,}")
+    print("-" * 52)
+    print(f"{'TOTAL':<18} {t_av:>10,} {t_tk:>10,} {t_lf:>10,}")
+    if args.no_census:
+        print("\n(--no-census: buckets after the deficit was filled were never read.)")
 
     if not args.apply:
         print("\nDRY RUN — nothing written. Re-run with --apply.")
