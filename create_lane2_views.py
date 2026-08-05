@@ -34,6 +34,11 @@ AUTH = (API_KEY, "")
 
 PREFIX = "L2 · "          # every view this script owns starts with this
 
+# Imported rather than redeclared — the Lane 1 roster and the Closer-active
+# opportunity statuses must not drift from the reconciler's definition of them.
+# has_opp_status also carries the `status_id` (not `opp_status_id`) fix.
+from lane2_state import LANE_1, LANE1_OPP_STATUSES, has_opp_status
+
 # ---------------------------------------------------------------------------
 # Sharing
 #
@@ -226,6 +231,44 @@ def unclaimed():
             "field": {"type": "custom_field", "custom_field_id": F_OWNER},
             "condition": {"type": "exists"}}
 
+def owner_in(user_ids, negate=False):
+    return {"type": "field_condition", "negate": negate,
+            "field": {"type": "custom_field", "custom_field_id": F_OWNER},
+            "condition": {"type": "reference", "reference_type": "user_or_group",
+                          "object_ids": list(user_ids)}}
+
+def not_lane1():
+    """
+    Hard gate against dialling into a deal a Closer is actively working.
+
+    Two independent clauses, deliberately belt-and-braces:
+
+      1. No opportunity in a Closer-active status (Contract Sent / Follow Up /
+         Reschedule). This is a LIVE check on the opportunity, so it does not
+         wait on the hourly reconciler — which matters, because the whole risk
+         window is the gap between runs.
+
+      2. Lead Owner is not a Lane 1 rep.
+
+    Clause 2 is written as "unclaimed OR not-a-closer" rather than a bare
+    negation. A negated reference condition may or may not match a lead whose
+    Lead Owner is EMPTY, and most of the hot cohort is unowned — getting that
+    wrong would silently empty the very lists this protects. Spelling out the
+    empty case makes it correct either way.
+
+    Deliberately NOT keyed on Recapture State = Booked. Brand-new leads have no
+    state stamp yet (the reconciler runs hourly), so a state-based exclusion
+    would drop exactly the sub-1-hour leads the SLA views exist to catch. Same
+    bug we already fixed once on Ever Had Call.
+    """
+    return {"negate": False, "type": "and", "queries": [
+        negated(has_opp_status(LANE1_OPP_STATUSES)),
+        {"negate": False, "type": "or", "queries": [
+            unclaimed(),
+            owner_in(LANE_1, negate=True),
+        ]},
+    ]}
+
 NOT_SUPPRESSED = status_in(SUPPRESS, negate=True)
 NO_UPCOMING = num_range("num_upcoming_meetings", lte=0)
 
@@ -262,6 +305,34 @@ def cols(*extra):
 #   - The SLA (<1hr) view can't be personal: brand-new leads have no owner yet.
 #   - Pool views exist precisely to show unowned work.
 #   - Ops views are for managers.
+# Views only these people should see. An escalation list in a rep's sidebar is a
+# collision risk: it shows leads that are, by definition, nobody's yet.
+MANAGERS = [
+    "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj",   # Jason Aaron (Lane 2 manager)
+    "user_Xoi7ztP2y5IeCIRhObWx8E6eKZO6B9GvPze5WMAgP1e",   # Jess Mayo
+    "user_hqv8aEy844FqW29HDFof8hPyBiJx1XBxaDkdUtqc1Qp",   # Dom Ellis
+]
+# Stephen owns the API key, so he sees these regardless of what's listed here.
+MANAGER_ONLY = {
+    "🚨 SLA BREACH — Untouched Hot Inbound",
+    # The four Ops · views are described as manager views but are still shared
+    # org-wide. Add them here to make that true — left out for now because it
+    # changes who can see what, which is your call not mine.
+}
+
+# Every view gets the Lane 1 guard appended automatically — safe by default, so
+# a view added later is protected without anyone remembering to do it. These are
+# the deliberate opt-outs:
+NO_LANE1_GUARD = {
+    # The whole point of this one is the Lane 1 handoff — Setter confirms the
+    # meeting and runs disco before the Closer takes the call.
+    "Setter · Booked — Confirm & Disco",
+    # Audit/reporting views must show the true picture, including Booked.
+    "Ops · Deep Nurture (6mo+ quiet)",
+    "Ops · Unassigned Recapture Universe",
+    "Ops · Recapture State — Audit",
+}
+
 PERSONAL = {
     "Setter · Hot Inbound — All",
     "Setter · Booked — Confirm & Disco",
@@ -459,9 +530,15 @@ def main():
     for entry in VIEWS:
         short, desc, query, sort, selected = entry[:5]
         personal = short in PERSONAL
+        mgr = short in MANAGER_ONLY
+
+        query = json.loads(json.dumps(query))          # never mutate the source
+        if short not in NO_LANE1_GUARD:
+            query["queries"][1]["queries"].append(not_lane1())
         if personal:
-            query = json.loads(json.dumps(query))
             query["queries"][1]["queries"].append(mine())
+
+        share_org = SHARE_WHOLE_ORG and not mgr
         name = PREFIX + short
         payload = {
             "name": name,
@@ -470,16 +547,21 @@ def main():
             "s_query": {"query": query, "results_limit": None, "sort": sort},
             "selected_fields": selected,
             "is_user_dependent": personal,
-            "is_shared": SHARE_WHOLE_ORG,
+            "is_shared": share_org,
             "sharing_settings": {
-                "whole_org": SHARE_WHOLE_ORG,
-                "user_ids": [] if SHARE_WHOLE_ORG else SHARE_WITH,
+                "whole_org": share_org,
+                "user_ids": MANAGERS if mgr else ([] if share_org else SHARE_WITH),
                 "group_ids": [],
             },
         }
         found = have.get(name)
         action = "UPDATE" if found else "CREATE"
-        print(f"  {action:<7} {name}")
+        tags = []
+        if personal: tags.append("mine-only")
+        if mgr: tags.append("MANAGERS ONLY")
+        if short in NO_LANE1_GUARD: tags.append("no lane1 guard")
+        suffix = f"   [{', '.join(tags)}]" if tags else ""
+        print(f"  {action:<7} {name}{suffix}")
         if not args.apply:
             continue
         if found:
