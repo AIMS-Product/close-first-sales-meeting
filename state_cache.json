@@ -86273,8 +86273,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_bpU7AqOXwCPwTOLVsY5H8FWsn9m0EoWKtX7SMo1eLOi": {
+      "date": "2026-08-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Jacob Hepner",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-05 18:35:22 UTC",
-  "count": 8800
+  "saved_at": "2026-08-05 19:09:47 UTC",
+  "count": 8801
 }
