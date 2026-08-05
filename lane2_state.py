@@ -69,11 +69,11 @@ F_EVERCALL = "cf_6g8pVOlyVciSucCIvbI3CjKsPE4nlJEaKUX0DY9H5XY"  # Ever Had Call (
 F_SALESLANE = "cf_UD9Hm3dpLGtcUd37tX8Y9GAK1Lhc3BdtDX769ffFvyB"
 WRITE_SALES_LANE = True
 
-# Resource Tag — TEXT field. Form automation owns it going forward; this script
-# only SEEDS it where empty, from legacy Handraiser/Funnel data, and never
-# overwrites. Being text, it fails soft: an unexpected value lands and shows up
-# in the drift report below, rather than being silently rejected like a bad
-# dropdown choice would be.
+# Resource Tag — TEXT field, seeded from legacy data where empty and
+# canonicalised to a slug everywhere. Form automation owns the VALUE; this
+# script owns the FORMAT. Being text it fails soft: an unexpected value lands
+# and shows up in the drift report rather than being silently rejected like a
+# bad dropdown choice would be.
 F_RESOURCE = "cf_PWAGlTAxZ62ybFh01xcEzVl0RHw6KUXHp4g4YFb2PgT"
 SEED_RESOURCE_TAG = True
 
@@ -169,26 +169,45 @@ ENTRY_FROM_FUNNEL = {
 }
 
 # --- Handraiser / Funnel -> Resource Tag (the specific asset) ---------------
-# Entry Source is the channel; Resource Tag is the asset. Seed only.
+# Entry Source is the channel; Resource Tag is the asset.
+#
+# Canonical form is a SLUG: lowercase, hyphenated. Chosen because the field is
+# machine-written (form automation / GHL webhook) and slugs remove case and
+# spacing ambiguity — "Route Builder" vs "Route builder" vs "route-builder" all
+# collapse to one value.
+#
+# Division of ownership: form automation owns the VALUE, the reconciler owns the
+# FORMAT. So unlike the rest of the seeding, normalisation DOES overwrite — but
+# only ever to canonicalise, never to change meaning.
 RESOURCE_FROM_HANDRAISER = {
-    "Webinar - Registered / Did Not Attend": "Internal Webinar",
-    "Webinar - Attended / Did Not Book": "Internal Webinar",
-    "Internal Webinar": "Internal Webinar",
-    "WWWS / Registrants": "WWWS",
-    "LTF Course Purchased / Did Not Book": "LTF - Course",
-    "LTF Course Purchased / High Activity": "LTF - Course",
-    "LTF All Booked / Did Not Convert": "LTF - Course",
-    "Quiz Funnel": "LTF - Quiz Funnel",
-    "Route Builder": "Route Builder",
-    "Typeform Entry / Did Not Book": "Typeform - Application",
-    "Typeform Entry / DQ'd": "Typeform - Application",
+    "Webinar - Registered / Did Not Attend": "internal-webinar",
+    "Webinar - Attended / Did Not Book": "internal-webinar",
+    "Internal Webinar": "internal-webinar",
+    "WWWS / Registrants": "wwws",
+    "LTF Course Purchased / Did Not Book": "ltf-course",
+    "LTF Course Purchased / High Activity": "ltf-course",
+    "LTF All Booked / Did Not Convert": "ltf-course",
+    "Quiz Funnel": "ltf-quiz-funnel",
+    "Route Builder": "route-builder",
+    "Typeform Entry / Did Not Book": "typeform-application",
+    "Typeform Entry / DQ'd": "typeform-application",
 }
 RESOURCE_FROM_FUNNEL = {
-    "WWWS": "WWWS", "Internal Webinar": "Internal Webinar",
-    "LTF - Quiz Funnel": "LTF - Quiz Funnel",
-    "LTF - In-House": "LTF - Course", "Low Ticket Funnel": "LTF - Course",
-    "VSL": "VSL",
+    "WWWS": "wwws", "Internal Webinar": "internal-webinar",
+    "LTF - Quiz Funnel": "ltf-quiz-funnel",
+    "LTF - In-House": "ltf-course", "Low Ticket Funnel": "ltf-course",
+    "VSL": "vsl",
 }
+
+# Genuine renames — applied AFTER slugifying. Use for cases where two slugs mean
+# the same asset, or an asset was renamed. Left→right.
+RESOURCE_ALIASES = {
+    "ltf": "ltf-course",
+    "internal-webinar-tuesday": "internal-webinar",
+    "typeform": "typeform-application",
+}
+
+NORMALIZE_RESOURCE_TAG = True   # canonicalise existing values, not just new ones
 
 # --- Lost Reason -> Objection Angle -----------------------------------------
 ANGLE_FROM_LOST = {
@@ -283,13 +302,20 @@ def any_inbound(days):
             "queries": [has_incoming(k, days) for k in ("sms", "email", "call")]}
 
 def has_opp_status(status_ids):
-    """Lead has an opportunity sitting in one of these statuses."""
+    """
+    Lead has an opportunity sitting in one of these statuses.
+
+    NOTE the field name is `status_id`, not `opp_status_id`. get_fields reports
+    the latter because that's the *search API's* name for it; the smart-view
+    query language uses `status_id` scoped to object_type "opportunity".
+    Verified against existing views in this account.
+    """
     return {"type": "has_related", "negate": False,
             "this_object_type": "lead", "related_object_type": "opportunity",
             "related_query": {"negate": False, "type": "and", "queries": [
                 {"type": "field_condition", "negate": False,
                  "field": {"type": "regular_field", "object_type": "opportunity",
-                           "field_name": "opp_status_id"},
+                           "field_name": "status_id"},
                  "condition": {"type": "reference",
                                "reference_type": "status.opportunity",
                                "object_ids": status_ids}}]}}
@@ -516,10 +542,36 @@ def entry_source(lead):
 def objection_angle(lead):
     return ANGLE_FROM_LOST.get(cf(lead, F_LOSTREASON))
 
-def resource_tag_seed(lead):
-    """Seed value only — returns None if the lead already has one."""
-    if cf(lead, F_RESOURCE):
-        return None                     # form automation owns it; never overwrite
+def slugify(s):
+    """'LTF - Course' / 'ltf course' / 'LTF—Course' -> 'ltf-course'."""
+    out, prev_dash = [], False
+    for ch in (s or "").strip().lower():
+        if ch.isalnum():
+            out.append(ch)
+            prev_dash = False
+        elif not prev_dash and out:
+            out.append("-")
+            prev_dash = True
+    return "".join(out).strip("-")
+
+def canonical_resource(value):
+    if not value:
+        return None
+    slug = slugify(value)
+    return RESOURCE_ALIASES.get(slug, slug) or None
+
+def resource_tag(lead):
+    """
+    The canonical Resource Tag.
+
+    If the lead already has one, canonicalise it (this is the drift fix — a
+    webhook writing 'Route Builder' and one writing 'route-builder' converge).
+    If it's empty, seed from legacy Handraiser/Funnel data.
+    Returns None when there's nothing to say, so the diff skips it.
+    """
+    existing = cf(lead, F_RESOURCE)
+    if existing:
+        return canonical_resource(existing) if NORMALIZE_RESOURCE_TAG else None
     h = cf(lead, F_HANDRAISER)
     if h and h in RESOURCE_FROM_HANDRAISER:
         return RESOURCE_FROM_HANDRAISER[h]
@@ -614,7 +666,7 @@ def main():
         if WRITE_SALES_LANE:
             desired[F_SALESLANE] = sales_lane(lead)
         if SEED_RESOURCE_TAG:
-            desired[F_RESOURCE] = resource_tag_seed(lead)
+            desired[F_RESOURCE] = resource_tag(lead)
 
         if cf(lead, F_OVERRIDE) == "Yes":
             desired.pop(F_TEAM, None)          # respect the escape hatch
