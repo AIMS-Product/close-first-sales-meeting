@@ -86330,7 +86330,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "WWWS",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -86365,6 +86365,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-05 21:09:09 UTC",
+  "saved_at": "2026-08-05 21:39:46 UTC",
   "count": 8809
 }
