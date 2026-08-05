@@ -237,9 +237,17 @@ def owner_in(user_ids, negate=False):
             "condition": {"type": "reference", "reference_type": "user_or_group",
                           "object_ids": list(user_ids)}}
 
-def not_lane1():
+def not_lane1(include_owner=True):
     """
     Hard gate against dialling into a deal a Closer is actively working.
+
+    `include_owner=False` drops the ownership clause. Use it on any view that
+    ALREADY pins Lead Owner — the personal views (Lead Owner = CURRENT_USER) and
+    the Pool views (Lead Owner not present). On those, the clause cannot change
+    the result: if the lead is mine it is by definition not a Closer's, and if it
+    is unowned the first OR branch is trivially true. Worse, it *reads* as a
+    contradiction — "Lead Owner = Me" sitting above "Lead Owner not present" —
+    which is exactly the sort of thing that gets "fixed" by someone later.
 
     Two independent clauses, deliberately belt-and-braces:
 
@@ -261,8 +269,11 @@ def not_lane1():
     would drop exactly the sub-1-hour leads the SLA views exist to catch. Same
     bug we already fixed once on Ever Had Call.
     """
+    no_live_deal = negated(has_opp_status(LANE1_OPP_STATUSES))
+    if not include_owner:
+        return no_live_deal
     return {"negate": False, "type": "and", "queries": [
-        negated(has_opp_status(LANE1_OPP_STATUSES)),
+        no_live_deal,
         {"negate": False, "type": "or", "queries": [
             unclaimed(),
             owner_in(LANE_1, negate=True),
@@ -533,8 +544,11 @@ def main():
         mgr = short in MANAGER_ONLY
 
         query = json.loads(json.dumps(query))          # never mutate the source
+        # Detected, not hand-listed: any view that already constrains Lead Owner
+        # gets the deal-check only. A new view picks the right form by itself.
+        pins_owner = personal or (F_OWNER in json.dumps(query))
         if short not in NO_LANE1_GUARD:
-            query["queries"][1]["queries"].append(not_lane1())
+            query["queries"][1]["queries"].append(not_lane1(include_owner=not pins_owner))
         if personal:
             query["queries"][1]["queries"].append(mine())
 
