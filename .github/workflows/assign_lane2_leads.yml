@@ -17,10 +17,15 @@ on:
         default: false
         type: boolean
       max_queue:
-        description: "Target queue size per rep (blank = script default 500; 0 = assign everything)"
+        description: "Target queue size per rep (blank = script default of 1000; 0 = uncapped)"
         required: false
         default: ""
         type: string
+      reclaim:
+        description: "First release leads held by departed Close users back to the pool"
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: lane2-assign
@@ -53,6 +58,7 @@ jobs:
           ARGS=""
           if [ "${{ inputs.apply }}" = "true" ]; then ARGS="$ARGS --apply"; fi
           if [ -n "${{ inputs.max_queue }}" ]; then ARGS="$ARGS --max-queue ${{ inputs.max_queue }}"; fi
+          if [ "${{ inputs.reclaim }}" = "true" ]; then ARGS="$ARGS --reclaim"; fi
           echo "Running: assign_lane2_leads.py $ARGS"
           python assign_lane2_leads.py $ARGS | tee assign.txt
 
