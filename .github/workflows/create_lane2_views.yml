@@ -12,6 +12,11 @@ on:
         required: false
         default: false
         type: boolean
+      prune:
+        description: "Also DELETE 'L2 · ' views no longer defined in the script (e.g. after a rename)"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   views:
@@ -38,7 +43,8 @@ jobs:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
         run: |
           ARGS=""
-          if [ "${{ inputs.apply }}" = "true" ]; then ARGS="--apply"; fi
+          if [ "${{ inputs.apply }}" = "true" ]; then ARGS="$ARGS --apply"; fi
+          if [ "${{ inputs.prune }}" = "true" ]; then ARGS="$ARGS --prune"; fi
           python create_lane2_views.py $ARGS | tee views.txt
 
       - name: Publish report
