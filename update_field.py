@@ -73,8 +73,9 @@ FIELDS_PARAM           = f"id,display_name,{FIELD_DATE_KEY},{FIELD_CALLTYPE_KEY}
 # Reactivation dropdown — Close accepts label strings directly for choice fields
 
 # Cutoff dates — only write Funnel Name for meetings on/after these dates
-SCRAPER_FUNNEL_CUTOFF = "2026-04-06"   # Reactivation Scrapers cutoff
-VSL_FUNNEL_CUTOFF     = "2026-06-18"   # VSL cutoff
+SCRAPER_FUNNEL_CUTOFF  = "2026-04-06"   # Reactivation Scrapers cutoff
+VSL_FUNNEL_CUTOFF      = "2026-06-18"   # VSL cutoff
+REACT_EMAIL_CUTOFF     = "2026-08-05"   # Reactivation Email cutoff
 
 CHECKPOINT_FILE  = "checkpoint.json"
 STATE_CACHE_FILE = "state_cache.json"
@@ -106,6 +107,7 @@ RE_ENROLLMENT        = re.compile(r"enrollment|silver\s+start\s*up|bronze\s+enro
 RE_DISCOVERY_TITLE   = re.compile(r"vending\s+quick\s+discovery", re.IGNORECASE)
 RE_POSTWEBINAR_TITLE    = re.compile(r"post\s+masterclass\s+strategy\s+call", re.IGNORECASE)
 RE_ROUTE_PLANNING_TITLE   = re.compile(r"route\s+planning\s+call", re.IGNORECASE)
+RE_REACT_EMAIL_TITLE      = re.compile(r"vending\s+consultation\s+&\s+strategy\s+session", re.IGNORECASE)
 
 # VendHub titles — checked before hard excludes (Next Steps Call would hit followup filter)
 RE_VENDHUB_CONSULTATION   = re.compile(r"vendhub\s+consultation\s+call", re.IGNORECASE)
@@ -139,6 +141,7 @@ CLOSER_PATTERNS = [
     re.compile(r"cash[\-\s]flowing\s+vending\s+route\s+advisory\s+interview", re.IGNORECASE),
     re.compile(r"vending\s+route\s+advisory\s+call", re.IGNORECASE),
     re.compile(r"vending\s+route\s+discovery", re.IGNORECASE),
+    re.compile(r"vending\s+consultation\s+&\s+strategy\s+session", re.IGNORECASE),
 ]
 
 
@@ -168,6 +171,7 @@ def classify_meeting(meeting: dict) -> tuple:
       "scraper"             — scraper meeting title (closer + scraper + setter name)
       "vendhub_consultation"— Vendhub Consultation Call (closer + VendHub = Standard Booking)
       "vendhub_nextsteps"   — Vendhub Next Steps Call (closer + VendHub = VendHub Q&A Booking)
+      "react_email"         — Vending Consultation & Strategy Session (closer + Funnel Name = Reactivation Email)
       None                  — irrelevant, ignore
 
     setter_name is only populated for "scraper" tier.
@@ -211,6 +215,10 @@ def classify_meeting(meeting: dict) -> tuple:
     # Route Planning Call — setter call that sets Funnel Name DEAL = VSL
     if RE_ROUTE_PLANNING_TITLE.search(title):
         return "route_planning", None
+
+    # Vending Consultation & Strategy Session — closer + Funnel Name = Reactivation Email
+    if RE_REACT_EMAIL_TITLE.search(title):
+        return "react_email", None
 
     # Closer — must match a qualifying pattern
     for pattern in CLOSER_PATTERNS:
@@ -276,6 +284,7 @@ def calculate_desired_state(all_meetings: list) -> dict:
         earliest_scraper   = None  # earliest scraper meeting date (for SCRAPER_FUNNEL_CUTOFF)
         earliest_vsl       = None  # earliest route planning call date (for VSL_FUNNEL_CUTOFF)
         vendhub_value      = None  # "Standard Booking" or "VendHub Q&A Booking"
+        earliest_react_email = None  # earliest Reactivation Email meeting date
         vendhub_dates      = []    # dates of any VendHub meeting (for First VendHub Call Booked)
 
         for m in meetings:
@@ -286,7 +295,7 @@ def calculate_desired_state(all_meetings: list) -> dict:
                 dt_utc = datetime.fromisoformat(starts_at.replace("Z", "+00:00"))
                 date = dt_utc.astimezone(PACIFIC).strftime("%Y-%m-%d")
 
-            if tier in ("closer", "post_webinar", "scraper", "vendhub_consultation", "vendhub_nextsteps"):
+            if tier in ("closer", "post_webinar", "scraper", "vendhub_consultation", "vendhub_nextsteps", "react_email"):
                 if date:
                     closer_dates.append(date)
                 if tier == "post_webinar":
@@ -305,6 +314,9 @@ def calculate_desired_state(all_meetings: list) -> dict:
                     vendhub_value = "VendHub Q&A Booking"
                     if date:
                         vendhub_dates.append(date)
+                elif tier == "react_email":
+                    if date and (earliest_react_email is None or date < earliest_react_email):
+                        earliest_react_email = date
             elif tier == "setter":
                 has_setter = True
             elif tier == "route_planning":
@@ -326,12 +338,14 @@ def calculate_desired_state(all_meetings: list) -> dict:
                 vendhub_dates.append(date)
 
         # Determine Funnel Name DEAL value for this lead
-        # Scraper wins over VSL if both exist; each has its own date cutoff
+        # Priority: Reactivation Scrapers > VSL > Reactivation Email
         funnel_name = None
         if earliest_scraper and earliest_scraper >= SCRAPER_FUNNEL_CUTOFF:
             funnel_name = "Reactivation Scrapers"
         elif earliest_vsl and earliest_vsl >= VSL_FUNNEL_CUTOFF:
             funnel_name = "VSL"
+        elif earliest_react_email and earliest_react_email >= REACT_EMAIL_CUTOFF:
+            funnel_name = "Reactivation Email"
 
         if closer_dates:
             call_type = "Closer"
@@ -342,7 +356,7 @@ def calculate_desired_state(all_meetings: list) -> dict:
 
         vendhub_date = min(vendhub_dates) if vendhub_dates else None
 
-        if call_type is not None or has_scraper or has_postwebinar or funnel_name or vendhub_value or vendhub_date:
+        if call_type is not None or has_scraper or has_postwebinar or funnel_name or vendhub_value or vendhub_date or earliest_react_email:
             desired[lead_id] = {
                 "date":         min(closer_dates) if closer_dates else None,
                 "call_type":    call_type,
