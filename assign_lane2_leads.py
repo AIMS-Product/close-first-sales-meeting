@@ -61,15 +61,20 @@ SCRAPERS = {
     # "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj": "Jason Aaron",
 }
 
-# None = assign the whole pool, no cap.
+# Target queue size per rep. None = uncapped (deal the whole pool).
 #
-# Deliberate: the views already do the prioritising. A rep opens Blitz first and
-# works down, so a deep Active-Nurture book sits behind the hot lists rather than
-# burying them. Capping would just leave leads unowned and unworkable.
+# 1,000 ≈ a few weeks of runway at ~100 calls/day. The assigner is a TOP-UP that
+# runs every weekday morning, so a capped queue refills as reps work it down —
+# nobody runs dry, and the pool stays intact for new hires (Sydney, Connor) and
+# for reclaim headroom. Uncapped dealt 28,392 in one go and emptied the pool.
 #
-# Unlimited mode still balances — it levels everyone toward the same holding
-# rather than dealing evenly onto uneven queues (see build_deficits).
-MAX_QUEUE = None
+# This is a DEFAULT, not a ceiling on what's already held: the cap stops giving,
+# it never claws back. A rep over target simply receives nothing.
+#
+# Deliberately not None: a bodyless cron dispatch sends no max_queue input, and
+# the safe behaviour has to be what happens when nobody passes an argument.
+# Same reasoning as the dry_run inversion on the reconciler workflow.
+MAX_QUEUE = 1000
 
 # Handed out in this order — hottest first. A rep's queue fills with Blitz before
 # it ever reaches Active-Nurture.
