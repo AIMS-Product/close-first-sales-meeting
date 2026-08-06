@@ -86395,8 +86395,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_QD3yO4igvabCOhX5XRaSZVD7ahrqy6WZePN4JI23MSG": {
+      "date": "2026-08-06",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": "Standard Booking",
+      "vendhub_date": "2026-08-06"
     }
   },
-  "saved_at": "2026-08-06 00:39:42 UTC",
-  "count": 8812
+  "saved_at": "2026-08-06 01:09:39 UTC",
+  "count": 8813
 }
