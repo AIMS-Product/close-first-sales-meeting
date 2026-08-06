@@ -86405,8 +86405,18 @@
       "funnel_name": null,
       "vendhub": "Standard Booking",
       "vendhub_date": "2026-08-06"
+    },
+    "lead_eQ64CYZPeIwb76Tbud0D1rh5OVxRVv5t8Q88raSIzC8": {
+      "date": "2026-08-06",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-06 04:38:37 UTC",
-  "count": 8813
+  "saved_at": "2026-08-06 05:09:09 UTC",
+  "count": 8814
 }
