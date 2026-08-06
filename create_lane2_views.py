@@ -131,15 +131,25 @@ def calling_hours():
             "condition": {"type": "local_time",
                           "on_or_after": CALL_WINDOW[0], "before": CALL_WINDOW[1]}}
 
-def cool_off():
+def cool_off(channels=("call",)):
     """
-    Hide a lead from the dialer for N hours after a rep touch.
+    Hide a lead from the dialer for N hours after an outbound touch.
 
-    Covers calls AND SMS. Email is deliberately excluded — marketing emails the
-    same people, and cooling off on that would empty the dial lists.
+    ONLY used on the shared Pool views now. On an owned list it was solving a
+    problem ownership already solves — two reps on one lead — while creating a
+    real one: a rep who dials a lead couldn't see them again for 12 hours, even
+    to try a second number the same afternoon. Pacing now comes from queue ORDER
+    (least-recently-contacted first), which leaves the lead callable instead of
+    hiding it. See the sort direction on the nurture views.
+
+    Defaults to CALLS ONLY. SMS was in here and had to come out: bulk SMS is a
+    marketing motion, not evidence a human is working the lead, so a blast was
+    silently pulling thousands of leads out of the dial lists for 12 hours.
+
+    Email was never included, for the same reason.
     """
     return {"negate": True, "type": "or",
-            "queries": [has_outgoing(k, hours=COOL_OFF_HOURS) for k in ("call", "sms")]}
+            "queries": [has_outgoing(k, hours=COOL_OFF_HOURS) for k in channels]}
 
 def has_incoming(kind, days):
     """Lead contacted US by this channel in the last N days."""
@@ -394,7 +404,7 @@ VIEWS = [
      "The full Setter hot window, read from Recapture State rather than re-derived. This is what "
      "makes the re-engagement arrow visible: an older never-called lead who replies is re-stamped "
      "Hot-Inbound and appears here, which a created-date filter would never have caught.",
-     view(NO_UPCOMING, choice(F_STATE, ["Hot-Inbound"]), cool_off(), calling_hours()),
+     view(NO_UPCOMING, choice(F_STATE, ["Hot-Inbound"]), calling_hours()),
      sort_by("date_created"), cols(F_ENTRY, F_RESOURCE, F_EVERCALL)),
 
     ("Setter · Booked — Confirm & Disco",
@@ -409,33 +419,34 @@ VIEWS = [
      "The no-show and cancellation slice of Blitz. Different opener from a lost deal — they never "
      "heard the pitch. Disjoint from Lost & Re-engaged, so no double-dialling.",
      view(NO_UPCOMING, choice(F_STATE, ["Blitz"]), status_in([S_NOSHOW, S_CANCELED]),
-          cool_off(), calling_hours()),
+          calling_hours()),
      sort_by("last_lead_status_change_date"), cols(F_ENTRY, F_ANGLE)),
 
     ("Scraper · Blitz — Lost & Re-engaged",
      "The rest of Blitz: recently lost deals, plus anyone who had a call and has just re-engaged. "
      "Read from Recapture State, so re-engaged leads actually surface here.",
      view(NO_UPCOMING, choice(F_STATE, ["Blitz"]),
-          status_in([S_NOSHOW, S_CANCELED], negate=True), cool_off(), calling_hours()),
+          status_in([S_NOSHOW, S_CANCELED], negate=True), calling_hours()),
      sort_by("last_lead_status_change_date"), cols(F_ANGLE, F_ENTRY, F_EVERCALL)),
 
     ("Scraper · VendHub Downsell (Price + DIY)",
      "Showed and didn't close on price, financing, DIY or a competitor. The only objection cut we "
-     "trust today — safe to work before the transcript backfill lands.",
+     "trust today. Overlaps your other lists on purpose — same person, better-known objection. "
+     "Least-recently-contacted first.",
      view(NO_UPCOMING, choice(F_ANGLE, ["Price", "DIY"]),
-          choice(F_EVERCALL, ["Yes"]), cool_off(), calling_hours()),
-     sort_by("last_communication_date"), cols(F_ANGLE, F_RESOURCE)),
+          choice(F_EVERCALL, ["Yes"]), calling_hours()),
+     sort_by("last_communication_date", "asc"), cols(F_ANGLE, F_RESOURCE)),
 
     ("Scraper · Active Nurture",
-     "Didn't book inside the Blitz window. Steady re-engagement: dials plus weekly marketing.",
-     view(NO_UPCOMING, choice(F_STATE, ["Active-Nurture"]), cool_off(), calling_hours()),
-     sort_by("last_communication_date"), cols(F_ANGLE, F_ENTRY)),
+     "Didn't book inside the Blitz window. Steady re-engagement: dials plus weekly marketing. Sorted least-recently-contacted first, so someone you just called sinks to the bottom instead of resurfacing — call as often as you judge right, the queue paces itself.",
+     view(NO_UPCOMING, choice(F_STATE, ["Active-Nurture"]), calling_hours()),
+     sort_by("last_communication_date", "asc"), cols(F_ANGLE, F_ENTRY)),
 
     ("Scraper · Deep Nurture — Revival Dials",
      "6mo+ quiet AND assigned to a rep. The dial list for the cold/stale universe — the Ops "
      "Deep Nurture view is the whole 29k cohort, this is only what's owned and workable now.",
      view(NO_UPCOMING, choice(F_STATE, ["Deep-Nurture"]), exists(F_TEAM),
-          cool_off(), calling_hours()),
+          calling_hours()),
      sort_by("last_communication_date", "asc"), cols(F_ANGLE, F_ENTRY, F_RESOURCE)),
 
     # ---------------- Team pools — unowned work, anyone can claim ----------------
@@ -444,14 +455,14 @@ VIEWS = [
      "anyone picks them up. Claim by setting yourself as Lead Owner, and it moves into your "
      "personal Hot Inbound list.",
      view(NO_UPCOMING, choice(F_STATE, ["Hot-Inbound"]), unclaimed(),
-          cool_off(), calling_hours()),
+          cool_off(("call", "sms")), calling_hours()),
      sort_by("date_created"), cols(F_ENTRY, F_RESOURCE)),
 
     ("Scraper · Pool — Unclaimed Dormant",
      "Blitz and Active-Nurture leads with NO owner. The overflow bench: work this when your own "
      "lists are clear. Claim by setting yourself as Lead Owner.",
      view(NO_UPCOMING, choice(F_STATE, ["Blitz", "Active-Nurture"]), unclaimed(),
-          cool_off(), calling_hours()),
+          cool_off(("call", "sms")), calling_hours()),
      sort_by("last_communication_date"), cols(F_STATE, F_ANGLE, F_ENTRY)),
 
     # ---------------- Ops / marketing ----------------
