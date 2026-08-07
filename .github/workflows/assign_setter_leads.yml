@@ -1,0 +1,84 @@
+name: Assign Setter Leads (Hot inbound round robin)
+
+# Routes unclaimed hot inbound hand-raises to a named Setter.
+# Sets Lead Owner ONLY.
+#
+# Triggered externally by cron-job.org, same pattern as the reconciler.
+# Recommended cadence: EVERY 15 MINUTES during calling hours, e.g.
+#   */15 6-20 * * 1-5  (America/Los_Angeles)
+#
+# Unlike the Scraper assigner this is a speed-to-lead job — an hour-old
+# assignment is already a miss — so it runs on a tight loop rather than daily.
+#
+# NOTE the input is `dry_run`, INVERTED on purpose. A bodyless cron dispatch
+# sends no inputs, so the default has to be the useful behaviour (assign),
+# not a silent no-op that runs green every 15 minutes forever.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Tick to preview only — writes nothing"
+        required: false
+        default: false
+        type: boolean
+      max_assign:
+        description: "Safety ceiling for this run (blank = script default of 100)"
+        required: false
+        default: ""
+        type: string
+
+# Runs overlap at a 15-minute cadence if one is slow. Queue rather than cancel:
+# cancelling mid-write could leave a partial batch. Queuing is safe because each
+# run recomputes the pool from scratch, and a lead assigned by the previous run
+# has an owner and is no longer in it.
+concurrency:
+  group: lane2-assign-setter
+  cancel-in-progress: false
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install requests
+
+      - name: Assign
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: |
+          ARGS=""
+          if [ "${{ inputs.dry_run }}" != "true" ]; then ARGS="$ARGS --apply"; fi
+          if [ -n "${{ inputs.max_assign }}" ]; then ARGS="$ARGS --max-assign ${{ inputs.max_assign }}"; fi
+          echo "Running: assign_setter_leads.py $ARGS"
+          python assign_setter_leads.py $ARGS | tee setter_assign.txt
+
+      - name: Publish report
+        if: always()
+        run: |
+          {
+            echo "## Setter Assignment"
+            echo ""
+            if [ "${{ inputs.dry_run }}" = "true" ]; then
+              echo "**Mode: DRY RUN** — nothing written."
+            else
+              echo "**Mode: APPLY** — Lead Owner written."
+            fi
+            echo ""
+            echo '```'
+            cat setter_assign.txt 2>/dev/null || echo "(see job log)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
