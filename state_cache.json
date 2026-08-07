@@ -86777,8 +86777,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_wTWcExL5ZZnteERlMC01ATjpsdATlPQdX49sS7WRqCK": {
+      "date": "2026-08-08",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-07 14:39:13 UTC",
-  "count": 8850
+  "saved_at": "2026-08-07 15:09:38 UTC",
+  "count": 8851
 }
