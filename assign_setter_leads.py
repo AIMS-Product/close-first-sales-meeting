@@ -1,0 +1,230 @@
+#!/usr/bin/env python3
+"""
+Setter round robin — assigns fresh inbound hand-raises to a named Setter.
+
+Sets Lead Owner ONLY. Never touches Recapture State, Owner Team, or anything else.
+
+    python3 assign_setter_leads.py            # dry run
+    python3 assign_setter_leads.py --apply     # write
+    python3 assign_setter_leads.py --apply --max-assign 25
+
+WHY THIS IS A SEPARATE SCRIPT FROM assign_lane2_leads.py
+--------------------------------------------------------
+Same shape, different physics. Three things differ and each one matters:
+
+1. CADENCE. The Scraper assigner runs once a weekday morning; a dormant lead
+   does not care whether it waits eight hours. A hand-raise does. This is built
+   to run every ~15 minutes.
+
+2. LIVE CRITERIA, NOT STAMPED STATE. The Scraper assigner filters on
+   `Recapture State`, which the reconciler stamps hourly. That is fine for a
+   day-scale queue and fatal here: a lead that arrived four minutes ago has no
+   stamp yet, so a state-based filter would systematically miss exactly the
+   leads this exists to route. So the pool is rebuilt from the SAME live
+   conditions the Hot-Inbound bucket uses. Same rule as the SLA views:
+   time-critical reads live, day-scale may read state.
+
+3. NO QUEUE TARGET. A Scraper holds a 1,000-lead book. A Setter does not "hold"
+   hot leads — they work them or lose them. So there is no top-up-to-target;
+   every eligible lead is dealt, balanced by who is currently carrying less.
+
+Balancing is by CURRENT live hot holdings, deliberately, so the script stays
+stateless — no rotation pointer to persist or get out of sync. A Setter who
+converts their hot leads quickly drops back down the count and receives the next
+one. That rewards throughput, which is the behaviour we want on a speed-to-lead
+queue. If it ever needs to be "equal count dealt per day" instead of "equal live
+load", that is a different function and a deliberate decision.
+"""
+
+import argparse
+import sys
+from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor
+
+from lane2_state import (
+    BASE, F_OWNER, F_OVERRIDE, SETTERS, SUPPRESS_STATUSES,
+    LANE1_OPP_STATUSES, LANE_1, WRITE_WORKERS,
+    HOT_WINDOW_DAYS, REENGAGE_DAYS,
+    _wrap, _req, cf, search, status_in, num_range, within,
+    has_completed_meeting, any_inbound, has_opp_status,
+)
+
+# ============================================================================
+# CONFIG
+# ============================================================================
+
+# Safety ceiling per run, not a business rule. At a ~15 minute cadence this is
+# ~400/hour, which drains any realistic backlog within the morning while making
+# it impossible for a bad query to deal thousands of leads in one go.
+MAX_PER_RUN = 100
+
+# Setters do not get leads another rep already owns. Same guarantee as the
+# Scraper assigner: this script only ever picks up leads with NO Lead Owner.
+#
+# Note there are ~1,600 Hot-Inbound leads owned by SCRAPERS. Those are nurture
+# leads that re-engaged and got re-stamped Hot-Inbound; they keep their existing
+# owner and this script leaves them alone. Moving them to Setters would be a
+# separate, deliberate decision — not something to do silently here.
+
+# ============================================================================
+
+
+def owner_empty():
+    return {"type": "field_condition", "negate": True,
+            "field": {"type": "custom_field", "custom_field_id": F_OWNER},
+            "condition": {"type": "exists"}}
+
+
+def owner_is(user_ids):
+    return {"type": "field_condition", "negate": False,
+            "field": {"type": "custom_field", "custom_field_id": F_OWNER},
+            "condition": {"type": "reference", "reference_type": "user_or_group",
+                          "object_ids": list(user_ids)}}
+
+
+def negated(cond):
+    import json
+    c = json.loads(json.dumps(cond))
+    c["negate"] = not c.get("negate", False)
+    return c
+
+
+def hot_inbound_live():
+    """
+    The Hot-Inbound bucket, rebuilt from live conditions.
+
+    Mirrors precedence rules 3 and 6 in lane2_state.BUCKETS, which are the two
+    that produce Hot-Inbound:
+
+        #3  re-engaged : inbound in the last REENGAGE_DAYS, never had a call
+        #6  fresh      : created in the last HOT_WINDOW_DAYS, never had a call
+
+    Both additionally require: not suppressed, and nothing on the calendar.
+    Kept as one OR so the two paths can't drift apart.
+    """
+    return [
+        status_in(SUPPRESS_STATUSES, negate=True),
+        num_range("num_upcoming_meetings", lte=0),
+        has_completed_meeting(negate=True),
+        {"negate": False, "type": "or", "queries": [
+            within("date_created", days=HOT_WINDOW_DAYS),
+            any_inbound(REENGAGE_DAYS),
+        ]},
+    ]
+
+
+def not_lane1():
+    """No Closer actively working a deal on this lead. Live, not state-based."""
+    return negated(has_opp_status(LANE1_OPP_STATUSES))
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--apply", action="store_true",
+                    help="write Lead Owner (default: dry run)")
+    ap.add_argument("--max-assign", type=int, default=MAX_PER_RUN,
+                    help=f"safety ceiling for this run (default {MAX_PER_RUN})")
+    args = ap.parse_args()
+
+    if not SETTERS:
+        sys.exit("No setters configured in lane2_state.SETTERS.")
+
+    overlap = set(SETTERS) & set(LANE_1)
+    if overlap:
+        sys.exit("CONFIG ERROR — user is both a Setter and Lane 1: "
+                 + ", ".join(SETTERS[u] for u in overlap))
+
+    # ---- 1. what does each Setter currently carry? -------------------------
+    print("Counting live hot queues...", file=sys.stderr)
+    held = search(
+        _wrap(*hot_inbound_live(), owner_is(SETTERS.keys())),
+        fields=["id", f"custom.{F_OWNER}"])
+    counts = Counter(cf(l, F_OWNER) for l in held)
+
+    # ---- 2. the unclaimed hot pool -----------------------------------------
+    print("Reading unclaimed hot inbound...", file=sys.stderr)
+    pool = search(
+        _wrap(*hot_inbound_live(), owner_empty(), not_lane1()),
+        fields=["id", "display_name", "date_created", f"custom.{F_OVERRIDE}"])
+    pool = [r for r in pool if cf(r, F_OVERRIDE) != "Yes"]
+
+    # Oldest first. A lead that has been sitting unowned for six days is more
+    # urgent than one that arrived a minute ago — the new one is still inside
+    # its SLA window, the old one is already a miss.
+    pool.sort(key=lambda r: r.get("date_created") or "")
+
+    total_available = len(pool)
+    capped = total_available > args.max_assign
+    if capped:
+        pool = pool[:args.max_assign]
+
+    if not pool:
+        print("\nNothing unclaimed in the hot window. Nothing to assign.")
+        return
+
+    # ---- 3. deal, always to whoever is carrying least -----------------------
+    plan = defaultdict(list)
+    running = {u: counts.get(u, 0) for u in SETTERS}
+    for lead in pool:
+        uid = min(SETTERS, key=lambda u: (running[u], SETTERS[u]))
+        plan[uid].append(lead)
+        running[uid] += 1
+
+    # ---- 4. report ----------------------------------------------------------
+    print()
+    print(f"{'Setter':<20} {'holds':>8} {'gets':>8} {'after':>8}")
+    print("-" * 48)
+    for uid in sorted(SETTERS, key=lambda u: -(counts.get(u, 0) + len(plan[u]))):
+        have, gets = counts.get(uid, 0), len(plan[uid])
+        print(f"{SETTERS[uid]:<20} {have:>8,} {gets:>+8,} {have + gets:>8,}")
+    print("-" * 48)
+    dealt = sum(len(v) for v in plan.values())
+    print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {dealt:>+8,} "
+          f"{sum(counts.values()) + dealt:>8,}")
+
+    print(f"\nUnclaimed hot inbound available : {total_available:,}")
+    print(f"Assigned this run               : {dealt:,}")
+    if capped:
+        print(f"Left for the next run           : {total_available - dealt:,}"
+              f"   (--max-assign {args.max_assign})")
+
+    if not args.apply:
+        print("\nDRY RUN — nothing written. Re-run with --apply.")
+        print("\nSample (oldest first):")
+        for uid, ls in plan.items():
+            for l in ls[:3]:
+                created = (l.get("date_created") or "")[:16].replace("T", " ")
+                print(f"  {created}  {l.get('display_name', '?')[:32]:<32} -> {SETTERS[uid]}")
+        return
+
+    # ---- 5. write -----------------------------------------------------------
+    work = [(l["id"], uid) for uid, ls in plan.items() for l in ls]
+    print(f"\nAssigning {len(work):,} leads with {WRITE_WORKERS} workers...")
+    ok = err = 0
+    errors = []
+
+    def _write(item):
+        lid, uid = item
+        try:
+            _req("PUT", f"{BASE}/lead/{lid}/", json={f"custom.{F_OWNER}": uid})
+            return True, None
+        except Exception as e:
+            return False, f"{lid}: {e}"
+
+    with ThreadPoolExecutor(max_workers=WRITE_WORKERS) as ex:
+        for good, msg in ex.map(_write, work):
+            if good:
+                ok += 1
+            else:
+                err += 1
+                if len(errors) < 5:
+                    errors.append(msg)
+
+    print(f"\nDone. {ok:,} assigned, {err:,} failed.")
+    for m in errors:
+        print(f"  {m}", file=sys.stderr)
+    print("\nOwner Team will catch up on the next reconciler run.")
+
+
+if __name__ == "__main__":
+    main()
