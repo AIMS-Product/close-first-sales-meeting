@@ -2,14 +2,21 @@
 """
 sync_lead_owner_to_opp.py
 
-Keeps each active (open) Opportunity's native owner (`user_id`) in sync
-with its lead's "Lead Owner" custom field. Lead Owner is the source of
-truth.
+Keeps each Opportunity's native owner (`user_id`) in sync with its lead's
+"Lead Owner" custom field, for every opportunity EXCEPT Closed/Won ones.
+Lead Owner is the source of truth.
 
-Rule set:
-  - Only ACTIVE (open) opportunities are checked. Won/Lost opportunities
-    keep whichever rep actually closed or lost them -- matches the
-    existing Lane 2 / Lost Deals reassignment scripts.
+Rule set (updated 2026-08-07 per Stephen -- see decision note below):
+  - ALL opportunities are checked and reassigned to match Lead Owner
+    EXCEPT ones in a Won status (WON_OPP_STATUS_IDS). Won deals keep
+    whichever rep actually closed them permanently -- that's revenue
+    attribution and shouldn't move even if Lead Owner changes later.
+  - Lost and active (open) opportunities ARE reassigned to match Lead
+    Owner. This is a deliberate change from the original "active only"
+    design: this org sometimes re-scrapes/reactivates Lost leads and
+    reassigns ownership via bulk import, and expects the Lost
+    opportunity's owner to follow along rather than staying stuck on
+    whoever originally lost it.
   - Leads with no Lead Owner set are skipped (nothing to sync against).
   - Leads with the "Reassignment Override" custom field set to "Yes" are
     skipped entirely -- this is the same escape hatch your other
@@ -29,10 +36,16 @@ Owner value. If Close's API doesn't embed opportunities/custom fields by
 default for your account, expand the _fields param in
 paginate_leads_with_opportunities().
 
-"Active" is determined from ACTIVE_OPP_STATUS_IDS (built from your Sales
+"Won" is determined from WON_OPP_STATUS_IDS (built from your Sales
 Pipeline's status list) rather than trusting a status_type field on the
 embedded opportunity object, since embeds don't always include every
-top-level field.
+top-level field. This set intentionally includes BOTH your Sales
+Pipeline's official 🏆 Closed/Won status (status_type "won") AND the
+legacy "OLD Deal Won (Prior to 2026 Migration)" status -- the latter is
+typed "active" in Close, not "won", but its name says it represents an
+already-won deal, and the same non-negotiable-attribution logic should
+apply to it. If that legacy status actually means something else in
+practice, pull it out of WON_OPP_STATUS_IDS.
 
 Usage:
     python sync_lead_owner_to_opp.py              # live
@@ -57,30 +70,13 @@ BASE_URL = "https://api.close.com/api/v1"
 LEAD_OWNER_FIELD_ID = "cf_gOfS9pFwext58oberEegLyix8hZzeHrxhCZOVh3P3rd"  # "Lead Owner"
 REASSIGNMENT_OVERRIDE_FIELD_ID = "cf_6PnYz6aaAkLzHMU3Faxz7kFurBEfadqlfGiBgfhjaVC"  # "Reassignment Override"
 
-# Opportunity status_ids whose type is "active" (open) in the Sales Pipeline.
-# Pulled directly from Settings -> Statuses. Update if statuses change.
-ACTIVE_OPP_STATUS_IDS = {
-    "stat_S4cxvnfOWWi8jOqTPtGoq34BzuU8ah9fKTPPfO5P9Yi",  # Call Booked
-    "stat_cqwPKIAezUGp8sJ4May80zRjJAlzCQzVXtAc4P9xyPd",  # Reschedule
-    "stat_mApYfeCdMszhTCCp6TJMWBRCRtmMilVyvaMpVlzbZZR",  # Follow Up
-    "stat_csQPyVHTXpTFBSDAK8kx10yGCtX40H0ONbD4QNXbJBI",  # Contract Sent
-    "stat_NCXVjokjo3VXirJx2eSAcRoKlEDg1WsO1sjeLfU8udO",  # No Show
-    "stat_9ae2fCnLhMKoWq15dKkAEb5drDFPXgV1PZHJegl3fuq",  # Canceled (by Lead)
-    "stat_oyR6irMMbv9KIigS8VEmX44DmXMhUut3EL57pFsExPF",  # Long Term Follow Up
-    "stat_bhmaw9aSACxeEIW9wjdE9dnSBMyQEWpZBSZZRdg0fcK",  # Non-responsive
-    "stat_ZA4DFlp3JeGCpqLVoQxIEGfd3WNxAqdM5RrHQrzrpm6",  # OLD Deal Won (Prior to 2026 Migration)
-    "stat_P9TLh4NNjKZztUlaUI533dcxhSCXmfoL7DuC2gIuIzM",  # Do Not Contact
-    "stat_gJjDwCgfdPqVaAgVY64CI8XwxjNuwi3yrKlIXnBdF5l",  # Webinar Lead
-    "stat_SJL06q8F8GOcHyX6RBclkQHLDh1tHaRm9KR4R35nOXA",  # Scraper No-Show
-    "stat_XdEFMMZI2kSfeHSb1DxS08WZCQAROeSOElayjYKawPU",  # Scraper Show
-    "stat_FP0Obs2SMeD84gKU2WsjpRQH9JYEiArHniVdbc5drsc",  # Scraper Canceled
-    "stat_oPfsZCwCCEadif8uzCSCcb6TroB3Gu5FKxnUPdJlWTM",  # Scraper Rescheduled
-    "stat_xJYl3faVfshDeuaL1w1Rogh3JA64eLJqNVJL1navPWf",  # Meeting Scheduled
-    "stat_Nr7cBCXTx67umK73a6KnaFoIDqARapYUgZ5ApUUs41x",  # Discovery Completed
-    "stat_NGfzbFQkI46nagRbqrRPyaAm8z8gdqHa8AhJnjEwdQq",  # Proposal Presented
-    "stat_lIge79IrriROLh2ocwM1Xm6oS74vSPJx0epwL465hxN",  # Commitment Pending
-    "stat_8XbH25IjXYGT3b1g07d9AFNCb6WbqVjd6Yjz0ykd3NQ",  # Nurture
-    "stat_G331FCVhaJeCFYRDNEfRBwOqnx13hNo2o6p2cvwrWwe",  # Discovery Call
+# Opportunity status_ids that represent a WON deal -- these are the ONLY
+# statuses excluded from the owner sync. Everything else (active + Lost)
+# gets reassigned to match Lead Owner. Pulled from Settings -> Statuses.
+# Update if statuses change.
+WON_OPP_STATUS_IDS = {
+    "stat_WnFc0uhjcjV0cc3bVzdFVqDz7av6rbsOmOvHUsO6s03",  # 🏆 Closed / Won (status_type: won)
+    "stat_ZA4DFlp3JeGCpqLVoQxIEGfd3WNxAqdM5RrHQrzrpm6",  # OLD Deal Won (Prior to 2026 Migration) (status_type: active, but named/treated as won)
 }
 
 
@@ -164,30 +160,30 @@ def run(dry_run, limit):
 
     print(f"Fetching leads (with opportunities embedded){f', limit {limit}' if limit else ''}...")
     leads_scanned = 0
-    active_opps_scanned = 0
+    opps_scanned = 0
     updated = already_correct = no_owner_set = override_skipped = failed = 0
 
     for lead in client.paginate_leads_with_opportunities(limit=limit):
         leads_scanned += 1
         opps = lead.get("opportunities") or []
-        active_opps = [o for o in opps if o.get("status_id") in ACTIVE_OPP_STATUS_IDS]
-        if not active_opps:
+        syncable_opps = [o for o in opps if o.get("status_id") not in WON_OPP_STATUS_IDS]
+        if not syncable_opps:
             continue
 
         lead_id = lead["id"]
 
         override = read_custom(lead, REASSIGNMENT_OVERRIDE_FIELD_ID, "Reassignment Override")
         if override == "Yes":
-            override_skipped += len(active_opps)
+            override_skipped += len(syncable_opps)
             continue
 
         lead_owner_user_id = read_custom(lead, LEAD_OWNER_FIELD_ID, "Lead Owner")
         if not lead_owner_user_id:
-            no_owner_set += len(active_opps)
+            no_owner_set += len(syncable_opps)
             continue
 
-        for opp in active_opps:
-            active_opps_scanned += 1
+        for opp in syncable_opps:
+            opps_scanned += 1
 
             if not owner_needs_update(opp.get("user_id"), lead_owner_user_id):
                 already_correct += 1
@@ -216,13 +212,13 @@ def run(dry_run, limit):
                   f"-> owner {lead_owner_user_id}")
 
     print("\n--- Summary ---")
-    print(f"Leads scanned:                 {leads_scanned}")
-    print(f"Active opportunities checked:  {active_opps_scanned}")
-    print(f"Updated:                       {updated}")
-    print(f"Already correct:               {already_correct}")
-    print(f"No Lead Owner set (skipped):   {no_owner_set}")
-    print(f"Reassignment Override (skip):  {override_skipped}")
-    print(f"Failed:                        {failed}")
+    print(f"Leads scanned:                     {leads_scanned}")
+    print(f"Non-Won opportunities checked:     {opps_scanned}")
+    print(f"Updated:                           {updated}")
+    print(f"Already correct:                   {already_correct}")
+    print(f"No Lead Owner set (skipped):       {no_owner_set}")
+    print(f"Reassignment Override (skip):      {override_skipped}")
+    print(f"Failed:                            {failed}")
     if dry_run:
         print("\nDRY RUN -- no writes were made.")
 
@@ -250,7 +246,22 @@ def selftest():
     check("read_custom returns None when field absent",
           read_custom({}, "cf_x", "Some Field") is None)
 
-    check("ACTIVE_OPP_STATUS_IDS has 21 entries", len(ACTIVE_OPP_STATUS_IDS) == 21)
+    check("WON_OPP_STATUS_IDS has 2 entries", len(WON_OPP_STATUS_IDS) == 2)
+
+    # Simulate the inclusion filter used in run(): everything except Won.
+    sample_opps = [
+        {"id": "o1", "status_id": "stat_S4cxvnfOWWi8jOqTPtGoq34BzuU8ah9fKTPPfO5P9Yi"},  # Call Booked (active)
+        {"id": "o2", "status_id": "stat_bBWcww9IflskaleadKuK2E4SGFF4qy3IuBucrqo7H4u"},  # Lost
+        {"id": "o3", "status_id": "stat_LbsuNBimzj2Fa3RCBpTz6kEDeokz3O97LwUorSpDhVp"},  # Closed Lost
+        {"id": "o4", "status_id": "stat_WnFc0uhjcjV0cc3bVzdFVqDz7av6rbsOmOvHUsO6s03"},  # Closed/Won -- excluded
+        {"id": "o5", "status_id": "stat_ZA4DFlp3JeGCpqLVoQxIEGfd3WNxAqdM5RrHQrzrpm6"},  # OLD Deal Won -- excluded
+    ]
+    syncable_ids = {o["id"] for o in sample_opps if o["status_id"] not in WON_OPP_STATUS_IDS}
+    check("active opportunities are syncable", "o1" in syncable_ids)
+    check("Lost opportunities are syncable", "o2" in syncable_ids)
+    check("Closed Lost opportunities are syncable", "o3" in syncable_ids)
+    check("Closed/Won opportunities are excluded", "o4" not in syncable_ids)
+    check("OLD Deal Won opportunities are excluded", "o5" not in syncable_ids)
 
     print(f"\n{'PASSED' if failures == 0 else f'{failures} FAILURE(S)'}")
     sys.exit(1 if failures else 0)
