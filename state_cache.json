@@ -52073,10 +52073,10 @@
     "lead_Utfcuuqr24EmpNAYq8n3ORPZxiDtiRvOTlps2zBykTG": {
       "date": "2026-04-16",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -83763,10 +83763,10 @@
     "lead_OBP0ApMcVUHVkyLseiZsYvgb4eMeTTzFhSkU9a1GQaU": {
       "date": "2026-04-16",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -86919,6 +86919,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-07 22:39:24 UTC",
+  "saved_at": "2026-08-07 23:09:05 UTC",
   "count": 8864
 }
