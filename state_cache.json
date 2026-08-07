@@ -86757,8 +86757,18 @@
       "funnel_name": "VSL",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_rKevjAKAscK6ZZ25PUlhVvGVhnopUEjn3uR0afdQm6N": {
+      "date": "2026-08-11",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-07 11:49:43 UTC",
-  "count": 8848
+  "saved_at": "2026-08-07 12:09:17 UTC",
+  "count": 8849
 }
