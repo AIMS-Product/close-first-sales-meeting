@@ -31721,7 +31721,7 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -86749,6 +86749,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-07 04:39:12 UTC",
+  "saved_at": "2026-08-07 05:09:17 UTC",
   "count": 8847
 }
