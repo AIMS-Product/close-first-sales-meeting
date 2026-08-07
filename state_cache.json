@@ -86769,12 +86769,12 @@
       "vendhub_date": null
     },
     "lead_68Xc8GHgqLlv7PBXylF66dfbk7spqwTvW5pGnBCUFCP": {
-      "date": "2026-08-07",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Pearl Sathekge",
+      "funnel_name": "YouTube",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -86787,8 +86787,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_DAKstZcc9MCKGLvJGTwvB79LUb5nc50Q8qRyWBWfirN": {
+      "date": "2026-08-07",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-07 15:31:19 UTC",
-  "count": 8851
+  "saved_at": "2026-08-07 16:09:51 UTC",
+  "count": 8852
 }
