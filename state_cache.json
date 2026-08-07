@@ -86419,12 +86419,12 @@
       "vendhub_date": null
     },
     "lead_4QVGXIqT6KHgZmvHBdoA8NNgKZ2HkXRKhHl8SzGtUgJ": {
-      "date": "2026-08-07",
+      "date": "2026-08-09",
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": null,
+      "funnel_name": "Meta Ads",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -86749,6 +86749,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-07 00:46:25 UTC",
+  "saved_at": "2026-08-07 01:09:02 UTC",
   "count": 8847
 }
