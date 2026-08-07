@@ -86857,8 +86857,28 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_I2DRDJiPvaLEEo8PuoDpVGr4ILu6VLJsmSDdvMVuys4": {
+      "date": "2026-08-10",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "WWWS",
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_JZkXFBWZCRvOpO7n1B40D17qYB4TvTjuNaK5lMpSwlV": {
+      "date": "2026-08-08",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-07 19:09:05 UTC",
-  "count": 8858
+  "saved_at": "2026-08-07 19:35:20 UTC",
+  "count": 8860
 }
