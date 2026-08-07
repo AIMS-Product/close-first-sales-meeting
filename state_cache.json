@@ -86864,7 +86864,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "WWWS",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -86874,11 +86874,11 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-07 19:35:20 UTC",
+  "saved_at": "2026-08-07 20:09:14 UTC",
   "count": 8860
 }
