@@ -86589,7 +86589,7 @@
       "vendhub_date": null
     },
     "lead_71fY8e1R9SyvR7VS4WU0gXTB1G67xiGmK9GieaMoZuu": {
-      "date": "2026-08-08",
+      "date": "2026-08-09",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
@@ -87017,8 +87017,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_OGLj5jbxjVs3Oj45Lo3EXQvB34ZAZT10t79yHsaKRtb": {
+      "date": "2026-08-10",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-08 21:06:01 UTC",
-  "count": 8874
+  "saved_at": "2026-08-08 21:38:55 UTC",
+  "count": 8875
 }
