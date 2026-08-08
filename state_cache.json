@@ -86934,7 +86934,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -86957,8 +86957,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_b0A8fZaZ3mhbi484KcuC5WeIlhcIyqwGqiGlTv8o2BY": {
+      "date": "2026-08-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-08 02:09:50 UTC",
-  "count": 8868
+  "saved_at": "2026-08-08 02:39:26 UTC",
+  "count": 8869
 }
