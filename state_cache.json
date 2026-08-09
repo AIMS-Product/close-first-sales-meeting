@@ -87047,8 +87047,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_Cg3AZh3VkWbwJ6QtBrEKjqNrutnnEbZ14qtMrxGwk6t": {
+      "date": "2026-08-10",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-09 16:37:33 UTC",
-  "count": 8877
+  "saved_at": "2026-08-09 17:09:21 UTC",
+  "count": 8878
 }
