@@ -87107,8 +87107,18 @@
       "funnel_name": "VSL",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_Xdjl8dLArIpNIfbN3LH2RQ1IhABJk34Ik6OHzkKuvQe": {
+      "date": "2026-06-16",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-10 11:09:29 UTC",
-  "count": 8883
+  "saved_at": "2026-08-10 11:39:06 UTC",
+  "count": 8884
 }
