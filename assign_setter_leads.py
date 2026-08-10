@@ -42,7 +42,7 @@ from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 
 from lane2_state import (
-    BASE, F_OWNER, F_OVERRIDE, SETTERS, SUPPRESS_STATUSES,
+    BASE, F_OWNER, F_OVERRIDE, SETTERS, HYBRID_SETTERS, SUPPRESS_STATUSES,
     LANE1_OPP_STATUSES, LANE_1, WRITE_WORKERS,
     HOT_WINDOW_DAYS, REENGAGE_DAYS,
     _wrap, _req, cf, search, status_in, num_range, within,
@@ -57,6 +57,19 @@ from lane2_state import (
 # ~400/hour, which drains any realistic backlog within the morning while making
 # it impossible for a bad query to deal thousands of leads in one go.
 MAX_PER_RUN = 100
+
+# Hybrid Setters (Ariella) book and run their own calls rather than handing off
+# to Lane 1. Hot inbound is still the right raw material for that, so they share
+# this rotation by default and receive an equal share.
+#
+# Set False to hold them out entirely — do that if her lead mix should come from
+# somewhere else instead. Whether "equal share" is right for a rep who also runs
+# the call is an open question: she may warrant fewer leads (each one costs her
+# more time) or better-qualified ones. Changing that means weighting the deal,
+# which is a deliberate change, not a config flip.
+HYBRID_IN_ROTATION = True
+
+ROTATION = {**SETTERS, **HYBRID_SETTERS} if HYBRID_IN_ROTATION else dict(SETTERS)
 
 # Setters do not get leads another rep already owns. Same guarantee as the
 # Scraper assigner: this script only ever picks up leads with NO Lead Owner.
@@ -126,18 +139,18 @@ def main():
                     help=f"safety ceiling for this run (default {MAX_PER_RUN})")
     args = ap.parse_args()
 
-    if not SETTERS:
-        sys.exit("No setters configured in lane2_state.SETTERS.")
+    if not ROTATION:
+        sys.exit("No setters configured in lane2_state.SETTERS / HYBRID_SETTERS.")
 
-    overlap = set(SETTERS) & set(LANE_1)
+    overlap = set(ROTATION) & set(LANE_1)
     if overlap:
         sys.exit("CONFIG ERROR — user is both a Setter and Lane 1: "
-                 + ", ".join(SETTERS[u] for u in overlap))
+                 + ", ".join(ROTATION[u] for u in overlap))
 
     # ---- 1. what does each Setter currently carry? -------------------------
     print("Counting live hot queues...", file=sys.stderr)
     held = search(
-        _wrap(*hot_inbound_live(), owner_is(SETTERS.keys())),
+        _wrap(*hot_inbound_live(), owner_is(ROTATION.keys())),
         fields=["id", f"custom.{F_OWNER}"])
     counts = Counter(cf(l, F_OWNER) for l in held)
 
@@ -164,9 +177,9 @@ def main():
 
     # ---- 3. deal, always to whoever is carrying least -----------------------
     plan = defaultdict(list)
-    running = {u: counts.get(u, 0) for u in SETTERS}
+    running = {u: counts.get(u, 0) for u in ROTATION}
     for lead in pool:
-        uid = min(SETTERS, key=lambda u: (running[u], SETTERS[u]))
+        uid = min(ROTATION, key=lambda u: (running[u], ROTATION[u]))
         plan[uid].append(lead)
         running[uid] += 1
 
@@ -174,9 +187,9 @@ def main():
     print()
     print(f"{'Setter':<20} {'holds':>8} {'gets':>8} {'after':>8}")
     print("-" * 48)
-    for uid in sorted(SETTERS, key=lambda u: -(counts.get(u, 0) + len(plan[u]))):
+    for uid in sorted(ROTATION, key=lambda u: -(counts.get(u, 0) + len(plan[u]))):
         have, gets = counts.get(uid, 0), len(plan[uid])
-        print(f"{SETTERS[uid]:<20} {have:>8,} {gets:>+8,} {have + gets:>8,}")
+        print(f"{ROTATION[uid]:<20} {have:>8,} {gets:>+8,} {have + gets:>8,}")
     print("-" * 48)
     dealt = sum(len(v) for v in plan.values())
     print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {dealt:>+8,} "
@@ -194,7 +207,7 @@ def main():
         for uid, ls in plan.items():
             for l in ls[:3]:
                 created = (l.get("date_created") or "")[:16].replace("T", " ")
-                print(f"  {created}  {l.get('display_name', '?')[:32]:<32} -> {SETTERS[uid]}")
+                print(f"  {created}  {l.get('display_name', '?')[:32]:<32} -> {ROTATION[uid]}")
         return
 
     # ---- 5. write -----------------------------------------------------------
