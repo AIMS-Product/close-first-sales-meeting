@@ -47,13 +47,16 @@ SCRAPERS = {
     "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb": "Charlie Ingram",
     "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ": "Pearl Sathekge",
     "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7": "Kelly Schrader",  # moved to Lane 2 2026-08-05
+    "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H": "August Young",    # added 2026-08-06
+    "user_rGhjlxgkAA0mXchgw6zggbWXqHSYpfpzCvO6UgkqVnm": "Amy Mulch",      # added 2026-08-06
 
-    # Setters (NOT in this rotation): William Nowak, Spencer Reynolds.
+    # Setters (NOT in this rotation): William Nowak, Spencer Reynolds,
+    # Ariella Irvine (Hybrid). Sydney Boyd is not joining — removed 2026-08-06.
+    # Not started yet: Cassie Caraballo, Abigail Garza, Jessica Zatkin.
     # Keep this list in sync with SCRAPERS in lane2_state.py — that one drives
     # Owner Team, this one drives who gets dealt leads.
 
-    # Not started yet — add when their offers are signed and Close users exist:
-    # "user_...": "Sydney Boyd",
+    # Not started yet — add when their Close users exist:
     # "user_...": "Connor George",
 
     # Jason Aaron manages Lane 2 and holds lost deals — not a dialing seat.
