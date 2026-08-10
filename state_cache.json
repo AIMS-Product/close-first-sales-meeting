@@ -44350,7 +44350,7 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "funnel_name": "Webinar",
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -87249,6 +87249,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-10 19:39:04 UTC",
+  "saved_at": "2026-08-10 20:02:03 UTC",
   "count": 8897
 }
