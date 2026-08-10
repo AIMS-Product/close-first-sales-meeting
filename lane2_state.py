@@ -125,11 +125,31 @@ SCRAPERS = {
     "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb": "Charlie Ingram",
     "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ": "Pearl Sathekge",
     "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7": "Kelly Schrader",  # moved to Lane 2 2026-08-05
+    "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H": "August Young",    # added 2026-08-06
+    "user_rGhjlxgkAA0mXchgw6zggbWXqHSYpfpzCvO6UgkqVnm": "Amy Mulch",      # added 2026-08-06
     "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj": "Jason Aaron",  # lane manager
     # Not started — add once their Close users exist:
-    # "user_...": "Sydney Boyd",
+    # "user_...": "Cassie Caraballo",
+    # "user_...": "Abigail Garza",
+    # "user_...": "Jessica Zatkin",
     # "user_...": "Connor George",
+    # Sydney Boyd — not joining, removed 2026-08-06.
 }
+
+# Setters who also run their own booked calls rather than handing off to Lane 1.
+# Kept in their own dict, not merged into SETTERS, so their lead mix can diverge
+# later without unpicking anything.
+HYBRID_SETTERS = {
+    "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO": "Ariella Irvine",  # added 2026-08-06
+}
+
+# What Owner Team gets stamped for a Hybrid Setter.
+#
+# "Setter" today because Owner Team is a CHOICES field in Close and its only
+# options are Lane 1 / None / Scraper / Setter — writing "Hybrid Setter" before
+# that choice exists would be rejected by the API on every one of her leads.
+# To split her out in reporting: add the choice in Close FIRST, then change this.
+HYBRID_TEAM_LABEL = "Setter"
 LANE_1 = {
     "user_lUjlATIIgFg8mELa0GFzZUj0lG4Cs7PwQsxbi34I6Su": "Joe Dysert",
     "user_7F059xEinVentOEvkRMP77fWZyvwUiTRTUOuhD11J0e": "Robin Perkins",
@@ -143,6 +163,22 @@ LANE_1 = {
     "user_6kp6k4OcqKqFNrxGjgMUncedjiCYC6JHU8EI28F7etV": "Luke Herman",
     "user_vyiPzY0qxbLwnW5Ubwae8vY2MLviPuozSTIsEKcyrFE": "Zac Clover",
 }
+
+# The rosters must be disjoint — owner_team() returns on first match, so a user
+# in two of them would get whichever the function happens to check first, and
+# their whole book would be mislabelled silently. With people moving between
+# lanes (Kelly, Ariella) this is a live risk, so fail loudly instead.
+_rosters = {"SETTERS": SETTERS, "HYBRID_SETTERS": HYBRID_SETTERS,
+            "SCRAPERS": SCRAPERS, "LANE_1": LANE_1}
+_seen, _dupes = {}, []
+for _name, _r in _rosters.items():
+    for _uid, _who in _r.items():
+        if _uid in _seen:
+            _dupes.append(f"{_who} in both {_seen[_uid]} and {_name}")
+        _seen[_uid] = _name
+if _dupes:
+    sys.exit("CONFIG ERROR — user appears in more than one roster:\n  "
+             + "\n  ".join(_dupes))
 
 # --- Handraiser / Funnel -> Entry Source ------------------------------------
 ENTRY_FROM_HANDRAISER = {
@@ -544,6 +580,7 @@ def owner_team(lead):
     o = cf(lead, F_OWNER)
     if not o: return "None"
     if o in SETTERS: return "Setter"
+    if o in HYBRID_SETTERS: return HYBRID_TEAM_LABEL
     if o in SCRAPERS: return "Scraper"
     if o in LANE_1: return "Lane 1"
     return "None"
