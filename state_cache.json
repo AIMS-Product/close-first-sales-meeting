@@ -87717,8 +87717,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_4NZHFWeWVREgJI05W5RHSfitZPpBWejKL6Q3UJSs2HB": {
+      "date": "2026-08-13",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Pearl Sathekge",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-11 23:07:53 UTC",
-  "count": 8944
+  "saved_at": "2026-08-11 23:37:19 UTC",
+  "count": 8945
 }
