@@ -86549,8 +86549,8 @@
       "vendhub_date": null
     },
     "lead_erkoeLoxSEHWvRgvuCencbcgG7Zaffmd0e99vHTQgRI": {
-      "date": null,
-      "call_type": "Setter",
+      "date": "2026-08-12",
+      "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
@@ -87687,8 +87687,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_0SLwsY9KSLbDOZKUXcHt9YsnLz8UVCq5hxBv9IR5atU": {
+      "date": "2026-08-14",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": "Pearl Sathekge",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-11 20:05:15 UTC",
-  "count": 8941
+  "saved_at": "2026-08-11 20:38:01 UTC",
+  "count": 8942
 }
