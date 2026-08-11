@@ -149,16 +149,56 @@ def override_set():
 
 
 def active_user_ids():
-    """Live list of Close users, so new hires aren't mistaken for leavers."""
-    out, skip = set(), 0
-    while True:
-        j = _req("GET", f"{BASE}/user/", params={"_skip": skip, "_limit": 100}).json()
-        for u in j.get("data", []):
-            out.add(u["id"])
-        if not j.get("has_more"):
-            break
-        skip += 100
+    """
+    Users with a CURRENT membership of this organisation.
+
+    NOT `GET /user/`. That endpoint returns every user record the API key can
+    see, including people whose org membership has been revoked — so it reports
+    departed reps as active. The 2026-08-07 reclaim found only the one person
+    hard-coded into RECLAIM_EXTRA and skipped ~5,300 leads held by leavers,
+    because every one of those owners looked "active".
+
+    Organisation memberships are the real source of truth: revoking someone's
+    access removes them here, which is exactly the signal reclaim needs.
+    """
+    me = _req("GET", f"{BASE}/me/").json()
+    orgs = me.get("organizations") or []
+    if not orgs:
+        raise CloseError("no organisation returned by /me/ — cannot determine "
+                         "active users, refusing to guess")
+
+    out = set()
+    for org in orgs:
+        oid = org.get("id") if isinstance(org, dict) else org
+        j = _req("GET", f"{BASE}/organization/{oid}/").json()
+        for m in j.get("memberships", []):
+            uid = m.get("user_id") or (m.get("user") or {}).get("id")
+            if uid:
+                out.add(uid)
+
+    if not out:
+        raise CloseError("organisation returned zero memberships — refusing to "
+                         "treat everyone as departed")
     return out
+
+
+def user_names(user_ids):
+    """
+    Resolve display names for reclaim reporting.
+
+    Uses GET /user/{id}/ — the same endpoint that must NOT be used to decide who
+    is active, but which is exactly right here: it still returns records for
+    departed people, which is the whole point when you're naming them.
+    """
+    names = {}
+    for uid in user_ids:
+        try:
+            u = _req("GET", f"{BASE}/user/{uid}/").json()
+            full = f"{u.get('first_name','')} {u.get('last_name','')}".strip()
+            names[uid] = full or u.get("email") or uid
+        except Exception:
+            names[uid] = uid
+    return names
 
 
 def find_stranded(active):
@@ -217,6 +257,10 @@ def main():
     ap.add_argument("--reclaim", action="store_true",
                     help="first clear Lead Owner on leads held by departed users, "
                          "returning them to the pool")
+    ap.add_argument("--max-reclaim", type=int, default=10000,
+                    help="refuse to release more than this many leads in one run "
+                         "(default 10000) — a backstop against a bad active-user "
+                         "lookup treating everyone as departed")
     args = ap.parse_args()
     target = None if args.max_queue == 0 else args.max_queue
 
@@ -227,15 +271,26 @@ def main():
     if args.reclaim:
         print("Checking for leads stranded under departed users...", file=sys.stderr)
         active = active_user_ids()
+        # Printed because it's the number that silently broke this before. If it
+        # looks wrong — far bigger than the headcount, or implausibly small —
+        # stop, because everything reclaim does hangs off it.
+        print(f"  {len(active)} users hold a current org membership.", file=sys.stderr)
         stranded = find_stranded(active)
         if not stranded:
             print("No stranded leads found.\n")
         else:
             by_owner = Counter(o for _, o in stranded)
+            names = user_names(by_owner.keys())
             print(f"\n{len(stranded):,} leads held by {len(by_owner)} departed user(s):")
             for owner, n in by_owner.most_common():
-                label = RECLAIM_EXTRA.get(owner, owner[:28] + "…")
+                label = RECLAIM_EXTRA.get(owner) or names.get(owner, owner)
                 print(f"  {label:<32} {n:>6,}")
+
+            if len(stranded) > args.max_reclaim:
+                sys.exit(f"\nRefusing to release {len(stranded):,} leads — above the "
+                         f"--max-reclaim ceiling of {args.max_reclaim:,}. If this is "
+                         f"genuinely right, re-run with a higher ceiling.")
+
             if args.apply:
                 print(f"\nReleasing {len(stranded):,} leads back to the pool...")
                 ok = err = 0
