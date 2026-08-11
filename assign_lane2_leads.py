@@ -49,10 +49,12 @@ SCRAPERS = {
     "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7": "Kelly Schrader",  # moved to Lane 2 2026-08-05
     "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H": "August Young",    # added 2026-08-06
     "user_rGhjlxgkAA0mXchgw6zggbWXqHSYpfpzCvO6UgkqVnm": "Amy Mulch",      # added 2026-08-06
+    "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL": "Cassie Caraballo",  # added 2026-08-07
+    "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp": "Jessica Zatkin",    # added 2026-08-07
 
     # Setters (NOT in this rotation): William Nowak, Spencer Reynolds,
     # Ariella Irvine (Hybrid). Sydney Boyd is not joining — removed 2026-08-06.
-    # Not started yet: Cassie Caraballo, Abigail Garza, Jessica Zatkin.
+    # Abigail Garza — Close seat exists but is unnamed; confirm before adding.
     # Keep this list in sync with SCRAPERS in lane2_state.py — that one drives
     # Owner Team, this one drives who gets dealt leads.
 
@@ -101,7 +103,14 @@ PRIORITY_STATES = ["Blitz", "Active-Nurture", "Deep-Nurture"]
 #
 # A name must never be in both SCRAPERS and RECLAIM_EXTRA — see the guard below.
 RECLAIM_EXTRA = {
+    # Left the company. Listed here rather than waiting on the Close seat being
+    # revoked — this way the reclaim frees her book on the next run regardless.
+    "user_QgFeDsKkV4fsOtkTYeOJMURXPqqhZA8d4kHbE8rzat7": "Jennifer Padilla",  # 2026-08-07
 }
+
+# Ryan Jones (user_3nrtuEmgPYd5VA15NvrxgQxDVNWbhrNSzitEKGwi8s6) is deliberately
+# in NO Lane 2 roster — he works upsells only. He is active in Close, so reclaim
+# already skips him; his ~293 leads stay with him and show Owner Team = None.
 
 # Never reclaim from these even if they look inactive (service accounts, admins).
 RECLAIM_NEVER = {
