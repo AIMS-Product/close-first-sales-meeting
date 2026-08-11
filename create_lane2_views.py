@@ -241,6 +241,22 @@ def unclaimed():
             "field": {"type": "custom_field", "custom_field_id": F_OWNER},
             "condition": {"type": "exists"}}
 
+def mine_or_unclaimed():
+    """
+    Lead Owner = me, OR nobody owns it.
+
+    For the shared warm-reply lists. They can't be strictly personal — an unowned
+    hand-raise has to stay visible to whoever can act on it — but with no owner
+    filter at all they showed EVERY rep's book, which is the one place two people
+    could genuinely dial the same person.
+
+    This is also a complete Lane 1 exclusion on its own: if the lead is mine I'm
+    not a Closer, and if it's unowned no Closer holds it. That's why the Lane 1
+    guard drops its ownership clause on these views.
+    """
+    return {"negate": False, "type": "or", "queries": [mine(), unclaimed()]}
+
+
 def owner_in(user_ids, negate=False):
     return {"type": "field_condition", "negate": negate,
             "field": {"type": "custom_field", "custom_field_id": F_OWNER},
@@ -354,7 +370,19 @@ NO_LANE1_GUARD = {
     "Ops · Recapture State — Audit",
 }
 
+# Shared lists that still must not show another rep's book. Get "mine OR unowned"
+# and are flagged user-dependent so CURRENT_USER resolves at read time.
+MINE_OR_UNCLAIMED = {
+    "⚡ Warm Reply — TODAY",
+    "Warm Backlog — 2 to 7 days",
+    # Safe here too, and strictly better: a sub-1-hour lead is unowned, so it
+    # still shows to everyone. Once the setter assigner gives it an owner it
+    # drops out of the other Setter's list instead of both racing for it.
+    "Setter · Hot Inbound — SLA (< 1 hour)",
+}
+
 PERSONAL = {
+    "Scraper · Hot Inbound — Re-engaged (work first)",
     "Setter · Hot Inbound — All",
     "Setter · Booked — Confirm & Disco",
     "Scraper · Blitz — No-Show Recovery (work first)",
@@ -414,6 +442,13 @@ VIEWS = [
      sort_by("date_created"), cols(F_ENTRY)),
 
     # ---------------- Scraper lane ----------------
+    ("Scraper · Hot Inbound — Re-engaged (work first)",
+     "Leads YOU own who just raised their hand again and have never spoken to us. The re-engagement "
+     "arrow: a dormant lead fills in a form or replies and jumps straight back to the top. Hottest "
+     "thing in your book — work it before Blitz. Previously these sat in no Scraper list at all.",
+     view(NO_UPCOMING, choice(F_STATE, ["Hot-Inbound"]), calling_hours()),
+     sort_by("last_communication_date"), cols(F_ENTRY, F_RESOURCE, F_EVERCALL, F_ANGLE)),
+
     # These two are DISJOINT and together cover all of Blitz. Work Recovery first.
     ("Scraper · Blitz — No-Show Recovery (work first)",
      "The no-show and cancellation slice of Blitz. Different opener from a lost deal — they never "
@@ -552,16 +587,20 @@ def main():
     for entry in VIEWS:
         short, desc, query, sort, selected = entry[:5]
         personal = short in PERSONAL
+        mine_or_pool = short in MINE_OR_UNCLAIMED
         mgr = short in MANAGER_ONLY
+        user_dependent = personal or mine_or_pool
 
         query = json.loads(json.dumps(query))          # never mutate the source
         # Detected, not hand-listed: any view that already constrains Lead Owner
         # gets the deal-check only. A new view picks the right form by itself.
-        pins_owner = personal or (F_OWNER in json.dumps(query))
+        pins_owner = user_dependent or (F_OWNER in json.dumps(query))
         if short not in NO_LANE1_GUARD:
             query["queries"][1]["queries"].append(not_lane1(include_owner=not pins_owner))
         if personal:
             query["queries"][1]["queries"].append(mine())
+        elif mine_or_pool:
+            query["queries"][1]["queries"].append(mine_or_unclaimed())
 
         share_org = SHARE_WHOLE_ORG and not mgr
         name = PREFIX + short
@@ -571,7 +610,7 @@ def main():
             "type": "lead",
             "s_query": {"query": query, "results_limit": None, "sort": sort},
             "selected_fields": selected,
-            "is_user_dependent": personal,
+            "is_user_dependent": user_dependent,
             "is_shared": share_org,
             "sharing_settings": {
                 "whole_org": share_org,
@@ -583,6 +622,7 @@ def main():
         action = "UPDATE" if found else "CREATE"
         tags = []
         if personal: tags.append("mine-only")
+        if mine_or_pool: tags.append("mine + unowned")
         if mgr: tags.append("MANAGERS ONLY")
         if short in NO_LANE1_GUARD: tags.append("no lane1 guard")
         suffix = f"   [{', '.join(tags)}]" if tags else ""
