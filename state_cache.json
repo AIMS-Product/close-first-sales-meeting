@@ -86980,11 +86980,11 @@
     },
     "lead_c2pGEIY7sIRB3kL5rI14QBbMNwD61VDTQCRXUi8jdb7": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "YouTube",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
     },
@@ -87677,8 +87677,18 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_834c6oKQ5HrOS2XPnY9IwJPibJ3bqqaXStOpVJljPNg": {
+      "date": "2026-08-17",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-11 19:37:34 UTC",
-  "count": 8940
+  "saved_at": "2026-08-11 20:05:15 UTC",
+  "count": 8941
 }
