@@ -87977,8 +87977,38 @@
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_UejYUdWcuFk4lRFNF84csxUFTUVPbrGIijFMgXYvXxg": {
+      "date": "2026-08-13",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Pearl Sathekge",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_3TFsFHArK0IRONDIwDGKfz4BMsn6wQ4Qkylsu7ojs0g": {
+      "date": "2026-08-14",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "LTF - In-House",
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_aqWwD4EWD0AIm07wkaYognQRs0qVWtTLYvhRCBTTup8": {
+      "date": "2026-08-13",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-12 22:37:36 UTC",
-  "count": 8970
+  "saved_at": "2026-08-12 23:07:40 UTC",
+  "count": 8973
 }
