@@ -51,10 +51,10 @@ SCRAPERS = {
     "user_rGhjlxgkAA0mXchgw6zggbWXqHSYpfpzCvO6UgkqVnm": "Amy Mulch",      # added 2026-08-06
     "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL": "Cassie Caraballo",  # added 2026-08-07
     "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp": "Jessica Zatkin",    # added 2026-08-07
+    "user_O9qFgDidrldSA1zU3pKPpz5zUbCcNpoEBTCrtAolDUi": "Abigail Garza",     # added 2026-08-12
 
     # Setters (NOT in this rotation): William Nowak, Spencer Reynolds,
     # Ariella Irvine (Hybrid). Sydney Boyd is not joining — removed 2026-08-06.
-    # Abigail Garza — Close seat exists but is unnamed; confirm before adding.
     # Keep this list in sync with SCRAPERS in lane2_state.py — that one drives
     # Owner Team, this one drives who gets dealt leads.
 
