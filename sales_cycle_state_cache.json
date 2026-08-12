@@ -893,6 +893,12 @@
     "name": "OZGUR UCA",
     "won_date": "2026-07-24"
   },
+  "lead_DOP1G2rBq4BwZzlHcdjfVBh1Ag6aufzYgULdutJUgLH": {
+    "cycle_days": 5,
+    "first_call_date": "2026-08-06",
+    "name": "Dean Quintal",
+    "won_date": "2026-08-11"
+  },
   "lead_DQrUxNs9aJPfV3Dg0nWDNkjSLtyQlefB15cky30HVx9": {
     "cycle_days": 0,
     "first_call_date": "2025-12-23",
@@ -1756,6 +1762,12 @@
     "first_call_date": "2026-05-01",
     "name": "Carlee Schaeffer",
     "won_date": "2026-05-04"
+  },
+  "lead_R6HHk4a3stI7OcS0jJAxJmxIad1EMVqqLAFj8katj0A": {
+    "cycle_days": 8,
+    "first_call_date": "2026-08-03",
+    "name": "Jeremy Gaunt",
+    "won_date": "2026-08-11"
   },
   "lead_RBG8tyw5nb2QKeTZn6quiWIgtxDTzH5kK2rKXR2gcr8": {
     "cycle_days": 21,
