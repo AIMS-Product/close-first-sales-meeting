@@ -307,7 +307,22 @@ def not_lane1(include_owner=True):
     ]}
 
 NOT_SUPPRESSED = status_in(SUPPRESS, negate=True)
-NO_UPCOMING = num_range("num_upcoming_meetings", lte=0)
+# "Nothing on the calendar."
+#
+# Written as NOT(>= 1), never as (<= 0).
+#
+# `lte: 0` looks equivalent and is not. In the smart-view engine it matched
+# NOTHING — every dial view returned 0 leads while the underlying data was
+# perfectly fine. Almost certainly because `num_upcoming_meetings` is null (not
+# zero) on a lead that has never had a meeting, and a null fails a <= comparison.
+# The UI renders it as "is less than 0", which is the tell.
+#
+# NOT(>= 1) has no such hole: a lead with no value simply doesn't have >= 1, so
+# the negation includes it. `gte: 1` is also the proven-working form — it's what
+# "Setter · Booked — Confirm & Disco" uses to find booked leads.
+#
+# Cost us the evening before go-live on 2026-08-12. Do not "simplify" this back.
+NO_UPCOMING = negated(num_range("num_upcoming_meetings", gte=1))
 
 def view(*conds):
     """Wrap conditions into a saved-search query. Suppression is always applied."""
@@ -480,8 +495,13 @@ VIEWS = [
     ("Scraper · Deep Nurture — Revival Dials",
      "6mo+ quiet AND assigned to a rep. The dial list for the cold/stale universe — the Ops "
      "Deep Nurture view is the whole 29k cohort, this is only what's owned and workable now.",
-     view(NO_UPCOMING, choice(F_STATE, ["Deep-Nurture"]), exists(F_TEAM),
-          calling_hours()),
+     # NO exists(F_TEAM) here. It used to require Owner Team to be populated,
+     # which made this view lag the assigner by up to an hour: a rep dealt 1,000
+     # Deep-Nurture leads saw NOTHING until the next reconciler run stamped their
+     # team. Owner Team is derived from Lead Owner anyway, so `mine()` already
+     # proves ownership — the check was redundant as well as harmful.
+     # (Cost us the evening before go-live on 2026-08-12. Don't add it back.)
+     view(NO_UPCOMING, choice(F_STATE, ["Deep-Nurture"]), calling_hours()),
      sort_by("last_communication_date", "asc"), cols(F_ANGLE, F_ENTRY, F_RESOURCE)),
 
     # ---------------- Team pools — unowned work, anyone can claim ----------------
