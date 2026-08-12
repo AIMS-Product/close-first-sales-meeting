@@ -87777,8 +87777,28 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_jPwFG2cKmgijzEppueAEBh4IIGGCnpQ5BRGyOR22y6d": {
+      "date": "2026-08-13",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Meta Ads",
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_U3tC5cuktP2fllT2WiYvEg5OFmvM8FNpZ9MLQzoIM6j": {
+      "date": "2026-08-13",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-12 06:08:10 UTC",
-  "count": 8950
+  "saved_at": "2026-08-12 06:37:32 UTC",
+  "count": 8952
 }
