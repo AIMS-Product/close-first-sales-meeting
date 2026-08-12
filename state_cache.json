@@ -87571,10 +87571,10 @@
     "lead_q69UnEzIVbix2sz3MqatIIYBWn8kxg20u7O5qAUjceV": {
       "date": "2026-08-12",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -87837,8 +87837,18 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_55wZ6z5nQLqO2PeEfIj8xjV6Z6xtDWSqn4A2THTc626": {
+      "date": "2026-08-12",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-12 13:38:15 UTC",
-  "count": 8956
+  "saved_at": "2026-08-12 14:27:41 UTC",
+  "count": 8957
 }
