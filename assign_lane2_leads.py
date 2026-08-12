@@ -32,6 +32,7 @@ from concurrent.futures import ThreadPoolExecutor
 from lane2_state import (
     BASE, F_OWNER, F_STATE, F_OVERRIDE, SUPPRESS_STATUSES,
     CloseError, _req, _wrap, cf, search, status_in, WRITE_WORKERS,
+    SKIP_CAP, PROBE_CAP,
 )
 
 # ============================================================================
@@ -321,14 +322,38 @@ def main():
                 print("  (dry run — not released)\n")
 
     # ---- 1. what does each rep already hold? -------------------------------
+    #
+    # NO `limit=` HERE. This used to read `limit=9000`, which silently broke
+    # every number this script prints and acts on.
+    #
+    # search() only partitions by month when it is called WITHOUT a limit. Any
+    # limit at or below SKIP_CAP (10,000) takes the single-page path, which stops
+    # dead at that many rows and returns them with no error and no warning. The
+    # rotation genuinely holds ~25,000 leads in these states, so the census saw
+    # the first 9,000 and inferred the rest were gaps.
+    #
+    # The damage is not a cosmetic bad number: `counts` drives `deficit`, so
+    # every rep looked thousands of leads short of a 1,000 target they were
+    # already several times over, and the assigner dealt out 3,000 leads it
+    # should have refused to deal. Caught 2026-08-12 — the tell was a "holds"
+    # column that summed to exactly 9,000.
     print("Counting current queues...", file=sys.stderr)
     held = search(
         _wrap(status_in(SUPPRESS_STATUSES, negate=True),
               owner_is(SCRAPERS.keys()),
               state_is(PRIORITY_STATES)),
-        fields=["id", f"custom.{F_OWNER}"], limit=9000)
+        fields=["id", f"custom.{F_OWNER}"])
 
     counts = Counter(cf(l, F_OWNER) for l in held)
+
+    # Truncation tripwire. A census that lands exactly on a round number is the
+    # signature of a page cap, not of reality. Cheap to check, and the failure it
+    # catches is invisible from the output otherwise.
+    for cap in (SKIP_CAP, PROBE_CAP):
+        if len(held) == cap:
+            sys.exit(f"\nABORT — the queue census returned exactly {cap:,} rows, which "
+                     f"is a page cap, not a count. Deficits computed from a truncated "
+                     f"census over-assign. Do not pass a limit to this search().")
 
     # ---- 2. pull from the unclaimed pool, hottest first --------------------
     # Capped mode only needs as many as the deficits require; uncapped takes all.
@@ -394,11 +419,23 @@ def main():
 
     for uid in sorted(SCRAPERS, key=lambda u: -(counts.get(u, 0) + len(plan[u]))):
         have, gets = counts.get(uid, 0), len(plan[uid])
-        print(f"{SCRAPERS[uid]:<20} {have:>8,} {gets:>+8,} {have+gets:>8,}")
+        # Flag anyone already past target. The cap never claws back, so a rep can
+        # sit above it legitimately — but it should be stated, not left to be
+        # inferred from a "gets" of zero.
+        over = f"  +{have - target:,} over" if target and have > target else ""
+        print(f"{SCRAPERS[uid]:<20} {have:>8,} {gets:>+8,} {have+gets:>8,}{over}")
     print("-" * 52)
     total = sum(len(v) for v in plan.values())
     print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {total:>+8,} "
           f"{sum(counts.values())+total:>8,}")
+
+    if target:
+        over_reps = {u: counts.get(u, 0) - target
+                     for u in SCRAPERS if counts.get(u, 0) > target}
+        if over_reps:
+            print(f"\n{len(over_reps)} rep(s) hold {sum(over_reps.values()):,} leads above "
+                  f"the {target:,} target. The cap only stops giving — it never takes "
+                  f"back. Rebalance is a separate, deliberate decision.")
     # ---- bucket census -----------------------------------------------------
     # "unowned" is the whole unclaimed pool in that bucket BEFORE this run.
     # "left" is what nobody owns once this run's assignments land — i.e. the
