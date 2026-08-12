@@ -87807,8 +87807,38 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_tDrCXEwdYoxTRED34KnEGCj1nVCXjsPSUKbPp17539s": {
+      "date": "2026-08-12",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_qCCb9im7VC3gdXIHjCPC5wx6nzdoJfKBIea00CQ1Ivh": {
+      "date": "2026-08-12",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_G3s4FtduQuscAjsEIRfzziMoWQA4iexV2XiyFWLTeSr": {
+      "date": "2026-08-12",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "YouTube",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-12 12:37:58 UTC",
-  "count": 8953
+  "saved_at": "2026-08-12 13:04:32 UTC",
+  "count": 8956
 }
