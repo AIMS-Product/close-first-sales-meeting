@@ -307,22 +307,29 @@ def not_lane1(include_owner=True):
     ]}
 
 NOT_SUPPRESSED = status_in(SUPPRESS, negate=True)
-# "Nothing on the calendar."
+# REMOVED 2026-08-12 — "no upcoming meeting" is no longer filtered on any view.
 #
-# Written as NOT(>= 1), never as (<= 0).
+# Every dial view was returning 0 leads while the underlying data was fine.
+# Stephen isolated it in the UI: with the meetings condition present the view
+# returned 0; removing it alone returned 156. Both authored forms failed the
+# same way — `lte: 0` and `NOT(gte: 1)` — so this is not a matter of writing the
+# condition differently. In the smart-view engine a lead that has never had a
+# meeting appears to carry NO value for `num_upcoming_meetings` (not 0), and any
+# condition on that field drops those leads regardless of negation.
 #
-# `lte: 0` looks equivalent and is not. In the smart-view engine it matched
-# NOTHING — every dial view returned 0 leads while the underlying data was
-# perfectly fine. Almost certainly because `num_upcoming_meetings` is null (not
-# zero) on a lead that has never had a meeting, and a null fails a <= comparison.
-# The UI renders it as "is less than 0", which is the tell.
+# Nothing is lost by removing it:
+#   - the 9 state-based views can't show booked leads anyway. The reconciler
+#     buckets any lead with an upcoming meeting into Recapture State = "Booked",
+#     and none of these views select that state.
+#   - the live Lane 1 opportunity guard still hides anything a Closer is on.
+# The only residual exposure is the live-criteria Setter views (SLA < 1 hour,
+# Warm Reply, SLA Breach), where a lead that booked minutes ago can linger for
+# one cycle. That is a small annoyance next to empty call lists.
 #
-# NOT(>= 1) has no such hole: a lead with no value simply doesn't have >= 1, so
-# the negation includes it. `gte: 1` is also the proven-working form — it's what
-# "Setter · Booked — Confirm & Disco" uses to find booked leads.
-#
-# Cost us the evening before go-live on 2026-08-12. Do not "simplify" this back.
-NO_UPCOMING = negated(num_range("num_upcoming_meetings", gte=1))
+# `gte: 1` (positive, no negation) is still used by "Setter · Booked — Confirm
+# & Disco" — that direction selects leads that DO have a value, so it is not
+# affected by the same hole. Verify that view has rows after any change here.
+NO_UPCOMING = None   # not applied to any view — see above
 
 def view(*conds):
     """Wrap conditions into a saved-search query. Suppression is always applied."""
@@ -413,14 +420,14 @@ VIEWS = [
      "They contacted US in the last 24 hours and nothing is booked. The hottest cohort we have and "
      "historically the biggest leak. Same-day SLA — this list should self-clear overnight. "
      "Never-called goes to a Setter, had-a-call to a Scraper.",
-     view(NO_UPCOMING, any_inbound(1), calling_hours()),
+     view(any_inbound(1), calling_hours()),
      sort_by("last_communication_date"), cols(F_STATE, F_TEAM, F_EVERCALL, F_ANGLE)),
 
     ("Warm Backlog — 2 to 7 days",
      "Contacted us in the last week but not in the last 24h — i.e. they slipped past the same-day "
      "SLA. Work after the TODAY list is clear. If this is consistently large, the same-day queue "
      "isn't being cleared.",
-     view(NO_UPCOMING, any_inbound(REENGAGE_DAYS), negated(any_inbound(1)), calling_hours()),
+     view(any_inbound(REENGAGE_DAYS), negated(any_inbound(1)), calling_hours()),
      sort_by("last_communication_date"), cols(F_STATE, F_TEAM, F_EVERCALL, F_ANGLE)),
 
     # ---------------- Setter lane ----------------
@@ -428,7 +435,7 @@ VIEWS = [
      "New leads 1h-14d old, never spoken to us, and never called/texted/emailed by us. Not a "
      "worklist — an escalation list. Anything here is being dropped. Empty is the target. "
      "Uses live criteria, not the stamped state, so nothing hides behind reconciler lag.",
-     view(NO_UPCOMING, has_completed_meeting(negate=True),
+     view(has_completed_meeting(negate=True),
           within("date_created", days=14),
           within("date_created", hours=1, negate=True),
           never_touched(), calling_hours()),
@@ -439,7 +446,7 @@ VIEWS = [
      "Deliberately uses LIVE criteria, not Recapture State or Ever Had Call — the reconciler runs "
      "hourly, so a lead five minutes old has no stamp yet and a state-based filter would miss "
      "exactly the leads this view exists to catch.",
-     view(NO_UPCOMING, has_completed_meeting(negate=True),
+     view(has_completed_meeting(negate=True),
           within("date_created", hours=1), calling_hours()),
      sort_by("date_created"), cols(F_ENTRY, F_RESOURCE)),
 
@@ -447,7 +454,7 @@ VIEWS = [
      "The full Setter hot window, read from Recapture State rather than re-derived. This is what "
      "makes the re-engagement arrow visible: an older never-called lead who replies is re-stamped "
      "Hot-Inbound and appears here, which a created-date filter would never have caught.",
-     view(NO_UPCOMING, choice(F_STATE, ["Hot-Inbound"]), calling_hours()),
+     view(choice(F_STATE, ["Hot-Inbound"]), calling_hours()),
      sort_by("date_created"), cols(F_ENTRY, F_RESOURCE, F_EVERCALL)),
 
     ("Setter · Booked — Confirm & Disco",
@@ -461,21 +468,21 @@ VIEWS = [
      "Leads YOU own who just raised their hand again and have never spoken to us. The re-engagement "
      "arrow: a dormant lead fills in a form or replies and jumps straight back to the top. Hottest "
      "thing in your book — work it before Blitz. Previously these sat in no Scraper list at all.",
-     view(NO_UPCOMING, choice(F_STATE, ["Hot-Inbound"]), calling_hours()),
+     view(choice(F_STATE, ["Hot-Inbound"]), calling_hours()),
      sort_by("last_communication_date"), cols(F_ENTRY, F_RESOURCE, F_EVERCALL, F_ANGLE)),
 
     # These two are DISJOINT and together cover all of Blitz. Work Recovery first.
     ("Scraper · Blitz — No-Show Recovery (work first)",
      "The no-show and cancellation slice of Blitz. Different opener from a lost deal — they never "
      "heard the pitch. Disjoint from Lost & Re-engaged, so no double-dialling.",
-     view(NO_UPCOMING, choice(F_STATE, ["Blitz"]), status_in([S_NOSHOW, S_CANCELED]),
+     view(choice(F_STATE, ["Blitz"]), status_in([S_NOSHOW, S_CANCELED]),
           calling_hours()),
      sort_by("last_lead_status_change_date"), cols(F_ENTRY, F_ANGLE)),
 
     ("Scraper · Blitz — Lost & Re-engaged",
      "The rest of Blitz: recently lost deals, plus anyone who had a call and has just re-engaged. "
      "Read from Recapture State, so re-engaged leads actually surface here.",
-     view(NO_UPCOMING, choice(F_STATE, ["Blitz"]),
+     view(choice(F_STATE, ["Blitz"]),
           status_in([S_NOSHOW, S_CANCELED], negate=True), calling_hours()),
      sort_by("last_lead_status_change_date"), cols(F_ANGLE, F_ENTRY, F_EVERCALL)),
 
@@ -483,13 +490,13 @@ VIEWS = [
      "Showed and didn't close on price, financing, DIY or a competitor. The only objection cut we "
      "trust today. Overlaps your other lists on purpose — same person, better-known objection. "
      "Least-recently-contacted first.",
-     view(NO_UPCOMING, choice(F_ANGLE, ["Price", "DIY"]),
+     view(choice(F_ANGLE, ["Price", "DIY"]),
           choice(F_EVERCALL, ["Yes"]), calling_hours()),
      sort_by("last_communication_date", "asc"), cols(F_ANGLE, F_RESOURCE)),
 
     ("Scraper · Active Nurture",
      "Didn't book inside the Blitz window. Steady re-engagement: dials plus weekly marketing. Sorted least-recently-contacted first, so someone you just called sinks to the bottom instead of resurfacing — call as often as you judge right, the queue paces itself.",
-     view(NO_UPCOMING, choice(F_STATE, ["Active-Nurture"]), calling_hours()),
+     view(choice(F_STATE, ["Active-Nurture"]), calling_hours()),
      sort_by("last_communication_date", "asc"), cols(F_ANGLE, F_ENTRY)),
 
     ("Scraper · Deep Nurture — Revival Dials",
@@ -501,7 +508,7 @@ VIEWS = [
      # team. Owner Team is derived from Lead Owner anyway, so `mine()` already
      # proves ownership — the check was redundant as well as harmful.
      # (Cost us the evening before go-live on 2026-08-12. Don't add it back.)
-     view(NO_UPCOMING, choice(F_STATE, ["Deep-Nurture"]), calling_hours()),
+     view(choice(F_STATE, ["Deep-Nurture"]), calling_hours()),
      sort_by("last_communication_date", "asc"), cols(F_ANGLE, F_ENTRY, F_RESOURCE)),
 
     # ---------------- Team pools — unowned work, anyone can claim ----------------
@@ -509,14 +516,14 @@ VIEWS = [
      "Hot inbound with NO owner yet. Shared on purpose — this is where new leads land before "
      "anyone picks them up. Claim by setting yourself as Lead Owner, and it moves into your "
      "personal Hot Inbound list.",
-     view(NO_UPCOMING, choice(F_STATE, ["Hot-Inbound"]), unclaimed(),
+     view(choice(F_STATE, ["Hot-Inbound"]), unclaimed(),
           cool_off(("call", "sms")), calling_hours()),
      sort_by("date_created"), cols(F_ENTRY, F_RESOURCE)),
 
     ("Scraper · Pool — Unclaimed Dormant",
      "Blitz and Active-Nurture leads with NO owner. The overflow bench: work this when your own "
      "lists are clear. Claim by setting yourself as Lead Owner.",
-     view(NO_UPCOMING, choice(F_STATE, ["Blitz", "Active-Nurture"]), unclaimed(),
+     view(choice(F_STATE, ["Blitz", "Active-Nurture"]), unclaimed(),
           cool_off(("call", "sms")), calling_hours()),
      sort_by("last_communication_date"), cols(F_STATE, F_ANGLE, F_ENTRY)),
 
