@@ -53,10 +53,22 @@ SCRAPERS = {
     "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp": "Jessica Zatkin",    # added 2026-08-07
     "user_O9qFgDidrldSA1zU3pKPpz5zUbCcNpoEBTCrtAolDUi": "Abigail Garza",     # added 2026-08-12
 
-    # Setters (NOT in this rotation): William Nowak, Spencer Reynolds,
-    # Ariella Irvine (Hybrid). Sydney Boyd is not joining — removed 2026-08-06.
-    # Keep this list in sync with SCRAPERS in lane2_state.py — that one drives
-    # Owner Team, this one drives who gets dealt leads.
+    # Ariella Irvine — Hybrid Setter, added to the dialing rotation 2026-08-12.
+    # She is in BOTH queues on purpose: assign_setter_leads.py deals her fresh
+    # hot inbound (she books and runs her own calls), and this script gives her
+    # a dormant book to work between them.
+    #
+    # She stays in HYBRID_SETTERS in lane2_state.py — do NOT copy her into
+    # SCRAPERS there. That dict drives Owner Team, and lane2_state's roster
+    # guard fails hard on anyone listed twice. Her Owner Team stays "Setter".
+    "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO": "Ariella Irvine",
+
+    # Setters (NOT in this rotation): William Nowak, Spencer Reynolds.
+    # Sydney Boyd is not joining — removed 2026-08-06.
+    #
+    # This list is NO LONGER a mirror of SCRAPERS in lane2_state.py — Ariella is
+    # here and not there, deliberately (see above). That one drives Owner Team,
+    # this one drives who gets dealt leads. Everyone else appears in both.
 
     # Not started yet — add when their Close users exist:
     # "user_...": "Connor George",
