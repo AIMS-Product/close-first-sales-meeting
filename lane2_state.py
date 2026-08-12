@@ -127,11 +127,11 @@ SCRAPERS = {
     "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7": "Kelly Schrader",  # moved to Lane 2 2026-08-05
     "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H": "August Young",    # added 2026-08-06
     "user_rGhjlxgkAA0mXchgw6zggbWXqHSYpfpzCvO6UgkqVnm": "Amy Mulch",      # added 2026-08-06
+    "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL": "Cassie Caraballo",  # added 2026-08-07
+    "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp": "Jessica Zatkin",    # added 2026-08-07
+    "user_O9qFgDidrldSA1zU3pKPpz5zUbCcNpoEBTCrtAolDUi": "Abigail Garza",     # added 2026-08-12
     "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj": "Jason Aaron",  # lane manager
     # Not started — add once their Close users exist:
-    # "user_...": "Cassie Caraballo",
-    # "user_...": "Abigail Garza",
-    # "user_...": "Jessica Zatkin",
     # "user_...": "Connor George",
     # Sydney Boyd — not joining, removed 2026-08-06.
 }
