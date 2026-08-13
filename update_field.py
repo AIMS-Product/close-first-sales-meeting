@@ -64,11 +64,13 @@ FIELD_REACTIVATION_KEY = f"custom.{FIELD_REACTIVATION_ID}"
 FIELD_FUNNEL_ID       = "cf_xqDQE8fkPsWa0RNEve7hcaxKblCe6489XeZGRDzyPdX"
 FIELD_FUNNEL_KEY      = f"custom.{FIELD_FUNNEL_ID}"
 
+FIELD_QUICK_DISC_ID       = "cf_vnmSl0VGK8n42T3sFPchgQ0Q320fr8oDIeqCP46m5Am"
+FIELD_QUICK_DISC_KEY      = f"custom.{FIELD_QUICK_DISC_ID}"
 FIELD_VENDHUB_ID          = "cf_2oYFNCsi4dcrjcIS6xFvGf37RGtraixl8jHYinwta9m"
 FIELD_VENDHUB_KEY         = f"custom.{FIELD_VENDHUB_ID}"
 FIELD_VENDHUB_DATE_ID     = "cf_qScR8i96dqsMDMirfPqPn8woMkeJrpl41mc4TmoU78q"
 FIELD_VENDHUB_DATE_KEY    = f"custom.{FIELD_VENDHUB_DATE_ID}"
-FIELDS_PARAM           = f"id,display_name,{FIELD_DATE_KEY},{FIELD_CALLTYPE_KEY},{FIELD_SCRAPER_KEY},{FIELD_POSTWEBINAR_KEY},{FIELD_REACTIVATION_KEY},{FIELD_FUNNEL_KEY},{FIELD_VENDHUB_KEY},{FIELD_VENDHUB_DATE_KEY}"
+FIELDS_PARAM           = f"id,display_name,{FIELD_DATE_KEY},{FIELD_CALLTYPE_KEY},{FIELD_SCRAPER_KEY},{FIELD_POSTWEBINAR_KEY},{FIELD_REACTIVATION_KEY},{FIELD_FUNNEL_KEY},{FIELD_VENDHUB_KEY},{FIELD_VENDHUB_DATE_KEY},{FIELD_QUICK_DISC_KEY}"
 
 # Reactivation dropdown — Close accepts label strings directly for choice fields
 
@@ -108,6 +110,7 @@ RE_DISCOVERY_TITLE   = re.compile(r"vending\s+quick\s+discovery", re.IGNORECASE)
 RE_POSTWEBINAR_TITLE    = re.compile(r"post\s+masterclass\s+strategy\s+call", re.IGNORECASE)
 RE_ROUTE_PLANNING_TITLE   = re.compile(r"route\s+planning\s+call", re.IGNORECASE)
 RE_REACT_EMAIL_TITLE      = re.compile(r"vending\s+consultation\s+&\s+strategy\s+session", re.IGNORECASE)
+RE_QUICK_DISC_TITLE       = re.compile(r"vending\s+consult\s+call", re.IGNORECASE)
 
 # VendHub titles — checked before hard excludes (Next Steps Call would hit followup filter)
 RE_VENDHUB_CONSULTATION   = re.compile(r"vendhub\s+consultation\s+call", re.IGNORECASE)
@@ -128,6 +131,8 @@ SCRAPER_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+discovery\s+-\s+next\s+steps", re.IGNORECASE),    "Kelly Schrader"),  # Vendingpreneurs Discovery - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps(?!\s+call)", re.IGNORECASE), "Jacob Herbig"),  # Vendingpreneurs - Next Steps
     (re.compile(r"vendingpren[eu]+r\s+next\s+steps", re.IGNORECASE),                  "William Nowak"),     # Vendingpreneur Next Steps
+    (re.compile(r"vending\s+discovery\s+call\s+-\s+next\s+steps", re.IGNORECASE),    "August Young"),      # Vending Discovery Call - Next Steps
+    (re.compile(r"vending\s+discovery\s+-\s+next\s+steps", re.IGNORECASE),           "Spencer Reynolds"),  # Vending Discovery - Next Steps
 ]
 
 CLOSER_PATTERNS = [
@@ -220,6 +225,10 @@ def classify_meeting(meeting: dict) -> tuple:
     if RE_REACT_EMAIL_TITLE.search(title):
         return "react_email", None
 
+    # Vending Consult Call — closer + sets Quick Discovery field
+    if RE_QUICK_DISC_TITLE.search(title):
+        return "quick_discovery", None
+
     # Closer — must match a qualifying pattern
     for pattern in CLOSER_PATTERNS:
         if pattern.search(title):
@@ -285,6 +294,7 @@ def calculate_desired_state(all_meetings: list) -> dict:
         earliest_vsl       = None  # earliest route planning call date (for VSL_FUNNEL_CUTOFF)
         vendhub_value      = None  # "Standard Booking" or "VendHub Q&A Booking"
         earliest_react_email = None  # earliest Reactivation Email meeting date
+        has_quick_disc       = False  # Vending Consult Call found
         vendhub_dates      = []    # dates of any VendHub meeting (for First VendHub Call Booked)
 
         for m in meetings:
@@ -295,7 +305,7 @@ def calculate_desired_state(all_meetings: list) -> dict:
                 dt_utc = datetime.fromisoformat(starts_at.replace("Z", "+00:00"))
                 date = dt_utc.astimezone(PACIFIC).strftime("%Y-%m-%d")
 
-            if tier in ("closer", "post_webinar", "scraper", "vendhub_consultation", "vendhub_nextsteps", "react_email"):
+            if tier in ("closer", "post_webinar", "scraper", "vendhub_consultation", "vendhub_nextsteps", "react_email", "quick_discovery"):
                 if date:
                     closer_dates.append(date)
                 if tier == "post_webinar":
@@ -317,6 +327,8 @@ def calculate_desired_state(all_meetings: list) -> dict:
                 elif tier == "react_email":
                     if date and (earliest_react_email is None or date < earliest_react_email):
                         earliest_react_email = date
+                elif tier == "quick_discovery":
+                    has_quick_disc = True
             elif tier == "setter":
                 has_setter = True
             elif tier == "route_planning":
@@ -356,7 +368,7 @@ def calculate_desired_state(all_meetings: list) -> dict:
 
         vendhub_date = min(vendhub_dates) if vendhub_dates else None
 
-        if call_type is not None or has_scraper or has_postwebinar or funnel_name or vendhub_value or vendhub_date or earliest_react_email:
+        if call_type is not None or has_scraper or has_postwebinar or funnel_name or vendhub_value or vendhub_date or earliest_react_email or has_quick_disc:
             desired[lead_id] = {
                 "date":         min(closer_dates) if closer_dates else None,
                 "call_type":    call_type,
@@ -365,7 +377,8 @@ def calculate_desired_state(all_meetings: list) -> dict:
                 "reactivation": reactivation,
                 "funnel_name":  funnel_name,
                 "vendhub":      vendhub_value,
-                "vendhub_date": vendhub_date,
+                "vendhub_date":  vendhub_date,
+                "quick_disc":    "Yes" if has_quick_disc else None,
             }
 
     return desired
@@ -637,6 +650,14 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
     if cur_vendhub_date != new_vendhub_date:
         payload[FIELD_VENDHUB_DATE_KEY] = new_vendhub_date
 
+    # ── Quick Discovery field ────────────────────────────────────────────────
+    cur_quick_disc = current.get("quick_disc")
+    new_quick_disc = desired.get("quick_disc")
+
+    # Never downgrade once set
+    if not cur_quick_disc and new_quick_disc:
+        payload[FIELD_QUICK_DISC_KEY] = new_quick_disc
+
     if not payload:
         return None  # Nothing to write
 
@@ -659,6 +680,8 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
         changes.append(f"vendhub: {cur_vendhub or 'blank'} → {new_vendhub}")
     if FIELD_VENDHUB_DATE_KEY in payload:
         changes.append(f"vendhub date: {cur_vendhub_date or 'blank'} → {new_vendhub_date or 'cleared'}")
+    if FIELD_QUICK_DISC_KEY in payload:
+        changes.append(f"quick disc: {cur_quick_disc or 'blank'} → {new_quick_disc}")
 
     print(f"  Updated: {lead_name} | {' | '.join(changes)}", flush=True)
 
@@ -666,6 +689,7 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
     final_funnel        = new_funnel if FIELD_FUNNEL_KEY in payload else cur_funnel
     final_vendhub       = new_vendhub if FIELD_VENDHUB_KEY in payload else cur_vendhub
     final_vendhub_date  = new_vendhub_date if FIELD_VENDHUB_DATE_KEY in payload else cur_vendhub_date
+    final_quick_disc    = new_quick_disc if FIELD_QUICK_DISC_KEY in payload else cur_quick_disc
 
     return {
         "date":         new_date if FIELD_DATE_KEY in payload else cur_date,
@@ -676,6 +700,7 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
         "funnel_name":  final_funnel,
         "vendhub":      final_vendhub,
         "vendhub_date": final_vendhub_date,
+        "quick_disc":   final_quick_disc,
     }
 
 
@@ -697,7 +722,7 @@ def routine_update(desired_state: dict, cached_state: dict) -> dict:
 
     # Leads cached as having a value but no longer in desired (stale)
     stale = {
-        lead_id: {"date": None, "call_type": None, "scraper": None, "post_webinar": None, "reactivation": None, "funnel_name": None, "vendhub": None, "vendhub_date": None}
+        lead_id: {"date": None, "call_type": None, "scraper": None, "post_webinar": None, "reactivation": None, "funnel_name": None, "vendhub": None, "vendhub_date": None, "quick_disc": None}
         for lead_id, cached in cached_state.items()
         if lead_id not in desired_state
         and (cached.get("date") or cached.get("call_type"))
@@ -739,6 +764,7 @@ def routine_update(desired_state: dict, cached_state: dict) -> dict:
                 "funnel_name":  lead_data.get(FIELD_FUNNEL_KEY),
                 "vendhub":      lead_data.get(FIELD_VENDHUB_KEY),
                 "vendhub_date": lead_data.get(FIELD_VENDHUB_DATE_KEY),
+                "quick_disc":   lead_data.get(FIELD_QUICK_DISC_KEY),
             }
 
             result = write_lead(lead_id, lead_name, current, desired)
@@ -798,6 +824,7 @@ def backfill(desired_state: dict, already_processed: set) -> tuple[dict, set]:
                 "funnel_name":  lead_data.get(FIELD_FUNNEL_KEY),
                 "vendhub":      lead_data.get(FIELD_VENDHUB_KEY),
                 "vendhub_date": lead_data.get(FIELD_VENDHUB_DATE_KEY),
+                "quick_disc":   lead_data.get(FIELD_QUICK_DISC_KEY),
             }
 
             result = write_lead(lead_id, lead_name, current, desired)
