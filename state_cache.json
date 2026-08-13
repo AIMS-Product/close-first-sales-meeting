@@ -50351,10 +50351,10 @@
     "lead_eZEPTPUqAy9xOES0NP8GjlD4CIgraIBIzXYk30RzrPr": {
       "date": "2026-05-08",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -88007,8 +88007,28 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null
+    },
+    "lead_T4jsjDPwjgIOes6M5lfZnJSKUaT8OrAJNUH7bYRuxtF": {
+      "date": "2026-08-13",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_HGTWPOEtSSZQCN0LUTkhOeV9D5agH51qIfUfJ9YOExU": {
+      "date": "2026-08-13",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-13 00:07:37 UTC",
-  "count": 8973
+  "saved_at": "2026-08-13 00:37:27 UTC",
+  "count": 8975
 }
