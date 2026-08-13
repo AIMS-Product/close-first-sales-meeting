@@ -1,0 +1,46 @@
+name: Find Ben Kelly / Joe Dysert Meetings (audit)
+
+# Manual, one-time audit -- no schedule. Mirrors repair-closed-lost.yml's pattern: this reads
+# Close data and writes CSV artifacts for human review. It never writes anything back to Close.
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Cap the number of Ben Kelly leads processed (leave blank for full run)"
+        required: false
+        default: ""
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run self-test
+        run: python find_ben_kelly_joe_meetings.py --selftest
+
+      - name: Run audit
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: |
+          if [ -n "${{ github.event.inputs.limit }}" ]; then
+            python find_ben_kelly_joe_meetings.py --limit "${{ github.event.inputs.limit }}"
+          else
+            python find_ben_kelly_joe_meetings.py
+          fi
+
+      - name: Upload CSV reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: ben-kelly-joe-meetings-report
+          path: |
+            ben_kelly_joe_meetings.csv
+            ben_kelly_joe_meetings_review.csv
+          retention-days: 90
