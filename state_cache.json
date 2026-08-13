@@ -88064,11 +88064,31 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Linkedin",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_cxhvdBzzlSDG56Z8P8ohoIB0teWfLyNZ8jcb5fj4rsJ": {
+      "date": "2026-08-14",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null
+    },
+    "lead_SpbpdF5x0yIVkio13WydHYp5WInCtpuH4Yrqty4wE18": {
+      "date": null,
+      "call_type": null,
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "VSL",
       "vendhub": null,
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-13 02:07:29 UTC",
-  "count": 8979
+  "saved_at": "2026-08-13 02:37:28 UTC",
+  "count": 8981
 }
