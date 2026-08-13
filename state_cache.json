@@ -41155,10 +41155,10 @@
     "lead_8qdEij1cToCKXFIQsGGeArneXsUSCdNQkWnjYGftAcM": {
       "date": "2026-03-24",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null
     },
@@ -88009,6 +88009,6 @@
       "vendhub_date": null
     }
   },
-  "saved_at": "2026-08-12 23:37:22 UTC",
+  "saved_at": "2026-08-13 00:07:37 UTC",
   "count": 8973
 }
