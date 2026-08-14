@@ -900,8 +900,8 @@
     "won_date": "2026-07-24"
   },
   "lead_DOP1G2rBq4BwZzlHcdjfVBh1Ag6aufzYgULdutJUgLH": {
-    "cycle_days": 5,
-    "first_call_date": "2026-08-06",
+    "cycle_days": 77,
+    "first_call_date": "2026-05-26",
     "name": "Dean Quintal",
     "won_date": "2026-08-11"
   },
@@ -2620,6 +2620,12 @@
     "first_call_date": "2026-07-26",
     "name": "Tirek Cave",
     "won_date": "2026-07-26"
+  },
+  "lead_dFj2o9eu9rEbksAQVwWE6cR3Dy8FbfTchTWRhQU1Rkg": {
+    "cycle_days": 3,
+    "first_call_date": "2026-08-10",
+    "name": "Todd Szuch",
+    "won_date": "2026-08-13"
   },
   "lead_dHGnCK9xY4wEEGac2VYfN2UpdbKkpnizvZ7NGTRR4yo": {
     "cycle_days": 88,
