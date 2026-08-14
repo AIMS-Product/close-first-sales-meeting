@@ -375,8 +375,12 @@ def sort_by(field_name, direction="desc"):
 # Worth having even on the PERSONAL views, where every row is the viewer: it makes
 # the ownership filter visible rather than something reps have to take on trust,
 # and it is the first thing to check when someone asks "why am I seeing this lead?"
+#
+# `last_communication_date` is a column on every view for the same reason: it is the
+# field most of these lists sort on, and showing it makes the ascending order legible
+# to reps. Without it "why is this lead at the top?" has no visible answer.
 DIAL_COLS = ["display_name", "primary_phone", "primary_email", "status_id",
-             F_OWNER, "date_created"]
+             F_OWNER, "last_communication_date", "date_created"]
 
 def cols(*extra):
     # Custom-field columns use the bare cf_ id — NOT "custom.<id>". The prefixed
