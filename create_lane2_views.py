@@ -338,18 +338,56 @@ def view(*conds):
         {"negate": False, "type": "and", "queries": [NOT_SUPPRESSED, *conds]},
     ]}
 
+# SORT_ASC_RATIONALE
+#
+# Any view sorted on `last_communication_date` must sort **asc**, never desc.
+#
+# `last_communication_date` counts OUTBOUND as well as inbound. Sorted desc, the
+# moment a rep calls a lead that lead jumps to the top of the list — so the rep's
+# own work resurfaces in front of them and the untouched leads sink out of sight.
+# Charlie hit this on 2026-08-13: "mine are all ones I've contacted this past few
+# days." Exactly the reported symptom, on exactly the three desc-sorted views.
+#
+# asc gives the behaviour a work queue needs: a lead you just called sinks to the
+# bottom, and whatever you haven't touched rises. Within an inbound window it also
+# reads as SLA order — the reply that has been waiting longest is first, which is
+# the one about to be dropped. Membership on these lists is already inbound-only
+# (any_inbound / stamped Hot-Inbound), so asc cannot surface a stale lead.
+#
+# Views sorted on `date_created` or `last_lead_status_change_date` are NOT affected
+# — rep activity does not move those fields, so desc is correct there.
+#
+# ONE deliberate exception: `Scraper · Pool — Unclaimed Dormant` stays desc.
+# Nobody owns those leads, so no rep's outbound is inflating the sort, and the view
+# carries a 12h call/SMS cool-off that suppresses anything just touched. Warmest
+# recent contact first is the right order for a dip-in pool. If the cool-off is ever
+# removed from that view, this exception has to be revisited.
 def sort_by(field_name, direction="desc"):
     return [{"direction": direction,
              "field": {"type": "regular_field", "object_type": "lead",
                        "field_name": field_name}}]
 
-DIAL_COLS = ["display_name", "primary_phone", "primary_email", "status_id", "date_created"]
+# Lead Owner is a column on EVERY L2 view. Dom added it by hand across the set on
+# 2026-08-13; baking it in here is what stops the next `create_lane2_views.py` run
+# from silently reverting that. This script rewrites columns wholesale — anything
+# added in the Close UI is lost on the next apply unless it lives in this list.
+#
+# Worth having even on the PERSONAL views, where every row is the viewer: it makes
+# the ownership filter visible rather than something reps have to take on trust,
+# and it is the first thing to check when someone asks "why am I seeing this lead?"
+DIAL_COLS = ["display_name", "primary_phone", "primary_email", "status_id",
+             F_OWNER, "date_created"]
 
 def cols(*extra):
     # Custom-field columns use the bare cf_ id — NOT "custom.<id>". The prefixed
     # form is 53 chars and Close caps selected_fields.field_id at 48.
-    return [{"type_id": "lead", "field_id": f} for f in DIAL_COLS] + \
-           [{"type_id": "lead", "field_id": f} for f in extra]
+    seen, out = set(), []
+    for f in list(DIAL_COLS) + list(extra):
+        if f in seen:            # a view passing F_OWNER again must not duplicate it
+            continue
+        seen.add(f)
+        out.append({"type_id": "lead", "field_id": f})
+    return out
 
 # ============================================================================
 # THE VIEW SET
@@ -421,14 +459,15 @@ VIEWS = [
      "historically the biggest leak. Same-day SLA — this list should self-clear overnight. "
      "Never-called goes to a Setter, had-a-call to a Scraper.",
      view(any_inbound(1), calling_hours()),
-     sort_by("last_communication_date"), cols(F_STATE, F_TEAM, F_EVERCALL, F_ANGLE)),
+     # asc, NOT desc — see the note above SORT_ASC_RATIONALE below.
+     sort_by("last_communication_date", "asc"), cols(F_STATE, F_TEAM, F_EVERCALL, F_ANGLE)),
 
     ("Warm Backlog — 2 to 7 days",
      "Contacted us in the last week but not in the last 24h — i.e. they slipped past the same-day "
      "SLA. Work after the TODAY list is clear. If this is consistently large, the same-day queue "
      "isn't being cleared.",
      view(any_inbound(REENGAGE_DAYS), negated(any_inbound(1)), calling_hours()),
-     sort_by("last_communication_date"), cols(F_STATE, F_TEAM, F_EVERCALL, F_ANGLE)),
+     sort_by("last_communication_date", "asc"), cols(F_STATE, F_TEAM, F_EVERCALL, F_ANGLE)),
 
     # ---------------- Setter lane ----------------
     ("🚨 SLA BREACH — Untouched Hot Inbound",
@@ -469,7 +508,7 @@ VIEWS = [
      "arrow: a dormant lead fills in a form or replies and jumps straight back to the top. Hottest "
      "thing in your book — work it before Blitz. Previously these sat in no Scraper list at all.",
      view(choice(F_STATE, ["Hot-Inbound"]), calling_hours()),
-     sort_by("last_communication_date"), cols(F_ENTRY, F_RESOURCE, F_EVERCALL, F_ANGLE)),
+     sort_by("last_communication_date", "asc"), cols(F_ENTRY, F_RESOURCE, F_EVERCALL, F_ANGLE)),
 
     # These two are DISJOINT and together cover all of Blitz. Work Recovery first.
     ("Scraper · Blitz — No-Show Recovery (work first)",
