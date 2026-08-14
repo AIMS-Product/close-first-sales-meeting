@@ -96685,8 +96685,30 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_RzfMO7kGYuTmO2ALDtu7TWQvdpsONbCP33337jeG1Sn": {
+      "date": "2026-08-15",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_2vG6vUO2u80wbMWwQObf7jiudVG7gBlbWbzvj58br1b": {
+      "date": "2026-08-18",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-14 23:26:20 UTC",
-  "count": 9017
+  "saved_at": "2026-08-14 23:55:22 UTC",
+  "count": 9019
 }
