@@ -727,8 +727,49 @@ def main():
 
     if not args.apply:
         print("\nDRY RUN — nothing changed. Re-run with --apply.")
-    else:
-        print(f"\n{created} created, {updated} updated.")
+        print("\nColumns this script would set on every view:")
+        for f in DIAL_COLS:
+            print(f"  {f}")
+        return
+
+    print(f"\n{created} created, {updated} updated.")
+
+    # ---- read-back verification -------------------------------------------
+    # Close accepts a saved_search PUT and returns 200 whether or not the change
+    # took. The only honest confirmation is to fetch the views again and compare.
+    #
+    # This also catches the much more common failure: the workflow running an older
+    # copy of this file than the one you just edited. If a column you added is
+    # missing from every view below, the code that ran was not this code.
+    print("\nVerifying against Close...", file=sys.stderr)
+    after = existing_views()
+    mismatched = []
+    for entry in VIEWS:
+        name = PREFIX + entry[0]
+        live = after.get(name)
+        if not live:
+            mismatched.append((name, "view not found after apply"))
+            continue
+        want = [f["field_id"] for f in entry[4]]
+        got = [f.get("field_id") for f in (live.get("selected_fields") or [])]
+        if got != want:
+            missing = [f for f in want if f not in got]
+            extra = [f for f in got if f not in want]
+            detail = []
+            if missing: detail.append(f"missing {missing}")
+            if extra:   detail.append(f"unexpected {extra}")
+            if not detail: detail.append("same columns, different order")
+            mismatched.append((name, "; ".join(detail)))
+
+    if mismatched:
+        print(f"\n⚠️  {len(mismatched)} of {len(VIEWS)} view(s) do NOT match what was sent:")
+        for name, why in mismatched:
+            print(f"  {name}\n      {why}")
+        print("\nIf the same column is missing everywhere, the workflow almost certainly\n"
+              "ran an older copy of this file — check the commit that the run used.")
+        sys.exit(1)
+
+    print(f"✅ all {len(VIEWS)} views verified — columns match what was sent.")
 
 
 if __name__ == "__main__":
