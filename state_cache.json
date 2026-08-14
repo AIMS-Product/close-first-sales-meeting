@@ -96630,8 +96630,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_M3XVvWnCNvvJ1MPpfWT91444RNoqqoCmN6NVpr49dbx": {
+      "date": "2026-08-16",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-14 21:04:31 UTC",
-  "count": 9012
+  "saved_at": "2026-08-14 21:29:46 UTC",
+  "count": 9013
 }
