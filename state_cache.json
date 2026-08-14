@@ -38225,10 +38225,10 @@
     "lead_pQ4qWfheUcHQtyQChA3AtemkWLC9WTGWLS85iblWZBe": {
       "date": "2026-01-05",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -96542,8 +96542,52 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_FxVMLYNUneAUAkiYKLIMaN1YdwZAkbLrgrmYBo8ztId": {
+      "date": "2026-08-18",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_2Xfdc4VJbq6v9zSTvynEZErt0gxWYZZrIV2ukFwgD3k": {
+      "date": "2026-08-18",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_cO28r4BlLyE7IlLmOoodj1EbkG6fhyvKmQbCs5Rlzw5": {
+      "date": "2026-08-14",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_BS8SsvVEablq0RjLfNilA4ydrI7Hk0KmzlnIlqqvjX3": {
+      "date": "2026-08-18",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-14 16:23:59 UTC",
-  "count": 9004
+  "saved_at": "2026-08-14 17:36:41 UTC",
+  "count": 9008
 }
