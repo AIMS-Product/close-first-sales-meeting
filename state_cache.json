@@ -96729,8 +96729,30 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
+    },
+    "lead_ZMqX0lRDmqYgvRY95KMhODiVBpdB5ucZDCobmDKUpgk": {
+      "date": null,
+      "call_type": null,
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "VSL",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_FVGZLjhC4nSZg0uvNKQ2cW6Df9ri9gvSYjoPD693JXB": {
+      "date": null,
+      "call_type": null,
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "VSL",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-15 11:39:47 UTC",
-  "count": 9021
+  "saved_at": "2026-08-15 11:52:08 UTC",
+  "count": 9023
 }
