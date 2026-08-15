@@ -96828,8 +96828,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_94wMgLwkGPPPUOtIyPbeajsKD75oRoTV7SyCaUN6nVT": {
+      "date": "2026-08-18",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-15 18:39:51 UTC",
-  "count": 9030
+  "saved_at": "2026-08-15 19:05:09 UTC",
+  "count": 9031
 }
