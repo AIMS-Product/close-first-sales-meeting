@@ -96791,12 +96791,23 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_0cCfLfqIvbYQHZ6m1BkTAv3OlGemkdQHfWQcMEj0WOV": {
+      "date": "2026-08-17",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-15 17:10:25 UTC",
-  "count": 9027
+  "saved_at": "2026-08-15 17:25:46 UTC",
+  "count": 9028
 }
