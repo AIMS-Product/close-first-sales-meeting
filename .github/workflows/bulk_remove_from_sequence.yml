@@ -1,0 +1,98 @@
+name: Bulk Remove from Workflow (Sequence)
+
+# Manual-only, one-off tool. Point it at a CSV committed to the repo.
+on:
+  workflow_dispatch:
+    inputs:
+      csv_path:
+        description: 'Path to the CSV in the repo'
+        required: true
+        default: 'data/sequence_removal.csv'
+      sequence:
+        description: 'Workflow: seq_xxx id or exact name (comma-separated for several)'
+        required: false
+        default: ''
+      all_sequences:
+        description: 'Act on EVERY Workflow the lead is in (ignores the field above)'
+        type: boolean
+        required: false
+        default: false
+      action:
+        description: 'pause (reversible) | resume (undo a pause) | finish | delete (IRREVERSIBLE)'
+        type: choice
+        options: [pause, resume, finish, delete]
+        required: true
+        default: 'pause'
+      statuses:
+        description: 'Subscription statuses to act on (blank = per-action default)'
+        required: false
+        default: ''
+      dry_run:
+        description: 'Dry run (no writes)'
+        type: boolean
+        required: false
+        default: true
+      row_limit:
+        description: 'Only process the first N rows (blank = all)'
+        required: false
+        default: ''
+      list_sequences:
+        description: 'Just list all Workflows and their IDs, then exit'
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  remove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Self-test (pure logic, no network)
+        run: python bulk_remove_from_sequence.py --selftest
+
+      - name: Run
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: |
+          set -euo pipefail
+
+          if [ "${{ inputs.list_sequences }}" = "true" ]; then
+            python bulk_remove_from_sequence.py --list-sequences
+            exit 0
+          fi
+
+          ARGS=(--csv "${{ inputs.csv_path }}"
+                --action "${{ inputs.action }}"
+                --report sequence_removal_report.csv)
+
+          if [ "${{ inputs.all_sequences }}" = "true" ]; then
+            ARGS+=(--all-sequences)
+          else
+            IFS=',' read -ra SEQS <<< "${{ inputs.sequence }}"
+            for s in "${SEQS[@]}"; do
+              trimmed="$(echo "$s" | sed 's/^ *//; s/ *$//')"
+              [ -n "$trimmed" ] && ARGS+=(--sequence "$trimmed")
+            done
+          fi
+
+          [ -n "${{ inputs.statuses }}" ] && ARGS+=(--statuses "${{ inputs.statuses }}")
+          [ -n "${{ inputs.row_limit }}" ] && ARGS+=(--limit "${{ inputs.row_limit }}")
+          [ "${{ inputs.dry_run }}" = "true" ] && ARGS+=(--dry-run)
+
+          python bulk_remove_from_sequence.py "${ARGS[@]}"
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sequence-removal-report
+          path: sequence_removal_report.csv
+          if-no-files-found: ignore
