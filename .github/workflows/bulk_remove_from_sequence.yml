@@ -32,6 +32,11 @@ on:
         type: boolean
         required: false
         default: true
+      no_owner_filter:
+        description: 'DISABLE owner protection (act on protected owners too)'
+        type: boolean
+        required: false
+        default: false
       row_limit:
         description: 'Only process the first N rows (blank = all)'
         required: false
@@ -84,6 +89,7 @@ jobs:
           fi
 
           [ -n "${{ inputs.statuses }}" ] && ARGS+=(--statuses "${{ inputs.statuses }}")
+          [ "${{ inputs.no_owner_filter }}" = "true" ] && ARGS+=(--no-owner-filter)
           [ -n "${{ inputs.row_limit }}" ] && ARGS+=(--limit "${{ inputs.row_limit }}")
           [ "${{ inputs.dry_run }}" = "true" ] && ARGS+=(--dry-run)
 
