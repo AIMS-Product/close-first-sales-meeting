@@ -76,6 +76,28 @@ TARGET_STATUS_BY_ACTION = {"pause": "paused", "resume": "active", "finish": "fin
 PAST_TENSE = {"pause": "paused", "resume": "resumed",
               "finish": "finished", "delete": "deleted"}
 
+# ---------------------------------------------------------------------------
+# OWNER PROTECTION
+#
+# "Lead Owner" is the CUSTOM field, not Close's built-in `assigned_to`. Same
+# field the sales-lane / lost-deals / lane-2 scripts treat as source of truth.
+LEAD_OWNER_FIELD_ID = "cf_gOfS9pFwext58oberEegLyix8hZzeHrxhCZOVh3P3rd"
+LEAD_OWNER_DISPLAY_NAME = "Lead Owner"
+
+# Leads owned by these users are LEFT ALONE -- closers warming their own deals.
+# Keyed by user_id because names get retyped and change; the name is only for
+# log readability. Verified against the org's active user list.
+PROTECTED_OWNERS = {
+    "user_F0VeLnOQlWpkDncNW8rBl1V2QJ08fnDt6DcUjNATUJK": "Scott Seymour",
+    "user_7F059xEinVentOEvkRMP77fWZyvwUiTRTUOuhD11J0e": "Robin Perkins",
+    "user_wF5aATmDljO6g6AHqehRPVmfCmH5j9VszbO6Q6Pjzm4": "Eric Piccione",
+    "user_7HSxi55O8q5jO11khvrTcAGoL2nlcoa3kZ6loAY6i78": "Joe Vaughan",
+    "user_1TKtkacQ7ZMKkcqnmCERikTYWwGltp5XUjEE9Hshple": "Shreya Bechra",
+    "user_wHm1vcLde4RExd3vv9UOjnms5Oz8ssXg8600mQuxMPb": "Christian Hartwell",
+    "user_6kp6k4OcqKqFNrxGjgMUncedjiCYC6JHU8EI28F7etV": "Luke Herman",
+    "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy": "Vince Bartolini",
+}
+
 SESSION = requests.Session()
 
 LEAD_ID_COLUMNS = ("lead_id", "leadid", "id", "close_lead_id", "close id", "lead id")
@@ -171,6 +193,71 @@ def resolve_sequences(all_seqs, wanted):
 
 
 # ------------------------------------------------------- subscription lookup
+
+def read_lead_owner(lead):
+    """Pull the Lead Owner custom field off a lead object.
+
+    Close hands custom fields back in three different key shapes depending on
+    which endpoint you asked. GET /lead/{id}/ nests them under `custom` keyed by
+    DISPLAY NAME; /data/search/ returns the literal dotted key `custom.cf_xxx`;
+    some responses nest by bare cf_ id. Checking all three beats guessing --
+    a wrong guess here reads as "no owner" and would pause a protected lead.
+    """
+    custom = lead.get("custom") or {}
+    for candidate in (
+        custom.get(LEAD_OWNER_DISPLAY_NAME),
+        custom.get(LEAD_OWNER_FIELD_ID),
+        custom.get(f"custom.{LEAD_OWNER_FIELD_ID}"),
+        lead.get(f"custom.{LEAD_OWNER_FIELD_ID}"),
+    ):
+        if candidate:
+            # Multi-value fields come back as a list; take the first.
+            if isinstance(candidate, list):
+                candidate = candidate[0] if candidate else None
+            if candidate:
+                return str(candidate).strip()
+    return ""
+
+
+def owner_is_protected(owner_value, protected):
+    """Match on user_id primarily; fall back to display name.
+
+    Close usually returns the user_id for a user-type custom field, but if this
+    org's field stores names instead, an ID-only check would silently protect
+    nobody -- which is the dangerous direction to fail in.
+    """
+    if not owner_value:
+        return False, ""
+    if owner_value in protected:
+        return True, protected[owner_value]
+    lowered = owner_value.lower()
+    for uid, name in protected.items():
+        if lowered == name.lower():
+            return True, name
+    return False, ""
+
+
+def resolve_owner_name(owner_value, user_names):
+    """Human-readable label for logs/report."""
+    if not owner_value:
+        return "(no owner)"
+    return user_names.get(owner_value, owner_value)
+
+
+def fetch_org_users():
+    """user_id -> name, for readable owner reporting."""
+    try:
+        data = close_request("GET", "/user/?_limit=200")
+        out = {}
+        for u in data.get("data", []):
+            name = (f"{u.get('first_name', '')} {u.get('last_name', '')}".strip()
+                    or u.get("email", ""))
+            out[str(u.get("id"))] = name
+        return out
+    except Exception as exc:  # noqa: BLE001 - cosmetic only, never fatal
+        print(f"  (could not fetch user names: {exc})")
+        return {}
+
 
 def fetch_lead_subscriptions(lead_id):
     """All sequence subscriptions on a lead (a lead can have several, one per
@@ -319,6 +406,8 @@ def run(args):
     all_seqs = fetch_sequences()
     print(f"  found {len(all_seqs)}")
 
+    user_names = {} if args.no_owner_filter else fetch_org_users()
+
     if args.list_sequences:
         for s in sorted(all_seqs, key=lambda x: str(x.get("name", ""))):
             print(f"  {s.get('id')}  {str(s.get('status', '')):<8} {s.get('name')}")
@@ -373,7 +462,28 @@ def run(args):
             email_index = None
 
     report_rows, stats = [], defaultdict(int)
+    owner_counts, protected_counts = defaultdict(int), defaultdict(int)
     seq_name_by_id = {str(s.get("id")): str(s.get("name", "")) for s in all_seqs}
+
+    protected_owners = None if args.no_owner_filter else dict(PROTECTED_OWNERS)
+    for extra in args.protect_owner:
+        token = extra.strip()
+        if token.startswith("user_"):
+            protected_owners[token] = token
+        else:
+            match = [uid for uid, nm in (user_names or {}).items()
+                     if nm.strip().lower() == token.lower()]
+            if len(match) == 1:
+                protected_owners[match[0]] = token
+            else:
+                sys.exit(f"--protect-owner {token!r} matched {len(match)} users; pass the user_ id")
+
+    if protected_owners is None:
+        print("Owner filter: OFF — every matched lead will be acted on")
+    else:
+        print(f"Protected owners ({len(protected_owners)}) — their leads are left alone:")
+        for name in sorted(set(protected_owners.values())):
+            print(f"    {name}")
 
     for i, row in enumerate(rows, 1):
         raw_key = (row.get(column) or "").strip()
@@ -382,7 +492,8 @@ def run(args):
         if not raw_key:
             stats["blank_key"] += 1
             report_rows.append({**base, "lead_id": "", "subscription_id": "", "sequence": "",
-                                "prior_status": "", "status": "skipped", "detail": "empty match key"})
+                                "owner": "", "prior_status": "", "status": "skipped",
+                                "detail": "empty match key"})
             continue
 
         try:
@@ -399,13 +510,15 @@ def run(args):
         except Exception as exc:  # noqa: BLE001
             stats["lookup_error"] += 1
             report_rows.append({**base, "lead_id": "", "subscription_id": "", "sequence": "",
-                                "prior_status": "", "status": "error", "detail": f"lookup: {exc}"})
+                                "owner": "", "prior_status": "", "status": "error",
+                                "detail": f"lookup: {exc}"})
             continue
 
         if not lead_ids:
             stats["no_match"] += 1
             report_rows.append({**base, "lead_id": "", "subscription_id": "", "sequence": "",
-                                "prior_status": "", "status": "no_match", "detail": "no lead found"})
+                                "owner": "", "prior_status": "", "status": "no_match",
+                                "detail": "no lead found"})
             print(f"[{i}/{len(rows)}] {raw_key} -> NO MATCH")
             continue
 
@@ -414,12 +527,45 @@ def run(args):
             stats["multi_match_rows"] += 1
 
         for lead_id in lead_ids:
+            # ---- owner gate, BEFORE any subscription work.
+            # A lead we're going to skip costs one GET and nothing else, and an
+            # owner-read failure is treated as "protect it" rather than "pause
+            # it" -- erring toward inaction on a closer's warm lead.
+            owner_value, owner_label = "", "(filter off)"
+            if protected_owners is not None:
+                try:
+                    lead = close_request("GET", f"/lead/{lead_id}/")
+                    owner_value = read_lead_owner(lead)
+                except Exception as exc:  # noqa: BLE001
+                    stats["owner_read_error"] += 1
+                    report_rows.append({**base, "lead_id": lead_id, "subscription_id": "",
+                                        "sequence": "", "owner": "", "prior_status": "",
+                                        "status": "error",
+                                        "detail": f"owner read failed, lead left untouched: {exc}"})
+                    print(f"[{i}/{len(rows)}] {raw_key} {lead_id} -> !! owner read failed, skipping")
+                    continue
+
+                owner_label = resolve_owner_name(owner_value, user_names)
+                is_protected, matched_name = owner_is_protected(owner_value, protected_owners)
+                owner_counts[owner_label] += 1
+
+                if is_protected:
+                    stats["skipped_protected_owner"] += 1
+                    protected_counts[matched_name] += 1
+                    report_rows.append({**base, "lead_id": lead_id, "subscription_id": "",
+                                        "sequence": "", "owner": owner_label, "prior_status": "",
+                                        "status": "skipped_protected_owner",
+                                        "detail": f"owned by {matched_name}"})
+                    print(f"[{i}/{len(rows)}] {raw_key} {lead_id} -> SKIP (owner: {matched_name})")
+                    continue
+
             try:
                 subs = fetch_lead_subscriptions(lead_id)
             except Exception as exc:  # noqa: BLE001
                 stats["lookup_error"] += 1
                 report_rows.append({**base, "lead_id": lead_id, "subscription_id": "",
-                                    "sequence": "", "prior_status": "", "status": "error",
+                                    "sequence": "", "owner": owner_label, "prior_status": "",
+                                    "status": "error",
                                     "detail": f"subscription fetch: {exc}"})
                 continue
 
@@ -429,12 +575,14 @@ def run(args):
                 other = ", ".join(f"{seq_name_by_id.get(str(s.get('sequence_id')), '?')}"
                                   f"={s.get('status')}" for s in subs) or "none"
                 report_rows.append({**base, "lead_id": lead_id, "subscription_id": "",
-                                    "sequence": "", "prior_status": "", "status": "not_subscribed",
+                                    "sequence": "", "owner": owner_label, "prior_status": "",
+                                    "status": "not_subscribed",
                                     "detail": f"subscriptions on lead: {other}"})
                 print(f"[{i}/{len(rows)}] {raw_key} {lead_id} -> no matching subscription")
                 continue
 
-            print(f"[{i}/{len(rows)}] {raw_key} {lead_id} -> {len(hits)} subscription(s)")
+            print(f"[{i}/{len(rows)}] {raw_key} {lead_id} [{owner_label}] "
+                  f"-> {len(hits)} subscription(s)")
             for sub in hits:
                 sub_id = str(sub.get("id"))
                 seq_id = str(sub.get("sequence_id"))
@@ -448,13 +596,15 @@ def run(args):
                 stats[status] += 1
                 report_rows.append({**base, "lead_id": lead_id, "subscription_id": sub_id,
                                     "sequence": seq_name_by_id.get(seq_id, seq_id),
+                                    "owner": owner_label,
                                     "prior_status": prior, "status": status, "detail": detail})
                 print(f"  {'->' if ok else '!!'} {sub_id} "
                       f"[{seq_name_by_id.get(seq_id, seq_id)}] {prior} -> {status} ({detail})")
 
     with open(args.report, "w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=["row", "match_key", "lead_id", "subscription_id",
-                                                "sequence", "prior_status", "status", "detail"])
+                                                "sequence", "owner", "prior_status",
+                                                "status", "detail"])
         writer.writeheader()
         writer.writerows(report_rows)
 
@@ -465,12 +615,21 @@ def run(args):
     print(f"CSV rows:                {len(rows)}")
     print(f"Rows matching >1 lead:   {stats['multi_match_rows']}")
     print(f"{label:<25}{acted}")
+    print(f"Skipped (protected):     {stats['skipped_protected_owner']}")
+    print(f"Owner read errors:       {stats['owner_read_error']}")
     print(f"Failed:                  {stats['failed']}")
     print(f"Leads not subscribed:    {stats['not_subscribed']}")
     print(f"No lead match:           {stats['no_match']}")
     print(f"Skipped (blank key):     {stats['blank_key']}")
     print(f"Lookup errors:           {stats['lookup_error']}")
     print(f"Report: {args.report}")
+
+    if protected_owners is not None and owner_counts:
+        print("-" * 60)
+        print("Leads by owner (all leads reached, protected or not):")
+        for name, count in sorted(owner_counts.items(), key=lambda kv: -kv[1]):
+            flag = "  [PROTECTED]" if name in protected_counts else ""
+            print(f"  {count:>6}  {name}{flag}")
     print("=" * 60)
 
     return 1 if (stats["failed"] or stats["lookup_error"]) else 0
@@ -527,6 +686,39 @@ def selftest():
     check("norm name", norm_name(" Acme   LLC "), "acme llc")
     check("LIVE_STATUSES sane", set(DEFAULT_TARGET_STATUSES) <= set(LIVE_STATUSES), True)
 
+    # ---- owner protection
+    check("8 protected owners", len(PROTECTED_OWNERS), 8)
+    check("all protected ids look like users",
+          all(k.startswith("user_") for k in PROTECTED_OWNERS), True)
+    check("protected names as expected", sorted(PROTECTED_OWNERS.values()),
+          ["Christian Hartwell", "Eric Piccione", "Joe Vaughan", "Luke Herman",
+           "Robin Perkins", "Scott Seymour", "Shreya Bechra", "Vince Bartolini"])
+
+    scott = "user_F0VeLnOQlWpkDncNW8rBl1V2QJ08fnDt6DcUjNATUJK"
+    august = "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    check("protected by id", owner_is_protected(scott, PROTECTED_OWNERS), (True, "Scott Seymour"))
+    check("protected by name", owner_is_protected("Vince Bartolini", PROTECTED_OWNERS),
+          (True, "Vince Bartolini"))
+    check("name match case-insensitive", owner_is_protected("scott seymour", PROTECTED_OWNERS)[0], True)
+    check("unprotected owner acts", owner_is_protected(august, PROTECTED_OWNERS), (False, ""))
+    check("blank owner not protected", owner_is_protected("", PROTECTED_OWNERS), (False, ""))
+    check("blank owner is NOT auto-protected", owner_is_protected(None, PROTECTED_OWNERS)[0], False)
+
+    # ---- the three custom-field key shapes Close returns
+    check("owner via display name",
+          read_lead_owner({"custom": {LEAD_OWNER_DISPLAY_NAME: scott}}), scott)
+    check("owner via bare cf id",
+          read_lead_owner({"custom": {LEAD_OWNER_FIELD_ID: scott}}), scott)
+    check("owner via dotted key",
+          read_lead_owner({f"custom.{LEAD_OWNER_FIELD_ID}": scott}), scott)
+    check("owner via nested dotted key",
+          read_lead_owner({"custom": {f"custom.{LEAD_OWNER_FIELD_ID}": scott}}), scott)
+    check("owner list takes first",
+          read_lead_owner({"custom": {LEAD_OWNER_DISPLAY_NAME: [scott, august]}}), scott)
+    check("no owner -> empty", read_lead_owner({"custom": {}}), "")
+    check("wrong field ignored",
+          read_lead_owner({"custom": {"Some Other Field": scott}}), "")
+
     check("pause defaults to active", DEFAULT_STATUSES_BY_ACTION["pause"], ("active",))
     check("resume defaults to paused", DEFAULT_STATUSES_BY_ACTION["resume"], ("paused",))
     check("pause writes paused", TARGET_STATUS_BY_ACTION["pause"], "paused")
@@ -561,6 +753,12 @@ def main():
     p.add_argument("--statuses", default=None,
                    help="comma-separated subscription statuses to act on. Defaults per action: "
                         "pause=active, resume=paused, finish/delete=active,paused")
+    p.add_argument("--protect-owner", action="append", default=[],
+                   help="add an owner to the protected list (user_ id, or exact name). "
+                        "Repeatable. Adds to the built-in PROTECTED_OWNERS roster.")
+    p.add_argument("--no-owner-filter", action="store_true",
+                   help="DISABLE owner protection -- act on every matched lead regardless "
+                        "of who owns it. Skips the per-lead owner read.")
     p.add_argument("--match-by", choices=["lead_id", "email", "name"])
     p.add_argument("--match-column")
     p.add_argument("--per-row-search", action="store_true",
