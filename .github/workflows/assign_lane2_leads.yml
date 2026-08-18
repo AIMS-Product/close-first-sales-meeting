@@ -2,17 +2,22 @@ name: Assign Lane 2 Leads (Scraper round robin)
 
 # Tops each Scraper up to a working queue of unowned leads, hottest bucket first.
 # Sets Lead Owner ONLY — never touches Recapture State or Owner Team.
-# Defaults to DRY RUN; tick apply to write.
-#
 # Triggered externally by cron-job.org (same pattern as the reconciler).
 # Recommended cadence: once each weekday morning, before the team starts —
 # e.g. 0 6 * * 1-5 America/Los_Angeles.
+#
+# NOTE the input is `dry_run`, INVERTED on purpose — matching the reconciler and
+# the Setter assigner. This file used to take `apply` defaulting to false, which
+# meant an external trigger sending no inputs ran a DRY RUN every weekday morning:
+# green tick, clean report, nothing assigned, no way to tell from the run list.
+# Fixed 2026-08-15 before wiring up the cron. A scheduled job whose no-input
+# default is a silent no-op is worse than no scheduled job at all.
 
 on:
   workflow_dispatch:
     inputs:
-      apply:
-        description: "Write Lead Owner (unticked = dry run, writes nothing)"
+      dry_run:
+        description: "Tick to preview only — writes nothing"
         required: false
         default: false
         type: boolean
@@ -56,7 +61,7 @@ jobs:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
         run: |
           ARGS=""
-          if [ "${{ inputs.apply }}" = "true" ]; then ARGS="$ARGS --apply"; fi
+          if [ "${{ inputs.dry_run }}" != "true" ]; then ARGS="$ARGS --apply"; fi
           if [ -n "${{ inputs.max_queue }}" ]; then ARGS="$ARGS --max-queue ${{ inputs.max_queue }}"; fi
           if [ "${{ inputs.reclaim }}" = "true" ]; then ARGS="$ARGS --reclaim"; fi
           echo "Running: assign_lane2_leads.py $ARGS"
@@ -68,10 +73,10 @@ jobs:
           {
             echo "## Lane 2 Assignment"
             echo ""
-            if [ "${{ inputs.apply }}" = "true" ]; then
-              echo "**Mode: APPLY** — Lead Owner written."
-            else
+            if [ "${{ inputs.dry_run }}" = "true" ]; then
               echo "**Mode: DRY RUN** — nothing written."
+            else
+              echo "**Mode: APPLY** — Lead Owner written."
             fi
             echo ""
             echo '```'
