@@ -97539,12 +97539,12 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "YouTube",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-18 21:40:36 UTC",
+  "saved_at": "2026-08-18 21:55:24 UTC",
   "count": 9095
 }
