@@ -97550,12 +97550,12 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-18 22:58:26 UTC",
+  "saved_at": "2026-08-18 23:10:46 UTC",
   "count": 9096
 }
