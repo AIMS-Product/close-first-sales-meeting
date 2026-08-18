@@ -34049,10 +34049,10 @@
     "lead_bLMD3NDIFcT1hrFjS56KVPpzy6r7eFpwGUWPSSflB3O": {
       "date": "2025-12-04",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Jessica Zatkin",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -97545,6 +97545,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-18 21:55:24 UTC",
+  "saved_at": "2026-08-18 22:10:08 UTC",
   "count": 9095
 }
