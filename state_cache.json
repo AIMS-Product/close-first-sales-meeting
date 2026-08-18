@@ -97209,12 +97209,23 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "YouTube",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_8ZlnJCrleh5wFqt6JibwjXQNpQPNsgR6Cf32TchE1jk": {
+      "date": "2026-08-19",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-18 09:39:54 UTC",
-  "count": 9065
+  "saved_at": "2026-08-18 10:06:55 UTC",
+  "count": 9066
 }
