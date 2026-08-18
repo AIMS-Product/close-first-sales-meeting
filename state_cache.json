@@ -96280,12 +96280,12 @@
       "quick_disc": "Yes"
     },
     "lead_SpbpdF5x0yIVkio13WydHYp5WInCtpuH4Yrqty4wE18": {
-      "date": null,
-      "call_type": null,
-      "scraper": null,
+      "date": "2026-08-19",
+      "call_type": "Closer",
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": "VSL",
+      "reactivation": "William Nowak",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -97466,8 +97466,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_UtJ6WV00eHpZa5eIRntgvGWSstCY0WChmsUbEbCnsPa": {
+      "date": "2026-08-19",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-18 19:39:58 UTC",
-  "count": 9088
+  "saved_at": "2026-08-18 19:57:47 UTC",
+  "count": 9089
 }
