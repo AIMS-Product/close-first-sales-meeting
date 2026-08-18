@@ -53,7 +53,8 @@ SCRAPERS = {
     "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL": "Cassie Caraballo",  # added 2026-08-07
     "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp": "Jessica Zatkin",    # added 2026-08-07
     "user_O9qFgDidrldSA1zU3pKPpz5zUbCcNpoEBTCrtAolDUi": "Abigail Garza",     # added 2026-08-12
-
+    "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi": "Connor George", # added 2026-08-18
+    "user_OsKxvuqk3YYRh22NXqonG3PbfFoTC39bn4vGFRKBdMZ": "Dana Lesiuk", # added 2026-08-18
     # Ariella Irvine — Hybrid Setter, added to the dialing rotation 2026-08-12.
     # She is in BOTH queues on purpose: assign_setter_leads.py deals her fresh
     # hot inbound (she books and runs her own calls), and this script gives her
