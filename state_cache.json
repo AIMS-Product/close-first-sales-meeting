@@ -97598,8 +97598,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
+    },
+    "lead_tTRCJf33piw5ih8Et5M8BXA04d81m0EjtAxtwlrxPaK": {
+      "date": "2026-08-19",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": "Yes"
     }
   },
-  "saved_at": "2026-08-19 14:12:25 UTC",
-  "count": 9100
+  "saved_at": "2026-08-19 14:38:54 UTC",
+  "count": 9101
 }
