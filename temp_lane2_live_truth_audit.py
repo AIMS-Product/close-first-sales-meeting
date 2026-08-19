@@ -164,6 +164,31 @@ def negative_fallback(meeting: dict, lead: dict, org_emails: set[str]) -> tuple[
     return None, "no negative fallback"
 
 
+def attendee_negative_signal(meeting: dict, org_emails: set[str]) -> tuple[str | None, str]:
+    contact_statuses: list[str] = []
+    for attendee in meeting.get("attendees") or []:
+        email = (attendee.get("email") or "").lower()
+        is_org = bool(attendee.get("is_organizer")) or email in org_emails or email.endswith(ORG_EMAIL_DOMAINS)
+        if not is_org:
+            contact_statuses.append(normalized(attendee.get("status") or attendee.get("attendance_status")))
+    if contact_statuses and all(value in {"noreply", "no", "declined"} for value in contact_statuses):
+        return "no_show", "all contact attendees are noreply/no/declined"
+    if any(value == "yes" for value in contact_statuses):
+        return None, "contact yes is RSVP only"
+    return None, "no attendee signal"
+
+
+def lead_negative_signal(lead: dict) -> tuple[str | None, str]:
+    status = normalized(lead.get("status_label"))
+    if "no show" in status or "no-show" in status or "noshow" in status:
+        return "no_show", "lead status says no show"
+    if "resched" in status:
+        return "rescheduled", "lead status says rescheduled"
+    if "cancel" in status:
+        return "cancelled", "lead status says canceled"
+    return None, "no lead-status signal"
+
+
 def normalized(value: object) -> str:
     return str(value or "").strip().lower()
 
@@ -404,6 +429,10 @@ class ZoomClient:
         return list(aggregated.values())
 
 
+def signal_short(key: str | None, detail: str) -> str:
+    return f"{key or '-'}:{detail}"
+
+
 def classify(
     meeting: dict,
     lead: dict,
@@ -502,18 +531,31 @@ def main() -> int:
 
     print(f"Lane 2 live truth audit for {args.date} PT")
     print(f"Zoom: {'on' if zoom.enabled else 'off'}")
-    print("=" * 170)
+    print("=" * 220)
     print(
         f"{'Time PT':<8} {'Lead':<24} {'Rep':<17} {'Activity':<10} {'Native':<11} "
         f"{'Contact RSVP':<26} {'Lead status':<24} {'Decision':<11} {'Source':<22} Detail"
     )
-    print("-" * 170)
+    print("-" * 220)
 
     totals = {"shown": 0, "not_shown": 0, "unresolved": 0}
     now_utc = datetime.now(timezone.utc)
     for meeting in sorted(scoped, key=lambda row: row.get("starts_at") or ""):
         lead = leads.get(meeting.get("lead_id"), {})
         zoom_result, provider = zoom_result_for(meeting, zoom, org_emails)
+        attention_key = attention_signal(
+            meeting,
+            lead.get(CF_TODAYS_DISPOSITION),
+            by_lead.get(meeting.get("lead_id"), []),
+            now_utc,
+        )
+        zoom_key = None
+        zoom_detail = "skipped"
+        if zoom_result != "skip":
+            participants, prospect_emails, zoom_org_emails, prospect_names = zoom_result
+            zoom_key, zoom_detail = zoom_signal(participants, prospect_emails, zoom_org_emails, prospect_names)
+        lead_key, lead_detail = lead_negative_signal(lead)
+        attendee_key, attendee_detail = attendee_negative_signal(meeting, org_emails)
         decision, source, detail = classify(
             meeting,
             lead,
@@ -535,9 +577,16 @@ def main() -> int:
             f"{native:<11} {contacts[:26]:<26} {lead_status[:24]:<24} "
             f"{decision:<11} {source_label[:22]:<22} {detail}"
         )
+        print(
+            f"{'':<8} {'signals':<24} {'':<17} {'':<10} "
+            f"attention={attention_key or '-'} | "
+            f"zoom={signal_short(zoom_key, zoom_detail)} [{provider}] | "
+            f"lead={signal_short(lead_key, lead_detail)} | "
+            f"attendee={signal_short(attendee_key, attendee_detail)}"
+        )
 
     scheduled = len(scoped)
-    print("-" * 170)
+    print("-" * 220)
     print(f"scheduled={scheduled} shown={totals['shown']} not_shown={totals['not_shown']} unresolved={totals['unresolved']}")
     if scheduled:
         print(f"confirmed shown / scheduled = {totals['shown'] / scheduled * 100:.1f}%")
