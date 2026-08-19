@@ -97605,12 +97605,23 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
+    },
+    "lead_HbXqN0e7YzIJCYX6AZSPTXQwuWeODAEBuYa1t49tNwi": {
+      "date": "2026-08-24",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-19 14:38:54 UTC",
-  "count": 9101
+  "saved_at": "2026-08-19 15:12:49 UTC",
+  "count": 9102
 }
