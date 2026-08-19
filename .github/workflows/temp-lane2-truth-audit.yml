@@ -1,0 +1,44 @@
+# Temporary read-only Lane 2 show-rate truth audit.
+# Runs manually with repo secrets and does not write to Close.
+
+name: Temp Lane 2 Truth Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Pacific date to audit, YYYY-MM-DD"
+        required: true
+        default: "2026-08-17"
+      no_zoom:
+        description: "Skip Zoom participant reports"
+        required: true
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run read-only audit
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+          ZOOM_ACCOUNT_ID: ${{ secrets.ZOOM_ACCOUNT_ID }}
+          ZOOM_CLIENT_ID: ${{ secrets.ZOOM_CLIENT_ID }}
+          ZOOM_CLIENT_SECRET: ${{ secrets.ZOOM_CLIENT_SECRET }}
+        run: |
+          if [ "${{ inputs.no_zoom }}" = "true" ]; then
+            python3 temp_lane2_live_truth_audit.py --date "${{ inputs.date }}" --no-zoom
+          else
+            python3 temp_lane2_live_truth_audit.py --date "${{ inputs.date }}"
+          fi
