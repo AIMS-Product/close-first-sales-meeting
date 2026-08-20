@@ -96,6 +96,33 @@ def status_in(ids, negate=False):
             "field": {"type": "regular_field", "object_type": "lead", "field_name": "status_id"},
             "condition": {"type": "reference", "reference_type": "status.lead", "object_ids": ids}}
 
+# Webinar leads are held back from the Scraper round robin for this long. Enforced
+# in assign_lane2_leads.py (which leads get dealt) and mirrored by the Setter view
+# below (which leads a Setter sees). Both read the SAME constant and the SAME field,
+# so the list and the routing rule cannot drift apart.
+#
+# It is a HOLD, not a ban — day 31 the lead returns to the general pool. A permanent
+# ban would have stranded ~2,000-3,500 leads a month: the Setter assigner only routes
+# Hot-Inbound, so a webinar lead aging out at day 14 would have belonged to nobody.
+#
+# Effective window is days 15-30. Days 0-14 the lead is Hot-Inbound, which the
+# Scraper assigner already excludes, so this adds ~2 weeks of Setter exclusivity.
+#
+# Anchored on `date_created`, NOT Resource Tag:
+#   - Resource Tag is free text and drifting (`lead-magnet` vs `lead-magnet-90-days`,
+#     three `ltf-playbook*` variants). Fine for reporting, wrong for routing.
+#   - The dated slugs carry no year — `webinar-18-aug` is ambiguous in 12 months.
+#   - `Lead Cohort` is the week-opening of the create date, so it is `date_created`
+#     at coarser granularity and adds nothing.
+#   - `utm_content` lives on the Contact, needs a join, and also carries no year.
+#   - `date_created` works identically in the search API and the view engine, which
+#     is what lets the assigner and this view agree by construction.
+#
+# `wwws` (2,288 leads) is Entry Source = Webinar but is NOT an internal webinar.
+# No explicit exclusion is needed: it has produced no lead in 60+ days, so the
+# 30-day window never contains one. If it ever revives, exclude it by name.
+WEBINAR_HOLD_DAYS = 30
+
 def choice(fid, values, negate=False):
     return {"type": "field_condition", "negate": negate,
             "field": {"type": "custom_field", "custom_field_id": fid},
@@ -414,6 +441,33 @@ MANAGERS = [
     "user_hqv8aEy844FqW29HDFof8hPyBiJx1XBxaDkdUtqc1Qp",   # Dom Ellis
 ]
 # Stephen owns the API key, so he sees these regardless of what's listed here.
+
+# The Setter lane. Used for SETTER_ONLY sharing below — keep in sync with
+# lane2_state.SETTERS + HYBRID_SETTERS.
+SETTERS_FOR_SHARING = [
+    "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",   # William Nowak
+    "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM",   # Spencer Reynolds
+    "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO",   # Ariella Irvine (Hybrid)
+]
+
+# SETTERS ONLY — not shared org-wide, so Scrapers never see them.
+#
+# Added 2026-08-14 on Stephen's call: scrapers should not be dialling the warm
+# reply queue. Both lists were removed from the Scraper SOP the same day.
+#
+# Sharing is the enforcement, not the SOP. These two views are `mine OR unowned`,
+# so a scraper who could see them would be shown genuinely unclaimed warm leads and
+# would be right to work them. Taking them out of the SOP alone leaves the door open.
+#
+# NOTE: this script rewrites sharing_settings on every apply. If the sharing was
+# changed by hand in the Close UI, THIS list is what makes it stick.
+SETTER_ONLY = {
+    "⚡ Warm Reply — TODAY",
+    "Warm Backlog — 2 to 7 days",
+    # The whole point is that Scrapers cannot work these yet.
+    "Setter · Webinar — Recent Cohort",
+}
+
 MANAGER_ONLY = {
     "🚨 SLA BREACH — Untouched Hot Inbound",
     # The four Ops · views are described as manager views but are still shared
@@ -439,6 +493,10 @@ NO_LANE1_GUARD = {
 MINE_OR_UNCLAIMED = {
     "⚡ Warm Reply — TODAY",
     "Warm Backlog — 2 to 7 days",
+    # 369 of the Aug 18 cohort are already Setter-owned and 35 sit with Scrapers.
+    # mine+unclaimed shows a Setter their own book plus anything unowned, and leaves
+    # the 35 where they are — forward-only, nothing is taken off anyone.
+    "Setter · Webinar — Recent Cohort",
     # Safe here too, and strictly better: a sub-1-hour lead is unowned, so it
     # still shows to everyone. Once the setter assigner gives it an owner it
     # drops out of the other Setter's list instead of both racing for it.
@@ -505,6 +563,21 @@ VIEWS = [
      "our biggest no-show-prevention lever.",
      view(num_range("num_upcoming_meetings", gte=1)),
      sort_by("date_created"), cols(F_ENTRY)),
+
+    # Days 15-30 of the webinar hold. Deliberately EXCLUDES Hot-Inbound: days 0-14
+    # already appear on the two Hot Inbound views above under a tighter SLA, and
+    # showing them a third time here would just split attention. What this adds is
+    # the slice that until now appeared on no list at all — webinar leads that have
+    # gone cold but that WEBINAR_HOLD_DAYS still keeps away from Scrapers.
+    ("Setter · Webinar — Recent Cohort",
+     "Webinar leads from the last 30 days that have gone past the hot window without booking. "
+     "Scrapers cannot be dealt these yet — they are yours until day 31, then they return to the "
+     "general pool. Not tied to any one webinar: each new cohort appears here automatically.",
+     view(choice(F_ENTRY, ["Webinar"]),
+          within("date_created", days=WEBINAR_HOLD_DAYS),
+          choice(F_STATE, ["Hot-Inbound"], negate=True),
+          calling_hours()),
+     sort_by("date_created"), cols(F_RESOURCE, F_STATE, F_EVERCALL, F_ANGLE)),
 
     # ---------------- Scraper lane ----------------
     ("Scraper · Hot Inbound — Re-engaged (work first)",
@@ -659,6 +732,7 @@ def main():
         personal = short in PERSONAL
         mine_or_pool = short in MINE_OR_UNCLAIMED
         mgr = short in MANAGER_ONLY
+        setter_only = short in SETTER_ONLY
         user_dependent = personal or mine_or_pool
 
         query = json.loads(json.dumps(query))          # never mutate the source
@@ -672,7 +746,15 @@ def main():
         elif mine_or_pool:
             query["queries"][1]["queries"].append(mine_or_unclaimed())
 
-        share_org = SHARE_WHOLE_ORG and not mgr
+        share_org = SHARE_WHOLE_ORG and not (mgr or setter_only)
+        if mgr:
+            recipients = MANAGERS
+        elif setter_only:
+            recipients = SETTERS_FOR_SHARING + MANAGERS
+        elif share_org:
+            recipients = []
+        else:
+            recipients = SHARE_WITH
         name = PREFIX + short
         payload = {
             "name": name,
@@ -684,7 +766,7 @@ def main():
             "is_shared": share_org,
             "sharing_settings": {
                 "whole_org": share_org,
-                "user_ids": MANAGERS if mgr else ([] if share_org else SHARE_WITH),
+                "user_ids": recipients,
                 "group_ids": [],
             },
         }
@@ -694,6 +776,7 @@ def main():
         if personal: tags.append("mine-only")
         if mine_or_pool: tags.append("mine + unowned")
         if mgr: tags.append("MANAGERS ONLY")
+        if setter_only: tags.append("SETTERS ONLY — not scrapers")
         if short in NO_LANE1_GUARD: tags.append("no lane1 guard")
         suffix = f"   [{', '.join(tags)}]" if tags else ""
         print(f"  {action:<7} {name}{suffix}")
