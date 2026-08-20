@@ -97573,15 +97573,15 @@
       "quick_disc": null
     },
     "lead_TS56YCAYgDqQp7mUlnVLqL8xKjp18XxHR20k21oPe26": {
-      "date": "2026-08-20",
-      "call_type": "Closer",
+      "date": null,
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": "Yes"
+      "quick_disc": null
     },
     "lead_Fmmfbgq41ZWPTFdH7kZAG1kTTisyzNmqecw1th5ivhU": {
       "date": "2026-08-24",
@@ -98110,8 +98110,52 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_MG0ZRvuGXbR7j1TIIgFBVtg8xaBwO6L5tIz3br03qHH": {
+      "date": "2026-08-21",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_lSMaAIIEC1Y0YILqp7Ysmhx04dWBY2BOMcYtOmtAasx": {
+      "date": "2026-08-24",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Jessica Zatkin",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_77OplAN3MFcbZ1M2VEjLnSAApGMHUoOJAlA4LVkyCHC": {
+      "date": "2026-08-21",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_3w6728uernpwejwGQRGVoKj7z8uM3vdKZ9ruWPwkKMr": {
+      "date": "2026-08-25",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-20 22:01:32 UTC",
-  "count": 9146
+  "saved_at": "2026-08-20 22:31:15 UTC",
+  "count": 9150
 }
