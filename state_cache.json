@@ -97909,8 +97909,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_VZ8I5GHebkIxTTQ3Zcf3KsNo1yd4nD8OV6ETmqqoLXN": {
+      "date": "2026-08-21",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Cassie Caraballo",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-20 15:38:55 UTC",
-  "count": 9128
+  "saved_at": "2026-08-20 16:09:25 UTC",
+  "count": 9129
 }
