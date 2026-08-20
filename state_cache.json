@@ -68392,12 +68392,15 @@
       "quick_disc": null
     },
     "lead_1Oz9inu2xwsrOuLXTlJxMFxtbvIzFQx2PMZLvmtvloN": {
-      "date": null,
-      "call_type": null,
-      "scraper": null,
+      "date": "2026-08-24",
+      "call_type": "Closer",
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "earliest_scraper_date": null
+      "reactivation": "Cassie Caraballo",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     },
     "lead_F5pkva9F2CbmweuSxvYxhuAur0jbGenMnHczpsz8gl0": {
       "date": "2026-05-13",
@@ -98019,8 +98022,52 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_K70Ei6uAb8tMXJwdSXjsgKSFsp3IUeSPdho7HnzALzq": {
+      "date": "2026-08-24",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_8f5PU3WOyQxVFvlofXgf84zSjT5jDRu8hk4zfYousoo": {
+      "date": "2026-08-21",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Jessica Zatkin",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_1spn8euxSJTQKOqJPhPYDmNQnoLItNRO0upSq2SDsp5": {
+      "date": "2026-08-21",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_v429kfVyXBPAvIoNw3WSSk4XwaQHyeXyv6C9FB5E3C2": {
+      "date": "2026-08-21",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-20 19:37:08 UTC",
-  "count": 9138
+  "saved_at": "2026-08-20 20:32:09 UTC",
+  "count": 9142
 }
