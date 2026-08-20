@@ -25,12 +25,13 @@ departed rep, and hands out the hottest buckets first.
 import argparse
 import sys
 from collections import Counter, defaultdict
+from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
 
 # Reuse the query builders and the month-partitioned search that works around
 # Close's 10,000-row pagination cap.
 from lane2_state import (
-    BASE, F_OWNER, F_STATE, F_OVERRIDE, SUPPRESS_STATUSES,
+    BASE, F_OWNER, F_STATE, F_ENTRY, F_OVERRIDE, SUPPRESS_STATUSES,
     CloseError, _req, _wrap, cf, search, status_in, WRITE_WORKERS,
     SKIP_CAP, PROBE_CAP,
 )
@@ -53,8 +54,7 @@ SCRAPERS = {
     "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL": "Cassie Caraballo",  # added 2026-08-07
     "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp": "Jessica Zatkin",    # added 2026-08-07
     "user_O9qFgDidrldSA1zU3pKPpz5zUbCcNpoEBTCrtAolDUi": "Abigail Garza",     # added 2026-08-12
-    "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi": "Connor George", # added 2026-08-18
-    "user_OsKxvuqk3YYRh22NXqonG3PbfFoTC39bn4vGFRKBdMZ": "Dana Lesiuk", # added 2026-08-18
+
     # Ariella Irvine — Hybrid Setter, added to the dialing rotation 2026-08-12.
     # She is in BOTH queues on purpose: assign_setter_leads.py deals her fresh
     # hot inbound (she books and runs her own calls), and this script gives her
@@ -100,6 +100,38 @@ MAX_QUEUE = 1000
 PRIORITY_STATES = ["Blitz", "Active-Nurture", "Deep-Nurture"]
 
 # Hot-Inbound is deliberately absent: that's the Setter lane.
+
+# ---- webinar hold ----------------------------------------------------------
+# Webinar leads are not dealt to Scrapers for their first 30 days. Setters get an
+# exclusive window; on day 31 the lead returns to the general pool like any other.
+#
+# A HOLD, not a ban. A permanent exclusion would have stranded ~2,000-3,500 leads a
+# month: the Setter assigner only routes Hot-Inbound, so a webinar lead aging out of
+# that bucket at day 14 would have been dealt to nobody and worked by nobody —
+# rebuilding the dormant graveyard this whole system exists to drain.
+#
+# FORWARD-ONLY BY CONSTRUCTION. This filters the unclaimed POOL, and the assigner
+# only ever deals unowned leads. The 6,477 webinar leads Scrapers already hold are
+# untouched and stay on their lists. Nothing is taken off anyone.
+#
+# Effective window is days 15-30: days 0-14 the lead is Hot-Inbound, which
+# PRIORITY_STATES already excludes.
+#
+# Mirrored by `L2 · Setter · Webinar — Recent Cohort`, which reads the same field
+# and the same day count. Change one, change the other.
+#
+# Filtered in PYTHON, not in the query, on purpose: the pool is read in full anyway
+# for the census, and doing it here means the run can REPORT how many were held
+# rather than silently returning a smaller pool. Also avoids adding an untested
+# negated-conjunction shape to a query language that has already burned us once.
+WEBINAR_HOLD_DAYS = 30
+WEBINAR_ENTRY_SOURCE = "Webinar"
+
+# `wwws` (2,288 leads) carries Entry Source = Webinar but is NOT an internal webinar.
+# It needs no exclusion here: it has produced no new lead in 60+ days, so it never
+# falls inside the hold window. Listed so the next person doesn't have to rediscover
+# it. If it ever starts producing again, add its tag to a Resource Tag exclusion.
+NOT_REALLY_WEBINAR = ("wwws",)
 
 # --- reclaim ----------------------------------------------------------------
 # Leads owned by someone who has left are invisible: they're not in the unclaimed
@@ -213,6 +245,27 @@ def user_names(user_ids):
         except Exception:
             names[uid] = uid
     return names
+
+
+def _on_webinar_hold(lead, _now=None):
+    """True if this lead is a webinar lead still inside its Setter-exclusive window.
+
+    Returns False on a missing or unparseable date_created rather than guessing —
+    holding a lead we can't date would remove it from the pool with no way to notice.
+    """
+    if cf(lead, F_ENTRY) != WEBINAR_ENTRY_SOURCE:
+        return False
+    raw = lead.get("date_created")
+    if not raw:
+        return False
+    try:
+        created = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    if created.tzinfo is None:
+        created = created.replace(tzinfo=timezone.utc)
+    now = _now or datetime.now(timezone.utc)
+    return (now - created).days < WEBINAR_HOLD_DAYS
 
 
 def find_stranded(active):
@@ -371,7 +424,7 @@ def main():
     # slower run (this is a once-a-weekday job) and buys an honest census of what
     # is left to work. --no-census restores the early-break behaviour.
     print("Reading the unclaimed pool...", file=sys.stderr)
-    pool, available, taken_from = [], Counter(), Counter()
+    pool, available, taken_from, held = [], Counter(), Counter(), Counter()
     for state in PRIORITY_STATES:
         early_stop = args.no_census and target and len(pool) >= cap_need
         if early_stop:
@@ -381,15 +434,27 @@ def main():
         rows = search(
             _wrap(status_in(SUPPRESS_STATUSES, negate=True),
                   owner_empty(), state_is([state])),
-            fields=["id", "display_name", f"custom.{F_OVERRIDE}"],
+            fields=["id", "display_name", "date_created",
+                    f"custom.{F_OVERRIDE}", f"custom.{F_ENTRY}"],
             limit=remaining)
         # never take a lead someone has pinned
         rows = [r for r in rows if cf(r, F_OVERRIDE) != "Yes"]
+        # webinar hold — Setters own these for their first WEBINAR_HOLD_DAYS
+        kept = [r for r in rows if not _on_webinar_hold(r)]
+        held[state] = len(rows) - len(kept)
+        rows = kept
         available[state] = len(rows)
         for r in rows:
             r["_state"] = state       # so we can report what came from where
         pool.extend(rows)
         print(f"  {state:<16} {len(rows):>7,} unowned", file=sys.stderr)
+
+    if sum(held.values()):
+        print(f"\n{sum(held.values()):,} unowned webinar lead(s) held back from Scrapers "
+              f"(under {WEBINAR_HOLD_DAYS} days old — Setters have them until then):")
+        for state in PRIORITY_STATES:
+            if held.get(state):
+                print(f"  {state:<16} {held[state]:>7,}")
 
     if not pool:
         print("\nPool is empty — nothing unowned in a workable state.")
