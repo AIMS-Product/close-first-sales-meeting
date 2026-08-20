@@ -96973,7 +96973,7 @@
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": "Yes"
     },
     "lead_bXRCKENrOKFWqPYJ7g67EL5EHmrCFFuXmME7Mpz354g": {
       "date": "2026-08-18",
@@ -97867,6 +97867,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-20 01:05:43 UTC",
+  "saved_at": "2026-08-20 02:10:08 UTC",
   "count": 9124
 }
