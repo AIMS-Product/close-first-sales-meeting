@@ -3,13 +3,22 @@
 outcome_sync.py — Close CRM Meeting Outcome Sync
 =================================================
 
-Writes Close's native Meeting Outcome (outcome_id) on past meetings, using:
+Writes Close's native Meeting Outcome (outcome_id) on past meetings.
+Evidence hierarchy (v5 — per-meeting evidence outranks lead-level fields):
 
   1. Close meeting status        (canceled -> Rescheduled/Cancelled)
-  2. Attention's verdict         (read from "Todays Call Disposition (Opp)"
-                                  lead field that Attention already writes)
-  3. Zoom attendance             (participant report via Server-to-Server OAuth)
-  4. Nothing conclusive          -> left blank + flagged in completeness report
+  2. Attention PER-CALL activity ("First Meeting Analysis"/"Meeting Analysis"
+                                  custom activity within +/-4h of the meeting
+                                  -> Completed; never overwritten by later calls)
+  3. Attention lead disposition  ("Todays Call Disposition (Opp)" — guarded:
+                                  latest meeting only, <=3 days old; kept as
+                                  secondary because the NEXT call overwrites it)
+  4. Phone conversation          (answered Close call >=5 min on the meeting's
+                                  day -> Completed; 2-5 min blocks auto-no-show)
+  5. Zoom attendance             (participant report via Server-to-Server OAuth)
+  6. Lead status + RSVP          (status Canceled/No Show AND every external
+                                  attendee noreply/declined -> Cancelled/No Show)
+  7. Nothing conclusive          -> left blank + flagged in completeness report
 
 Designed to live in the close-first-sales-meeting repo as a SEPARATE step in
 the 30-min workflow (isolated failure: a Zoom outage skips outcome sync, it
@@ -93,6 +102,16 @@ DISPOSITION_TO_OUTCOME = {
     "canceled - rescheduled":     "rescheduled",
 }
 
+# Attention PER-CALL custom activity types. These are per-event records that
+# later calls never overwrite — primary evidence (fixes the Dan Minton case,
+# where a Tuesday cancel overwrote Monday's show in the lead-level field).
+ATTENTION_MEETING_TYPE_IDS = {
+    "actitype_7Hnq4Sw2S223adPFUmTarD",   # Attention - First Meeting Analysis
+    "actitype_1hoSfW6deESpPKyZ4FORYV",   # Attention - Meeting Analysis
+}
+ATTENTION_DIALER_TYPE_ID = "actitype_6odahlx7K817nuEYi4yL32"  # Close Dialer Call Analysis
+ATTENTION_MATCH_HOURS = 4  # meeting-analysis activity within +/- this of starts_at
+
 # Attention verdict is a LEAD-level "today's" field, so it is only trusted for
 # a meeting when it unambiguously refers to it (see attention_signal()).
 ATTENTION_MAX_AGE_DAYS = 3
@@ -144,6 +163,8 @@ GRACE_MINUTES = env_int("GRACE_MINUTES", 90)  # skip meetings that ended < this 
 MIN_ATTEND_SECONDS = env_int("MIN_ATTEND_SECONDS", 300)
 HOST_MIN_SECONDS = env_int("HOST_MIN_SECONDS", 600)
 ZOOM_AUTO_NOSHOW = os.environ.get("ZOOM_AUTO_NOSHOW", "1") != "0"
+MIN_PHONE_SHOW_SECONDS = env_int("MIN_PHONE_SHOW_SECONDS", 300)     # answered call = show
+MIN_PHONE_REVIEW_SECONDS = env_int("MIN_PHONE_REVIEW_SECONDS", 120)  # blocks auto-no-show
 
 # ---------------------------------------------------------------------------
 # Close API helpers
@@ -227,8 +248,36 @@ def fetch_meetings_window(s, since_dt, until_dt):
 def fetch_lead_brief(s, lead_id):
     return close_get(
         s, f"/lead/{lead_id}/",
-        {"_fields": f"id,display_name,{CF_TODAYS_DISPOSITION.replace('custom.', 'custom.')}"}
+        {"_fields": f"id,display_name,status_label,{CF_TODAYS_DISPOSITION}"}
     )
+
+
+def fetch_attention_acts(s, lead_id):
+    """Attention custom-activity instances on a lead -> [{'type_id','at'}]."""
+    data = close_get(s, "/activity/custom/", {"lead_id": lead_id, "_limit": 100})
+    acts = []
+    for a in data.get("data", []):
+        tid = a.get("custom_activity_type_id")
+        if tid not in ATTENTION_MEETING_TYPE_IDS and tid != ATTENTION_DIALER_TYPE_ID:
+            continue
+        at = parse_dt(a.get("activity_at") or a.get("date_created"))
+        if at:
+            acts.append({"type_id": tid, "at": at})
+    return acts
+
+
+def fetch_lead_calls(s, lead_id):
+    """Native Close call activities on a lead -> [{'at','duration','disposition'}]."""
+    data = close_get(s, "/activity/call/", {
+        "lead_id": lead_id, "_limit": 100,
+        "_fields": "id,duration,disposition,activity_at,date_created"})
+    calls = []
+    for c in data.get("data", []):
+        at = parse_dt(c.get("activity_at") or c.get("date_created"))
+        if at:
+            calls.append({"at": at, "duration": int(c.get("duration") or 0),
+                          "disposition": c.get("disposition") or ""})
+    return calls
 
 
 def set_meeting_outcome(s, meeting_id, outcome_id):
@@ -371,6 +420,68 @@ def attention_signal(meeting, disposition, lead_meetings, now_utc):
     return outcome
 
 
+def attention_activity_signal(meeting, acts):
+    """
+    Per-meeting Attention evidence: a First Meeting / Meeting Analysis custom
+    activity within ATTENTION_MATCH_HOURS of the meeting start means Attention
+    analyzed a real conversation for THIS event -> Completed.
+    (Attention only produces a meeting analysis when a meeting actually ran.)
+    """
+    st = parse_dt(meeting.get("starts_at"))
+    if st is None:
+        return None, None
+    for a in acts or ():
+        if a["type_id"] in ATTENTION_MEETING_TYPE_IDS and \
+                abs((a["at"] - st).total_seconds()) <= ATTENTION_MATCH_HOURS * 3600:
+            return "completed", f"attention meeting-analysis at {a['at']:%m-%d %H:%M}"
+    return None, None
+
+
+def phone_evidence(meeting, calls, acts=()):
+    """
+    Phone conversation on the meeting's Pacific day (the Rashard case: prospect
+    misses the Zoom link, rep reaches them by phone — that IS the show).
+      answered call >= MIN_PHONE_SHOW_SECONDS   -> ("completed", detail)
+      answered call >= MIN_PHONE_REVIEW_SECONDS
+        or an Attention dialer analysis that day -> ("review", detail)
+      else                                       -> (None, None)
+    """
+    st = parse_dt(meeting.get("starts_at"))
+    if st is None:
+        return None, None
+    day = pacific_date(st)
+    best = 0
+    for c in calls or ():
+        if pacific_date(c["at"]) == day and c["disposition"] == "answered":
+            best = max(best, c["duration"])
+    if best >= MIN_PHONE_SHOW_SECONDS:
+        return "completed", f"answered call {best}s on meeting day"
+    dialer = any(a["type_id"] == ATTENTION_DIALER_TYPE_ID
+                 and pacific_date(a["at"]) == day for a in acts or ())
+    if best >= MIN_PHONE_REVIEW_SECONDS or dialer:
+        why = f"answered call {best}s" if best else "attention dialer analysis"
+        return "review", f"{why} on meeting day — review before no-show"
+    return None, None
+
+
+def status_rsvp_signal(meeting, lead_status, ext_attendee_statuses):
+    """
+    Negative evidence pair (the Ruben case): lead status says canceled/no-show
+    AND every external attendee never accepted the invite.
+    """
+    if not lead_status or not ext_attendee_statuses:
+        return None, None
+    if not all((x or "noreply").lower() in ("noreply", "no", "declined")
+               for x in ext_attendee_statuses):
+        return None, None
+    ls = lead_status.lower()
+    if "cancel" in ls:
+        return "cancelled", f"lead status '{lead_status}' + attendees never accepted"
+    if "no show" in ls or "👻" in lead_status:
+        return "no_show", f"lead status '{lead_status}' + attendees never accepted"
+    return None, None
+
+
 def zoom_signal(participants, prospect_emails, org_emails, prospect_names=()):
     """
     -> ("completed" | "no_show" | None, detail)
@@ -409,7 +520,8 @@ def _name_match(a, b):
     return difflib.SequenceMatcher(None, a, b).ratio() >= 0.8
 
 
-def decide(meeting, lead_meetings, disposition, zoom_result, now_utc):
+def decide(meeting, lead_meetings, disposition, zoom_result, now_utc,
+           acts=(), calls=(), lead_status="", ext_attendee_statuses=()):
     """
     -> (outcome_key or None, source, detail)
     zoom_result: (participants or None) pre-fetched, or "skip" if zoom disabled/no link.
@@ -420,19 +532,39 @@ def decide(meeting, lead_meetings, disposition, zoom_result, now_utc):
             return "rescheduled", "close-status", "canceled + later booking exists"
         return "cancelled", "close-status", "canceled, no later booking"
 
-    # 2. Attention verdict (guarded).
+    # 2. Attention per-call activity — per-meeting record, never overwritten.
+    aa, aa_detail = attention_activity_signal(meeting, acts)
+    if aa:
+        return aa, "attention-activity", aa_detail
+
+    # 3. Attention lead-level disposition (guarded; secondary during transition).
     a = attention_signal(meeting, disposition, lead_meetings, now_utc)
     if a:
         return a, "attention", f"disposition='{disposition}'"
 
-    # 3. Zoom attendance.
+    # 4. Phone conversation on the meeting day.
+    ph, ph_detail = phone_evidence(meeting, calls, acts)
+    if ph == "completed":
+        return "completed", "phone", ph_detail
+
+    # 5. Zoom attendance — with the phone guard on auto no-shows.
+    zoom_detail = None
     if zoom_result != "skip":
         participants, prospect_emails, org_emails, prospect_names = zoom_result
-        z, detail = zoom_signal(participants, prospect_emails, org_emails, prospect_names)
+        z, zoom_detail = zoom_signal(participants, prospect_emails, org_emails,
+                                     prospect_names)
+        if z == "no_show" and ph == "review":
+            return None, "phone-guard", f"zoom says no-show BUT {ph_detail}"
         if z:
-            return z, "zoom", detail
-        return None, "zoom", detail
+            return z, "zoom", zoom_detail
 
+    # 6. Lead status + attendee RSVP negative evidence.
+    sr, sr_detail = status_rsvp_signal(meeting, lead_status, ext_attendee_statuses)
+    if sr:
+        return sr, "status-rsvp", sr_detail
+
+    if zoom_detail is not None:
+        return None, "zoom", zoom_detail
     return None, "none", "no signal available"
 
 # ---------------------------------------------------------------------------
@@ -483,9 +615,20 @@ def run():
         lead_id = m["lead_id"]
         try:
             if lead_id not in lead_cache:
-                lead_cache[lead_id] = fetch_lead_brief(s, lead_id)
-            lead = lead_cache[lead_id]
+                lead_cache[lead_id] = {
+                    "brief": fetch_lead_brief(s, lead_id),
+                    "acts": fetch_attention_acts(s, lead_id),
+                    "calls": fetch_lead_calls(s, lead_id),
+                }
+            lead = lead_cache[lead_id]["brief"]
+            acts = lead_cache[lead_id]["acts"]
+            calls = lead_cache[lead_id]["calls"]
             disposition = lead.get(CF_TODAYS_DISPOSITION)
+            lead_status = lead.get("status_label") or ""
+            ext_attendee_statuses = [
+                a.get("status") for a in (m.get("attendees") or [])
+                if (a.get("email") or "").lower() not in org_emails
+            ]
 
             blob = f"{m.get('note') or ''} {m.get('location') or ''}"
             zoom_meeting_id = None
@@ -522,7 +665,9 @@ def run():
                                    org_emails, prospect_names)
 
             outcome_key, source, detail = decide(
-                m, by_lead[lead_id], disposition, zoom_result, now_utc)
+                m, by_lead[lead_id], disposition, zoom_result, now_utc,
+                acts=acts, calls=calls, lead_status=lead_status,
+                ext_attendee_statuses=ext_attendee_statuses)
 
             label = f"{m['id']} '{(m.get('title') or '')[:40]}' {st:%m-%d %H:%M}"
             if outcome_key:
@@ -664,6 +809,66 @@ def selftest():
     # 12. no signal at all -> flag
     r = decide(m_first, lead_meetings, None, "skip", now)
     checks.append(("no signal flag", r[0] is None and r[1] == "none"))
+
+    # --- v5: per-meeting evidence ---
+    MEETING_TYPE = next(iter(ATTENTION_MEETING_TYPE_IDS))
+    mstart = parse_dt(m_first["starts_at"])
+
+    # 13. attention meeting-analysis activity within window -> completed
+    acts = [{"type_id": MEETING_TYPE, "at": mstart + timedelta(minutes=30)}]
+    r = decide(m_first, lead_meetings, None, "skip", now, acts=acts)
+    checks.append(("attention-activity match", r[0] == "completed"
+                   and r[1] == "attention-activity"))
+
+    # 14. attention activity outranks a contradicting lead disposition
+    r = decide(m_first, lead_meetings, "New Call No Show", "skip", now, acts=acts)
+    checks.append(("activity beats disposition", r[0] == "completed"
+                   and r[1] == "attention-activity"))
+
+    # 15. attention activity outside +/-4h window -> not matched
+    acts_far = [{"type_id": MEETING_TYPE, "at": mstart + timedelta(hours=9)}]
+    r = decide(m_first, lead_meetings, None, "skip", now, acts=acts_far)
+    checks.append(("activity window guard", r[1] != "attention-activity"))
+
+    # 16. phone: answered 400s call on meeting day -> completed (Rashard fix)
+    calls = [{"at": mstart + timedelta(hours=2), "duration": 400,
+              "disposition": "answered"}]
+    parts = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 1800}]
+    z = (parts, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Prospect"])
+    r = decide(m_first, lead_meetings, None, z, now, calls=calls)
+    checks.append(("phone show beats zoom noshow", r[0] == "completed"
+                   and r[1] == "phone"))
+
+    # 17. phone: 150s answered call blocks auto no-show -> flagged for review
+    calls_short = [{"at": mstart + timedelta(hours=2), "duration": 150,
+                    "disposition": "answered"}]
+    r = decide(m_first, lead_meetings, None, z, now, calls=calls_short)
+    checks.append(("phone guard flags noshow", r[0] is None
+                   and r[1] == "phone-guard"))
+
+    # 18. phone: unanswered call does NOT block auto no-show
+    calls_na = [{"at": mstart + timedelta(hours=2), "duration": 0,
+                 "disposition": "no-answer"}]
+    r = decide(m_first, lead_meetings, None, z, now, calls=calls_na)
+    checks.append(("unanswered call ignored", r[0] == "no_show"))
+
+    # 19. status+rsvp: Canceled (by Lead) + attendee noreply -> cancelled (Ruben fix)
+    r = decide(m_first, lead_meetings, None, "skip", now,
+               lead_status="🔻 Canceled (by Lead)",
+               ext_attendee_statuses=["noreply"])
+    checks.append(("status-rsvp cancelled", r[0] == "cancelled"
+                   and r[1] == "status-rsvp"))
+
+    # 20. status+rsvp: ghost/no-show status + noreply -> no_show
+    r = decide(m_first, lead_meetings, None, "skip", now,
+               lead_status="👻 No Show", ext_attendee_statuses=["noreply", "no"])
+    checks.append(("status-rsvp noshow", r[0] == "no_show"))
+
+    # 21. status+rsvp requires ALL-negative RSVPs — an accepted invite blocks it
+    r = decide(m_first, lead_meetings, None, "skip", now,
+               lead_status="🔻 Canceled (by Lead)",
+               ext_attendee_statuses=["yes"])
+    checks.append(("rsvp yes blocks status rung", r[0] is None))
 
     failed = [name for name, ok in checks if not ok]
     for name, ok in checks:
