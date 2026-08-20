@@ -1,0 +1,40 @@
+# .github/workflows/temp-wtd-showrate.yml
+# One-off WTD scraper show-rate check — READ-ONLY, manual trigger only.
+# Delete this workflow + script when the discrepancy review is done.
+
+name: TEMP WTD Scraper Show Rate
+
+on:
+  workflow_dispatch:
+    inputs:
+      wtd_start:
+        description: "Week start date (Pacific, YYYY-MM-DD)"
+        required: false
+        default: "2026-08-17"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests
+
+      - name: Run WTD show-rate check
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+          WTD_START: ${{ github.event.inputs.wtd_start }}
+        run: python temp_wtd_scraper_showrate.py
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wtd-showrate-report
+          path: wtd_showrate_report.json
+          retention-days: 14
