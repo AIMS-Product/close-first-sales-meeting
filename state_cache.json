@@ -97953,8 +97953,52 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_Qu2vS3DLe5zcMo9Px5EnB3J2sUYtaFuYsZVUgHrsit2": {
+      "date": "2026-08-21",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_LXekJIGcOwX1E2eGKFTIgy9McfMSiX4Op9AbYHmJIgd": {
+      "date": "2026-08-24",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Cassie Caraballo",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_Ct2j9GbaC0QpM6rc6UUqmOXEYBLdSszWY5pNDeDUqDL": {
+      "date": "2026-08-20",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_w4VBx33pDmdyBnWGDKslmLEYAbMXCcNpDj3KMW3pjf6": {
+      "date": "2026-08-21",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Jessica Zatkin",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-20 17:34:24 UTC",
-  "count": 9132
+  "saved_at": "2026-08-20 18:05:02 UTC",
+  "count": 9136
 }
