@@ -97948,11 +97948,11 @@
     },
     "lead_Q3qo9mqsmJaSAS9dbwqEIW5AI1skOMRNZcGcas77xwT": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Connor George",
-      "funnel_name": "Reactivation Scrapers",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -98231,8 +98231,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_IaY6zrT6yJ7qicqXf0YKmgNse2tfVm3rYNSNPgcZmyC": {
+      "date": "2026-08-25",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-21 14:39:11 UTC",
-  "count": 9157
+  "saved_at": "2026-08-21 15:12:14 UTC",
+  "count": 9158
 }
