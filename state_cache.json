@@ -97947,9 +97947,9 @@
       "quick_disc": null
     },
     "lead_Q3qo9mqsmJaSAS9dbwqEIW5AI1skOMRNZcGcas77xwT": {
-      "date": "2026-08-21",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Connor George",
       "funnel_name": "Reactivation Scrapers",
@@ -98233,6 +98233,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-21 14:12:31 UTC",
+  "saved_at": "2026-08-21 14:39:11 UTC",
   "count": 9157
 }
