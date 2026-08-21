@@ -121,6 +121,15 @@ def status_in(ids, negate=False):
 # `wwws` (2,288 leads) is Entry Source = Webinar but is NOT an internal webinar.
 # No explicit exclusion is needed: it has produced no lead in 60+ days, so the
 # 30-day window never contains one. If it ever revives, exclude it by name.
+#
+# KNOWN GAP — the re-registrant. A dormant lead who signs up for a new webinar keeps
+# its old `date_created`, so it is not held and the view does not show it. It is also
+# NOT re-bucketed to Hot-Inbound: `any_inbound()` counts incoming sms/email/call
+# only, and a registration form-fill is none of those. So the warmest people in a
+# cohort — dormant leads who came back and attended — can be dealt to a Scraper the
+# next morning. 13 of the Aug 18 cohort's 752 were already 30d+ old.
+# The durable fix is a DATED webinar field written by the form automation. Until one
+# exists, no query here can close this.
 WEBINAR_HOLD_DAYS = 30
 
 def choice(fid, values, negate=False):
@@ -564,18 +573,24 @@ VIEWS = [
      view(num_range("num_upcoming_meetings", gte=1)),
      sort_by("date_created"), cols(F_ENTRY)),
 
-    # Days 15-30 of the webinar hold. Deliberately EXCLUDES Hot-Inbound: days 0-14
-    # already appear on the two Hot Inbound views above under a tighter SLA, and
-    # showing them a third time here would just split attention. What this adds is
-    # the slice that until now appeared on no list at all — webinar leads that have
-    # gone cold but that WEBINAR_HOLD_DAYS still keeps away from Scrapers.
+    # The whole webinar cohort for its 30-day hold — Hot-Inbound INCLUDED.
+    #
+    # This view first shipped excluding Hot-Inbound, reasoning that days 0-14 already
+    # appear on the two Hot Inbound views under a tighter SLA and a third listing
+    # would split attention. That was wrong, and the Aug 18 cohort showed why:
+    # 735 of its 752 leads were 0-13 days old, so the view rendered 4 rows out of
+    # 752 and read as broken. A cohort view that hides the cohort is worth nothing.
+    #
+    # Overlap with the Hot Inbound views is fine and already precedented here —
+    # VendHub Downsell overlaps the Blitz lists on purpose and says so in its own
+    # description. Seeing the same lead under a second, more useful grouping is not
+    # duplicate work; an empty list during the only week the cohort is hot IS.
     ("Setter · Webinar — Recent Cohort",
-     "Webinar leads from the last 30 days that have gone past the hot window without booking. "
-     "Scrapers cannot be dealt these yet — they are yours until day 31, then they return to the "
-     "general pool. Not tied to any one webinar: each new cohort appears here automatically.",
+     "Every webinar lead from the last 30 days, hottest first. Scrapers cannot be dealt these "
+     "until day 31, so the whole cohort is yours to work. Some also appear on your Hot Inbound "
+     "lists — same leads, grouped by webinar here. Each new cohort appears automatically.",
      view(choice(F_ENTRY, ["Webinar"]),
           within("date_created", days=WEBINAR_HOLD_DAYS),
-          choice(F_STATE, ["Hot-Inbound"], negate=True),
           calling_hours()),
      sort_by("date_created"), cols(F_RESOURCE, F_STATE, F_EVERCALL, F_ANGLE)),
 
