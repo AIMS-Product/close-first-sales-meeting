@@ -98550,8 +98550,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_FTp8nThyWP1krZMjxkoKLV8CUDe3uC6bCOnCWaGjlh9": {
+      "date": "2026-08-25",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-22 22:39:44 UTC",
-  "count": 9186
+  "saved_at": "2026-08-22 22:56:02 UTC",
+  "count": 9187
 }
