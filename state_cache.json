@@ -98178,12 +98178,12 @@
       "quick_disc": "Yes"
     },
     "lead_NifzHlO3U8Vb8SorYIfQyqgW1qkbAL2oscrGiVv8zv8": {
-      "date": "2026-08-24",
+      "date": "2026-08-25",
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "William Nowak",
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
@@ -98761,6 +98761,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-24 20:03:10 UTC",
+  "saved_at": "2026-08-24 20:33:25 UTC",
   "count": 9205
 }
