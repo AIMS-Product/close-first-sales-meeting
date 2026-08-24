@@ -59,17 +59,33 @@ from lane2_state import (
 MAX_PER_RUN = 100
 
 # Hybrid Setters (Ariella) book and run their own calls rather than handing off
-# to Lane 1. Hot inbound is still the right raw material for that, so they share
-# this rotation by default and receive an equal share.
+# to Lane 1. Hot inbound was originally the raw material for that, so they shared
+# this rotation and received an equal share.
 #
-# Set False to hold them out entirely — do that if her lead mix should come from
-# somewhere else instead. Whether "equal share" is right for a rep who also runs
-# the call is an open question: she may warrant fewer leads (each one costs her
-# more time) or better-qualified ones. Changing that means weighting the deal,
-# which is a deliberate change, not a config flip.
-HYBRID_IN_ROTATION = True
+# OFF since 2026-08-20 on Stephen's call. Ariella now works the dormant book only
+# — she stays in assign_lane2_leads.SCRAPERS and receives no fresh hot inbound.
+#
+# CONSEQUENCE, so nobody has to rediscover it: the "hybrid" part of Hybrid Setter
+# is now dormant. She keeps the Setter Owner Team label and her existing hot leads
+# (this script never takes a lead off anyone), but her incoming flow is entirely
+# Scraper-side. If she should get hot inbound again, flip this back to True.
+HYBRID_IN_ROTATION = False
 
 ROTATION = {**SETTERS, **HYBRID_SETTERS} if HYBRID_IN_ROTATION else dict(SETTERS)
+
+# Per-rep floor. Anyone below their number is topped up BEFORE the normal
+# least-loaded balancing runs. Keyed by user id; absent = no floor.
+#
+# Spencer sat at 9 live hot leads against William's ~917 on 2026-08-20, because
+# this script had never run on a schedule. Least-loaded dealing alone would fix
+# that eventually, but only while he happens to be the lowest — a floor states the
+# intent directly and survives a third Setter joining the rotation.
+#
+# This is a FLOOR, not a target or a cap. It changes who gets dealt next; it never
+# takes a lead off anyone, and nobody is held back once they are above it.
+MIN_QUEUE = {
+    "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM": 250,   # Spencer Reynolds
+}
 
 # Setters do not get leads another rep already owns. Same guarantee as the
 # Scraper assigner: this script only ever picks up leads with NO Lead Owner.
@@ -179,7 +195,14 @@ def main():
     plan = defaultdict(list)
     running = {u: counts.get(u, 0) for u in ROTATION}
     for lead in pool:
-        uid = min(ROTATION, key=lambda u: (running[u], ROTATION[u]))
+        # Floors first: anyone under their MIN_QUEUE gets served before balancing
+        # resumes, furthest-below-floor first. Ties break on name so a dry run and
+        # the apply that follows deal identically.
+        below = [u for u in ROTATION if running[u] < MIN_QUEUE.get(u, 0)]
+        if below:
+            uid = min(below, key=lambda u: (running[u] - MIN_QUEUE[u], ROTATION[u]))
+        else:
+            uid = min(ROTATION, key=lambda u: (running[u], ROTATION[u]))
         plan[uid].append(lead)
         running[uid] += 1
 
@@ -189,7 +212,13 @@ def main():
     print("-" * 48)
     for uid in sorted(ROTATION, key=lambda u: -(counts.get(u, 0) + len(plan[u]))):
         have, gets = counts.get(uid, 0), len(plan[uid])
-        print(f"{ROTATION[uid]:<20} {have:>8,} {gets:>+8,} {have + gets:>8,}")
+        floor = MIN_QUEUE.get(uid)
+        note = ""
+        if floor:
+            short = floor - (have + gets)
+            note = (f"   floor {floor:,} — {short:,} short, next run continues"
+                    if short > 0 else f"   floor {floor:,} met")
+        print(f"{ROTATION[uid]:<20} {have:>8,} {gets:>+8,} {have + gets:>8,}{note}")
     print("-" * 48)
     dealt = sum(len(v) for v in plan.values())
     print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {dealt:>+8,} "
