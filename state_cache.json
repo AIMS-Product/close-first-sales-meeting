@@ -98770,8 +98770,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_55MIcK4fKhVRAzcuPeVZ947k22c4F3NArYBfGz8I5tZ": {
+      "date": "2026-08-27",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Jessica Zatkin",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-24 22:30:42 UTC",
-  "count": 9206
+  "saved_at": "2026-08-24 23:01:45 UTC",
+  "count": 9207
 }
