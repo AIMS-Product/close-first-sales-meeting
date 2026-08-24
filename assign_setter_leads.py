@@ -39,6 +39,7 @@ load", that is a different function and a deliberate decision.
 import argparse
 import sys
 from collections import Counter, defaultdict
+from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
 
 from lane2_state import (
@@ -142,6 +143,47 @@ def hot_inbound_live():
     ]
 
 
+def _norm(ts):
+    """Normalise a Close timestamp so two of them can be compared as strings.
+
+    Close is not consistent about the date/time separator — `date_created` has come
+    back space-separated ("2026-08-16 22:56:53+00:00") while
+    `last_communication_date` came back with a "T". Space (0x20) sorts BEFORE every
+    digit and "T" (0x54) sorts after, so comparing the two raw would order them by
+    format rather than by time. Normalise before any max() or sort.
+    """
+    return str(ts or "").replace(" ", "T").replace("Z", "+00:00")
+
+
+def _waiting_since(lead):
+    """When this lead raised its hand — the thing SLA should actually be measured from.
+
+    Fresh leads (inside HOT_WINDOW_DAYS) sort on date_created: that IS the moment
+    they arrived. Older leads are only in this pool because they re-engaged, so the
+    most recent communication is the best available proxy for when that happened —
+    Close exposes no "last INBOUND communication" field to sort on.
+
+    Deliberately not applied to fresh leads: a bulk marketing send updates
+    last_communication_date on everything it touches, and using it everywhere would
+    let one campaign reshuffle the whole queue. Confining it to the re-engaged tail
+    keeps that blast radius small. Falls back to date_created whenever the value is
+    missing or unparseable, so a bad field can never reorder the queue silently.
+    """
+    created = _norm(lead.get("date_created"))
+    try:
+        age = (datetime.now(timezone.utc) - datetime.fromisoformat(created)).days
+    except ValueError:
+        return created
+    if age <= HOT_WINDOW_DAYS:
+        return created
+    comm = _norm(lead.get("last_communication_date"))
+    try:                       # only trust it if it is actually a timestamp —
+        datetime.fromisoformat(comm)   # otherwise max() would let "junk" win and
+    except ValueError:                 # bury the lead at the end of the queue
+        return created
+    return max(created, comm)
+
+
 def not_lane1():
     """No Closer actively working a deal on this lead. Live, not state-based."""
     return negated(has_opp_status(LANE1_OPP_STATUSES))
@@ -174,13 +216,23 @@ def main():
     print("Reading unclaimed hot inbound...", file=sys.stderr)
     pool = search(
         _wrap(*hot_inbound_live(), owner_empty(), not_lane1()),
-        fields=["id", "display_name", "date_created", f"custom.{F_OVERRIDE}"])
+        fields=["id", "display_name", "date_created", "last_communication_date",
+                f"custom.{F_OVERRIDE}"])
     pool = [r for r in pool if cf(r, F_OVERRIDE) != "Yes"]
 
-    # Oldest first. A lead that has been sitting unowned for six days is more
-    # urgent than one that arrived a minute ago — the new one is still inside
-    # its SLA window, the old one is already a miss.
-    pool.sort(key=lambda r: r.get("date_created") or "")
+    # Longest-waiting-since-the-hand-raise first — NOT oldest date_created.
+    #
+    # This pool has two kinds of lead in it and `date_created` only describes one
+    # of them. A fresh hand-raise was created when it raised its hand, so
+    # date_created is exactly right. A RE-ENGAGED lead is here because it replied
+    # in the last REENGAGE_DAYS, and its date_created can be years old.
+    #
+    # Sorting the whole pool on date_created put a lead created in April 2025 that
+    # replied yesterday at the very top, ahead of genuinely fresh hand-raises from
+    # this week — which then sank to the bottom and were left for the next run. On
+    # a speed-to-lead job that is precisely backwards. Caught 2026-08-20 from a dry
+    # run whose first three rows were all 12-16 months old.
+    pool.sort(key=_waiting_since)
 
     total_available = len(pool)
     capped = total_available > args.max_assign
@@ -224,6 +276,8 @@ def main():
     print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {dealt:>+8,} "
           f"{sum(counts.values()) + dealt:>8,}")
 
+    fresh = sum(1 for l in pool if str(_waiting_since(l))[:10] == (l.get("date_created") or "")[:10])
+    print(f"\nOf this run: {fresh:,} fresh hand-raise(s), {len(pool) - fresh:,} re-engaged")
     print(f"\nUnclaimed hot inbound available : {total_available:,}")
     print(f"Assigned this run               : {dealt:,}")
     if capped:
@@ -235,8 +289,11 @@ def main():
         print("\nSample (oldest first):")
         for uid, ls in plan.items():
             for l in ls[:3]:
-                created = (l.get("date_created") or "")[:16].replace("T", " ")
-                print(f"  {created}  {l.get('display_name', '?')[:32]:<32} -> {ROTATION[uid]}")
+                w = str(_waiting_since(l))[:16].replace("T", " ")
+                c = (l.get("date_created") or "")[:10]
+                kind = "fresh" if w[:10] == c else "re-eng"
+                print(f"  raised {w}  ({kind}, created {c})  "
+                      f"{l.get('display_name', '?')[:28]:<28} -> {ROTATION[uid]}")
         return
 
     # ---- 5. write -----------------------------------------------------------
