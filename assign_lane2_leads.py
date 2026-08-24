@@ -24,6 +24,7 @@ departed rep, and hands out the hottest buckets first.
 
 import argparse
 import sys
+import time
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
@@ -294,6 +295,107 @@ def find_stranded(active):
     return out
 
 
+def close_paginate_skip(path, params=None):
+    """Yield items from Close endpoints that use _skip pagination."""
+    params = dict(params or {})
+    params.setdefault("_limit", 100)
+    skip = 0
+    while True:
+        page = dict(params)
+        page["_skip"] = skip
+        last_exc = None
+        for attempt in range(5):
+            try:
+                data = _req("GET", f"{BASE}{path}", params=page).json()
+                break
+            except Exception as exc:
+                last_exc = exc
+                time.sleep(min(2 ** attempt, 20))
+        else:
+            raise last_exc
+        rows = data.get("data", [])
+        for row in rows:
+            yield row
+        if not data.get("has_more") or not rows:
+            return
+        skip += len(rows)
+
+
+def _active_sequence_ids():
+    sequences = list(close_paginate_skip(
+        "/sequence/",
+        {"_fields": "id,name,status", "_limit": 100},
+    ))
+    return {s["id"] for s in sequences if s.get("status") == "active"}
+
+
+def active_sequence_lead_ids_for_leads(leads):
+    """
+    Given a lead list, return those with an active subscription in an active
+    Close sequence.
+
+    This is deliberately used only by the opt-in actionable-queue dry run. The
+    existing top-up job counts all owned workable leads; this helper lets us
+    simulate a stricter definition: owned workable leads that are not already
+    being worked by an active sequence.
+    """
+    active_sequences = _active_sequence_ids()
+    lead_ids = set()
+    subscriptions = 0
+    print(f"Checking active sequence subscriptions on {len(leads):,} "
+          f"held lead(s)...", file=sys.stderr)
+
+    def _check(lead):
+        lead_id = lead.get("id")
+        if not lead_id:
+            return None
+        rows = list(close_paginate_skip(
+            "/sequence_subscription/",
+            {
+                "lead_id": lead_id,
+                "status": "active",
+                "_fields": "id,lead_id,sequence_id,status",
+                "_limit": 100,
+            },
+        ))
+        rows = [r for r in rows
+                if r.get("status") == "active"
+                and r.get("sequence_id") in active_sequences]
+        return lead_id, len(rows)
+
+    workers = min(max(WRITE_WORKERS, 4), 16)
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        for n, result in enumerate(ex.map(_check, leads), 1):
+            if result:
+                lead_id, sub_count = result
+                subscriptions += sub_count
+                if sub_count:
+                    lead_ids.add(lead_id)
+            if n % 500 == 0:
+                print(f"  checked {n:,}/{len(leads):,} held leads; "
+                      f"{len(lead_ids):,} unique active-sequence leads so far",
+                      file=sys.stderr)
+
+    print(f"  {subscriptions:,} active subscription(s) on "
+          f"{len(lead_ids):,} unique lead(s).", file=sys.stderr)
+    return lead_ids
+
+
+def resolve_scraper(label):
+    needle = (label or "").strip().lower()
+    if not needle:
+        return None
+    if label in SCRAPERS:
+        return label
+    hits = [uid for uid, name in SCRAPERS.items() if needle in name.lower()]
+    if len(hits) == 1:
+        return hits[0]
+    if len(hits) > 1:
+        raise CloseError(f"--actionable-owner matched multiple reps: "
+                         f"{', '.join(SCRAPERS[u] for u in hits)}")
+    raise CloseError(f"--actionable-owner did not match a configured scraper: {label}")
+
+
 def build_deficits(counts, pool_size, target):
     """
     How many leads each rep should receive.
@@ -327,6 +429,12 @@ def main():
     ap.add_argument("--reclaim", action="store_true",
                     help="first clear Lead Owner on leads held by departed users, "
                          "returning them to the pool")
+    ap.add_argument("--actionable-queue", action="store_true",
+                    help="DRY RUN ONLY: calculate top-up need from owned workable "
+                         "leads that are not in an active sequence")
+    ap.add_argument("--actionable-owner",
+                    help="limit --actionable-queue subscription checks to one rep "
+                         "(name fragment or user_id), useful for dry-running Vince")
     ap.add_argument("--max-reclaim", type=int, default=10000,
                     help="refuse to release more than this many leads in one run "
                          "(default 10000) — a backstop against a bad active-user "
@@ -336,6 +444,12 @@ def main():
 
     if not SCRAPERS:
         sys.exit("No scrapers configured.")
+    if args.apply and args.actionable_queue:
+        sys.exit("--actionable-queue is dry-run-only for now. Run without --apply "
+                 "to inspect the proposed behavior.")
+    actionable_owner = resolve_scraper(args.actionable_owner) if args.actionable_owner else None
+    if args.actionable_owner and not args.actionable_queue:
+        sys.exit("--actionable-owner only applies with --actionable-queue.")
 
     # ---- 0. reclaim from leavers ------------------------------------------
     if args.reclaim:
@@ -401,7 +515,34 @@ def main():
               state_is(PRIORITY_STATES)),
         fields=["id", f"custom.{F_OWNER}"])
 
-    counts = Counter(cf(l, F_OWNER) for l in held)
+    total_counts = Counter(cf(l, F_OWNER) for l in held)
+    sequence_counts = Counter()
+    if args.actionable_queue:
+        subscription_scope = held
+        if actionable_owner:
+            subscription_scope = [l for l in held if cf(l, F_OWNER) == actionable_owner]
+            print(f"\nACTIONABLE OWNER SCOPE: {SCRAPERS[actionable_owner]} "
+                  f"({len(subscription_scope):,} held workable leads)")
+        active_seq_leads = active_sequence_lead_ids_for_leads(subscription_scope)
+        actionable = []
+        for lead in held:
+            owner = cf(lead, F_OWNER)
+            if lead.get("id") in active_seq_leads:
+                sequence_counts[owner] += 1
+            else:
+                actionable.append(lead)
+        counts = Counter(cf(l, F_OWNER) for l in actionable)
+        print("\nACTIONABLE QUEUE DRY RUN — deficits are based on owned workable "
+              "leads that are NOT in an active sequence.")
+        if actionable_owner:
+            print("  Owner-scoped subscription check: "
+                  f"{SCRAPERS[actionable_owner]} only; other reps use total held "
+                  "counts in this what-if.")
+        print(f"  Total owned workable leads:        {len(held):,}")
+        print(f"  Owned workable in active sequence: {sum(sequence_counts.values()):,}")
+        print(f"  Owned workable actionable:         {sum(counts.values()):,}")
+    else:
+        counts = total_counts
 
     # Truncation tripwire. A census that lands exactly on a round number is the
     # signature of a page cap, not of reality. Cheap to check, and the failure it
@@ -468,8 +609,13 @@ def main():
 
     print()
     mode = f"target {level:,}/rep" if target else f"levelling to ~{level:,}/rep (uncapped)"
-    print(f"{'Rep':<20} {'holds':>8} {'gets':>8} {'after':>8}   [{mode}]")
-    print("-" * 52)
+    if args.actionable_queue:
+        print(f"{'Rep':<20} {'total':>8} {'in seq':>8} {'action':>8} "
+              f"{'gets':>8} {'after':>8}   [{mode}]")
+        print("-" * 78)
+    else:
+        print(f"{'Rep':<20} {'holds':>8} {'gets':>8} {'after':>8}   [{mode}]")
+        print("-" * 52)
 
     plan = defaultdict(list)
     order = sorted(SCRAPERS, key=lambda u: -deficit[u])
@@ -492,11 +638,22 @@ def main():
         # sit above it legitimately — but it should be stated, not left to be
         # inferred from a "gets" of zero.
         over = f"  +{have - target:,} over" if target and have > target else ""
-        print(f"{SCRAPERS[uid]:<20} {have:>8,} {gets:>+8,} {have+gets:>8,}{over}")
-    print("-" * 52)
+        if args.actionable_queue:
+            total_have = total_counts.get(uid, 0)
+            in_seq = sequence_counts.get(uid, 0)
+            print(f"{SCRAPERS[uid]:<20} {total_have:>8,} {in_seq:>8,} "
+                  f"{have:>8,} {gets:>+8,} {have+gets:>8,}{over}")
+        else:
+            print(f"{SCRAPERS[uid]:<20} {have:>8,} {gets:>+8,} {have+gets:>8,}{over}")
+    print("-" * (78 if args.actionable_queue else 52))
     total = sum(len(v) for v in plan.values())
-    print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {total:>+8,} "
-          f"{sum(counts.values())+total:>8,}")
+    if args.actionable_queue:
+        print(f"{'TOTAL':<20} {sum(total_counts.values()):>8,} "
+              f"{sum(sequence_counts.values()):>8,} {sum(counts.values()):>8,} "
+              f"{total:>+8,} {sum(counts.values())+total:>8,}")
+    else:
+        print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {total:>+8,} "
+              f"{sum(counts.values())+total:>8,}")
 
     if target:
         over_reps = {u: counts.get(u, 0) - target
