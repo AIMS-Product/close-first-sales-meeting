@@ -95775,7 +95775,7 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Charlie Ingram",
+      "reactivation": "William Nowak",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
@@ -96389,7 +96389,7 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Jacob Hepner",
+      "reactivation": "William Nowak",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
@@ -97126,7 +97126,7 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "August Young",
+      "reactivation": "William Nowak",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
@@ -97937,11 +97937,11 @@
     },
     "lead_32b1Kr93HpHeKL23WyTeTJL08R9i6kEQ62kZ3NTQ6fs": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Website",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -98677,13 +98677,24 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "William Nowak",
-      "funnel_name": "YouTube",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
+    },
+    "lead_HaRYRKCAYMNzC6KS8JxSnIEKhCXjkvKxxt6Uk9XdFcM": {
+      "date": "2026-08-26",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Pearl Sathekge",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-24 15:14:04 UTC",
-  "count": 9198
+  "saved_at": "2026-08-24 15:43:45 UTC",
+  "count": 9199
 }
