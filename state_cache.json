@@ -99386,8 +99386,30 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_79JngZJNIosMuDjazQdOAp6XBorupbL8oZwZrhCJbL1": {
+      "date": "2026-08-29",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Jessica Zatkin",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_yIwHvgrmRDQJ7KGTBdQvxrgDwrTjn1ZIYbhN1w4V7W2": {
+      "date": "2026-08-27",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-25 22:30:13 UTC",
-  "count": 9262
+  "saved_at": "2026-08-25 23:03:14 UTC",
+  "count": 9264
 }
