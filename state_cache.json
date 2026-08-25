@@ -99118,7 +99118,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -99364,8 +99364,30 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_xKy0xuYiNmu4ah0TeAJ4hm5ntJvaxp1knOOvycL35xg": {
+      "date": "2026-08-27",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Spencer Reynolds",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_O6JEoGQdRl6YT1WjodhkR5pl1ANHlHFDRIi72tEnrHZ": {
+      "date": "2026-08-27",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-25 21:32:32 UTC",
-  "count": 9260
+  "saved_at": "2026-08-25 22:02:29 UTC",
+  "count": 9262
 }
