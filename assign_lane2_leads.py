@@ -321,45 +321,41 @@ def close_paginate_skip(path, params=None):
         skip += len(rows)
 
 
-def _active_sequence_ids():
-    sequences = list(close_paginate_skip(
-        "/sequence/",
-        {"_fields": "id,name,status", "_limit": 100},
-    ))
-    return {s["id"] for s in sequences if s.get("status") == "active"}
-
-
-def active_sequence_lead_ids_for_leads(leads):
+def workflow_subscription_lead_ids_for_leads(leads):
     """
-    Given a lead list, return those with an active subscription in an active
-    Close sequence.
+    Given a lead list, return those with any Close workflow subscription.
 
     Used by --actionable-queue, where top-up need is based on owned workable
-    leads that are not already being worked by an active sequence.
+    leads that are not already in a workflow.
+
+    Close's UI calls these "Workflow Subscriptions"; the API still exposes them
+    as sequence subscriptions. The UI filter is contact-scoped, so check every
+    contact on the lead rather than only lead-level subscriptions.
     """
-    active_sequences = _active_sequence_ids()
     lead_ids = set()
     subscriptions = 0
-    print(f"Checking active sequence subscriptions on {len(leads):,} "
+    print(f"Checking workflow subscriptions on {len(leads):,} "
           f"held lead(s)...", file=sys.stderr)
 
     def _check(lead):
         lead_id = lead.get("id")
         if not lead_id:
             return None
-        rows = list(close_paginate_skip(
-            "/sequence_subscription/",
-            {
-                "lead_id": lead_id,
-                "status": "active",
-                "_fields": "id,lead_id,sequence_id,status",
-                "_limit": 100,
-            },
-        ))
-        rows = [r for r in rows
-                if r.get("status") == "active"
-                and r.get("sequence_id") in active_sequences]
-        return lead_id, len(rows)
+        found = 0
+        for contact in lead.get("contacts") or []:
+            contact_id = contact.get("id")
+            if not contact_id:
+                continue
+            rows = list(close_paginate_skip(
+                "/sequence_subscription/",
+                {
+                    "contact_id": contact_id,
+                    "_fields": "id,contact_id,lead_id,sequence_id,status",
+                    "_limit": 100,
+                },
+            ))
+            found += len(rows)
+        return lead_id, found
 
     workers = min(max(WRITE_WORKERS, 4), 16)
     with ThreadPoolExecutor(max_workers=workers) as ex:
@@ -371,10 +367,10 @@ def active_sequence_lead_ids_for_leads(leads):
                     lead_ids.add(lead_id)
             if n % 500 == 0:
                 print(f"  checked {n:,}/{len(leads):,} held leads; "
-                      f"{len(lead_ids):,} unique active-sequence leads so far",
+                      f"{len(lead_ids):,} unique workflow-subscription leads so far",
                       file=sys.stderr)
 
-    print(f"  {subscriptions:,} active subscription(s) on "
+    print(f"  {subscriptions:,} workflow subscription(s) on "
           f"{len(lead_ids):,} unique lead(s).", file=sys.stderr)
     return lead_ids
 
@@ -429,7 +425,7 @@ def main():
                          "returning them to the pool")
     ap.add_argument("--actionable-queue", action="store_true",
                     help="calculate top-up need from owned workable "
-                         "leads that are not in an active sequence")
+                         "leads that are not in a workflow subscription")
     ap.add_argument("--actionable-owner",
                     help="limit --actionable-queue subscription checks to one rep "
                          "(name fragment or user_id), useful for dry-running Vince")
@@ -508,34 +504,34 @@ def main():
         _wrap(status_in(SUPPRESS_STATUSES, negate=True),
               owner_is(SCRAPERS.keys()),
               state_is(PRIORITY_STATES)),
-        fields=["id", f"custom.{F_OWNER}"])
+        fields=["id", "contacts", f"custom.{F_OWNER}"])
 
     total_counts = Counter(cf(l, F_OWNER) for l in held)
-    sequence_counts = Counter()
+    workflow_counts = Counter()
     if args.actionable_queue:
         subscription_scope = held
         if actionable_owner:
             subscription_scope = [l for l in held if cf(l, F_OWNER) == actionable_owner]
             print(f"\nACTIONABLE OWNER SCOPE: {SCRAPERS[actionable_owner]} "
                   f"({len(subscription_scope):,} held workable leads)")
-        active_seq_leads = active_sequence_lead_ids_for_leads(subscription_scope)
+        workflow_subscription_leads = workflow_subscription_lead_ids_for_leads(subscription_scope)
         actionable = []
         for lead in held:
             owner = cf(lead, F_OWNER)
-            if lead.get("id") in active_seq_leads:
-                sequence_counts[owner] += 1
+            if lead.get("id") in workflow_subscription_leads:
+                workflow_counts[owner] += 1
             else:
                 actionable.append(lead)
         counts = Counter(cf(l, F_OWNER) for l in actionable)
         mode_label = "APPLY" if args.apply else "DRY RUN"
         print(f"\nACTIONABLE QUEUE {mode_label} — deficits are based on owned workable "
-              "leads that are NOT in an active sequence.")
+              "leads that are NOT in a workflow subscription.")
         if actionable_owner:
             print("  Owner-scoped subscription check: "
                   f"{SCRAPERS[actionable_owner]} only; other reps use total held "
                   "counts in this what-if.")
         print(f"  Total owned workable leads:        {len(held):,}")
-        print(f"  Owned workable in active sequence: {sum(sequence_counts.values()):,}")
+        print(f"  Owned workable in workflow subscription: {sum(workflow_counts.values()):,}")
         print(f"  Owned workable actionable:         {sum(counts.values()):,}")
     else:
         counts = total_counts
@@ -606,7 +602,7 @@ def main():
     print()
     mode = f"target {level:,}/rep" if target else f"levelling to ~{level:,}/rep (uncapped)"
     if args.actionable_queue:
-        print(f"{'Rep':<20} {'total':>8} {'in seq':>8} {'action':>8} "
+        print(f"{'Rep':<20} {'total':>8} {'in wf':>8} {'action':>8} "
               f"{'gets':>8} {'after':>8}   [{mode}]")
         print("-" * 78)
     else:
@@ -636,8 +632,8 @@ def main():
         over = f"  +{have - target:,} over" if target and have > target else ""
         if args.actionable_queue:
             total_have = total_counts.get(uid, 0)
-            in_seq = sequence_counts.get(uid, 0)
-            print(f"{SCRAPERS[uid]:<20} {total_have:>8,} {in_seq:>8,} "
+            in_workflow = workflow_counts.get(uid, 0)
+            print(f"{SCRAPERS[uid]:<20} {total_have:>8,} {in_workflow:>8,} "
                   f"{have:>8,} {gets:>+8,} {have+gets:>8,}{over}")
         else:
             print(f"{SCRAPERS[uid]:<20} {have:>8,} {gets:>+8,} {have+gets:>8,}{over}")
@@ -645,7 +641,7 @@ def main():
     total = sum(len(v) for v in plan.values())
     if args.actionable_queue:
         print(f"{'TOTAL':<20} {sum(total_counts.values()):>8,} "
-              f"{sum(sequence_counts.values()):>8,} {sum(counts.values()):>8,} "
+              f"{sum(workflow_counts.values()):>8,} {sum(counts.values()):>8,} "
               f"{total:>+8,} {sum(counts.values())+total:>8,}")
     else:
         print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {total:>+8,} "
