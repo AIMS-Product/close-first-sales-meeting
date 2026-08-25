@@ -98838,15 +98838,15 @@
       "quick_disc": null
     },
     "lead_BjdV0mVS9mFGVMxyk2Tz6tnkpQ1DjV0BTvu7E6TOPWN": {
-      "date": null,
-      "call_type": null,
+      "date": "2026-08-25",
+      "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
       "funnel_name": "VSL",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": "Yes"
     },
     "lead_8Dslu2o4JKYSY8Ui9Y36SSTZVTfLZiOZF9y28KFfX3B": {
       "date": "2026-08-25",
@@ -98957,8 +98957,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_M4sT4gZxDV9xpn4KqapGTFe5ThbarQaIydWd0yDoQuI": {
+      "date": "2026-08-26",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-25 15:42:29 UTC",
-  "count": 9223
+  "saved_at": "2026-08-25 16:13:30 UTC",
+  "count": 9224
 }
