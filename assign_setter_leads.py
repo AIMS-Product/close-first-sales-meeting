@@ -38,12 +38,14 @@ load", that is a different function and a deliberate decision.
 
 import argparse
 import sys
+import time
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
 
 from lane2_state import (
     BASE, F_OWNER, F_OVERRIDE, SETTERS, HYBRID_SETTERS, SUPPRESS_STATUSES,
+    CloseError,
     LANE1_OPP_STATUSES, LANE_1, WRITE_WORKERS,
     HOT_WINDOW_DAYS, REENGAGE_DAYS,
     _wrap, _req, cf, search, status_in, num_range, within,
@@ -184,6 +186,126 @@ def _waiting_since(lead):
     return max(created, comm)
 
 
+# ============================================================================
+# ACTIVE SEQUENCE AWARENESS  (--actionable-queue)
+#
+# A lead sitting in a live Close sequence is already being worked by automation.
+# Counting it toward a Setter's live load makes them look busier than they are
+# and starves them of new hand-raises. With --actionable-queue, balancing (and
+# the MIN_QUEUE floor) is computed from leads that are NOT in an active sequence.
+#
+# DESIGN NOTE — this is deliberately NOT one API call per lead.
+# The obvious implementation asks "is THIS lead in a sequence?" for every held
+# lead. Against the Scraper rotation's ~25,000 leads that is 25,000+ requests:
+# ~84 minutes at 5 req/s, past the 60-minute workflow timeout. Instead we sweep
+# subscriptions once and build a set — there are only ~16,000 active
+# subscriptions org-wide across ~20 active sequences, so ~160 paged requests
+# cover the same ground. Roughly 158x fewer calls, and the cost stops scaling
+# with roster size. Port this shape back to assign_lane2_leads.py.
+# ============================================================================
+
+def close_paginate_skip(path, params=None):
+    """Yield items from Close endpoints that use _skip pagination, with backoff."""
+    params = dict(params or {})
+    params.setdefault("_limit", 100)
+    skip = 0
+    while True:
+        page = dict(params)
+        page["_skip"] = skip
+        last_exc = None
+        for attempt in range(5):
+            try:
+                data = _req("GET", f"{BASE}{path}", params=page).json()
+                break
+            except Exception as exc:
+                last_exc = exc
+                time.sleep(min(2 ** attempt, 20))
+        else:
+            raise last_exc
+        rows = data.get("data", [])
+        for row in rows:
+            yield row
+        if not data.get("has_more") or not rows:
+            return
+        skip += len(rows)
+
+
+def _active_sequence_ids():
+    """Ids of sequences currently running.
+
+    Verified against the live org 2026-08-24: /sequence/ returns `status`, and
+    active ones carry status == "active".
+
+    HARD FAIL on an empty result rather than returning one. An empty set makes
+    every subscription look inactive, which makes every lead look actionable,
+    which inflates every deficit — the run would over-assign and look completely
+    normal doing it. Same failure shape as the 9,000-row census truncation.
+    """
+    seqs = list(close_paginate_skip("/sequence/", {"_fields": "id,name,status"}))
+    active = {x["id"] for x in seqs if x.get("status") == "active" and x.get("id")}
+    if not active:
+        raise CloseError(
+            f"/sequence/ returned {len(seqs)} sequence(s) but none with "
+            'status == "active". Refusing to continue: an empty active set would '
+            "mark every lead actionable and over-assign. Check whether the "
+            "endpoint still returns a `status` field.")
+    return active
+
+
+def active_sequence_lead_ids():
+    """Lead ids with a live subscription to a live sequence.
+
+    Probes once to find out whether /sequence_subscription/ honours a
+    `sequence_id` filter. If it does, we page per sequence (bounded, tidy). If
+    the filter is ignored — the response comes back carrying other sequences —
+    we fall back to one global sweep. Detecting this beats assuming it: an
+    ignored filter would otherwise be invisible and we would just re-read the
+    whole table once per sequence.
+    """
+    active = _active_sequence_ids()
+    print(f"  {len(active)} active sequence(s).", file=sys.stderr)
+
+    FIELDS = "id,lead_id,sequence_id,status"
+    probe_id = sorted(active)[0]
+    probe = list(close_paginate_skip(
+        "/sequence_subscription/",
+        {"sequence_id": probe_id, "status": "active", "_fields": FIELDS, "_limit": 100}))
+    honoured = all(r.get("sequence_id") in (None, probe_id) for r in probe)
+
+    lead_ids, subs = set(), 0
+
+    def _take(rows):
+        nonlocal subs
+        for r in rows:
+            if r.get("status") != "active":
+                continue
+            if r.get("sequence_id") not in active:
+                continue
+            lid = r.get("lead_id")
+            if lid:
+                subs += 1
+                lead_ids.add(lid)
+
+    if honoured:
+        _take(probe)
+        for sid in sorted(active):
+            if sid == probe_id:
+                continue
+            _take(close_paginate_skip(
+                "/sequence_subscription/",
+                {"sequence_id": sid, "status": "active", "_fields": FIELDS, "_limit": 100}))
+    else:
+        print("  (sequence_id filter not honoured — falling back to one global "
+              "sweep)", file=sys.stderr)
+        lead_ids.clear(); subs = 0
+        _take(close_paginate_skip(
+            "/sequence_subscription/", {"status": "active", "_fields": FIELDS, "_limit": 100}))
+
+    print(f"  {subs:,} active subscription(s) across {len(lead_ids):,} lead(s).",
+          file=sys.stderr)
+    return lead_ids
+
+
 def not_lane1():
     """No Closer actively working a deal on this lead. Live, not state-based."""
     return negated(has_opp_status(LANE1_OPP_STATUSES))
@@ -195,6 +317,10 @@ def main():
                     help="write Lead Owner (default: dry run)")
     ap.add_argument("--max-assign", type=int, default=MAX_PER_RUN,
                     help=f"safety ceiling for this run (default {MAX_PER_RUN})")
+    ap.add_argument("--actionable-queue", action="store_true",
+                    help="balance on hot leads NOT already in an active Close "
+                         "sequence — a lead automation is working should not "
+                         "count against a Setter's live load")
     args = ap.parse_args()
 
     if not ROTATION:
@@ -210,7 +336,35 @@ def main():
     held = search(
         _wrap(*hot_inbound_live(), owner_is(ROTATION.keys())),
         fields=["id", f"custom.{F_OWNER}"])
-    counts = Counter(cf(l, F_OWNER) for l in held)
+    total_counts = Counter(cf(l, F_OWNER) for l in held)
+
+    sequence_counts = Counter()
+    if args.actionable_queue:
+        print("Reading active sequence subscriptions...", file=sys.stderr)
+        in_sequence = active_sequence_lead_ids()
+        actionable = []
+        for lead in held:
+            if lead.get("id") in in_sequence:
+                sequence_counts[cf(lead, F_OWNER)] += 1
+            else:
+                actionable.append(lead)
+        counts = Counter(cf(l, F_OWNER) for l in actionable)
+
+        # Sanity check on the sweep itself. Zero matches across a whole rotation
+        # is far more likely to mean the subscription read silently returned
+        # nothing than that not one hot lead is sequenced. Left as a warning, not
+        # an abort: on a small or freshly-drained queue it can legitimately be 0.
+        if held and not sequence_counts:
+            print("\n  ⚠️  No held lead matched an active subscription. If that "
+                  "looks wrong, re-check the sweep before trusting these deficits.",
+                  file=sys.stderr)
+
+        print(f"\nACTIONABLE QUEUE — balancing on hot leads NOT in an active sequence.")
+        print(f"  Held hot leads:        {len(held):,}")
+        print(f"  In an active sequence: {sum(sequence_counts.values()):,}")
+        print(f"  Actionable:            {sum(counts.values()):,}")
+    else:
+        counts = total_counts
 
     # ---- 2. the unclaimed hot pool -----------------------------------------
     print("Reading unclaimed hot inbound...", file=sys.stderr)
@@ -260,8 +414,14 @@ def main():
 
     # ---- 4. report ----------------------------------------------------------
     print()
-    print(f"{'Setter':<20} {'holds':>8} {'gets':>8} {'after':>8}")
-    print("-" * 48)
+    wide = args.actionable_queue
+    if wide:
+        print(f"{'Setter':<20} {'total':>8} {'in seq':>8} {'action':>8} "
+              f"{'gets':>8} {'after':>8}")
+        print("-" * 74)
+    else:
+        print(f"{'Setter':<20} {'holds':>8} {'gets':>8} {'after':>8}")
+        print("-" * 48)
     for uid in sorted(ROTATION, key=lambda u: -(counts.get(u, 0) + len(plan[u]))):
         have, gets = counts.get(uid, 0), len(plan[uid])
         floor = MIN_QUEUE.get(uid)
@@ -270,11 +430,23 @@ def main():
             short = floor - (have + gets)
             note = (f"   floor {floor:,} — {short:,} short, next run continues"
                     if short > 0 else f"   floor {floor:,} met")
-        print(f"{ROTATION[uid]:<20} {have:>8,} {gets:>+8,} {have + gets:>8,}{note}")
-    print("-" * 48)
+        if wide:
+            print(f"{ROTATION[uid]:<20} {total_counts.get(uid, 0):>8,} "
+                  f"{sequence_counts.get(uid, 0):>8,} {have:>8,} "
+                  f"{gets:>+8,} {have + gets:>8,}{note}")
+        else:
+            print(f"{ROTATION[uid]:<20} {have:>8,} {gets:>+8,} {have + gets:>8,}{note}")
+    print("-" * (74 if wide else 48))
     dealt = sum(len(v) for v in plan.values())
-    print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {dealt:>+8,} "
-          f"{sum(counts.values()) + dealt:>8,}")
+    if wide:
+        print(f"{'TOTAL':<20} {sum(total_counts.values()):>8,} "
+              f"{sum(sequence_counts.values()):>8,} {sum(counts.values()):>8,} "
+              f"{dealt:>+8,} {sum(counts.values()) + dealt:>8,}")
+        print("\n'after' is the ACTIONABLE count. Real holdings are 'total' + gets — "
+              "a Setter whose sequenced leads finish will see actionable rise on its own.")
+    else:
+        print(f"{'TOTAL':<20} {sum(counts.values()):>8,} {dealt:>+8,} "
+              f"{sum(counts.values()) + dealt:>8,}")
 
     fresh = sum(1 for l in pool if str(_waiting_since(l))[:10] == (l.get("date_created") or "")[:10])
     print(f"\nOf this run: {fresh:,} fresh hand-raise(s), {len(pool) - fresh:,} re-engaged")
