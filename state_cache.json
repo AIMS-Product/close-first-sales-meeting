@@ -98887,12 +98887,34 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
+    },
+    "lead_3Y66IoDj1ocs8N9SD6ttHaZgh0ldCJl7pPYXNFu5vex": {
+      "date": "2026-08-25",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Cassie Caraballo",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_e2Dmo7QFtvVZDQh41XdQPQ83oSu8h4Bb2GQhzzmOG4t": {
+      "date": "2026-08-26",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-25 13:54:11 UTC",
-  "count": 9217
+  "saved_at": "2026-08-25 14:12:39 UTC",
+  "count": 9219
 }
