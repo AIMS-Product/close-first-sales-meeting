@@ -1,0 +1,82 @@
+name: No Show Recovery
+
+# Temporarily routes recent no-shows to the configured reactivation setter.
+#
+# Every run recomputes the truth:
+#   - recent eligible no-show leads get No show recovery = Yes
+#   - leads that aged out or became suppressed get No show recovery = No
+#
+# The owner move is one-way by design. Clearing the flag after 48 hours lets
+# the lead rejoin the normal SOP lists without trying to infer a previous owner.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Tick to preview only — writes nothing"
+        required: false
+        default: false
+        type: boolean
+      window_hours:
+        description: "Lookback window in hours"
+        required: false
+        default: "48"
+        type: string
+
+  schedule:
+    - cron: "17 */2 * * *"
+
+concurrency:
+  group: no-show-recovery
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install requests
+
+      - name: Reconcile no-show recovery
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+          NO_SHOW_RECOVERY_FIELD_ID: ${{ vars.NO_SHOW_RECOVERY_FIELD_ID }}
+          NO_SHOW_RECOVERY_FIELD_NAME: ${{ vars.NO_SHOW_RECOVERY_FIELD_NAME }}
+          REACTIVATION_SETTER_ID: ${{ vars.REACTIVATION_SETTER_ID }}
+          REACTIVATION_SETTER_NAME: ${{ vars.REACTIVATION_SETTER_NAME }}
+        run: |
+          ARGS="--apply"
+          if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS=""; fi
+          if [ -n "${{ inputs.window_hours }}" ]; then ARGS="$ARGS --window-hours ${{ inputs.window_hours }}"; fi
+          echo "Running: no_show_recovery.py $ARGS"
+          python no_show_recovery.py $ARGS | tee no_show_recovery.txt
+
+      - name: Publish report
+        if: always()
+        run: |
+          {
+            echo "## No Show Recovery"
+            echo ""
+            if [ "${{ inputs.dry_run }}" = "true" ]; then
+              echo "**Mode: DRY RUN** — nothing written."
+            else
+              echo "**Mode: APPLY** — changes written to Close."
+            fi
+            echo ""
+            echo '```'
+            cat no_show_recovery.txt 2>/dev/null || echo "(see job log)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
