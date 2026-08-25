@@ -334,10 +334,8 @@ def active_sequence_lead_ids_for_leads(leads):
     Given a lead list, return those with an active subscription in an active
     Close sequence.
 
-    This is deliberately used only by the opt-in actionable-queue dry run. The
-    existing top-up job counts all owned workable leads; this helper lets us
-    simulate a stricter definition: owned workable leads that are not already
-    being worked by an active sequence.
+    Used by --actionable-queue, where top-up need is based on owned workable
+    leads that are not already being worked by an active sequence.
     """
     active_sequences = _active_sequence_ids()
     lead_ids = set()
@@ -430,7 +428,7 @@ def main():
                     help="first clear Lead Owner on leads held by departed users, "
                          "returning them to the pool")
     ap.add_argument("--actionable-queue", action="store_true",
-                    help="DRY RUN ONLY: calculate top-up need from owned workable "
+                    help="calculate top-up need from owned workable "
                          "leads that are not in an active sequence")
     ap.add_argument("--actionable-owner",
                     help="limit --actionable-queue subscription checks to one rep "
@@ -444,9 +442,6 @@ def main():
 
     if not SCRAPERS:
         sys.exit("No scrapers configured.")
-    if args.apply and args.actionable_queue:
-        sys.exit("--actionable-queue is dry-run-only for now. Run without --apply "
-                 "to inspect the proposed behavior.")
     actionable_owner = resolve_scraper(args.actionable_owner) if args.actionable_owner else None
     if args.actionable_owner and not args.actionable_queue:
         sys.exit("--actionable-owner only applies with --actionable-queue.")
@@ -532,7 +527,8 @@ def main():
             else:
                 actionable.append(lead)
         counts = Counter(cf(l, F_OWNER) for l in actionable)
-        print("\nACTIONABLE QUEUE DRY RUN — deficits are based on owned workable "
+        mode_label = "APPLY" if args.apply else "DRY RUN"
+        print(f"\nACTIONABLE QUEUE {mode_label} — deficits are based on owned workable "
               "leads that are NOT in an active sequence.")
         if actionable_owner:
             print("  Owner-scoped subscription check: "

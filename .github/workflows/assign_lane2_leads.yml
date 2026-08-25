@@ -31,6 +31,11 @@ on:
         required: false
         default: false
         type: boolean
+      actionable_queue:
+        description: "Top up based on owned workable leads not already in an active sequence"
+        required: false
+        default: true
+        type: boolean
 
 concurrency:
   group: lane2-assign
@@ -64,6 +69,7 @@ jobs:
           if [ "${{ inputs.dry_run }}" != "true" ]; then ARGS="$ARGS --apply"; fi
           if [ -n "${{ inputs.max_queue }}" ]; then ARGS="$ARGS --max-queue ${{ inputs.max_queue }}"; fi
           if [ "${{ inputs.reclaim }}" = "true" ]; then ARGS="$ARGS --reclaim"; fi
+          if [ "${{ inputs.actionable_queue }}" != "false" ]; then ARGS="$ARGS --actionable-queue"; fi
           echo "Running: assign_lane2_leads.py $ARGS"
           python assign_lane2_leads.py $ARGS | tee assign.txt
 
