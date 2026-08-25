@@ -99353,8 +99353,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_sMQXOITh7ngw7iBKm0UwvFf7bfUcHmAxjmLjtQkozOt": {
+      "date": "2026-08-26",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "YouTube",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-25 20:40:26 UTC",
-  "count": 9259
+  "saved_at": "2026-08-25 21:04:22 UTC",
+  "count": 9260
 }
