@@ -99309,8 +99309,41 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_eTqbS1AO3PIU7oDaB1JsFZiLfxzJgCG74PW6TQCKuuE": {
+      "date": "2026-08-27",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_Vv7utfOz09xv7LNYAWPKXBE3KBLjBtkoMbXOS4RWPyH": {
+      "date": "2026-08-26",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_X5jFBEYxBEnn8qp23YqBkvX8Q7DQrLNQq21XaHNllhm": {
+      "date": "2026-08-27",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-25 19:37:44 UTC",
-  "count": 9255
+  "saved_at": "2026-08-25 20:05:54 UTC",
+  "count": 9258
 }
