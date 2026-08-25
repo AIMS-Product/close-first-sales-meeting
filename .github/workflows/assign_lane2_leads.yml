@@ -65,13 +65,14 @@ jobs:
         env:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
         run: |
+          set -o pipefail
           ARGS=""
           if [ "${{ inputs.dry_run }}" != "true" ]; then ARGS="$ARGS --apply"; fi
           if [ -n "${{ inputs.max_queue }}" ]; then ARGS="$ARGS --max-queue ${{ inputs.max_queue }}"; fi
           if [ "${{ inputs.reclaim }}" = "true" ]; then ARGS="$ARGS --reclaim"; fi
           if [ "${{ inputs.actionable_queue }}" != "false" ]; then ARGS="$ARGS --actionable-queue"; fi
           echo "Running: assign_lane2_leads.py $ARGS"
-          python assign_lane2_leads.py $ARGS | tee assign.txt
+          python assign_lane2_leads.py $ARGS 2>&1 | tee assign.txt
 
       - name: Publish report
         if: always()
