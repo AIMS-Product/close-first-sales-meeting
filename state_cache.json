@@ -99623,7 +99623,7 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "William Nowak",
+      "reactivation": null,
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
@@ -99635,12 +99635,56 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_D0nmgv8WTTmNG9iVdbg5NFnmuXAeatMHRng53Kbbdlt": {
+      "date": "2026-08-28",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_Q2FreZvu8GdEtCv0a2XDcXgEs4ryskeWDUAruLm2ccf": {
+      "date": "2026-08-28",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_9fNZJPDTZgNu18loIuHCAqDbR5XpYxnp2kvD8AqAupB": {
+      "date": "2026-08-31",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Cassie Caraballo",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_XrAnr41Ch7NJs1XfYItipq3KFJI9bqXlCjSPCteZCmG": {
+      "date": "2026-08-28",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Jessica Zatkin",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-26 19:40:35 UTC",
-  "count": 9285
+  "saved_at": "2026-08-26 20:11:11 UTC",
+  "count": 9289
 }
