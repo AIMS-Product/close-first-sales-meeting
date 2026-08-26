@@ -99701,12 +99701,23 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_VG26u7vbMPHRUvo5GaFxAATeyJbWblLI4OwVDEhJYxC": {
+      "date": "2026-08-28",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-26 21:10:48 UTC",
-  "count": 9291
+  "saved_at": "2026-08-26 21:41:01 UTC",
+  "count": 9292
 }
