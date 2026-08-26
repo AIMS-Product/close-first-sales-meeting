@@ -99591,12 +99591,34 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_AUDWQEMg3u15P1NCZvM9mqdjsXOwHG5np0aA1MgDUly": {
+      "date": "2026-08-28",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_xLPTbrg5HisITrbXCwcmRxiKZFk5sMd5vJ42efJJBto": {
+      "date": "2026-08-28",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-26 17:40:45 UTC",
-  "count": 9281
+  "saved_at": "2026-08-26 18:12:15 UTC",
+  "count": 9283
 }
