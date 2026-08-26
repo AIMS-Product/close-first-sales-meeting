@@ -99289,8 +99289,8 @@
       "quick_disc": null
     },
     "lead_V4oCZhMfmsTbZWppvLRaQSzeO8cVCc2sRqBsL5QrcY2": {
-      "date": "2026-08-26",
-      "call_type": "Closer",
+      "date": null,
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
@@ -99619,6 +99619,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-26 18:12:15 UTC",
+  "saved_at": "2026-08-26 18:40:15 UTC",
   "count": 9283
 }
