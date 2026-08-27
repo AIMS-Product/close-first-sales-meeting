@@ -99837,8 +99837,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_2CStvmNI5C7EhnTrGHdPLkFl55Sn9j8Lub3z1kR88pC": {
+      "date": "2026-08-31",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Pearl Sathekge",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-27 14:14:07 UTC",
-  "count": 9303
+  "saved_at": "2026-08-27 14:42:41 UTC",
+  "count": 9304
 }
