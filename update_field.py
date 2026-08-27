@@ -133,6 +133,7 @@ SCRAPER_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+discovery\s+-\s+next\s+steps", re.IGNORECASE),    "Kelly Schrader"),  # Vendingpreneurs Discovery - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps(?!\s+call)", re.IGNORECASE), "Jacob Herbig"),  # Vendingpreneurs - Next Steps
     (re.compile(r"vendingpren[eu]+r\s+next\s+steps", re.IGNORECASE),                  "William Nowak"),     # Vendingpreneur Next Steps
+    (re.compile(r"vending\s+consult\s+call", re.IGNORECASE),                          "William Nowak"),     # Vending Consult Call
     (re.compile(r"vending\s+discovery\s+call\s+-\s+next\s+steps", re.IGNORECASE),    "August Young"),      # Vending Discovery Call - Next Steps
     (re.compile(r"vending\s+discovery\s+-\s+next\s+steps", re.IGNORECASE),           "Spencer Reynolds"),  # Vending Discovery - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+strategy\s*-?\s*next\s+steps", re.IGNORECASE), "Amy Mulch"),         # Vendingpreneurs Strategy - Next Steps
@@ -399,6 +400,8 @@ def calculate_desired_state(all_meetings: list, users_by_name: dict | None = Non
                     has_postwebinar = True
                 elif tier == "scraper":
                     has_scraper = True
+                    if RE_QUICK_DISC_TITLE.search(m.get("title") or ""):
+                        has_quick_disc = True
                     if reactivation is None:
                         reactivation = setter_name
                     if date and (earliest_scraper is None or date < earliest_scraper):
