@@ -20830,10 +20830,10 @@
     "lead_HWZaTxj4BUtOhHVQ7MJ1oh1As0EOds29T3zebtX18gg": {
       "date": "2025-12-29",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -99887,13 +99887,13 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Charlie Ingram",
+      "reactivation": null,
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-27 16:41:18 UTC",
+  "saved_at": "2026-08-27 17:11:43 UTC",
   "count": 9308
 }
