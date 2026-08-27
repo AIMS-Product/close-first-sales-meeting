@@ -99719,7 +99719,7 @@
     },
     "lead_Ii4kAR97MX5vM0LYkVgM8TztySOnUnX53FgL8WvSqei": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
@@ -99795,6 +99795,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-27 00:10:09 UTC",
+  "saved_at": "2026-08-27 00:39:51 UTC",
   "count": 9299
 }
