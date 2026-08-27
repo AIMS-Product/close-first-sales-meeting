@@ -99855,12 +99855,12 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
     }
   },
-  "saved_at": "2026-08-27 15:12:43 UTC",
+  "saved_at": "2026-08-27 15:42:53 UTC",
   "count": 9305
 }
