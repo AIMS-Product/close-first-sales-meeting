@@ -8,12 +8,14 @@ Rules:
   - Look at meetings whose start time is in the last WINDOW_HOURS hours.
   - If any of those meetings has Close's native Meeting Outcome = No Show,
     and the lead is not Do Not Contact / Closed Won / Disqualified /
-    Outside the US, set:
+    Outside the US, and the lead has no upcoming meetings booked, set:
       * No show recovery = Yes
-      * Lead Owner = the Close user matching Reactivation - Setter Name
-      * Lead Owner = blank when Reactivation - Setter Name is blank/unmapped
+      * Lead Owner = Reactivation Setter User when present
+      * Lead Owner = the Close user matching Reactivation - Setter Name as fallback
+      * Lead Owner = blank when both setter fields are blank/unmapped
   - If a lead currently has No show recovery = Yes but no longer qualifies,
     set No show recovery = No so it can reappear on the normal SOP lists.
+    Booking a new meeting makes the lead no longer qualify immediately.
 
 The owner reassignment is deliberately one-way. When a lead ages out of the
 window, this script clears only the recovery flag; it does not guess the prior
@@ -53,6 +55,7 @@ OUTCOME_NO_SHOW = "outcome_032DjoyPo9BgPBdOF6DzqH"
 LEAD_OWNER_FIELD = "cf_gOfS9pFwext58oberEegLyix8hZzeHrxhCZOVh3P3rd"
 NO_SHOW_RECOVERY_FIELD = "cf_ye2V9PkBCqUZLfNo2AVoe82m7riZUTCbBYPVhvhou6x"
 REACTIVATION_SETTER_FIELD = "cf_vz6kNiu4ItFxRA8Y9HKlWIoQMq3TsdaQqKekQ2YuxVk"
+REACTIVATION_SETTER_USER_FIELD = "cf_7W3UCpJWWaIQsniF1upSxGO7rMX1yDT5qppHXBGJIhO"
 
 STATUS_CLOSED_WON = "stat_0oW3iRpVp9z5DJq0cuwI1HgR0XhHAhykEPPIq4TFsxd"
 STATUS_DNC = "stat_U9MI7pqsvIjceTv3pCU7b1EghO8Q83h1HUcL6fGVyi6"
@@ -205,6 +208,18 @@ def custom_value(lead, field_id):
     return custom.get(field_id) or custom.get(f"custom.{field_id}")
 
 
+def user_field_id(value):
+    if isinstance(value, dict):
+        return value.get("id") or None
+    if isinstance(value, list):
+        ids = [user_field_id(item) for item in value]
+        ids = [uid for uid in ids if uid]
+        return ",".join(ids) if ids else None
+    if isinstance(value, str):
+        return value.strip() or None
+    return None
+
+
 def normalize_name(value):
     return " ".join(str(value or "").lower().split())
 
@@ -335,8 +350,8 @@ def fetch_meetings_window(client, since_dt, until_dt):
 
 def fetch_leads(client, lead_ids, recovery_field_id):
     fields = (
-        f"id,display_name,status_id,status_label,custom.{LEAD_OWNER_FIELD},"
-        f"custom.{recovery_field_id},custom.{REACTIVATION_SETTER_FIELD}"
+        f"id,display_name,status_id,status_label,num_upcoming_meetings,custom.{LEAD_OWNER_FIELD},"
+        f"custom.{recovery_field_id},custom.{REACTIVATION_SETTER_FIELD},custom.{REACTIVATION_SETTER_USER_FIELD}"
     )
     leads = {}
     for lead_id in sorted(lead_ids):
@@ -374,9 +389,11 @@ def search_recovery_yes_leads(client, recovery_field_id):
         "display_name",
         "status_id",
         "status_label",
+        "num_upcoming_meetings",
         f"custom.{LEAD_OWNER_FIELD}",
         f"custom.{recovery_field_id}",
         f"custom.{REACTIVATION_SETTER_FIELD}",
+        f"custom.{REACTIVATION_SETTER_USER_FIELD}",
     ]
     while True:
         payload = {
@@ -405,7 +422,18 @@ def lead_is_suppressed(lead):
     return lead.get("status_id") in SUPPRESSED_STATUSES
 
 
+def lead_has_upcoming_meeting(lead):
+    try:
+        return int(lead.get("num_upcoming_meetings") or 0) > 0
+    except (TypeError, ValueError):
+        return False
+
+
 def owner_target_for_lead(lead, lane2_ids_by_name, fallback_setter_id=None):
+    setter_user_id = user_field_id(custom_value(lead, REACTIVATION_SETTER_USER_FIELD))
+    if setter_user_id:
+        return setter_user_id, "Reactivation Setter User"
+
     setter_name = custom_value(lead, REACTIVATION_SETTER_FIELD)
     if setter_name in lane2_ids_by_name:
         return lane2_ids_by_name[setter_name], setter_name
@@ -426,7 +454,11 @@ def plan_writes(
     eligible_ids = {
         lead_id
         for lead_id in no_show_lead_ids
-        if lead_id in leads_by_id and not lead_is_suppressed(leads_by_id[lead_id])
+        if (
+            lead_id in leads_by_id
+            and not lead_is_suppressed(leads_by_id[lead_id])
+            and not lead_has_upcoming_meeting(leads_by_id[lead_id])
+        )
     }
     released_unresolved = {}
 
@@ -471,6 +503,15 @@ def print_plan_summary(
         for lead_id, lead in leads_by_id.items()
         if lead_id in no_show_by_lead and lead_is_suppressed(lead)
     ]
+    booked = [
+        lead
+        for lead_id, lead in leads_by_id.items()
+        if (
+            lead_id in no_show_by_lead
+            and not lead_is_suppressed(lead)
+            and lead_has_upcoming_meeting(lead)
+        )
+    ]
     by_action = Counter(action for _, _, action in writes)
     flag_yes = sum(1 for _, payload, _ in writes if payload.get(f"custom.{recovery_field_id}") == "Yes")
     flag_no = sum(1 for _, payload, _ in writes if payload.get(f"custom.{recovery_field_id}") == "No")
@@ -479,6 +520,7 @@ def print_plan_summary(
     print(f"Meetings scanned               : {len(meetings):,}")
     print(f"Lead(s) with no-show meeting   : {len(no_show_by_lead):,}")
     print(f"Suppressed current lead status : {len(suppressed):,}")
+    print(f"Already booked upcoming meeting: {len(booked):,}")
     print(f"Eligible recovery lead(s)      : {len(eligible_ids):,}")
     print(f"Currently marked recovery Yes  : {len(recovery_yes_leads):,}")
     print(f"Will set recovery Yes          : {flag_yes:,}")
@@ -543,6 +585,7 @@ def run_selftest():
         "lead_active": {
             "id": "lead_active",
             "status_id": "stat_ok",
+            "num_upcoming_meetings": 0,
             f"custom.{LEAD_OWNER_FIELD}": "old_owner",
             f"custom.{recovery_field_id}": "No",
             f"custom.{REACTIVATION_SETTER_FIELD}": "Jacob Hepner",
@@ -550,18 +593,38 @@ def run_selftest():
         "lead_suppressed": {
             "id": "lead_suppressed",
             "status_id": STATUS_DNC,
+            "num_upcoming_meetings": 0,
             f"custom.{recovery_field_id}": "No",
         },
         "lead_blank_setter": {
             "id": "lead_blank_setter",
             "status_id": "stat_ok",
+            "num_upcoming_meetings": 0,
             f"custom.{LEAD_OWNER_FIELD}": "closer",
             f"custom.{recovery_field_id}": "No",
             f"custom.{REACTIVATION_SETTER_FIELD}": "",
         },
+        "lead_user_field": {
+            "id": "lead_user_field",
+            "status_id": "stat_ok",
+            "num_upcoming_meetings": 0,
+            f"custom.{LEAD_OWNER_FIELD}": "closer",
+            f"custom.{recovery_field_id}": "No",
+            f"custom.{REACTIVATION_SETTER_FIELD}": "",
+            f"custom.{REACTIVATION_SETTER_USER_FIELD}": "shadow_setter",
+        },
         "lead_already": {
             "id": "lead_already",
             "status_id": "stat_ok",
+            "num_upcoming_meetings": 0,
+            f"custom.{LEAD_OWNER_FIELD}": "setter",
+            f"custom.{recovery_field_id}": "Yes",
+            f"custom.{REACTIVATION_SETTER_FIELD}": "Jacob Hepner",
+        },
+        "lead_booked": {
+            "id": "lead_booked",
+            "status_id": "stat_ok",
+            "num_upcoming_meetings": 1,
             f"custom.{LEAD_OWNER_FIELD}": "setter",
             f"custom.{recovery_field_id}": "Yes",
             f"custom.{REACTIVATION_SETTER_FIELD}": "Jacob Hepner",
@@ -569,6 +632,7 @@ def run_selftest():
     }
     current_yes = [
         leads["lead_already"],
+        leads["lead_booked"],
         {"id": "lead_stale", "status_id": "stat_ok", f"custom.{recovery_field_id}": "Yes"},
     ]
     lane2_ids = {
@@ -576,7 +640,7 @@ def run_selftest():
         "Jacob Hepner": "setter",
     }
     eligible, writes, current, released = plan_writes(
-        {"lead_active", "lead_suppressed", "lead_already", "lead_blank_setter"},
+        {"lead_active", "lead_suppressed", "lead_already", "lead_blank_setter", "lead_user_field", "lead_booked"},
         leads,
         current_yes,
         recovery_field_id,
@@ -584,10 +648,12 @@ def run_selftest():
     )
     checks = [
         ("suppressed excluded", "lead_suppressed" not in eligible),
+        ("booked excluded", "lead_booked" not in eligible),
         ("active included", "lead_active" in eligible),
         ("blank setter included", "lead_blank_setter" in eligible),
+        ("user field included", "lead_user_field" in eligible),
         ("already included", "lead_already" in eligible),
-        ("current yes seen", current == {"lead_already", "lead_stale"}),
+        ("current yes seen", current == {"lead_already", "lead_booked", "lead_stale"}),
         ("blank setter released", released == {"lead_blank_setter": ""}),
         ("active gets owner and flag", any(
             lead["id"] == "lead_active"
@@ -607,9 +673,24 @@ def run_selftest():
             and action == "activate"
             for lead, payload, action in writes
         )),
+        ("user field gets owner and flag", any(
+            lead["id"] == "lead_user_field"
+            and payload == {
+                f"custom.{recovery_field_id}": "Yes",
+                f"custom.{LEAD_OWNER_FIELD}": "shadow_setter",
+            }
+            and action == "activate"
+            for lead, payload, action in writes
+        )),
         ("already has no write", not any(lead["id"] == "lead_already" for lead, _, _ in writes)),
         ("stale clears", any(
             lead["id"] == "lead_stale"
+            and payload == {f"custom.{recovery_field_id}": "No"}
+            and action == "clear"
+            for lead, payload, action in writes
+        )),
+        ("booked clears", any(
+            lead["id"] == "lead_booked"
             and payload == {f"custom.{recovery_field_id}": "No"}
             and action == "clear"
             for lead, payload, action in writes

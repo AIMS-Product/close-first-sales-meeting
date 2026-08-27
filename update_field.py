@@ -54,11 +54,13 @@ FIELD_CALLTYPE_ID      = "cf_6yy8dqzeiBIQD2dhDfaVeiCmEhTW6ycmM4SVQ5sO6CG"
 FIELD_SCRAPER_ID       = "cf_69vb5dGu6FcBrnLGJFeHQviYQTkk7zpnLRgMPW2vipd"
 FIELD_POSTWEBINAR_ID   = "cf_inRBDlgKLV9CgE7gBgzoQB0CAhwwuOoTHWclHxZoZQW"
 FIELD_REACTIVATION_ID  = "cf_vz6kNiu4ItFxRA8Y9HKlWIoQMq3TsdaQqKekQ2YuxVk"
+FIELD_REACTIVATION_USER_ID = "cf_7W3UCpJWWaIQsniF1upSxGO7rMX1yDT5qppHXBGJIhO"
 FIELD_DATE_KEY         = f"custom.{FIELD_DATE_ID}"
 FIELD_CALLTYPE_KEY     = f"custom.{FIELD_CALLTYPE_ID}"
 FIELD_SCRAPER_KEY      = f"custom.{FIELD_SCRAPER_ID}"
 FIELD_POSTWEBINAR_KEY  = f"custom.{FIELD_POSTWEBINAR_ID}"
 FIELD_REACTIVATION_KEY = f"custom.{FIELD_REACTIVATION_ID}"
+FIELD_REACTIVATION_USER_KEY = f"custom.{FIELD_REACTIVATION_USER_ID}"
 
 # Funnel Name DEAL — lead field (NOT opportunity)
 FIELD_FUNNEL_ID       = "cf_xqDQE8fkPsWa0RNEve7hcaxKblCe6489XeZGRDzyPdX"
@@ -70,7 +72,7 @@ FIELD_VENDHUB_ID          = "cf_2oYFNCsi4dcrjcIS6xFvGf37RGtraixl8jHYinwta9m"
 FIELD_VENDHUB_KEY         = f"custom.{FIELD_VENDHUB_ID}"
 FIELD_VENDHUB_DATE_ID     = "cf_qScR8i96dqsMDMirfPqPn8woMkeJrpl41mc4TmoU78q"
 FIELD_VENDHUB_DATE_KEY    = f"custom.{FIELD_VENDHUB_DATE_ID}"
-FIELDS_PARAM           = f"id,display_name,{FIELD_DATE_KEY},{FIELD_CALLTYPE_KEY},{FIELD_SCRAPER_KEY},{FIELD_POSTWEBINAR_KEY},{FIELD_REACTIVATION_KEY},{FIELD_FUNNEL_KEY},{FIELD_VENDHUB_KEY},{FIELD_VENDHUB_DATE_KEY},{FIELD_QUICK_DISC_KEY}"
+FIELDS_PARAM           = f"id,display_name,{FIELD_DATE_KEY},{FIELD_CALLTYPE_KEY},{FIELD_SCRAPER_KEY},{FIELD_POSTWEBINAR_KEY},{FIELD_REACTIVATION_KEY},{FIELD_REACTIVATION_USER_KEY},{FIELD_FUNNEL_KEY},{FIELD_VENDHUB_KEY},{FIELD_VENDHUB_DATE_KEY},{FIELD_QUICK_DISC_KEY}"
 
 # Reactivation dropdown — Close accepts label strings directly for choice fields
 
@@ -266,10 +268,87 @@ def classify_meeting(meeting: dict) -> tuple:
 
 
 # ─────────────────────────────────────────────
+# Close user resolution
+# ─────────────────────────────────────────────
+
+def normalize_name(value) -> str:
+    return " ".join(str(value or "").lower().split())
+
+
+def user_display_name(user: dict) -> str:
+    full = f"{user.get('first_name', '')} {user.get('last_name', '')}".strip()
+    return full or user.get("email") or user.get("id") or ""
+
+
+def user_field_id(value) -> str | None:
+    if isinstance(value, dict):
+        return value.get("id") or None
+    if isinstance(value, list):
+        ids = [user_field_id(item) for item in value]
+        ids = [uid for uid in ids if uid]
+        return ",".join(ids) if ids else None
+    if isinstance(value, str):
+        return value.strip() or None
+    return None
+
+
+def fetch_close_users() -> list:
+    print("Fetching Close users for reactivation setter mapping...", flush=True)
+    users = []
+    skip = 0
+    limit = 100
+
+    while True:
+        data = api_get("/user/", params={"_skip": skip, "_limit": limit})
+        batch = data.get("data", [])
+        users.extend(batch)
+        if not data.get("has_more") or not batch:
+            break
+        skip += len(batch)
+
+    print(f"Done. {len(users)} Close users fetched.", flush=True)
+    return users
+
+
+def build_user_name_map(users: list) -> dict:
+    by_name = {}
+    duplicate_names = set()
+
+    for user in users:
+        key = normalize_name(user_display_name(user))
+        if not key:
+            continue
+        if key in by_name:
+            duplicate_names.add(key)
+        by_name[key] = user
+
+    for key in duplicate_names:
+        by_name.pop(key, None)
+
+    if duplicate_names:
+        print(
+            "Warning: ambiguous Close user display names will not be used for "
+            f"reactivation dual-write: {', '.join(sorted(duplicate_names))}",
+            flush=True,
+        )
+
+    return by_name
+
+
+def resolve_reactivation_user_id(setter_name: str | None, users_by_name: dict) -> str | None:
+    if not setter_name:
+        return None
+    user = users_by_name.get(normalize_name(setter_name))
+    if not user:
+        return None
+    return user.get("id") or None
+
+
+# ─────────────────────────────────────────────
 # Per-lead desired state calculation
 # ─────────────────────────────────────────────
 
-def calculate_desired_state(all_meetings: list) -> dict:
+def calculate_desired_state(all_meetings: list, users_by_name: dict | None = None) -> dict:
     """
     Given all meetings from the org, returns:
     {
@@ -377,7 +456,7 @@ def calculate_desired_state(all_meetings: list) -> dict:
         vendhub_date = min(vendhub_dates) if vendhub_dates else None
 
         if call_type is not None or has_scraper or has_postwebinar or funnel_name or vendhub_value or vendhub_date or earliest_react_email or has_quick_disc:
-            desired[lead_id] = {
+            desired_for_lead = {
                 "date":         min(closer_dates) if closer_dates else None,
                 "call_type":    call_type,
                 "scraper":      "YES" if has_scraper else None,
@@ -388,6 +467,9 @@ def calculate_desired_state(all_meetings: list) -> dict:
                 "vendhub_date":  vendhub_date,
                 "quick_disc":    "Yes" if has_quick_disc else None,
             }
+            if reactivation is not None:
+                desired_for_lead["reactivation_user"] = resolve_reactivation_user_id(reactivation, users_by_name or {})
+            desired[lead_id] = desired_for_lead
 
     return desired
 
@@ -564,7 +646,7 @@ def fetch_all_meetings() -> list:
 # Write fields to a single lead
 # ─────────────────────────────────────────────
 
-def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> dict | None:
+def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users_by_name: dict) -> dict | None:
     """
     Compares current vs desired state for one lead and writes only what changed.
 
@@ -619,8 +701,9 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
     if cur_postwebinar != new_postwebinar:
         payload[FIELD_POSTWEBINAR_KEY] = new_postwebinar
 
-    # ── Reactivation - Setter Name field ──────────────────────────────────────────
+    # ── Reactivation - Setter Name + shadow User fields ──────────────────────────
     cur_reactivation       = current.get("reactivation")
+    cur_reactivation_user  = user_field_id(current.get("reactivation_user"))
     new_reactivation_label = desired.get("reactivation")  # human label e.g. "Mallory Kent"
 
     # Never overwrite once set
@@ -629,6 +712,26 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
 
     if new_reactivation_label and not cur_reactivation:
         payload[FIELD_REACTIVATION_KEY] = new_reactivation_label
+
+    effective_reactivation_label = cur_reactivation or new_reactivation_label or desired.get("reactivation")
+    desired_reactivation_user = resolve_reactivation_user_id(effective_reactivation_label, users_by_name)
+
+    if effective_reactivation_label and not desired_reactivation_user:
+        print(
+            f"  Warning: no unique Close user match for reactivation setter "
+            f"{effective_reactivation_label!r} on {lead_name} ({lead_id}); "
+            "skipping Reactivation Setter User write.",
+            flush=True,
+        )
+    elif desired_reactivation_user and not cur_reactivation_user:
+        payload[FIELD_REACTIVATION_USER_KEY] = desired_reactivation_user
+    elif desired_reactivation_user and cur_reactivation_user != desired_reactivation_user:
+        print(
+            f"  Warning: Reactivation Setter User mismatch on {lead_name} ({lead_id}); "
+            f"current={cur_reactivation_user}, desired={desired_reactivation_user}. "
+            "Leaving populated user field unchanged.",
+            flush=True,
+        )
 
     # ── Funnel Name DEAL (lead field) ────────────────────────────────────────────
     cur_funnel = current.get("funnel_name")
@@ -682,6 +785,8 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
         changes.append(f"post-webinar: {cur_postwebinar or 'blank'} → {new_postwebinar or 'cleared'}")
     if FIELD_REACTIVATION_KEY in payload:
         changes.append(f"reactivation: {cur_reactivation or 'blank'} → {new_reactivation_label}")
+    if FIELD_REACTIVATION_USER_KEY in payload:
+        changes.append(f"reactivation user: {cur_reactivation_user or 'blank'} → {desired_reactivation_user}")
     if FIELD_FUNNEL_KEY in payload:
         changes.append(f"funnel: {cur_funnel or 'blank'} → {new_funnel}")
     if FIELD_VENDHUB_KEY in payload:
@@ -694,6 +799,7 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
     print(f"  Updated: {lead_name} | {' | '.join(changes)}", flush=True)
 
     final_reactivation  = new_reactivation_label if FIELD_REACTIVATION_KEY in payload else cur_reactivation
+    final_reactivation_user = desired_reactivation_user if FIELD_REACTIVATION_USER_KEY in payload else cur_reactivation_user
     final_funnel        = new_funnel if FIELD_FUNNEL_KEY in payload else cur_funnel
     final_vendhub       = new_vendhub if FIELD_VENDHUB_KEY in payload else cur_vendhub
     final_vendhub_date  = new_vendhub_date if FIELD_VENDHUB_DATE_KEY in payload else cur_vendhub_date
@@ -705,6 +811,7 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
         "scraper":      new_scraper if FIELD_SCRAPER_KEY in payload else cur_scraper,
         "post_webinar": new_postwebinar if FIELD_POSTWEBINAR_KEY in payload else cur_postwebinar,
         "reactivation": final_reactivation,
+        "reactivation_user": final_reactivation_user,
         "funnel_name":  final_funnel,
         "vendhub":      final_vendhub,
         "vendhub_date": final_vendhub_date,
@@ -716,7 +823,7 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict) -> di
 # Routine run (fast path — cache exists)
 # ─────────────────────────────────────────────
 
-def routine_update(desired_state: dict, cached_state: dict) -> dict:
+def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict) -> dict:
     """
     Compare desired vs cached in memory.
     Only fetch + update leads where something changed.
@@ -730,7 +837,7 @@ def routine_update(desired_state: dict, cached_state: dict) -> dict:
 
     # Leads cached as having a value but no longer in desired (stale)
     stale = {
-        lead_id: {"date": None, "call_type": None, "scraper": None, "post_webinar": None, "reactivation": None, "funnel_name": None, "vendhub": None, "vendhub_date": None, "quick_disc": None}
+        lead_id: {"date": None, "call_type": None, "scraper": None, "post_webinar": None, "reactivation": None, "reactivation_user": None, "funnel_name": None, "vendhub": None, "vendhub_date": None, "quick_disc": None}
         for lead_id, cached in cached_state.items()
         if lead_id not in desired_state
         and (cached.get("date") or cached.get("call_type"))
@@ -769,13 +876,14 @@ def routine_update(desired_state: dict, cached_state: dict) -> dict:
                 "scraper":      lead_data.get(FIELD_SCRAPER_KEY),
                 "post_webinar": lead_data.get(FIELD_POSTWEBINAR_KEY),
                 "reactivation": lead_data.get(FIELD_REACTIVATION_KEY),
+                "reactivation_user": lead_data.get(FIELD_REACTIVATION_USER_KEY),
                 "funnel_name":  lead_data.get(FIELD_FUNNEL_KEY),
                 "vendhub":      lead_data.get(FIELD_VENDHUB_KEY),
                 "vendhub_date": lead_data.get(FIELD_VENDHUB_DATE_KEY),
                 "quick_disc":   lead_data.get(FIELD_QUICK_DISC_KEY),
             }
 
-            result = write_lead(lead_id, lead_name, current, desired)
+            result = write_lead(lead_id, lead_name, current, desired, users_by_name)
             if result:
                 updated += 1
                 new_cache[lead_id] = result
@@ -797,7 +905,7 @@ def routine_update(desired_state: dict, cached_state: dict) -> dict:
 # Backfill (first run or resuming interrupted run)
 # ─────────────────────────────────────────────
 
-def backfill(desired_state: dict, already_processed: set) -> tuple[dict, set]:
+def backfill(desired_state: dict, already_processed: set, users_by_name: dict) -> tuple[dict, set]:
     """
     No state cache exists — must fetch every lead from Close to read current values.
     Uses checkpoint to survive timeouts/cancellations.
@@ -829,13 +937,14 @@ def backfill(desired_state: dict, already_processed: set) -> tuple[dict, set]:
                 "scraper":      lead_data.get(FIELD_SCRAPER_KEY),
                 "post_webinar": lead_data.get(FIELD_POSTWEBINAR_KEY),
                 "reactivation": lead_data.get(FIELD_REACTIVATION_KEY),
+                "reactivation_user": lead_data.get(FIELD_REACTIVATION_USER_KEY),
                 "funnel_name":  lead_data.get(FIELD_FUNNEL_KEY),
                 "vendhub":      lead_data.get(FIELD_VENDHUB_KEY),
                 "vendhub_date": lead_data.get(FIELD_VENDHUB_DATE_KEY),
                 "quick_disc":   lead_data.get(FIELD_QUICK_DISC_KEY),
             }
 
-            result = write_lead(lead_id, lead_name, current, desired)
+            result = write_lead(lead_id, lead_name, current, desired, users_by_name)
             if result:
                 updated += 1
                 built_cache[lead_id] = result
@@ -881,11 +990,14 @@ def main():
     is_resuming_backfill = os.path.exists(CHECKPOINT_FILE)
     is_backfill          = not cached_state and not is_resuming_backfill
 
-    # 2. Fetch ALL meetings (always required — Close ignores date filters)
+    # 2. Fetch Close users once for Reactivation Setter User shadow writes
+    users_by_name = build_user_name_map(fetch_close_users())
+
+    # 3. Fetch ALL meetings (always required — Close ignores date filters)
     all_meetings = fetch_all_meetings()
 
-    # 2. Calculate desired state in Python — zero API calls
-    desired_state = calculate_desired_state(all_meetings)
+    # 4. Calculate desired state in Python — zero API calls
+    desired_state = calculate_desired_state(all_meetings, users_by_name)
 
     closer_count = sum(1 for v in desired_state.values() if v.get("call_type") == "Closer")
     setter_count = sum(1 for v in desired_state.values() if v.get("call_type") == "Setter")
@@ -895,11 +1007,11 @@ def main():
         flush=True,
     )
 
-    # 3. Update Close
+    # 5. Update Close
     if cached_state and not is_resuming_backfill:
         # ── Fast routine path ───────────────────────────────────────────────
         print("\nMode: ROUTINE", flush=True)
-        new_cache = routine_update(desired_state, cached_state)
+        new_cache = routine_update(desired_state, cached_state, users_by_name)
         save_state_cache(new_cache)
 
     else:
@@ -907,7 +1019,7 @@ def main():
         mode = "RESUMING BACKFILL" if is_resuming_backfill else "INITIAL BACKFILL"
         print(f"\nMode: {mode}", flush=True)
         already_processed = load_checkpoint()
-        built_cache, all_processed = backfill(desired_state, already_processed)
+        built_cache, all_processed = backfill(desired_state, already_processed, users_by_name)
 
         if len(all_processed) >= len(desired_state):
             save_state_cache(built_cache)
