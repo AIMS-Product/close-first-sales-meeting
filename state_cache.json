@@ -99800,7 +99800,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
@@ -99817,6 +99817,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-27 01:10:03 UTC",
+  "saved_at": "2026-08-27 01:40:46 UTC",
   "count": 9301
 }
