@@ -99870,8 +99870,30 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_wQOfKjyVgbvDlbsOLi3ex00g1Bgg2PHLaFC3clVnAan": {
+      "date": "2026-08-27",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_oAgmFQqEaF3UvQ5vlEKSvdVfNwyC1BBIFTAWc1PW8JL": {
+      "date": "2026-08-31",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-27 16:11:34 UTC",
-  "count": 9306
+  "saved_at": "2026-08-27 16:41:18 UTC",
+  "count": 9308
 }
