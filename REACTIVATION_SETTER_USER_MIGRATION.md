@@ -24,7 +24,7 @@ Implementation status:
 - Routine runs can backfill `Reactivation Setter User` when `Reactivation - Setter Name` is already set and the new user field is blank.
 - Populated `Reactivation Setter User` values are not overwritten automatically; mismatches are logged for review.
 - `dry_run_reactivation_setter_user_sync.py` de-dupes candidate leads before reporting/apply.
-- `no_show_recovery.py` now prefers `Reactivation Setter User` for Lead Owner assignment and falls back to the old name field.
+- `no_show_recovery.py` only maintains the `No show recovery` flag; it no longer assigns or clears `Lead Owner`.
 
 ## Migration Strategy
 
@@ -103,25 +103,18 @@ Implemented change:
 ### 3. `close-first-sales-meeting/no_show_recovery.py`
 
 Role:
-- Reads the old name field.
-- Converts setter name to Close user.
-- Sets `Lead Owner` during no-show recovery.
+- Maintains the `No show recovery` flag for eligible no-show leads.
+- Leaves `Lead Owner` unchanged during no-show recovery.
 
 Current references:
-- `REACTIVATION_SETTER_FIELD`
-- Lead fetch fields include `custom.{REACTIVATION_SETTER_FIELD}`
-- `owner_target_for_lead()` uses the old text value.
+- `NO_SHOW_RECOVERY_FIELD`
 
 Implemented change:
-- Fetches `Reactivation Setter User`.
-- Prefers the new user field when present.
-- Falls back to old setter name only if the new user field is blank.
-- Keeps the old fallback behavior for unmapped/blank rows.
+- Removed Lead Owner reassignment and release logic from no-show recovery.
+- Removed the no-show recovery dependency on `Reactivation Setter User` and `Reactivation - Setter Name`.
 
 Suggested behavior:
-- If new user field is present, set Lead Owner to that user id directly.
-- If new user field is blank and old name maps, use the old name mapping.
-- If neither resolves, clear owner or use configured fallback exactly as today.
+- Keep no-show recovery focused on the recovery flag only.
 
 ### 4. `close-first-sales-meeting/update_funnel_name.py`
 
