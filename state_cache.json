@@ -99474,9 +99474,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Pearl Sathekge",
-      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
-      "funnel_name": "Instagram",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -101357,6 +101356,18 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "August Young",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_sAf3wyuIiXCza24RKQR1uGBWgbUTc2ExwWMlhIufy3s": {
+      "date": "2026-09-01",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
       "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
@@ -101364,6 +101375,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-28 19:40:38 UTC",
-  "count": 9342
+  "saved_at": "2026-08-28 20:10:42 UTC",
+  "count": 9343
 }
