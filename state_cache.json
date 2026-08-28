@@ -101380,13 +101380,24 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_9PJwVSdVdfH8yIxvLA1I6ggVrD1dERQCrcVrTckZN6R": {
+      "date": "2026-09-01",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Naria Torres",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
     }
   },
-  "saved_at": "2026-08-28 20:41:02 UTC",
-  "count": 9344
+  "saved_at": "2026-08-28 21:11:05 UTC",
+  "count": 9345
 }
