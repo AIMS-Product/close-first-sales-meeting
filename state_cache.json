@@ -99473,12 +99473,13 @@
       "quick_disc": null
     },
     "lead_C7wIrLVI77tSzEEtMJa5BgUFUTlz1gwfHn0zWEV279h": {
-      "date": "2026-09-02",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Pearl Sathekge",
+      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
+      "funnel_name": "Instagram",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -101506,6 +101507,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-29 13:10:49 UTC",
+  "saved_at": "2026-08-29 13:40:07 UTC",
   "count": 9354
 }
