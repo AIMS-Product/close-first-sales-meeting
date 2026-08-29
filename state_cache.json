@@ -101514,13 +101514,13 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Jessica Zatkin",
-      "reactivation_user": "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp"
     }
   },
-  "saved_at": "2026-08-29 19:40:08 UTC",
+  "saved_at": "2026-08-29 20:06:36 UTC",
   "count": 9355
 }
