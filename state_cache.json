@@ -100835,12 +100835,12 @@
     },
     "lead_Dun7EG3hVKdQTbGqVEW8zPyiAZOvO9TWLwBWv6XokA5": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
       "reactivation_user": null,
-      "funnel_name": "LTF - In-House",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -101508,6 +101508,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-29 16:11:14 UTC",
+  "saved_at": "2026-08-29 16:40:37 UTC",
   "count": 9354
 }
