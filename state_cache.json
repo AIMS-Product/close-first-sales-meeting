@@ -101641,8 +101641,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
-      "funnel_name": "GoHighLevel",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -101653,7 +101652,6 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
@@ -101665,13 +101663,25 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Kelly Schrader",
-      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7"
+    },
+    "lead_Y7dzf64Jd6IEEUyCVlfijqdb4P0U2RwbCuENOFetvgF": {
+      "date": "2026-09-02",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "William Nowak",
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": "Yes"
     }
   },
-  "saved_at": "2026-08-31 16:42:19 UTC",
-  "count": 9368
+  "saved_at": "2026-08-31 17:11:25 UTC",
+  "count": 9369
 }
