@@ -101759,6 +101759,30 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "August Young",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_H5GQ5T81rXWvtxJkDcIDH3iCQOIwkRGCwYGhLCEKxfY": {
+      "date": "2026-09-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_LZfMAnP1EiYik7DKkqOWLKMyfsSsfg3BTtbqOBLZoib": {
+      "date": "2026-09-03",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
       "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
@@ -101766,6 +101790,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-08-31 19:10:41 UTC",
-  "count": 9376
+  "saved_at": "2026-08-31 19:41:39 UTC",
+  "count": 9378
 }
