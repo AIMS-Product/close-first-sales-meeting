@@ -20,6 +20,13 @@ Evidence hierarchy (v5 — per-meeting evidence outranks lead-level fields):
                                   attendee noreply/declined -> Cancelled/No Show)
   7. Nothing conclusive          -> left blank + flagged in completeness report
 
+FIELD PROJECTION (v6): outcomes are the source of truth; the legacy
+"First Call Show Up (Opp)" lead field is kept in lockstep as a bridge for
+Smart Views / older reports. When THE first sales call (sales-titled meeting on
+the lead's FSCBD date) carries outcome Completed -> field "Yes"; No Show ->
+"No". Overwrites a differing value (outcome wins); runs for rep-set outcomes
+too; never touches "First Call Show (Override)".
+
 Designed to live in the close-first-sales-meeting repo as a SEPARATE step in
 the 30-min workflow (isolated failure: a Zoom outage skips outcome sync, it
 never blocks FSCBD stamping).
@@ -88,6 +95,31 @@ TERMINAL_OUTCOME_IDS = {
 
 # Lead custom field: Attention writes its verdict here today.
 CF_TODAYS_DISPOSITION = "custom.cf_n2QvikNfeZ0uWObMsyCJmnXnrbWNLGlSvYiKJTwxTqU"
+
+# --- First Call Show Up projection (outcome -> legacy field bridge) ---------
+# Outcomes are the source of truth; this keeps the legacy field in lockstep so
+# Smart Views / older reports keep working. Completed -> "Yes", No Show -> "No".
+# Only for THE first sales call: sales-titled meeting on the lead's FSCBD date.
+# Never touches "First Call Show (Override)".
+CF_FSCBD = "custom.cf_LFdYEQ6bsgp49YjZzefypDmdVx8iwuakWDSLPLpVrBq"
+CF_FIRST_CALL_SHOW = "custom.cf_OPyvpU45RdvjLqfm8V1VWwNxrGKogEH2IBJmfCj0Uhq"
+
+# SYNC WITH update_field.py / backfill_outcomes.py — qualifying sales titles.
+SALES_TITLE_RE = re.compile("|".join([
+    r"vending strategy call",
+    r"vendingpren[eu]+rs?\s+consultation",
+    r"vendingpren[eu]+rs?\s+strategy call",
+    r"new vendingpreneur strategy call",
+    r"vending consult",
+    r"post masterclass strategy call",
+    r"vending route consultation",
+    r"cash[- ]?flowing vending route advisory interview",
+    r"vending route advisory call",
+    r"vendingpren[eu]+rs?.{0,12}next steps",   # scraper closer calls (title variants)
+    r"vendingpreneur next steps",
+    r"vending (?:opportunity|discovery call)\s*-\s*next steps",
+]), re.IGNORECASE)
+FOLLOWUP_TITLE_RE = re.compile(r"follow[\s-]?up|fallow up|f/u", re.IGNORECASE)
 
 # Attention disposition -> outcome key. Grounded in the field's actual choices.
 DISPOSITION_TO_OUTCOME = {
@@ -248,8 +280,13 @@ def fetch_meetings_window(s, since_dt, until_dt):
 def fetch_lead_brief(s, lead_id):
     return close_get(
         s, f"/lead/{lead_id}/",
-        {"_fields": f"id,display_name,status_label,{CF_TODAYS_DISPOSITION}"}
+        {"_fields": f"id,display_name,status_label,{CF_TODAYS_DISPOSITION},"
+                    f"{CF_FSCBD},{CF_FIRST_CALL_SHOW}"}
     )
+
+
+def set_lead_field(s, lead_id, field_key, value):
+    return close_put(s, f"/lead/{lead_id}/", {field_key: value})
 
 
 def fetch_attention_acts(s, lead_id):
@@ -418,6 +455,27 @@ def attention_signal(meeting, disposition, lead_meetings, now_utc):
     if latest.get("id") != meeting.get("id"):
         return None
     return outcome
+
+
+def first_call_field_value(meeting, fscbd_str, outcome_id):
+    """
+    If this meeting is THE first sales call (sales title, not a follow-up, not
+    canceled, Pacific date == lead's FSCBD) and its outcome is projectable:
+    Completed -> "Yes", No Show -> "No". Anything else -> None (no field write).
+    """
+    if not fscbd_str or is_canceledish(meeting):
+        return None
+    title = meeting.get("title") or ""
+    if not SALES_TITLE_RE.search(title) or FOLLOWUP_TITLE_RE.search(title):
+        return None
+    st = parse_dt(meeting.get("starts_at"))
+    if st is None or str(pacific_date(st)) != str(fscbd_str)[:10]:
+        return None
+    if outcome_id == OUTCOMES["completed"]:
+        return "Yes"
+    if outcome_id == OUTCOMES["no_show"]:
+        return "No"
+    return None
 
 
 def attention_activity_signal(meeting, acts):
@@ -590,9 +648,40 @@ def run():
             by_lead[m["lead_id"]].append(m)
 
     report = {"written": [], "skipped_terminal": 0, "flagged": [],
-              "auto_noshow": [], "errors": []}
+              "auto_noshow": [], "field_writes": [], "errors": []}
 
-    lead_cache = {}
+    brief_cache, evidence_cache = {}, {}
+
+    def get_brief(lead_id):
+        if lead_id not in brief_cache:
+            brief_cache[lead_id] = fetch_lead_brief(s, lead_id)
+        return brief_cache[lead_id]
+
+    def get_evidence(lead_id):
+        if lead_id not in evidence_cache:
+            evidence_cache[lead_id] = {"acts": fetch_attention_acts(s, lead_id),
+                                       "calls": fetch_lead_calls(s, lead_id)}
+        return evidence_cache[lead_id]
+
+    def project_first_call_field(meeting, lead_id, outcome_id):
+        """Outcome -> First Call Show Up bridge. Overwrites (outcome is truth)."""
+        brief = get_brief(lead_id)
+        value = first_call_field_value(meeting, brief.get(CF_FSCBD), outcome_id)
+        if value is None:
+            return
+        current_val = brief.get(CF_FIRST_CALL_SHOW)
+        if (current_val or "").strip().lower() == value.lower():
+            return  # already in lockstep
+        if not DRY_RUN:
+            set_lead_field(s, lead_id, CF_FIRST_CALL_SHOW, value)
+        brief[CF_FIRST_CALL_SHOW] = value  # avoid duplicate writes this run
+        report["field_writes"].append(
+            {"lead": lead_id, "meeting": meeting["id"],
+             "field": "First Call Show Up (Opp)",
+             "old": current_val, "new": value})
+        print(f"  {'DRY ' if DRY_RUN else ''}FIELD First Call Show Up: "
+              f"{current_val or '(blank)'} -> {value}  "
+              f"(lead {lead_id}, mtg {meeting['id']})")
 
     for m in meetings:
         st = parse_dt(m.get("starts_at"))
@@ -607,22 +696,23 @@ def run():
         owner = users.get(m.get("user_id"), {})
         if owner.get("name", "").lower() in EXCLUDED_OWNER_NAMES:
             continue
+        lead_id = m["lead_id"]
         current = m.get("outcome_id")
         if current and current != OUTCOMES["scheduled"]:
+            # HARD RULE: never overwrite a terminal/manual outcome. But DO keep
+            # the legacy First Call Show Up field in lockstep with it.
             report["skipped_terminal"] += 1
-            continue  # HARD RULE: never overwrite a terminal/manual outcome
+            try:
+                project_first_call_field(m, lead_id, current)
+            except Exception as e:
+                report["errors"].append({"meeting": m.get("id"), "error": str(e)})
+                print(f"  ERROR {m.get('id')}: {e}", file=sys.stderr)
+            continue
 
-        lead_id = m["lead_id"]
         try:
-            if lead_id not in lead_cache:
-                lead_cache[lead_id] = {
-                    "brief": fetch_lead_brief(s, lead_id),
-                    "acts": fetch_attention_acts(s, lead_id),
-                    "calls": fetch_lead_calls(s, lead_id),
-                }
-            lead = lead_cache[lead_id]["brief"]
-            acts = lead_cache[lead_id]["acts"]
-            calls = lead_cache[lead_id]["calls"]
+            lead = get_brief(lead_id)
+            ev = get_evidence(lead_id)
+            acts, calls = ev["acts"], ev["calls"]
             disposition = lead.get(CF_TODAYS_DISPOSITION)
             lead_status = lead.get("status_label") or ""
             ext_attendee_statuses = [
@@ -681,6 +771,7 @@ def run():
                         {"meeting": m["id"], "lead": lead_id, "detail": detail})
                 print(f"  {'DRY ' if DRY_RUN else ''}SET {outcome_key:<11} "
                       f"[{source}] {label} ({detail})")
+                project_first_call_field(m, lead_id, OUTCOMES[outcome_key])
             else:
                 age_days = (now_utc - st).days
                 report["flagged"].append(
@@ -702,6 +793,8 @@ def run():
     print(f"already terminal : {report['skipped_terminal']}")
     print(f"needs review     : {len(report['flagged'])}")
     print(f"auto no-shows    : {len(report['auto_noshow'])} (verify these)")
+    print(f"field writes     : {len(report['field_writes'])} "
+          f"(First Call Show Up kept in lockstep with outcomes)")
     print(f"errors           : {len(report['errors'])}")
     prov_counts = defaultdict(int)
     fresh_counts = defaultdict(int)
@@ -869,6 +962,38 @@ def selftest():
                lead_status="🔻 Canceled (by Lead)",
                ext_attendee_statuses=["yes"])
     checks.append(("rsvp yes blocks status rung", r[0] is None))
+
+    # --- v6: First Call Show Up projection ---
+    # m_first starts 2026-07-20T16:00Z = 2026-07-20 Pacific (9am PDT)
+    # 22. first sales call + Completed -> Yes
+    v = first_call_field_value(m_first, "2026-07-20", OUTCOMES["completed"])
+    checks.append(("project Yes", v == "Yes"))
+
+    # 23. first sales call + No Show -> No
+    v = first_call_field_value(m_first, "2026-07-20", OUTCOMES["no_show"])
+    checks.append(("project No", v == "No"))
+
+    # 24. wrong FSCBD date -> no projection (a later re-booked sales call
+    #     must NOT overwrite the first call's verdict)
+    v = first_call_field_value(m_first, "2026-07-01", OUTCOMES["completed"])
+    checks.append(("project date guard", v is None))
+
+    # 25. follow-up / non-sales titles -> no projection
+    m_fu = mtg("mf", "Vending Strategy Call Follow-Up", "2026-07-20T16:00:00+00:00")
+    v = first_call_field_value(m_fu, "2026-07-20", OUTCOMES["completed"])
+    m_rand = mtg("mr", "Random sync", "2026-07-20T16:00:00+00:00")
+    v2 = first_call_field_value(m_rand, "2026-07-20", OUTCOMES["completed"])
+    checks.append(("project title guard", v is None and v2 is None))
+
+    # 26. rescheduled/cancelled outcomes never project
+    v = first_call_field_value(m_first, "2026-07-20", OUTCOMES["rescheduled"])
+    checks.append(("project outcome guard", v is None))
+
+    # 27. scraper title variants project too (incl. 'Call - Next Steps')
+    m_scr = mtg("msc", "Vendingpreneurs Call - Next Steps with Phil",
+                "2026-07-20T16:00:00+00:00")
+    v = first_call_field_value(m_scr, "2026-07-20", OUTCOMES["completed"])
+    checks.append(("project scraper title", v == "Yes"))
 
     failed = [name for name, ok in checks if not ok]
     for name, ok in checks:
