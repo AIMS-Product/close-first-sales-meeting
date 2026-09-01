@@ -38066,11 +38066,11 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Vince Bartolini",
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_UXvWrXZee78ocQ9HsxDUdRyAgZ7saGifR311hSpcVPb": {
       "date": "2025-09-22",
@@ -101101,9 +101101,8 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Pearl Sathekge",
-      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
-      "funnel_name": "Instagram",
+      "reactivation": null,
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -101837,8 +101836,20 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
+    },
+    "lead_4HPWtDoe241RIn284k367dWzkVS9tHMZ8VMpPsNYoQ6": {
+      "date": "2026-09-02",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-08-31 23:40:50 UTC",
-  "count": 9382
+  "saved_at": "2026-09-01 00:10:49 UTC",
+  "count": 9383
 }
