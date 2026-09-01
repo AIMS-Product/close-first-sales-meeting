@@ -101964,7 +101964,6 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
@@ -101976,6 +101975,30 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Connor George",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
+    },
+    "lead_ApZJu4ratYvmH9JPrBb2Iq9UR1V3Laf7Od9Hu0M7IHI": {
+      "date": "2026-09-03",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Naria Torres",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
+    },
+    "lead_TV9oCvdyxW3vFUi2LKxWjXPXXGFJuODNDHNYJv7rMGX": {
+      "date": "2026-09-03",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
       "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
@@ -101983,6 +102006,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-01 17:41:32 UTC",
-  "count": 9394
+  "saved_at": "2026-09-01 18:12:45 UTC",
+  "count": 9396
 }
