@@ -101906,13 +101906,13 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Cassie Caraballo",
-      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL"
     }
   },
-  "saved_at": "2026-09-01 14:42:47 UTC",
+  "saved_at": "2026-09-01 15:13:02 UTC",
   "count": 9388
 }
