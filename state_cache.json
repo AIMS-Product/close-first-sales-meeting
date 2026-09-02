@@ -102307,8 +102307,20 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_LjvEzigIDjdKXPymWXiERdPJXZLusjkULcrS6g8Nv0S": {
+      "date": "2026-09-03",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "funnel_name": "LTF - In-House",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-01 23:53:45 UTC",
-  "count": 9423
+  "saved_at": "2026-09-02 00:10:34 UTC",
+  "count": 9424
 }
