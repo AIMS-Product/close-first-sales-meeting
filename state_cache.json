@@ -102574,13 +102574,25 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Cassie Caraballo",
-      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL",
       "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL"
+    },
+    "lead_0lGJkGT4hSHNN5fj2oXsQzplSPG2bjCTPsWgTl9OigF": {
+      "date": "2026-09-07",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-02 21:41:28 UTC",
-  "count": 9449
+  "saved_at": "2026-09-02 22:10:44 UTC",
+  "count": 9450
 }
