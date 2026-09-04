@@ -102396,12 +102396,13 @@
       "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
     },
     "lead_2DP7fwb7EYtXrqurlvOcMAs6GjWpwTAZJGbu78u8g7Y": {
-      "date": "2026-09-04",
+      "date": "2026-09-08",
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": null,
+      "reactivation_user": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -103053,6 +103054,18 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Connor George",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
+    },
+    "lead_igNWoghVHcYWaoz7n2FpZ9CN3EfAyHw50Sz2HxnZG4Z": {
+      "date": "2026-09-08",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
       "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
@@ -103060,6 +103073,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-04 17:12:07 UTC",
-  "count": 9490
+  "saved_at": "2026-09-04 17:41:51 UTC",
+  "count": 9491
 }
