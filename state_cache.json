@@ -103111,11 +103111,11 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Jessica Zatkin",
-      "reactivation_user": "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp"
     },
     "lead_RlfyV5UvuLZa8MvpOOiLlAl2vYsTyv3iAnISAOmSTLN": {
       "date": "2026-09-07",
@@ -103123,13 +103123,13 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "August Young",
-      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
     }
   },
-  "saved_at": "2026-09-04 19:41:14 UTC",
+  "saved_at": "2026-09-04 20:11:34 UTC",
   "count": 9496
 }
