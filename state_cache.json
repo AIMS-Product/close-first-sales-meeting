@@ -102732,12 +102732,12 @@
     },
     "lead_X43JGeFskBTk3uoIrJAqiQzoB7sLkzdwoqGMbE3l9Nc": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
       "reactivation_user": null,
-      "funnel_name": "YouTube",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -103048,6 +103048,6 @@
       "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     }
   },
-  "saved_at": "2026-09-04 15:40:56 UTC",
+  "saved_at": "2026-09-04 16:11:35 UTC",
   "count": 9489
 }
