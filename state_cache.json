@@ -103290,13 +103290,12 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-05 23:40:20 UTC",
+  "saved_at": "2026-09-06 00:11:03 UTC",
   "count": 9511
 }
