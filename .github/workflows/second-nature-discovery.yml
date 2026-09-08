@@ -1,0 +1,46 @@
+name: Second Nature API Discovery
+
+# One-off diagnostic, not a real integration -- deliberately workflow_dispatch
+# only, no schedule. We're guessing at hosts/paths since Second Nature has no
+# public API docs; this just tells us whether SECOND_NATURE_API_KEY is worth
+# building the real recap automation around, and if so, what base URL / auth
+# scheme to use.
+#
+# Prereq: add the SECOND_NATURE_API_KEY repo secret before running.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: second-nature-discovery
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run discovery
+        env:
+          SECOND_NATURE_API_KEY: ${{ secrets.SECOND_NATURE_API_KEY }}
+        run: python second_nature_discovery.py
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: second-nature-discovery-report
+          path: second_nature_discovery_report.md
+          retention-days: 14
