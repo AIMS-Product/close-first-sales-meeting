@@ -52,6 +52,13 @@ SCRAPER_TITLE_MAP = [
     (re.compile(r"vending\s+opportunity\s*-?\s*next\s+steps",                 re.IGNORECASE), "Cassie Caraballo"),
     (re.compile(r"vendingpren[eu]+rs?\s+connect\s*-?\s*next\s+steps",         re.IGNORECASE), "Jessica Zatkin"),
     (re.compile(r"vending\s+success\s*-?\s*next\s+steps",                     re.IGNORECASE), "Abigail Garza"),
+    (re.compile(r"vendingpren[eu]+rs?\s+momentum\s*-?\s*next\s+steps",        re.IGNORECASE), "Connor George"),
+    (re.compile(r"vendingpren[eu]+rs?\s+launch\s*-?\s*next\s+steps",          re.IGNORECASE), "Dana Lesiuk"),
+    (re.compile(r"vendingpren[eu]+rs?\s+pathway\s*-?\s*next\s+steps",         re.IGNORECASE), "Naria Torres"),
+    (re.compile(r"vendingpren[eu]+rs?\s+blueprint\s*-?\s*next\s+steps",       re.IGNORECASE), "Melia King"),
+    (re.compile(r"vendingpren[eu]+rs?\s+compass\s*-?\s*next\s+steps",         re.IGNORECASE), "Josh Stoffel"),
+    (re.compile(r"vendingpren[eu]+rs?\s+gateway\s*-?\s*next\s+steps",         re.IGNORECASE), "Oscar Pugh"),
+    (re.compile(r"vendingpren[eu]+rs?\s+horizon\s*-?\s*next\s+steps",         re.IGNORECASE), "Beatrice Braescu Cojocaru"),
 ]
 
 EXCLUDED_OWNERS = {

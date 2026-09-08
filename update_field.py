@@ -143,6 +143,9 @@ SCRAPER_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+launch\s*-?\s*next\s+steps", re.IGNORECASE), "Dana Lesiuk"),  # Vendingpreneurs Launch - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+pathway\s*-?\s*next\s+steps", re.IGNORECASE), "Naria Torres"),  # Vendingpreneurs Pathway - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+blueprint\s*-?\s*next\s+steps", re.IGNORECASE), "Melia King"),  # Vendingpreneurs Blueprint - Next Steps
+    (re.compile(r"vendingpren[eu]+rs?\s+compass\s*-?\s*next\s+steps", re.IGNORECASE), "Josh Stoffel"),  # Vendingpreneurs Compass - Next Steps
+    (re.compile(r"vendingpren[eu]+rs?\s+gateway\s*-?\s*next\s+steps", re.IGNORECASE), "Oscar Pugh"),  # Vendingpreneurs Gateway - Next Steps
+    (re.compile(r"vendingpren[eu]+rs?\s+horizon\s*-?\s*next\s+steps", re.IGNORECASE), "Beatrice Braescu Cojocaru"),  # Vendingpreneurs Horizon - Next Steps
 ]
 
 CLOSER_PATTERNS = [

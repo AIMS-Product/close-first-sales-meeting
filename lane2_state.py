@@ -130,6 +130,7 @@ SCRAPERS = {
     "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL": "Cassie Caraballo",  # added 2026-08-07
     "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp": "Jessica Zatkin",    # added 2026-08-07
     "user_O9qFgDidrldSA1zU3pKPpz5zUbCcNpoEBTCrtAolDUi": "Abigail Garza",     # added 2026-08-12
+    "user_stO6qgPWPprrhNp8wBxHFzkYLrG8JAN9wBiWXru1xvJ": "Beatrice Braescu Cojocaru", # added 2026-09-08
     "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj": "Jason Aaron",  # lane manager
     # Not started — add once their Close users exist:
     # "user_...": "Connor George",
