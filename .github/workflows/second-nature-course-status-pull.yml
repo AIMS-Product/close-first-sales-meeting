@@ -10,12 +10,16 @@ name: Second Nature Course Status Test Pull
 on:
   workflow_dispatch:
     inputs:
+      course_id:
+        description: "Optional: a real course_id grabbed from the Second Nature admin UI. Tested in addition to whatever the catalog endpoint returns (which came back empty on the first run)."
+        required: false
+        default: ""
       completed_from:
-        description: "Optional: only pull records completed on/after this date (YYYY-MM-DD). Blank = no lower bound."
+        description: "Optional: only pull records completed on/after this date. YYYY-MM-DD or a raw UNIX timestamp. Blank = no lower bound (returns all assigned users, including in-progress)."
         required: false
         default: ""
       completed_until:
-        description: "Optional: only pull records completed on/before this date (YYYY-MM-DD). Blank = no upper bound."
+        description: "Optional: only pull records completed on/before this date. YYYY-MM-DD or a raw UNIX timestamp. Blank = no upper bound."
         required: false
         default: ""
 
@@ -43,6 +47,7 @@ jobs:
       - name: Run test pull
         env:
           SECOND_NATURE_API_KEY: ${{ secrets.SECOND_NATURE_API_KEY }}
+          COURSE_ID: ${{ inputs.course_id }}
           COMPLETED_FROM: ${{ inputs.completed_from }}
           COMPLETED_UNTIL: ${{ inputs.completed_until }}
         run: python second_nature_course_status_pull.py
