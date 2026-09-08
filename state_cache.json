@@ -62852,12 +62852,16 @@
       "earliest_scraper_date": null
     },
     "lead_NyGtL0FZIPUDfndkNlpIt9kTR4dRs6haEcgRrbDmIek": {
-      "date": null,
-      "call_type": null,
-      "scraper": null,
+      "date": "2026-09-09",
+      "call_type": "Closer",
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "earliest_scraper_date": null
+      "reactivation": "Vince Bartolini",
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     },
     "lead_ORN0HiTuciWQyxqUi3KtSktX0uGGhFeJLmD60TlpO9v": {
       "date": "2026-05-04",
@@ -104197,8 +104201,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -104209,11 +104212,11 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Charlie Ingram",
-      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_4IFovbn1baB71orTINmusWs5cbsKhyZIyWZuGEz8t3F": {
       "date": "2026-09-09",
@@ -104221,13 +104224,24 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_eMlqd9USYf5qAS8sHOFLnXBivorDSmCvvRCDumrdhif": {
+      "date": "2026-09-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-08 22:11:22 UTC",
-  "count": 9593
+  "saved_at": "2026-09-08 22:41:14 UTC",
+  "count": 9594
 }
