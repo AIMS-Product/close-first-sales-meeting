@@ -60800,10 +60800,11 @@
     "lead_9Zi8DqIg93TUJsZCFyFg2aiRRrQFWxGTuNkFH7AiLXP": {
       "date": "2026-04-24",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Pearl Sathekge",
+      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -103489,6 +103490,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-08 12:54:11 UTC",
+  "saved_at": "2026-09-08 13:12:15 UTC",
   "count": 9528
 }
