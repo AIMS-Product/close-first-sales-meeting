@@ -1,0 +1,58 @@
+name: Second Nature Course Status Test Pull
+
+# Real test pull against the confirmed Users Course State API -- not the
+# earlier host-guessing diagnostic. workflow_dispatch only for now; once
+# we've seen a real response and confirmed it has what the recap job
+# needs, this becomes the basis for the scheduled recap workflow.
+#
+# Prereq: SECOND_NATURE_API_KEY repo secret must be set.
+
+on:
+  workflow_dispatch:
+    inputs:
+      completed_from:
+        description: "Optional: only pull records completed on/after this date (YYYY-MM-DD). Blank = no lower bound."
+        required: false
+        default: ""
+      completed_until:
+        description: "Optional: only pull records completed on/before this date (YYYY-MM-DD). Blank = no upper bound."
+        required: false
+        default: ""
+
+concurrency:
+  group: second-nature-course-status-pull
+  cancel-in-progress: false
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run test pull
+        env:
+          SECOND_NATURE_API_KEY: ${{ secrets.SECOND_NATURE_API_KEY }}
+          COMPLETED_FROM: ${{ inputs.completed_from }}
+          COMPLETED_UNTIL: ${{ inputs.completed_until }}
+        run: python second_nature_course_status_pull.py
+
+      # Short retention -- this artifact contains real trainee names/emails/
+      # scores, unlike the earlier discovery report which had none.
+      - name: Upload raw response (contains real trainee data — short retention)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: second-nature-course-status-raw
+          path: course_status_raw.json
+          retention-days: 3
