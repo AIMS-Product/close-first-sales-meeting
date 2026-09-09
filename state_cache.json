@@ -104270,13 +104270,24 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_LWyaZcGjFSlmHhWHCWKzeTiHX2PKFNw9pfbY4K22lLO": {
+      "date": "2026-09-11",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": "Pearl Sathekge",
+      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
+      "funnel_name": "Instagram",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-09 13:41:26 UTC",
-  "count": 9597
+  "saved_at": "2026-09-09 14:14:06 UTC",
+  "count": 9598
 }
