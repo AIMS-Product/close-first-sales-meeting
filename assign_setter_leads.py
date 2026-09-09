@@ -51,6 +51,7 @@ from lane2_state import (
     _wrap, _req, cf, search, status_in, num_range, within,
     has_completed_meeting, any_inbound, has_opp_status,
 )
+from vp_end_release import release_vp_end_leads
 
 # ============================================================================
 # CONFIG
@@ -321,6 +322,8 @@ def main():
                     help="balance on hot leads NOT already in an active Close "
                          "sequence — a lead automation is working should not "
                          "count against a Setter's live load")
+    ap.add_argument("--max-release", type=int, default=10_000,
+                    help="safety ceiling for open VP THE END releases")
     args = ap.parse_args()
 
     if not ROTATION:
@@ -336,6 +339,18 @@ def main():
     held = search(
         _wrap(*hot_inbound_live(), owner_is(ROTATION.keys())),
         fields=["id", f"custom.{F_OWNER}"])
+    total_counts = Counter(cf(l, F_OWNER) for l in held)
+    def _release_owner(lead_id):
+        try:
+            _req("PUT", f"{BASE}/lead/{lead_id}/", json={f"custom.{F_OWNER}": None})
+        except Exception as exc:
+            return str(exc)
+        return None
+    released_ids = release_vp_end_leads(
+        held, owner_of=lambda lead: cf(lead, F_OWNER), owner_names=ROTATION,
+        paginate=close_paginate_skip, write_owner=_release_owner, apply=args.apply,
+        max_release=args.max_release, label="Setter")
+    held = [lead for lead in held if lead.get("id") not in released_ids]
     total_counts = Counter(cf(l, F_OWNER) for l in held)
 
     sequence_counts = Counter()
@@ -373,6 +388,7 @@ def main():
         fields=["id", "display_name", "date_created", "last_communication_date",
                 f"custom.{F_OVERRIDE}"])
     pool = [r for r in pool if cf(r, F_OVERRIDE) != "Yes"]
+    pool = [r for r in pool if r.get("id") not in released_ids]
 
     # Longest-waiting-since-the-hand-raise first — NOT oldest date_created.
     #
