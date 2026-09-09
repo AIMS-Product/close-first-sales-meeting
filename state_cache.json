@@ -104477,12 +104477,12 @@
     },
     "lead_Ng4HoRGPkwzjZBtKJJ5IKS7C3PFQjwYGnlH1vxLnemr": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
       "reactivation_user": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -104493,13 +104493,25 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Jessica Zatkin",
-      "reactivation_user": "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp"
+    },
+    "lead_CoB3Pmq1Gkwd4Idht2o2Dbk2alSbxcwtouNK3fCnnpT": {
+      "date": "2026-09-14",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Cassie Caraballo",
+      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-09 20:10:42 UTC",
-  "count": 9616
+  "saved_at": "2026-09-09 20:40:43 UTC",
+  "count": 9617
 }
