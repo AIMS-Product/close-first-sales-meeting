@@ -70181,10 +70181,11 @@
     "lead_6H0QMKSlGBcfHcIP6lDLQoVsqmmvkqPgESGpt35xlDV": {
       "date": "2026-05-13",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -104820,11 +104821,11 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "August Young",
-      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
     },
     "lead_Y8TfqTaSIlBTEejqpSEsTv1ZjbrLXxddZig713Xm6jp": {
       "date": null,
@@ -104832,7 +104833,6 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "funnel_name": "VSL",
       "vendhub": null,
       "vendhub_date": null,
@@ -104844,13 +104844,12 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "funnel_name": "VSL",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-10 20:12:22 UTC",
+  "saved_at": "2026-09-10 20:40:37 UTC",
   "count": 9646
 }
