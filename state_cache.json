@@ -104893,11 +104893,11 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Cassie Caraballo",
-      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL"
     },
     "lead_uT4ehV8VOnMfKXPMDnxSN56XgxxygANqdQLQqfO42WE": {
       "date": "2026-09-23",
@@ -105019,11 +105019,11 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Connor George",
-      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
     },
     "lead_e2UseNryR5afX6hQaiFysFAZbIDD6jyaOFb16STd72l": {
       "date": "2026-09-16",
@@ -105113,13 +105113,13 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Cassie Caraballo",
-      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL"
     }
   },
-  "saved_at": "2026-09-11 18:40:52 UTC",
+  "saved_at": "2026-09-11 19:10:38 UTC",
   "count": 9669
 }
