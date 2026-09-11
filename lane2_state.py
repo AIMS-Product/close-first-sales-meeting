@@ -84,6 +84,25 @@ F_FUNNEL = "cf_xqDQE8fkPsWa0RNEve7hcaxKblCe6489XeZGRDzyPdX"
 F_LOSTREASON = "cf_R4i05fLNOQP8yveAs4ofTMMYGAQnkLLklunP4lov2Bt"
 F_OVERRIDE = "cf_6PnYz6aaAkLzHMU3Faxz7kFurBEfadqlfGiBgfhjaVC"  # Reassignment Override
 
+# --- BTC Business Line -------------------------------------------------------
+# Which offer a lead belongs to. Four values live in Close today:
+#   Vendingpreneurs (VP) · Ben Kelly (BK) · AI Operator Collective (AOC)
+#   The Land Geek (TLG)
+#
+# **A BLANK VALUE MEANS VP.** That is not a rounding detail — 44,023 of 64,044
+# leads are blank (68%), including 87% of Deep-Nurture and 97% of Hot-Inbound.
+# Any filter on this field that mishandles nulls empties the VP lists.
+F_BUSINESS = "cf_aJlNlilQZIgLLuhcymNN8fiOzewnFxrbWjLZFPmsucO"
+
+BL_VP  = "Vendingpreneurs (VP)"
+BL_BK  = "Ben Kelly (BK)"
+BL_AOC = "AI Operator Collective (AOC)"
+BL_TLG = "The Land Geek (TLG)"
+
+# The Land Geek runs as a separate motion with its own reps and its own lists.
+# Everything VP-facing excludes it; the TLG assigner and TLG views select it.
+EXCLUDED_BUSINESS_LINES = [BL_TLG]
+
 # --- statuses ---------------------------------------------------------------
 S_NEW = "stat_EwxduBOxA2CLBUrvXAyB7ZrVXKGw7v9i5xz0f2JuIY9"
 S_LOST = "stat_aR2jBa8YnTNZmHAnPsnlQuinBdaXpSBCkZGP3UvoBlV"
@@ -154,6 +173,27 @@ HYBRID_SETTERS = {
 # that choice exists would be rejected by the API on every one of her leads.
 # To split her out in reporting: add the choice in Close FIRST, then change this.
 HYBRID_TEAM_LABEL = "Setter"
+
+# --- The Land Geek setters ---------------------------------------------------
+# TLG is a separate offer with its own two-person setter rotation. Listed here
+# ONLY so Owner Team stamps correctly; who actually gets dealt TLG leads lives in
+# assign_tlg_leads.py, same split as every other lane (state = stamping,
+# assigner = dealing).
+#
+# DELIBERATELY NOT IN THE DISJOINT-ROSTER GUARD BELOW. Beatrice appears here and
+# in SCRAPERS at once, on purpose (Stephen, 2026-09-11): she keeps her VP scraper
+# book and picks up TLG setting on top. The guard exists to catch a rep who has
+# been moved between lanes and left in both by accident — this is neither.
+#
+# owner_team() checks SCRAPERS BEFORE this dict, so Beatrice stamps "Scraper",
+# her primary lane. Josh is in no other roster and stamps "Setter". Her TLG leads
+# therefore carry Owner Team = Scraper, which is harmless: the VP views now filter
+# on business line, so those leads never surface on a VP scraper list.
+TLG_SETTERS = {
+    "user_stO6qgPWPprrhNp8wBxHFzkYLrG8JAN9wBiWXru1xvJ": "Beatrice Braescu Cojocaru",
+    "user_WdDkCcFt7B6F7nPJJiWGi6vl5g5jeqbluErfy6Syrfs": "Josh Stoffel",
+}
+
 LANE_1 = {
     "user_lUjlATIIgFg8mELa0GFzZUj0lG4Cs7PwQsxbi34I6Su": "Joe Dysert",
     "user_7F059xEinVentOEvkRMP77fWZyvwUiTRTUOuhD11J0e": "Robin Perkins",
@@ -336,6 +376,50 @@ def has_incoming(kind, days):
                                "on_or_after": {"type": "offset", "direction": "past",
                                                "moment": {"type": "now"}, "offset": off,
                                                "which_day_end": "start"}}}]}}
+
+def business_line_is(values):
+    """Lead belongs to one of these business lines. Positive, so nulls are excluded.
+
+    Use for the TLG side. Do NOT use the negation of this for the VP side — see
+    not_excluded_business_line().
+    """
+    return {"type": "field_condition", "negate": False,
+            "field": {"type": "custom_field", "custom_field_id": F_BUSINESS},
+            "condition": {"type": "term", "values": list(values)}}
+
+
+def not_excluded_business_line(excluded=None):
+    """Everything EXCEPT the excluded business lines — blank counts as included.
+
+    Written as an explicit OR of two POSITIVE-ish branches:
+
+        (business line is not set)  OR  (business line is set and not excluded)
+
+    NOT as a bare `NOT(business line is TLG)`.
+
+    The bare negation is the trap. 68% of leads have no value in this field at
+    all, and this query engine has already burned us once on exactly that shape:
+    `num_upcoming_meetings lte 0` and `NOT(gte 1)` both matched NOTHING because a
+    lead with no value fails the comparison either way, and every dial view
+    returned zero rows the evening before go-live (2026-08-12). If the same holds
+    here, a bare negation would drop 44,023 leads — the entire VP working book —
+    from every view, and it would look exactly like a normal empty list.
+
+    The first branch is a negated `exists`, which is the one shape we KNOW works
+    on this field type: it is how owner_empty() finds the unclaimed pool, and that
+    demonstrably returns leads. So this construction is safe whichever way the
+    engine treats negation over nulls.
+    """
+    excluded = list(excluded or EXCLUDED_BUSINESS_LINES)
+    return {"negate": False, "type": "or", "queries": [
+        {"type": "field_condition", "negate": True,
+         "field": {"type": "custom_field", "custom_field_id": F_BUSINESS},
+         "condition": {"type": "exists"}},
+        {"type": "field_condition", "negate": True,
+         "field": {"type": "custom_field", "custom_field_id": F_BUSINESS},
+         "condition": {"type": "term", "values": excluded}},
+    ]}
+
 
 def any_inbound(days):
     """A fresh hand-raise: they contacted US, by any channel."""
@@ -585,7 +669,8 @@ def owner_team(lead):
     if not o: return "None"
     if o in SETTERS: return "Setter"
     if o in HYBRID_SETTERS: return HYBRID_TEAM_LABEL
-    if o in SCRAPERS: return "Scraper"
+    if o in SCRAPERS: return "Scraper"          # checked before TLG_SETTERS — see note there
+    if o in TLG_SETTERS: return "Setter"
     if o in LANE_1: return "Lane 1"
     return "None"
 
