@@ -1,0 +1,80 @@
+name: Assign TLG Leads (Land Geek setter round robin)
+
+# Tops Beatrice and Josh up to a working book of unowned Land Geek leads.
+# Sets Lead Owner ONLY — never touches Recapture State or Owner Team.
+#
+# TLG is a separate offer sharing the same Close instance. This job deals ONLY
+# leads whose BTC Business Line is "The Land Geek (TLG)"; the VP Scraper and
+# Setter assigners exclude that value, so the two motions cannot overlap.
+#
+# Recommended cadence: once each weekday morning, alongside the Scraper assigner
+# — e.g. 0 6 * * 1-5 America/Los_Angeles.
+#
+# The input is `dry_run`, INVERTED on purpose, matching every other job in this
+# repo: a trigger that sends no inputs must still WRITE. A scheduled job whose
+# no-input default is a silent no-op is worse than no scheduled job at all.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Tick to preview only — writes nothing"
+        required: false
+        default: false
+        type: boolean
+      max_queue:
+        description: "Target book per rep (blank = script default of 1000; 0 = uncapped)"
+        required: false
+        default: ""
+        type: string
+
+concurrency:
+  group: lane2-assign-tlg
+  cancel-in-progress: false
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install requests
+
+      - name: Assign
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: |
+          ARGS=""
+          if [ "${{ inputs.dry_run }}" != "true" ]; then ARGS="$ARGS --apply"; fi
+          if [ -n "${{ inputs.max_queue }}" ]; then ARGS="$ARGS --max-queue ${{ inputs.max_queue }}"; fi
+          echo "Running: assign_tlg_leads.py $ARGS"
+          python assign_tlg_leads.py $ARGS | tee tlg_assign.txt
+
+      - name: Publish report
+        if: always()
+        run: |
+          {
+            echo "## TLG Assignment"
+            echo ""
+            if [ "${{ inputs.dry_run }}" = "true" ]; then
+              echo "**Mode: DRY RUN** — nothing written."
+            else
+              echo "**Mode: APPLY** — Lead Owner written."
+            fi
+            echo ""
+            echo '```'
+            cat tlg_assign.txt 2>/dev/null || echo "(see job log)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
