@@ -37,7 +37,11 @@ PREFIX = "L2 · "          # every view this script owns starts with this
 # Imported rather than redeclared — the Lane 1 roster and the Closer-active
 # opportunity statuses must not drift from the reconciler's definition of them.
 # has_opp_status also carries the `status_id` (not `opp_status_id`) fix.
-from lane2_state import LANE_1, LANE1_OPP_STATUSES, has_opp_status
+from lane2_state import (
+    LANE_1, LANE1_OPP_STATUSES, has_opp_status,
+    F_BUSINESS, BL_TLG, EXCLUDED_BUSINESS_LINES,
+    business_line_is, not_excluded_business_line,
+)
 
 # ---------------------------------------------------------------------------
 # Sharing
@@ -367,11 +371,26 @@ NOT_SUPPRESSED = status_in(SUPPRESS, negate=True)
 # affected by the same hole. Verify that view has rows after any change here.
 NO_UPCOMING = None   # not applied to any view — see above
 
-def view(*conds):
-    """Wrap conditions into a saved-search query. Suppression is always applied."""
+def view(*conds, tlg=False):
+    """Wrap conditions into a saved-search query.
+
+    Two things are applied to EVERY view here, so no individual view can forget:
+
+      1. Suppression (Won / DNC / DQ / Outside-US).
+      2. A business-line gate. VP views exclude The Land Geek; TLG views select
+         only it. One offer's leads can never appear on the other's lists, and a
+         view added later inherits the gate without anyone remembering.
+
+    `tlg=True` flips the gate. That is the ONLY way a view sees TLG leads.
+
+    The VP gate is null-safe by construction — 68% of leads have no business line
+    and a blank means VP. See lane2_state.not_excluded_business_line() for why it
+    is an OR and not a bare negation; getting that wrong empties every VP list.
+    """
+    gate = business_line_is([BL_TLG]) if tlg else not_excluded_business_line()
     return {"negate": False, "type": "and", "queries": [
         {"negate": False, "object_type": "lead", "type": "object_type"},
-        {"negate": False, "type": "and", "queries": [NOT_SUPPRESSED, *conds]},
+        {"negate": False, "type": "and", "queries": [NOT_SUPPRESSED, gate, *conds]},
     ]}
 
 # SORT_ASC_RATIONALE
@@ -475,6 +494,22 @@ SETTER_ONLY = {
     "Warm Backlog — 2 to 7 days",
     # The whole point is that Scrapers cannot work these yet.
     "Setter · Webinar — Recent Cohort",
+}
+
+# The Land Geek setter lane. Keep in sync with lane2_state.TLG_SETTERS.
+TLG_SETTERS_FOR_SHARING = [
+    "user_stO6qgPWPprrhNp8wBxHFzkYLrG8JAN9wBiWXru1xvJ",   # Beatrice Braescu Cojocaru
+    "user_WdDkCcFt7B6F7nPJJiWGi6vl5g5jeqbluErfy6Syrfs",   # Josh Stoffel
+]
+
+# TLG ONLY — a separate offer, so these are shared with its two reps and managers
+# and nobody else. The business-line gate in view() already guarantees a VP rep
+# would see zero rows, but sharing is the honest expression of "not your lane"
+# and keeps the sidebar clean.
+TLG_ONLY = {
+    "TLG · My Book — Work Queue",
+    "TLG · Pool — Unclaimed",
+    "TLG · Ops — All TLG Leads",
 }
 
 MANAGER_ONLY = {
@@ -675,6 +710,32 @@ VIEWS = [
           choice(F_STATE, ["Hot-Inbound", "Blitz", "Active-Nurture"])),
      sort_by("date_created"), cols(F_STATE, F_TEAM, F_ANGLE)),
 
+    # ---------------- The Land Geek (separate offer) ----------------
+    # tlg=True flips the business-line gate in view(): these select ONLY TLG, and
+    # every other view above excludes it. One offer's leads cannot reach the
+    # other's lists, and that holds for any view added later on either side.
+    ("TLG · My Book — Work Queue",
+     "Your Land Geek book in one list, least-recently-contacted first — TLG has no separate "
+     "inbound team. Most of it reads as Hot-Inbound only because the list was imported "
+     "recently; that is not a hand-raise. Work top to bottom. VP leads never appear here.",
+     view(choice(F_STATE, ["Hot-Inbound", "Blitz", "Active-Nurture", "Deep-Nurture"]),
+          calling_hours(), tlg=True),
+     sort_by("last_communication_date", "asc"),
+     cols(F_STATE, F_ENTRY, F_EVERCALL, F_ANGLE)),
+
+    ("TLG · Pool — Unclaimed",
+     "Land Geek leads nobody owns yet. The assigner tops both reps up to target each morning; "
+     "this is what is left over. Claim by setting yourself as Lead Owner before calling.",
+     view(choice(F_STATE, ["Hot-Inbound", "Blitz", "Active-Nurture", "Deep-Nurture"]),
+          unclaimed(), calling_hours(), tlg=True),
+     sort_by("date_created"), cols(F_STATE, F_ENTRY, F_RESOURCE)),
+
+    ("TLG · Ops — All TLG Leads",
+     "Every Land Geek lead with its state and owner, calling hours ignored. Use to check the "
+     "import landed, to confirm the assigner split evenly, and as the ground-truth count.",
+     view(tlg=True),
+     sort_by("date_created"), cols(F_STATE, F_TEAM, F_ENTRY, F_EVERCALL)),
+
     ("Ops · Recapture State — Audit",
      "Every non-suppressed lead with its state and team. Use to eyeball the reconciler.",
      view(exists(F_STATE)),
@@ -761,9 +822,12 @@ def main():
         elif mine_or_pool:
             query["queries"][1]["queries"].append(mine_or_unclaimed())
 
-        share_org = SHARE_WHOLE_ORG and not (mgr or setter_only)
+        tlg_only = short in TLG_ONLY
+        share_org = SHARE_WHOLE_ORG and not (mgr or setter_only or tlg_only)
         if mgr:
             recipients = MANAGERS
+        elif tlg_only:
+            recipients = TLG_SETTERS_FOR_SHARING + MANAGERS
         elif setter_only:
             recipients = SETTERS_FOR_SHARING + MANAGERS
         elif share_org:
@@ -792,6 +856,7 @@ def main():
         if mine_or_pool: tags.append("mine + unowned")
         if mgr: tags.append("MANAGERS ONLY")
         if setter_only: tags.append("SETTERS ONLY — not scrapers")
+        if tlg_only: tags.append("TLG ONLY")
         if short in NO_LANE1_GUARD: tags.append("no lane1 guard")
         suffix = f"   [{', '.join(tags)}]" if tags else ""
         print(f"  {action:<7} {name}{suffix}")
