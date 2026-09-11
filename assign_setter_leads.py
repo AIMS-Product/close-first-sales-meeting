@@ -45,6 +45,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from lane2_state import (
     BASE, F_OWNER, F_OVERRIDE, SETTERS, HYBRID_SETTERS, SUPPRESS_STATUSES,
+    not_excluded_business_line,
     CloseError,
     LANE1_OPP_STATUSES, LANE_1, WRITE_WORKERS,
     HOT_WINDOW_DAYS, REENGAGE_DAYS,
@@ -337,7 +338,8 @@ def main():
     # ---- 1. what does each Setter currently carry? -------------------------
     print("Counting live hot queues...", file=sys.stderr)
     held = search(
-        _wrap(*hot_inbound_live(), owner_is(ROTATION.keys())),
+        _wrap(*hot_inbound_live(), not_excluded_business_line(),
+              owner_is(ROTATION.keys())),
         fields=["id", f"custom.{F_OWNER}"])
     total_counts = Counter(cf(l, F_OWNER) for l in held)
     def _release_owner(lead_id):
@@ -384,7 +386,8 @@ def main():
     # ---- 2. the unclaimed hot pool -----------------------------------------
     print("Reading unclaimed hot inbound...", file=sys.stderr)
     pool = search(
-        _wrap(*hot_inbound_live(), owner_empty(), not_lane1()),
+        _wrap(*hot_inbound_live(), not_excluded_business_line(),
+              owner_empty(), not_lane1()),
         fields=["id", "display_name", "date_created", "last_communication_date",
                 f"custom.{F_OVERRIDE}"])
     pool = [r for r in pool if cf(r, F_OVERRIDE) != "Yes"]
