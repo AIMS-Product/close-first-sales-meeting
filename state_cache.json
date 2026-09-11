@@ -104960,13 +104960,12 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
-      "funnel_name": "YouTube",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-11 09:41:16 UTC",
+  "saved_at": "2026-09-11 10:10:41 UTC",
   "count": 9656
 }
