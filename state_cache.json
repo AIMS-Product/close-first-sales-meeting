@@ -104888,16 +104888,16 @@
       "reactivation_user": "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp"
     },
     "lead_wMPe2SaH82T4jD2EGvQQWSoyUWQLwKEYVA2zKaB1eFR": {
-      "date": "2026-09-11",
+      "date": "2026-09-13",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Cassie Caraballo",
+      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL"
+      "quick_disc": null
     },
     "lead_uT4ehV8VOnMfKXPMDnxSN56XgxxygANqdQLQqfO42WE": {
       "date": "2026-09-23",
@@ -105018,8 +105018,8 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Pearl Sathekge",
-      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
+      "reactivation": "Connor George",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
@@ -105102,13 +105102,24 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_G6MoNvBXfHhwGsXuO4G1TiKGZV24dTI2BwllKjntjSg": {
+      "date": "2026-09-15",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Cassie Caraballo",
+      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-11 18:11:41 UTC",
-  "count": 9668
+  "saved_at": "2026-09-11 18:40:52 UTC",
+  "count": 9669
 }
