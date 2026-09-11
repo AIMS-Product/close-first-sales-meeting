@@ -33,6 +33,7 @@ from concurrent.futures import ThreadPoolExecutor
 # Close's 10,000-row pagination cap.
 from lane2_state import (
     BASE, F_OWNER, F_STATE, F_ENTRY, F_OVERRIDE, SUPPRESS_STATUSES,
+    not_excluded_business_line,
     CloseError, _req, _wrap, cf, search, status_in, WRITE_WORKERS,
     SKIP_CAP, PROBE_CAP,
 )
@@ -509,6 +510,7 @@ def main():
     print("Counting current queues...", file=sys.stderr)
     held = search(
         _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+              not_excluded_business_line(),          # TLG is a separate motion
               owner_is(SCRAPERS.keys()),
               state_is(PRIORITY_STATES)),
         fields=["id", "contacts", f"custom.{F_OWNER}"])
@@ -588,6 +590,7 @@ def main():
         remaining = (cap_need - len(pool)) if (args.no_census and target) else None
         rows = search(
             _wrap(status_in(SUPPRESS_STATUSES, negate=True),
+                  not_excluded_business_line(),      # never deal TLG to a VP Scraper
                   owner_empty(), state_is([state])),
             fields=["id", "display_name", "date_created",
                     f"custom.{F_OVERRIDE}", f"custom.{F_ENTRY}"],
