@@ -58,6 +58,9 @@ SCRAPER_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+blueprint\s*-?\s*next\s+steps",       re.IGNORECASE), "Melia King"),
     (re.compile(r"vendingpren[eu]+rs?\s+compass\s*-?\s*next\s+steps",         re.IGNORECASE), "Josh Stoffel"),
     (re.compile(r"vendingpren[eu]+rs?\s+horizon\s*-?\s*next\s+steps",         re.IGNORECASE), "Beatrice Braescu Cojocaru"),
+    (re.compile(r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps",         re.IGNORECASE), "Catalina"),
+    (re.compile(r"vendingpren[eu]+rs?\s+catalyst\s*-?\s*next\s+steps",        re.IGNORECASE), "Raiya"),
+    (re.compile(r"vendingpren[eu]+rs?\s+clarity\s*-?\s*next\s+steps",         re.IGNORECASE), "Luna"),
 ]
 
 EXCLUDED_OWNERS = {
