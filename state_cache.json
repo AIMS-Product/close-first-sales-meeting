@@ -105176,8 +105176,20 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_WxOwqlEoV07KuE3hNIJD2VNv5JxAtcA8a4w0RSzvtRs": {
+      "date": "2026-09-14",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-12 05:41:03 UTC",
-  "count": 9674
+  "saved_at": "2026-09-12 06:11:18 UTC",
+  "count": 9675
 }
