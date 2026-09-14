@@ -85,23 +85,40 @@ F_LOSTREASON = "cf_R4i05fLNOQP8yveAs4ofTMMYGAQnkLLklunP4lov2Bt"
 F_OVERRIDE = "cf_6PnYz6aaAkLzHMU3Faxz7kFurBEfadqlfGiBgfhjaVC"  # Reassignment Override
 
 # --- BTC Business Line -------------------------------------------------------
-# Which offer a lead belongs to. Four values live in Close today:
+# Which offer a lead belongs to. Five values are defined on the field in Close:
 #   Vendingpreneurs (VP) · Ben Kelly (BK) · AI Operator Collective (AOC)
-#   The Land Geek (TLG)
+#   The Land Geek (TLG) · Publishing Profits Academy (PPA)
 #
 # **A BLANK VALUE MEANS VP.** That is not a rounding detail — 44,023 of 64,044
 # leads are blank (68%), including 87% of Deep-Nurture and 97% of Hot-Inbound.
 # Any filter on this field that mishandles nulls empties the VP lists.
 F_BUSINESS = "cf_aJlNlilQZIgLLuhcymNN8fiOzewnFxrbWjLZFPmsucO"
 
+# These strings must match the field's CHOICES EXACTLY — a term condition on a
+# value that does not exist matches nothing and fails silently. Verified against
+# the live field definition 2026-09-11; re-check with find_lead_custom_fields
+# before adding another.
 BL_VP  = "Vendingpreneurs (VP)"
 BL_BK  = "Ben Kelly (BK)"
 BL_AOC = "AI Operator Collective (AOC)"
 BL_TLG = "The Land Geek (TLG)"
+BL_PPA = "Publishing Profits Academy (PPA)"
 
-# The Land Geek runs as a separate motion with its own reps and its own lists.
-# Everything VP-facing excludes it; the TLG assigner and TLG views select it.
-EXCLUDED_BUSINESS_LINES = [BL_TLG]
+# Offers that run as their own motion, with their own reps and their own lists.
+# Everything VP-facing excludes these; each offer's own views select its own line.
+#
+# THIS LIST IS THE ONLY PLACE TO EDIT. Every VP view and both VP assigners read
+# not_excluded_business_line(), which defaults to it, so adding a line here
+# removes that offer from all 18 views and both assigners at once.
+#
+#   TLG — added 2026-09-11. Has its own assigner (assign_tlg_leads.py) and its
+#         own `TLG ·` views, so its leads have somewhere to go.
+#   PPA — added 2026-09-11. NO assigner and NO views yet, so PPA leads are
+#         excluded from VP lists and selected by nothing. They will sit unowned
+#         and unworked until PPA gets its own lane. That is deliberate while no
+#         one is selling it — but it is a dead zone, so do not leave it if PPA
+#         starts producing volume.
+EXCLUDED_BUSINESS_LINES = [BL_TLG, BL_PPA]
 
 # --- statuses ---------------------------------------------------------------
 S_NEW = "stat_EwxduBOxA2CLBUrvXAyB7ZrVXKGw7v9i5xz0f2JuIY9"
