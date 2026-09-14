@@ -104598,11 +104598,12 @@
       "quick_disc": null
     },
     "lead_F9SzRQZrGcQXGE3t5A1KXyms8oqew1Gtkt63tGHsBEd": {
-      "date": "2026-09-14",
-      "call_type": "Closer",
+      "date": null,
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
@@ -105403,8 +105404,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_I5kg37wLld7ddZD1Fcr069cmUp86c96PZb47YccPERl": {
+      "date": "2026-09-14",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-14 14:12:38 UTC",
-  "count": 9694
+  "saved_at": "2026-09-14 14:42:01 UTC",
+  "count": 9695
 }
