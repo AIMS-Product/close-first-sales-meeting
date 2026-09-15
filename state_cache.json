@@ -105638,8 +105638,32 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_AXTSVkucypKyguN5efxtyt4UZlg61BvaI63Dwy5fCJT": {
+      "date": "2026-09-15",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "funnel_name": "YouTube",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_wVejyk5JP8HzXNgY1bFQp7kJ5OlHmD7oD8kzEM654LO": {
+      "date": "2026-09-17",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": "Pearl Sathekge",
+      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
+      "funnel_name": "Instagram",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-15 01:10:41 UTC",
-  "count": 9714
+  "saved_at": "2026-09-15 01:40:27 UTC",
+  "count": 9716
 }
