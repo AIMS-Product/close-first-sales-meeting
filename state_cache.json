@@ -105737,8 +105737,20 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_2NefJtkAhh49pHlBfK2x1BS1zcrmIPM4Uzpxp8jDVz0": {
+      "date": "2026-09-15",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-15 14:12:17 UTC",
-  "count": 9723
+  "saved_at": "2026-09-15 14:43:25 UTC",
+  "count": 9724
 }
