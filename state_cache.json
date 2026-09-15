@@ -105689,8 +105689,7 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -105707,6 +105706,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-15 05:10:47 UTC",
+  "saved_at": "2026-09-15 05:41:57 UTC",
   "count": 9720
 }
