@@ -105803,13 +105803,25 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Melia King",
-      "reactivation_user": "user_32021LR58tWOSl2MX2nFVMSP8PoaGV1DjZEF0v0yGXs",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_32021LR58tWOSl2MX2nFVMSP8PoaGV1DjZEF0v0yGXs"
+    },
+    "lead_CT36k9pN569Bq355pJ34AHuB6DE9v8MRmnMEzmSaQZB": {
+      "date": "2026-09-16",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-15 17:12:13 UTC",
-  "count": 9729
+  "saved_at": "2026-09-15 17:41:45 UTC",
+  "count": 9730
 }
