@@ -106156,10 +106156,11 @@
     "lead_IQUKqA3PuOa45hoBZI0yBd7K3HgwY1EAq53ETFROAsK": {
       "date": "2026-09-18",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Pearl Sathekge",
+      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -106498,11 +106499,11 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Connor George",
-      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
     },
     "lead_wPyPDwSbyzsOiyBLXZVlnMLK9XiVVnnW3VW409U06n8": {
       "date": "2026-09-17",
@@ -106510,13 +106511,37 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Vince Bartolini",
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_IU4aTjPbSW5HcKcB6oK9c3HEyU72FvDtCgWTGwtPXjx": {
+      "date": "2026-09-21",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_CvKQLocEYSJjQ37a5ZUkWLtrU9y9PmeOeUh5hRd0O2l": {
+      "date": "2026-09-21",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-16 17:11:25 UTC",
-  "count": 9791
+  "saved_at": "2026-09-16 17:42:30 UTC",
+  "count": 9793
 }
