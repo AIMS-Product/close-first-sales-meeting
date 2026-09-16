@@ -170,6 +170,8 @@ SCRAPERS = {
     "user_SstZur4m512IhMhhIWPIehvCpkkSndAKZiWPhQ13jaQ": "Catalina", # added 2026-09-11
     "user_JM69zsjxDPj2MVQKI3kCcfToub01d0eoKP9sxFwUEQY": "Raiya", # added 2026-09-11
     "user_bT94lFhgyA2c4inUFezZLSmGp9pRpfvc9LG7Io8luN7": "Luna", # added 2026-09-11
+    "user_8UDC7WAhyYNxEyhrh3flGsYUqmXh9UVkn7Z1LOlY6Lm": "Owen Hart", # added 2026-09-16
+    "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF": "Brad Savage", # added 2026-09-16
     "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj": "Jason Aaron",  # lane manager
     # Not started — add once their Close users exist:
     # "user_...": "Connor George",

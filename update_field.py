@@ -145,9 +145,11 @@ SCRAPER_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+blueprint\s*-?\s*next\s+steps", re.IGNORECASE), "Melia King"),  # Vendingpreneurs Blueprint - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+compass\s*-?\s*next\s+steps", re.IGNORECASE), "Josh Stoffel"),  # Vendingpreneurs Compass - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+horizon\s*-?\s*next\s+steps", re.IGNORECASE), "Beatrice Braescu Cojocaru"),  # Vendingpreneurs Horizon - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Catalina"),  # Vendingpreneurs Elevate - Next Steps
+    (re.compile(r"tlg\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Catalina"),  # TLG Elevate - Next Steps
     (re.compile(r"ppa\s+catalyst\s*-?\s*next\s+steps", re.IGNORECASE), "Raiya"),  # PPA Catalyst - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+clarity\s*-?\s*next\s+steps", re.IGNORECASE), "Luna"),  # Vendingpreneurs Clarity - Next Steps
+    (re.compile(r"tlg\s+clarity\s*-?\s*next\s+steps", re.IGNORECASE), "Luna"),  # TLG Clarity - Next Steps
+    (re.compile(r"vendingpren[eu]+rs?\s+ascent\s*-?\s*next\s+steps", re.IGNORECASE), "Owen Hart"),  # Vendingpreneurs Ascent - Next Steps
+    (re.compile(r"vendingpren[eu]+rs?\s+keystone\s*-?\s*next\s+steps", re.IGNORECASE), "Brad Savage"),  # Vendingpreneurs Keystone - Next Steps
 ]
 
 CLOSER_PATTERNS = [
