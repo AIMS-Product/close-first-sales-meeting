@@ -106154,16 +106154,16 @@
       "quick_disc": null
     },
     "lead_IQUKqA3PuOa45hoBZI0yBd7K3HgwY1EAq53ETFROAsK": {
-      "date": "2026-09-18",
+      "date": "2026-09-19",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Pearl Sathekge",
+      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ"
+      "quick_disc": null
     },
     "lead_8UdCr1Sv0IJplPffrW7KWqK6A8s6IWgxsEXAgoeT9Rn": {
       "date": "2026-09-18",
@@ -106611,6 +106611,6 @@
       "reactivation_user": "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp"
     }
   },
-  "saved_at": "2026-09-16 21:12:26 UTC",
+  "saved_at": "2026-09-16 21:41:28 UTC",
   "count": 9799
 }
