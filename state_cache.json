@@ -106721,11 +106721,11 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Charlie Ingram",
-      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_wablzfQpDgXqLWDMA9z4IGDickXT3XwfZWkJaqO8gdI": {
       "date": "2026-09-20",
@@ -106739,6 +106739,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-17 17:41:01 UTC",
+  "saved_at": "2026-09-17 18:11:33 UTC",
   "count": 9810
 }
