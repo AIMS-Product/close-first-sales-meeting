@@ -106714,8 +106714,31 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
+    },
+    "lead_p2SCLcemeRfCnej01fyajHT4HkD7zDgotRLs0KrZ8Hc": {
+      "date": "2026-09-20",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_wablzfQpDgXqLWDMA9z4IGDickXT3XwfZWkJaqO8gdI": {
+      "date": "2026-09-20",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-17 17:11:36 UTC",
-  "count": 9808
+  "saved_at": "2026-09-17 17:41:01 UTC",
+  "count": 9810
 }
