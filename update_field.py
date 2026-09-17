@@ -147,6 +147,7 @@ SCRAPER_TITLE_MAP = [
     (re.compile(r"tlg\s+horizon\s*-?\s*next\s+steps", re.IGNORECASE), "Beatrice Braescu Cojocaru"),  # TLG Horizon - Next Steps
     (re.compile(r"tlg\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Catalina"),  # TLG Elevate - Next Steps
     (re.compile(r"ppa\s+catalyst\s*-?\s*next\s+steps", re.IGNORECASE), "Raiya"),  # PPA Catalyst - Next Steps
+    (re.compile(r"ppa\s+pinnacle\s*-?\s*next\s+steps", re.IGNORECASE), "Jessica Hernandez"),  # PPA Pinnacle - Next Steps
     (re.compile(r"tlg\s+clarity\s*-?\s*next\s+steps", re.IGNORECASE), "Luna"),  # TLG Clarity - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+ascent\s*-?\s*next\s+steps", re.IGNORECASE), "Owen Hart"),  # Vendingpreneurs Ascent - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+keystone\s*-?\s*next\s+steps", re.IGNORECASE), "Brad Savage"),  # Vendingpreneurs Keystone - Next Steps
