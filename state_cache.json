@@ -105708,7 +105708,7 @@
     },
     "lead_koyxcUi4unhNHPOzvbTaeoFenJ1evMQygMmQ0IR5pC5": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
@@ -106952,8 +106952,32 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_H7E9c8ungcheppguwvxmvm9mGRR3iBKBbK0KQhqrTbp": {
+      "date": "2026-09-21",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_LC7BHGJhz65D67QXJ46ahcyYUVvIwtNj01z16SNPCv6": {
+      "date": "2026-09-20",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-18 16:11:58 UTC",
-  "count": 9828
+  "saved_at": "2026-09-18 16:41:09 UTC",
+  "count": 9830
 }
