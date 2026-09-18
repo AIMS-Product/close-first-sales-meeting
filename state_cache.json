@@ -106301,12 +106301,13 @@
       "quick_disc": null
     },
     "lead_gjlK76Z2HmEPuWSVfO34QX7b43twmsVLv789N9scyyp": {
-      "date": "2026-09-18",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": null,
-      "funnel_name": null,
+      "reactivation": "Charlie Ingram",
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -106671,12 +106672,13 @@
       "quick_disc": null
     },
     "lead_83Yl6yg7orOpvxNhtM3hL9826UiVV6evV2x5E3uQjKh": {
-      "date": "2026-09-18",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "funnel_name": null,
+      "reactivation_user": null,
+      "funnel_name": "YouTube",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -106915,6 +106917,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-18 09:40:47 UTC",
+  "saved_at": "2026-09-18 10:11:18 UTC",
   "count": 9825
 }
