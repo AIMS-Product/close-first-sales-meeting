@@ -107174,8 +107174,20 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_7kzVM943PthLDR5khSqr9YQMhKNTKneeetyc9ihsvgR": {
+      "date": "2026-09-24",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-20 22:10:51 UTC",
-  "count": 9847
+  "saved_at": "2026-09-20 22:40:37 UTC",
+  "count": 9848
 }
