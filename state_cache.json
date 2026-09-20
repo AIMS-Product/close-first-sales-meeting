@@ -107151,8 +107151,19 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_mb7dAGQuMGBooqN53DFjerZVF4u5AFIH7Jjbob0ld15": {
+      "date": null,
+      "call_type": null,
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "funnel_name": "VSL",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-20 12:40:17 UTC",
-  "count": 9845
+  "saved_at": "2026-09-20 13:11:18 UTC",
+  "count": 9846
 }
