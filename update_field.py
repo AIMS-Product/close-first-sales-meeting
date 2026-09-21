@@ -156,6 +156,7 @@ SCRAPER_TITLE_MAP = [
     (re.compile(r"tlg\s+clarity\s*-?\s*next\s+steps", re.IGNORECASE), "Luna"),  # TLG Clarity - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+ascent\s*-?\s*next\s+steps", re.IGNORECASE), "Owen Hart"),  # Vendingpreneurs Ascent - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+keystone\s*-?\s*next\s+steps", re.IGNORECASE), "Brad Savage"),  # Vendingpreneurs Keystone - Next Steps
+    (re.compile(r"vendingpren[eu]+rs?\s+summit\s*-?\s*next\s+steps", re.IGNORECASE), "Rob Maxfield"),  # Vendingpreneurs Summit - Next Steps
 ]
 
 CLOSER_PATTERNS = [
