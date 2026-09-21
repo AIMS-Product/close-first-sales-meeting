@@ -81,6 +81,11 @@ SCRAPER_FUNNEL_CUTOFF  = "2026-04-06"   # Reactivation Scrapers cutoff
 VSL_FUNNEL_CUTOFF      = "2026-06-18"   # VSL cutoff
 REACT_EMAIL_CUTOFF     = "2026-08-05"   # Reactivation Email cutoff
 
+# Bump when re-running a targeted reconciliation is required for the scraper
+# attribution fields.  This makes cached scraper leads eligible for one fresh
+# Close read, without forcing a full all-lead backfill.
+REACTIVATION_OVERRIDE_CACHE_VERSION = 1
+
 CHECKPOINT_FILE  = "checkpoint.json"
 STATE_CACHE_FILE = "state_cache.json"
 CHECKPOINT_EVERY = 200
@@ -472,6 +477,9 @@ def calculate_desired_state(all_meetings: list, users_by_name: dict | None = Non
                 "scraper":      "YES" if has_scraper else None,
                 "post_webinar": "YES" if has_postwebinar else None,
                 "reactivation": reactivation,
+                "reactivation_override_version": (
+                    REACTIVATION_OVERRIDE_CACHE_VERSION if reactivation is not None else None
+                ),
                 "funnel_name":  funnel_name,
                 "vendhub":      vendhub_value,
                 "vendhub_date":  vendhub_date,
@@ -716,14 +724,12 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
     cur_reactivation_user  = user_field_id(current.get("reactivation_user"))
     new_reactivation_label = desired.get("reactivation")  # human label e.g. "Mallory Kent"
 
-    # Never overwrite once set
-    if cur_reactivation:
-        new_reactivation_label = None
-
-    if new_reactivation_label and not cur_reactivation:
+    # A scraper meeting title is the source of truth for attribution.  Correct
+    # an existing rep/setter value whenever it differs from the mapped setter.
+    if new_reactivation_label and cur_reactivation != new_reactivation_label:
         payload[FIELD_REACTIVATION_KEY] = new_reactivation_label
 
-    effective_reactivation_label = cur_reactivation or new_reactivation_label or desired.get("reactivation")
+    effective_reactivation_label = new_reactivation_label or cur_reactivation
     desired_reactivation_user = resolve_reactivation_user_id(effective_reactivation_label, users_by_name)
 
     if effective_reactivation_label and not desired_reactivation_user:
@@ -733,15 +739,8 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
             "skipping Reactivation Setter User write.",
             flush=True,
         )
-    elif desired_reactivation_user and not cur_reactivation_user:
-        payload[FIELD_REACTIVATION_USER_KEY] = desired_reactivation_user
     elif desired_reactivation_user and cur_reactivation_user != desired_reactivation_user:
-        print(
-            f"  Warning: Reactivation Setter User mismatch on {lead_name} ({lead_id}); "
-            f"current={cur_reactivation_user}, desired={desired_reactivation_user}. "
-            "Leaving populated user field unchanged.",
-            flush=True,
-        )
+        payload[FIELD_REACTIVATION_USER_KEY] = desired_reactivation_user
 
     # ── Funnel Name DEAL (lead field) ────────────────────────────────────────────
     cur_funnel = current.get("funnel_name")
@@ -822,6 +821,7 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
         "post_webinar": new_postwebinar if FIELD_POSTWEBINAR_KEY in payload else cur_postwebinar,
         "reactivation": final_reactivation,
         "reactivation_user": final_reactivation_user,
+        "reactivation_override_version": desired.get("reactivation_override_version"),
         "funnel_name":  final_funnel,
         "vendhub":      final_vendhub,
         "vendhub_date": final_vendhub_date,
@@ -847,7 +847,7 @@ def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict)
 
     # Leads cached as having a value but no longer in desired (stale)
     stale = {
-        lead_id: {"date": None, "call_type": None, "scraper": None, "post_webinar": None, "reactivation": None, "reactivation_user": None, "funnel_name": None, "vendhub": None, "vendhub_date": None, "quick_disc": None}
+        lead_id: {"date": None, "call_type": None, "scraper": None, "post_webinar": None, "reactivation": None, "reactivation_user": None, "reactivation_override_version": None, "funnel_name": None, "vendhub": None, "vendhub_date": None, "quick_disc": None}
         for lead_id, cached in cached_state.items()
         if lead_id not in desired_state
         and (cached.get("date") or cached.get("call_type"))
