@@ -106872,7 +106872,7 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Pearl Sathekge",
-      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
@@ -107225,6 +107225,18 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Connor George",
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
+    },
+    "lead_rByolne3BRri2pA90DI9H1Kl8Co8ZGFHBc8nt2RxfeM": {
+      "date": "2026-09-25",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
       "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
@@ -107232,6 +107244,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-21 14:14:58 UTC",
-  "count": 9852
+  "saved_at": "2026-09-21 14:45:13 UTC",
+  "count": 9853
 }
