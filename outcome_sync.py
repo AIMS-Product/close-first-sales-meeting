@@ -6,16 +6,16 @@ outcome_sync.py — Close CRM Meeting Outcome Sync
 Writes Close's native Meeting Outcome (outcome_id) on past meetings.
 Evidence hierarchy (v5 — per-meeting evidence outranks lead-level fields):
 
-  1. Close meeting status        (canceled -> Rescheduled/Cancelled)
-  2. Attention PER-CALL activity ("First Meeting Analysis"/"Meeting Analysis"
+  1. Zoom attendance             (participant report via Server-to-Server OAuth)
+  2. Close meeting status        (canceled -> Rescheduled/Cancelled)
+  3. Attention PER-CALL activity ("First Meeting Analysis"/"Meeting Analysis"
                                   custom activity within +/-4h of the meeting
                                   -> Completed; never overwritten by later calls)
-  3. Attention lead disposition  ("Todays Call Disposition (Opp)" — guarded:
+  4. Attention lead disposition  ("Todays Call Disposition (Opp)" — guarded:
                                   latest meeting only, <=3 days old; kept as
                                   secondary because the NEXT call overwrites it)
-  4. Phone conversation          (answered Close call >=5 min on the meeting's
-                                  day -> Completed; 2-5 min blocks auto-no-show)
-  5. Zoom attendance             (participant report via Server-to-Server OAuth)
+  5. Phone conversation          (answered Close call >=5 min on the meeting's
+                                  day -> Completed when Zoom is inconclusive)
   6. Lead status + RSVP          (status Canceled/No Show AND every external
                                   attendee noreply/declined -> Cancelled/No Show)
   7. Nothing conclusive          -> left blank + flagged in completeness report
@@ -584,37 +584,35 @@ def decide(meeting, lead_meetings, disposition, zoom_result, now_utc,
     -> (outcome_key or None, source, detail)
     zoom_result: (participants or None) pre-fetched, or "skip" if zoom disabled/no link.
     """
-    # 1. Cancel / reschedule from Close's own state — cheapest, most reliable.
-    if is_canceledish(meeting):
-        if later_similar_meeting_exists(meeting, lead_meetings):
-            return "rescheduled", "close-status", "canceled + later booking exists"
-        return "cancelled", "close-status", "canceled, no later booking"
-
-    # 2. Attention per-call activity — per-meeting record, never overwritten.
-    aa, aa_detail = attention_activity_signal(meeting, acts)
-    if aa:
-        return aa, "attention-activity", aa_detail
-
-    # 3. Attention lead-level disposition (guarded; secondary during transition).
-    a = attention_signal(meeting, disposition, lead_meetings, now_utc)
-    if a:
-        return a, "attention", f"disposition='{disposition}'"
-
-    # 4. Phone conversation on the meeting day.
-    ph, ph_detail = phone_evidence(meeting, calls, acts)
-    if ph == "completed":
-        return "completed", "phone", ph_detail
-
-    # 5. Zoom attendance — with the phone guard on auto no-shows.
+    # 1. Zoom attendance.
     zoom_detail = None
     if zoom_result != "skip":
         participants, prospect_emails, org_emails, prospect_names = zoom_result
         z, zoom_detail = zoom_signal(participants, prospect_emails, org_emails,
                                      prospect_names)
-        if z == "no_show" and ph == "review":
-            return None, "phone-guard", f"zoom says no-show BUT {ph_detail}"
         if z:
             return z, "zoom", zoom_detail
+
+    # 2. Cancel / reschedule from Close's own state.
+    if is_canceledish(meeting):
+        if later_similar_meeting_exists(meeting, lead_meetings):
+            return "rescheduled", "close-status", "canceled + later booking exists"
+        return "cancelled", "close-status", "canceled, no later booking"
+
+    # 3. Attention per-call activity — per-meeting record, never overwritten.
+    aa, aa_detail = attention_activity_signal(meeting, acts)
+    if aa:
+        return aa, "attention-activity", aa_detail
+
+    # 4. Attention lead-level disposition (guarded; secondary during transition).
+    a = attention_signal(meeting, disposition, lead_meetings, now_utc)
+    if a:
+        return a, "attention", f"disposition='{disposition}'"
+
+    # 5. Phone conversation on the meeting day.
+    ph, ph_detail = phone_evidence(meeting, calls, acts)
+    if ph == "completed":
+        return "completed", "phone", ph_detail
 
     # 6. Lead status + attendee RSVP negative evidence.
     sr, sr_detail = status_rsvp_signal(meeting, lead_status, ext_attendee_statuses)
@@ -918,26 +916,33 @@ def selftest():
     checks.append(("activity beats disposition", r[0] == "completed"
                    and r[1] == "attention-activity"))
 
+    # 14b. Zoom participant report now outranks the Attention activity.
+    host_only = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 1800}]
+    zoom_noshow = (host_only, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Prospect"])
+    r = decide(m_first, lead_meetings, "New Call Show", zoom_noshow, now, acts=acts)
+    checks.append(("zoom beats attention activity", r[0] == "no_show"
+                   and r[1] == "zoom"))
+
     # 15. attention activity outside +/-4h window -> not matched
     acts_far = [{"type_id": MEETING_TYPE, "at": mstart + timedelta(hours=9)}]
     r = decide(m_first, lead_meetings, None, "skip", now, acts=acts_far)
     checks.append(("activity window guard", r[1] != "attention-activity"))
 
-    # 16. phone: answered 400s call on meeting day -> completed (Rashard fix)
+    # 16. Zoom no-show outranks an answered 400s phone call.
     calls = [{"at": mstart + timedelta(hours=2), "duration": 400,
               "disposition": "answered"}]
     parts = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 1800}]
     z = (parts, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Prospect"])
     r = decide(m_first, lead_meetings, None, z, now, calls=calls)
-    checks.append(("phone show beats zoom noshow", r[0] == "completed"
-                   and r[1] == "phone"))
+    checks.append(("zoom noshow beats phone show", r[0] == "no_show"
+                   and r[1] == "zoom"))
 
-    # 17. phone: 150s answered call blocks auto no-show -> flagged for review
+    # 17. Zoom no-show also outranks a shorter answered phone call.
     calls_short = [{"at": mstart + timedelta(hours=2), "duration": 150,
                     "disposition": "answered"}]
     r = decide(m_first, lead_meetings, None, z, now, calls=calls_short)
-    checks.append(("phone guard flags noshow", r[0] is None
-                   and r[1] == "phone-guard"))
+    checks.append(("zoom noshow beats short phone", r[0] == "no_show"
+                   and r[1] == "zoom"))
 
     # 18. phone: unanswered call does NOT block auto no-show
     calls_na = [{"at": mstart + timedelta(hours=2), "duration": 0,
