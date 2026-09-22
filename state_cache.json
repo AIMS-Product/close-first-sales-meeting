@@ -32337,12 +32337,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Vince Bartolini",
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_4Mrp6Ui9mqrJkhXCw7ZNGPXhQI32N3KvyCJdHVkRbcX": {
       "date": "2025-12-03",
@@ -112830,11 +112830,12 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": "Yes"
     },
     "lead_dotaToKhoriuv7zuFl5SbOlxG460sHs7kq1S6Neu48P": {
       "date": "2026-09-12",
@@ -116962,8 +116963,21 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_SglBHXI5utShSRlA8ui6LIAY3saWUPqzK8LGROZEhlO": {
+      "date": "2026-09-23",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Rob Maxfield",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
     }
   },
-  "saved_at": "2026-09-22 22:11:34 UTC",
-  "count": 9909
+  "saved_at": "2026-09-22 22:39:44 UTC",
+  "count": 9910
 }
