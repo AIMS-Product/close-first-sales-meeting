@@ -116664,8 +116664,34 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_dP67COSR2lXfXsyoPDQeY9lcrR2i2GjpFXz9GznDAFQ": {
+      "date": "2026-09-22",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_r1zzkiRh2KTAqXC3E9AXABKOOKCPOrTWQm27wt9zCjQ": {
+      "date": "2026-09-23",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-22 08:21:36 UTC",
-  "count": 9886
+  "saved_at": "2026-09-22 08:40:55 UTC",
+  "count": 9888
 }
