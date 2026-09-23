@@ -14,6 +14,11 @@ name: Meeting Outcome Sync
 
 on:
   workflow_dispatch:
+    inputs:
+      shadow_lead_id:
+        description: "Lead ID highlighted by the read-only shadow replay"
+        required: false
+        default: "lead_0otvDkw7joxfs3mjC0xygYOLJFbzLPP7NB1Xte4huVy"
   schedule:
     - cron: "7,37 * * * *"   # offset from update-field to avoid Close rate-limit overlap
 
@@ -50,7 +55,7 @@ jobs:
           ZOOM_AUTO_NOSHOW: "1"
         run: >-
           python outcome_shadow.py
-          --lead-id lead_0otvDkw7joxfs3mjC0xygYOLJFbzLPP7NB1Xte4huVy
+          --lead-id ${{ inputs.shadow_lead_id || 'lead_0otvDkw7joxfs3mjC0xygYOLJFbzLPP7NB1Xte4huVy' }}
           --lookback-days 7
 
       - name: Upload shadow report

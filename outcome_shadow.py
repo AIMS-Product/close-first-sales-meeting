@@ -153,7 +153,27 @@ def participant_summary(participants, prospect_emails, org_emails):
     return summary
 
 
-def replay_meeting(meeting, lead, zoom, org_emails):
+def zoom_occurrence_metadata(zoom, zoom_id, target_start):
+    """Return the Zoom occurrence nearest the Close meeting start."""
+    instances = zoom._get(f"/past_meetings/{zoom_id}/instances")
+    candidates = []
+    for occurrence in (instances or {}).get("meetings") or []:
+        occurrence_start = production.parse_dt(occurrence.get("start_time"))
+        if occurrence_start is None:
+            continue
+        gap_seconds = abs((occurrence_start - target_start).total_seconds())
+        candidates.append((gap_seconds, occurrence))
+    if not candidates:
+        return {"status": "no-instances"}
+    gap_seconds, occurrence = min(candidates, key=lambda candidate: candidate[0])
+    return {
+        "status": "selected" if gap_seconds <= 6 * 3600 else "outside-selection-window",
+        "start_time": occurrence.get("start_time"),
+        "gap_seconds": int(gap_seconds),
+    }
+
+
+def replay_meeting(meeting, lead, zoom, org_emails, include_occurrence_metadata=False):
     meeting_id, provider = zoom_meeting_id(meeting)
     if not meeting_id:
         return {
@@ -175,7 +195,11 @@ def replay_meeting(meeting, lead, zoom, org_emails):
     }
     current_names = current_prospect_names(meeting, org_emails)
     proposed_names = proposed_prospect_names(meeting, lead, org_emails)
-    participants = zoom.participants_for(meeting_id, production.parse_dt(meeting.get("starts_at")))
+    target_start = production.parse_dt(meeting.get("starts_at"))
+    occurrence = None
+    if include_occurrence_metadata:
+        occurrence = zoom_occurrence_metadata(zoom, meeting_id, target_start)
+    participants = zoom.participants_for(meeting_id, target_start)
     strict_proposed_names = strictly_matchable_names(proposed_names, participants)
 
     current_outcome, current_detail = production.zoom_signal(
@@ -191,6 +215,7 @@ def replay_meeting(meeting, lead, zoom, org_emails):
         "title": meeting.get("title") or "",
         "starts_at": meeting.get("starts_at"),
         "provider": provider,
+        "zoom_occurrence": occurrence,
         "status": "evaluated",
         "native_outcome_id": meeting.get("outcome_id"),
         "disposition": lead.get(production.CF_TODAYS_DISPOSITION),
@@ -253,7 +278,13 @@ def run(target_lead_id, lookback_days):
         if lead_id not in lead_cache:
             lead_cache[lead_id] = fetch_lead(session, lead_id)
         try:
-            result = replay_meeting(meeting, lead_cache[lead_id], zoom, org_emails)
+            result = replay_meeting(
+                meeting,
+                lead_cache[lead_id],
+                zoom,
+                org_emails,
+                include_occurrence_metadata=lead_id == target_lead_id,
+            )
         except Exception as error:
             result = {
                 "meeting_id": meeting.get("id"),

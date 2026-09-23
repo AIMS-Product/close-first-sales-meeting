@@ -17,6 +17,16 @@ class FakeZoom:
         return self.participants
 
 
+class FakeOccurrenceZoom:
+    def _get(self, path):
+        return {
+            "meetings": [
+                {"start_time": "2026-09-17T17:00:00Z"},
+                {"start_time": "2026-09-21T15:32:00Z"},
+            ]
+        }
+
+
 def meeting(attendee_name=None, attendee_email="debbie@example.com"):
     return {
         "id": "meeting_1",
@@ -58,6 +68,17 @@ def lead(contact_name="Debbie Barca"):
 
 
 class ShadowMatchingTests(unittest.TestCase):
+    def test_zoom_occurrence_metadata_selects_nearest_instance(self):
+        target = datetime(2026, 9, 21, 15, 30, tzinfo=timezone.utc)
+
+        occurrence = outcome_shadow.zoom_occurrence_metadata(
+            FakeOccurrenceZoom(), "81416527389", target
+        )
+
+        self.assertEqual("selected", occurrence["status"])
+        self.assertEqual("2026-09-21T15:32:00Z", occurrence["start_time"])
+        self.assertEqual(120, occurrence["gap_seconds"])
+
     def test_contact_name_recovers_anonymous_zoom_guest(self):
         participants = [
             {"name": "Eric Piccione", "email": "eric@modern-amenities.com", "seconds": 3600},
