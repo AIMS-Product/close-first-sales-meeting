@@ -46,6 +46,9 @@ class AuditWindowTests(unittest.TestCase):
         self.assertEqual(300, result["zoom"]["unmatched_human_seconds"])
         self.assertEqual([0], result["attention_offsets_minutes"])
         self.assertEqual([601], result["answered_call_seconds"])
+        self.assertEqual(
+            [{"seconds": 601, "offset_minutes": 0}], result["answered_calls"]
+        )
         self.assertNotIn("lead@example.com", str(result))
 
 

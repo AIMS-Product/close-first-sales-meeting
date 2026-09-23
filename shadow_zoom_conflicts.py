@@ -313,6 +313,7 @@ def compact_evidence_snapshot(
     starts_at = production.parse_dt(meeting.get("starts_at"))
     attention_offsets_minutes = []
     answered_call_seconds = []
+    answered_calls = []
     if starts_at is not None:
         attention_offsets_minutes = [
             round((activity["at"] - starts_at).total_seconds() / 60)
@@ -331,6 +332,21 @@ def compact_evidence_snapshot(
             ],
             reverse=True,
         )
+        answered_calls = sorted(
+            [
+                {
+                    "seconds": int(call["duration"]),
+                    "offset_minutes": round(
+                        (call["at"] - starts_at).total_seconds() / 60
+                    ),
+                }
+                for call in calls
+                if call["disposition"] == "answered"
+                and production.pacific_date(call["at"]) == meeting_day
+            ],
+            key=lambda call: call["seconds"],
+            reverse=True,
+        )
     attendee_statuses = sorted(
         {
             str(attendee.get("status") or "unknown")
@@ -342,6 +358,7 @@ def compact_evidence_snapshot(
         "zoom": zoom_summary if participants is not None else None,
         "attention_offsets_minutes": attention_offsets_minutes,
         "answered_call_seconds": answered_call_seconds,
+        "answered_calls": answered_calls,
         "external_attendee_statuses": attendee_statuses,
         "disposition": lead.get(production.CF_TODAYS_DISPOSITION),
         "lead_status": lead.get("status_label") or "",
