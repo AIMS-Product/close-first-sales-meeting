@@ -1,9 +1,19 @@
 import unittest
+from datetime import datetime, timezone
 
 import shadow_zoom_conflicts as shadow
 
 
 ORG_EMAILS = {"rep@modern-amenities.com"}
+
+
+class AuditWindowTests(unittest.TestCase):
+    def test_month_to_date_starts_at_midnight_pacific(self):
+        now_utc = datetime(2026, 9, 23, 21, 45, tzinfo=timezone.utc)
+        self.assertEqual(
+            datetime(2026, 9, 1, 7, 0, tzinfo=timezone.utc),
+            shadow.audit_since(now_utc, True),
+        )
 
 
 class EmailAliasTests(unittest.TestCase):

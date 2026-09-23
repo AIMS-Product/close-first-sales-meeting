@@ -28,6 +28,7 @@ import outcome_sync as production
 
 REPORT_PATH = "zoom_conflict_shadow_report.json"
 LOOKBACK_DAYS = int(os.environ.get("LOOKBACK_DAYS", "7"))
+MONTH_TO_DATE = os.environ.get("AUDIT_MONTH_TO_DATE", "0") == "1"
 
 ROLE_EMAIL_ALIASES = {
     "admin",
@@ -60,6 +61,20 @@ FOCUS_TARGETS = {
 FOCUS_LEADS = {
     "lead_r1zzkiRh2KTAqXC3E9AXABKOOKCPOrTWQm27wt9zCjQ": "Haoua Kabore",
 }
+
+
+def audit_since(now_utc: datetime, month_to_date: bool) -> datetime:
+    """Return an exact Pacific month boundary or the rolling lookback."""
+    if not month_to_date:
+        return now_utc - timedelta(days=LOOKBACK_DAYS)
+    now_pacific = now_utc.astimezone(production.PACIFIC)
+    month_start = datetime(
+        now_pacific.year,
+        now_pacific.month,
+        1,
+        tzinfo=production.PACIFIC,
+    )
+    return month_start.astimezone(timezone.utc)
 
 
 def email_alias(email: str) -> str | None:
@@ -360,7 +375,7 @@ def reviewed_outcome(meeting_id: str, shadow: dict) -> dict:
 
 def run() -> int:
     now_utc = datetime.now(timezone.utc)
-    since = now_utc - timedelta(days=LOOKBACK_DAYS)
+    since = audit_since(now_utc, MONTH_TO_DATE)
     session = production.close_session()
     zoom = production.Zoom()
     if not zoom.enabled:
@@ -392,6 +407,9 @@ def run() -> int:
 
     report = {
         "generated_at": now_utc.isoformat(),
+        "since": since.isoformat(),
+        "until": now_utc.isoformat(),
+        "month_to_date": MONTH_TO_DATE,
         "lookback_days": LOOKBACK_DAYS,
         "read_only": True,
         "no_show_scanned": 0,
@@ -495,6 +513,8 @@ def run() -> int:
         json.dump(report, report_file, indent=2, default=str)
 
     print("=== ZOOM CONFLICT SHADOW (READ ONLY) ===")
+    print(f"Window           : {since.isoformat()} .. {now_utc.isoformat()}")
+    print(f"Month to date    : {MONTH_TO_DATE}")
     print(f"No Shows scanned : {report['no_show_scanned']}")
     print(f"Completed scanned: {report['completed_scanned']}")
     print(f"Auto Completed   : {len(report['auto_completed'])}")
