@@ -67,6 +67,57 @@ def single_name_contact_candidates(meeting, lead, org_emails):
     return production.unique_names(names)
 
 
+def candidate_diagnostics(meeting, lead, org_emails):
+    """Return non-identifying counters explaining candidate acceptance."""
+    lead_tokens = name_tokens(lead.get("display_name"))
+    diagnostics = Counter()
+    if len(lead_tokens) != 1:
+        diagnostics["lead_not_single_name"] += 1
+        return diagnostics
+    lead_first = lead_tokens[0]
+
+    contacts = lead.get("contacts") or []
+    contacts_by_id = {
+        contact.get("id"): contact for contact in contacts if contact.get("id")
+    }
+    contacts_by_email = {}
+    for contact in contacts:
+        for email_item in contact.get("emails") or []:
+            email = (email_item.get("email") or "").lower()
+            if email:
+                contacts_by_email[email] = contact
+
+    for attendee in meeting.get("attendees") or []:
+        email = (attendee.get("email") or "").lower()
+        if email in org_emails:
+            continue
+        diagnostics["external_attendees"] += 1
+        attendee_tokens = name_tokens(attendee.get("name"))
+        if len(attendee_tokens) >= 2:
+            diagnostics["attendee_has_surname"] += 1
+            if attendee_tokens[0] == lead_first:
+                diagnostics["attendee_first_matches"] += 1
+
+        contact = contacts_by_id.get(attendee.get("contact_id"))
+        if contact is None and email:
+            contact = contacts_by_email.get(email)
+        if contact is None:
+            diagnostics["unlinked_attendees"] += 1
+            continue
+        diagnostics["linked_contacts"] += 1
+        contact_name = contact.get("name") or ""
+        contact_tokens = name_tokens(contact_name)
+        if production.name_surname(contact_name):
+            diagnostics["contact_has_surname"] += 1
+        else:
+            diagnostics["contact_missing_surname"] += 1
+        if contact_tokens and contact_tokens[0] == lead_first:
+            diagnostics["contact_first_matches"] += 1
+        else:
+            diagnostics["contact_first_mismatch"] += 1
+    return diagnostics
+
+
 def proposed_prospect_names_for(meeting, lead, org_emails):
     """Add only the narrow single-name exception to production candidates."""
     current = production.prospect_names_for(meeting, lead, org_emails)
@@ -162,6 +213,9 @@ def run(lookback_days):
                     summary["changed_with_nearby_attention"] += 1
 
             if (lead.get("display_name") or "").strip().casefold() == "terri":
+                diagnostics = candidate_diagnostics(
+                    meeting, lead, org_emails
+                )
                 target_rows.append({
                     "date": str(production.pacific_date(starts_at)),
                     "native": OUTCOME_LABELS.get(
@@ -170,6 +224,7 @@ def run(lookback_days):
                     "candidate": "accepted" if candidates else "rejected",
                     "current": signal_label(current),
                     "proposed": signal_label(proposed),
+                    "diagnostics": diagnostics,
                 })
         except Exception as error:
             summary["errors"] += 1
@@ -184,6 +239,23 @@ def run(lookback_days):
             f"date={row['date']} native={row['native']} "
             f"candidate={row['candidate']} current={row['current']} "
             f"proposed={row['proposed']}"
+        )
+        diagnostic_keys = [
+            "external_attendees",
+            "linked_contacts",
+            "unlinked_attendees",
+            "contact_has_surname",
+            "contact_missing_surname",
+            "contact_first_matches",
+            "contact_first_mismatch",
+            "attendee_has_surname",
+            "attendee_first_matches",
+        ]
+        print(
+            "TARGET_DIAGNOSTICS name=Terri "
+            + " ".join(
+                f"{key}={row['diagnostics'][key]}" for key in diagnostic_keys
+            )
         )
     if not target_rows:
         print("TARGET name=Terri result=not_found_in_window")

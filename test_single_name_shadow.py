@@ -2,6 +2,7 @@ import unittest
 
 import outcome_sync as production
 from single_name_shadow import (
+    candidate_diagnostics,
     proposed_prospect_names_for,
     single_name_contact_candidates,
 )
@@ -60,6 +61,14 @@ class SingleNameShadowTests(unittest.TestCase):
             ),
             [],
         )
+
+    def test_diagnostics_explain_contact_without_surname(self):
+        diagnostics = candidate_diagnostics(
+            meeting(), lead(contact_name="Terri"), ORG_EMAILS
+        )
+        self.assertEqual(diagnostics["linked_contacts"], 1)
+        self.assertEqual(diagnostics["contact_missing_surname"], 1)
+        self.assertEqual(diagnostics["contact_first_matches"], 1)
 
     def test_multiword_lead_keeps_existing_surname_guard(self):
         ashley_lead = lead(
