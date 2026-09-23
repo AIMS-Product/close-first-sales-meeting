@@ -8,12 +8,14 @@ classified meetings can be evaluated again. It never writes to Close or Zoom.
 import argparse
 import json
 import os
+import re
 from datetime import datetime, timedelta, timezone
 
 import outcome_sync as production
 
 
 REPORT_PATH = "outcome_shadow_report.json"
+NAME_SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
 
 
 def parse_args():
@@ -46,8 +48,12 @@ def current_prospect_names(meeting, org_emails):
 
 
 def proposed_prospect_names(meeting, lead, org_emails):
-    """Add names from the exact Close contacts represented by meeting attendees."""
-    names = current_prospect_names(meeting, org_emails)
+    """Add attendee contact names only when their surname agrees with the lead."""
+    lead_name = lead.get("display_name") or ""
+    names = [
+        name for name in current_prospect_names(meeting, org_emails)
+        if same_surname(name, lead_name)
+    ]
     contacts = lead.get("contacts") or []
     contacts_by_id = {contact.get("id"): contact for contact in contacts if contact.get("id")}
     contacts_by_email = {}
@@ -63,9 +69,38 @@ def proposed_prospect_names(meeting, lead, org_emails):
         contact = contacts_by_id.get(attendee.get("contact_id"))
         if contact is None:
             contact = contacts_by_email.get((attendee.get("email") or "").lower())
-        if contact and contact.get("name"):
+        if contact and same_surname(contact.get("name"), lead_name):
             names.append(contact["name"])
     return _unique_names(names)
+
+
+def same_surname(left, right):
+    left_surname = _surname(left)
+    right_surname = _surname(right)
+    return bool(left_surname and right_surname and left_surname == right_surname)
+
+
+def _surname(name):
+    tokens = re.findall(r"[^\W_]+", str(name or "").casefold(), flags=re.UNICODE)
+    while tokens and tokens[-1] in NAME_SUFFIXES:
+        tokens.pop()
+    return tokens[-1] if len(tokens) >= 2 else ""
+
+
+def strict_name_match(participant_name, prospect_name):
+    return same_surname(participant_name, prospect_name) and production._name_match(
+        str(participant_name or "").casefold(),
+        str(prospect_name or "").casefold(),
+    )
+
+
+def strictly_matchable_names(names, participants):
+    participant_names = [participant.get("name") or "" for participant in participants or []]
+    return [
+        name for name in names
+        if any(strict_name_match(participant_name, name)
+               for participant_name in participant_names)
+    ]
 
 
 def _unique_names(names):
@@ -136,12 +171,13 @@ def replay_meeting(meeting, lead, zoom, org_emails):
     current_names = current_prospect_names(meeting, org_emails)
     proposed_names = proposed_prospect_names(meeting, lead, org_emails)
     participants = zoom.participants_for(meeting_id, production.parse_dt(meeting.get("starts_at")))
+    strict_proposed_names = strictly_matchable_names(proposed_names, participants)
 
     current_outcome, current_detail = production.zoom_signal(
         participants, prospect_emails, org_emails, current_names
     )
     proposed_outcome, proposed_detail = production.zoom_signal(
-        participants, prospect_emails, org_emails, proposed_names
+        participants, prospect_emails, org_emails, strict_proposed_names
     )
     return {
         "meeting_id": meeting.get("id"),
@@ -156,6 +192,7 @@ def replay_meeting(meeting, lead, zoom, org_emails):
         "prospect_email_count": len(prospect_emails),
         "current_names": current_names,
         "proposed_names": proposed_names,
+        "strictly_matched_names": strict_proposed_names,
         "participants": participant_summary(participants, prospect_emails, org_emails),
         "current": {"outcome": current_outcome, "detail": current_detail},
         "proposed": {"outcome": proposed_outcome, "detail": proposed_detail},

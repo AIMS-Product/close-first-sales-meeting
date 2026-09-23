@@ -61,7 +61,7 @@ class ShadowMatchingTests(unittest.TestCase):
     def test_contact_name_recovers_anonymous_zoom_guest(self):
         participants = [
             {"name": "Eric Piccione", "email": "eric@modern-amenities.com", "seconds": 3600},
-            {"name": "Debbiebarca", "email": "", "seconds": 3500},
+            {"name": "Debbie Barca", "email": "", "seconds": 3500},
         ]
 
         result = outcome_shadow.replay_meeting(
@@ -100,6 +100,37 @@ class ShadowMatchingTests(unittest.TestCase):
         self.assertEqual("no_show", result["proposed"]["outcome"])
         self.assertFalse(result["changed"])
 
+    def test_different_contact_surname_does_not_match_lead(self):
+        participants = [
+            {"name": "Eric Piccione", "email": "eric@modern-amenities.com", "seconds": 1200},
+            {"name": "Ashley Hoeger", "email": "", "seconds": 1100},
+        ]
+        ashley_lead = lead(contact_name="Ashley Hoeger")
+        ashley_lead["display_name"] = "Ashley Trybus"
+
+        result = outcome_shadow.replay_meeting(
+            meeting(attendee_name=None), ashley_lead, FakeZoom(participants), ORG_EMAILS
+        )
+
+        self.assertEqual([], result["proposed_names"])
+        self.assertEqual("no_show", result["proposed"]["outcome"])
+        self.assertFalse(result["changed"])
+
+    def test_fuzzy_match_with_different_zoom_surname_is_rejected(self):
+        participants = [
+            {"name": "Eric Piccione", "email": "eric@modern-amenities.com", "seconds": 1200},
+            {"name": "Debbie Barcas", "email": "", "seconds": 1100},
+        ]
+
+        result = outcome_shadow.replay_meeting(
+            meeting(attendee_name=None), lead(), FakeZoom(participants), ORG_EMAILS
+        )
+
+        self.assertEqual(["Debbie Barca"], result["proposed_names"])
+        self.assertEqual([], result["strictly_matched_names"])
+        self.assertEqual("no_show", result["proposed"]["outcome"])
+        self.assertFalse(result["changed"])
+
     def test_existing_email_match_is_unchanged(self):
         participants = [
             {"name": "Eric Piccione", "email": "eric@modern-amenities.com", "seconds": 3600},
@@ -115,7 +146,7 @@ class ShadowMatchingTests(unittest.TestCase):
         self.assertFalse(result["changed"])
 
     def test_only_matching_close_contact_is_used(self):
-        other_lead = lead(contact_name="Unrelated Person")
+        other_lead = lead(contact_name="Different Barca")
         other_lead["contacts"].append({
             "id": "contact_2",
             "name": "Debbie Barca",
@@ -128,7 +159,7 @@ class ShadowMatchingTests(unittest.TestCase):
             ORG_EMAILS,
         )
 
-        self.assertEqual(["Unrelated Person"], names)
+        self.assertEqual(["Different Barca"], names)
 
 
 if __name__ == "__main__":
