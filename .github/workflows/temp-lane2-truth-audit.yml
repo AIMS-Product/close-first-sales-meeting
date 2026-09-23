@@ -1,10 +1,12 @@
-# Temporary read-only Lane 2 show-rate truth audit.
+# Temporary read-only Zoom conflict shadow audit.
 # Runs manually with repo secrets and does not write to Close.
 
-name: Temp Lane 2 Truth Audit
+name: Zoom Conflict Shadow Audit
 
 on:
   workflow_dispatch:
+    # Retained so this branch can be dispatched through the workflow definition
+    # that already exists on main. The shadow itself always scans seven days.
     inputs:
       date:
         description: "Pacific date to audit, YYYY-MM-DD"
@@ -30,15 +32,26 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run read-only audit
+      - run: pip install requests
+
+      - name: Test shadow classifier
+        run: |
+          python outcome_sync.py --selftest
+          python -m unittest -v test_outcome_sync.py test_shadow_zoom_conflicts.py
+
+      - name: Run read-only shadow audit
         env:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
           ZOOM_ACCOUNT_ID: ${{ secrets.ZOOM_ACCOUNT_ID }}
           ZOOM_CLIENT_ID: ${{ secrets.ZOOM_CLIENT_ID }}
           ZOOM_CLIENT_SECRET: ${{ secrets.ZOOM_CLIENT_SECRET }}
-        run: |
-          if [ "${{ inputs.no_zoom }}" = "true" ]; then
-            python3 temp_lane2_live_truth_audit.py --date "${{ inputs.date }}" --no-zoom
-          else
-            python3 temp_lane2_live_truth_audit.py --date "${{ inputs.date }}"
-          fi
+          LOOKBACK_DAYS: "7"
+        run: python shadow_zoom_conflicts.py
+
+      - name: Upload shadow report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zoom-conflict-shadow-report
+          path: zoom_conflict_shadow_report.json
+          retention-days: 14
