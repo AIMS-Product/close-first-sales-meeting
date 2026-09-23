@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only shadow audit for Zoom host-only outcome conflicts.
+"""Read-only shadow audit for Zoom outcome conflicts.
 
 The production sync treats an identified Zoom attendee as strong positive
 evidence. This shadow keeps that behavior, but tests two safeguards before a
@@ -7,7 +7,9 @@ host-only report becomes a No Show:
 
 * exact aliases derived from an external meeting attendee's email address;
 * meeting-specific Attention or answered-phone evidence that contradicts the
-  negative Zoom signal.
+  negative Zoom signal;
+* explicit, guarded no-show dispositions that prevent a bot-generated
+  Attention analysis from turning a host-only call into Completed.
 
 The script only calls GET endpoints. It never updates Close.
 """
@@ -53,6 +55,10 @@ FOCUS_TARGETS = {
     "acti_D08co5c2zYTpGB1TCzcaRqvf35OEwL8jwdAzlWhasVo": "Isaac Dodds",
     "acti_u2K0L4f7JXyl5wzfFxytiKRvgahNngjJ6IbGoGKGexA": "Terri",
     "acti_uIMvr0JeN1pm9fMEJbVyn47L4g4VLu3dhY90wo6gCuo": "Markus Specks",
+}
+
+FOCUS_LEADS = {
+    "lead_r1zzkiRh2KTAqXC3E9AXABKOOKCPOrTWQm27wt9zCjQ": "Haoua Kabore",
 }
 
 
@@ -198,6 +204,12 @@ def resolve_shadow_conflict(
         return "completed", zoom_source, zoom_detail
     if close_status_outcome:
         return close_status_outcome, "close-status", close_status_detail or ""
+    if disposition_outcome in {"no_show", "cancelled", "rescheduled"}:
+        return (
+            disposition_outcome,
+            "attention-disposition",
+            disposition_detail or "explicit negative disposition",
+        )
     if attention_outcome == "completed":
         source = "attention-over-zoom" if zoom_outcome == "no_show" else "attention"
         return "completed", source, attention_detail or ""
@@ -221,6 +233,18 @@ def resolve_shadow_conflict(
     if status_outcome:
         return status_outcome, "status-rsvp", status_detail or ""
     return "review", zoom_source, zoom_detail
+
+
+def projected_first_call_value(
+    meeting: dict, lead: dict, shadow_outcome: str
+) -> str | None:
+    """Project the legacy field from the shadow outcome without writing it."""
+    outcome_id = production.OUTCOMES.get(shadow_outcome)
+    if outcome_id is None:
+        return None
+    return production.first_call_field_value(
+        meeting, lead.get(production.CF_FSCBD), outcome_id
+    )
 
 
 def close_status_signal(meeting: dict, lead_meetings: list[dict]) -> tuple[str | None, str | None]:
@@ -371,15 +395,28 @@ def run() -> int:
         "lookback_days": LOOKBACK_DAYS,
         "read_only": True,
         "no_show_scanned": 0,
+        "completed_scanned": 0,
         "auto_completed": [],
+        "auto_no_show": [],
         "needs_review": [],
+        "completed_needs_review": [],
         "unchanged_no_show": [],
+        "unchanged_completed": [],
         "focus_targets": [],
         "errors": [],
     }
 
     for meeting in meetings:
-        if meeting.get("outcome_id") != production.OUTCOMES["no_show"]:
+        current_outcome_id = meeting.get("outcome_id")
+        current_outcome = next(
+            (
+                outcome
+                for outcome, outcome_id in production.OUTCOMES.items()
+                if outcome_id == current_outcome_id
+            ),
+            None,
+        )
+        if current_outcome not in {"no_show", "completed"}:
             continue
         meeting_id = meeting.get("id") or ""
         lead_id = meeting.get("lead_id") or ""
@@ -388,7 +425,7 @@ def run() -> int:
             continue
         if not meeting_id or not lead_id:
             continue
-        report["no_show_scanned"] += 1
+        report[f"{current_outcome}_scanned"] += 1
         try:
             lead = lead_brief(lead_id)
             evidence = lead_evidence(lead_id)
@@ -416,21 +453,35 @@ def run() -> int:
                 "title": meeting.get("title") or "",
                 "starts_at": meeting.get("starts_at"),
                 "video_provider": provider,
+                "current_outcome": current_outcome,
                 **shadow,
                 "effective_outcome": effective["shadow_outcome"],
                 "effective_source": effective["shadow_source"],
                 "effective_detail": effective["shadow_detail"],
+                "current_first_call_show": lead.get(production.CF_FIRST_CALL_SHOW),
+                "projected_first_call_show": projected_first_call_value(
+                    meeting, lead, effective["shadow_outcome"]
+                ),
             }
-            if shadow["shadow_outcome"] == "completed":
-                report["auto_completed"].append(row)
-            elif shadow["shadow_outcome"] == "review":
-                report["needs_review"].append(row)
+            if current_outcome == "no_show":
+                if shadow["shadow_outcome"] == "completed":
+                    report["auto_completed"].append(row)
+                elif shadow["shadow_outcome"] == "review":
+                    report["needs_review"].append(row)
+                else:
+                    report["unchanged_no_show"].append(row)
             else:
-                report["unchanged_no_show"].append(row)
-            if meeting_id in FOCUS_TARGETS:
+                if shadow["shadow_outcome"] == "no_show":
+                    report["auto_no_show"].append(row)
+                elif shadow["shadow_outcome"] == "review":
+                    report["completed_needs_review"].append(row)
+                else:
+                    report["unchanged_completed"].append(row)
+            expected_name = FOCUS_TARGETS.get(meeting_id) or FOCUS_LEADS.get(lead_id)
+            if expected_name:
                 report["focus_targets"].append({
                     **row,
-                    "expected_name": FOCUS_TARGETS[meeting_id],
+                    "expected_name": expected_name,
                     "participants": participants,
                 })
         except Exception as error:
@@ -445,16 +496,22 @@ def run() -> int:
 
     print("=== ZOOM CONFLICT SHADOW (READ ONLY) ===")
     print(f"No Shows scanned : {report['no_show_scanned']}")
+    print(f"Completed scanned: {report['completed_scanned']}")
     print(f"Auto Completed   : {len(report['auto_completed'])}")
+    print(f"Auto No Show     : {len(report['auto_no_show'])}")
     print(f"Needs review     : {len(report['needs_review'])}")
+    print(f"Completed review : {len(report['completed_needs_review'])}")
     print(f"Unchanged        : {len(report['unchanged_no_show'])}")
+    print(f"Completed same   : {len(report['unchanged_completed'])}")
     print(f"Errors           : {len(report['errors'])}")
     print("\n=== FOCUS TARGETS ===")
     for row in report["focus_targets"]:
         print(
-            f"{row['expected_name']}: current=no_show "
+            f"{row['expected_name']}: current={row['current_outcome']} "
             f"shadow={row['shadow_outcome']}[{row['shadow_source']}] "
             f"effective={row['effective_outcome']}[{row['effective_source']}] "
+            f"first_call={row['current_first_call_show']!r}"
+            f"->{row['projected_first_call_show']!r} "
             f"aliases={','.join(row['email_aliases']) or '-'} — "
             f"{row['effective_detail']}"
         )

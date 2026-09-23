@@ -116,6 +116,15 @@ class ConflictResolutionTests(unittest.TestCase):
         )
         self.assertEqual(("completed", "attention-over-zoom"), (outcome, source))
 
+    def test_explicit_no_show_disposition_beats_attention_analysis(self):
+        outcome, source, _ = self.resolve(
+            attention_outcome="completed",
+            attention_detail="bot-generated matching meeting analysis",
+            disposition_outcome="no_show",
+            disposition_detail="disposition='New Call No Show'",
+        )
+        self.assertEqual(("no_show", "attention-disposition"), (outcome, source))
+
     def test_answered_phone_vetoes_host_only_no_show(self):
         outcome, source, _ = self.resolve(
             phone_outcome="completed",
@@ -168,6 +177,17 @@ class ConflictResolutionTests(unittest.TestCase):
         )
         self.assertEqual("completed", outcome)
         self.assertEqual("matching Attention timestamp", detail)
+
+    def test_no_show_shadow_projects_first_call_field_to_no(self):
+        meeting = {
+            "title": "Haoua Kabore and Vendingpreneurs Consultation",
+            "starts_at": "2026-09-23T15:30:00+00:00",
+            "status": "confirmed",
+        }
+        lead = {shadow.production.CF_FSCBD: "2026-09-23"}
+        self.assertEqual(
+            "No", shadow.projected_first_call_value(meeting, lead, "no_show")
+        )
 
 
 if __name__ == "__main__":
