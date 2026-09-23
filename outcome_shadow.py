@@ -16,6 +16,7 @@ import outcome_sync as production
 
 REPORT_PATH = "outcome_shadow_report.json"
 NAME_SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
+NAME_METADATA_SUFFIXES = {"yo", "old"}
 
 
 def parse_args():
@@ -82,6 +83,10 @@ def same_surname(left, right):
 
 def _surname(name):
     tokens = re.findall(r"[^\W_]+", str(name or "").casefold(), flags=re.UNICODE)
+    while tokens and tokens[-1] in NAME_METADATA_SUFFIXES:
+        tokens.pop()
+    while tokens and tokens[-1].isdigit():
+        tokens.pop()
     while tokens and tokens[-1] in NAME_SUFFIXES:
         tokens.pop()
     return tokens[-1] if len(tokens) >= 2 else ""

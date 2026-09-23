@@ -131,6 +131,20 @@ class ShadowMatchingTests(unittest.TestCase):
         self.assertEqual("no_show", result["proposed"]["outcome"])
         self.assertFalse(result["changed"])
 
+    def test_zoom_age_metadata_does_not_change_surname(self):
+        participants = [
+            {"name": "Eric Piccione", "email": "eric@modern-amenities.com", "seconds": 1200},
+            {"name": "Debbie Barca 37 YO", "email": "", "seconds": 1100},
+        ]
+
+        result = outcome_shadow.replay_meeting(
+            meeting(attendee_name=None), lead(), FakeZoom(participants), ORG_EMAILS
+        )
+
+        self.assertEqual(["Debbie Barca"], result["strictly_matched_names"])
+        self.assertEqual("completed", result["proposed"]["outcome"])
+        self.assertTrue(result["changed"])
+
     def test_existing_email_match_is_unchanged(self):
         participants = [
             {"name": "Eric Piccione", "email": "eric@modern-amenities.com", "seconds": 3600},
