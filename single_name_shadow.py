@@ -2,9 +2,10 @@
 """Read-only shadow test for single-word Close lead names.
 
 Production remains unchanged. This compares the current prospect-name matcher
-with a narrow exception: an exact attendee-linked Close contact may supply the
-full name when the lead display name contains only one word and the first name
-agrees. Zoom's existing exact-surname guard still makes the final match.
+with two narrow exceptions for a one-word lead name. The first uses a full name
+from an exact attendee-linked Close contact. The second requires the linked
+contact to carry that same one-word name and exactly one qualifying external
+Zoom participant whose multi-word name has the same first name.
 """
 
 import argparse
@@ -65,6 +66,84 @@ def single_name_contact_candidates(meeting, lead, org_emails):
         ):
             names.append(contact_name)
     return production.unique_names(names)
+
+
+def unique_external_first_name_signal(participants, meeting, lead, org_emails):
+    """Conservatively identify a one-word contact via one Zoom participant."""
+    lead_tokens = name_tokens(lead.get("display_name"))
+    if len(lead_tokens) != 1:
+        return None, "lead_not_single_name"
+    lead_first = lead_tokens[0]
+
+    contacts = lead.get("contacts") or []
+    contacts_by_id = {
+        contact.get("id"): contact for contact in contacts if contact.get("id")
+    }
+    contacts_by_email = {}
+    for contact in contacts:
+        for email_item in contact.get("emails") or []:
+            email = (email_item.get("email") or "").lower()
+            if email:
+                contacts_by_email[email] = contact
+
+    external_attendees = []
+    linked_contacts = []
+    for attendee in meeting.get("attendees") or []:
+        email = (attendee.get("email") or "").lower()
+        if email in org_emails:
+            continue
+        external_attendees.append(attendee)
+        contact = contacts_by_id.get(attendee.get("contact_id"))
+        if contact is None and email:
+            contact = contacts_by_email.get(email)
+        if contact is not None:
+            linked_contacts.append(contact)
+
+    if len(external_attendees) != 1:
+        return None, "external_attendee_not_unique"
+    if len(linked_contacts) != 1:
+        return None, "linked_contact_not_unique"
+    contact_tokens = name_tokens(linked_contacts[0].get("name"))
+    if len(contact_tokens) != 1:
+        return None, "linked_contact_not_single_name"
+    if contact_tokens[0] != lead_first:
+        return None, "linked_contact_first_mismatch"
+    if participants is None:
+        return None, "no_zoom_data"
+
+    qualifying_external = [
+        participant
+        for participant in participants
+        if (participant.get("email") or "").lower() not in org_emails
+        and int(participant.get("seconds") or 0)
+        >= production.MIN_ATTEND_SECONDS
+    ]
+    if len(qualifying_external) != 1:
+        return None, "qualifying_zoom_participant_not_unique"
+    participant_tokens = name_tokens(qualifying_external[0].get("name"))
+    if len(participant_tokens) < 2:
+        return None, "zoom_participant_missing_surname"
+    if participant_tokens[0] != lead_first:
+        return None, "zoom_participant_first_mismatch"
+    return "completed", "unique_external_first_name_match"
+
+
+def proposed_zoom_signal(
+    participants, meeting, lead, prospect_emails, org_emails
+):
+    """Apply both shadow exceptions after the existing production matcher."""
+    proposed_names = proposed_prospect_names_for(meeting, lead, org_emails)
+    current, detail = production.zoom_signal(
+        participants, prospect_emails, org_emails, proposed_names
+    )
+    if current == "completed":
+        return current, detail, "existing_or_full_contact_match"
+    exception, reason = unique_external_first_name_signal(
+        participants, meeting, lead, org_emails
+    )
+    if exception:
+        return exception, reason, reason
+    return current, detail, reason
 
 
 def candidate_diagnostics(meeting, lead, org_emails):
@@ -181,20 +260,18 @@ def run(lookback_days):
             current_names = production.prospect_names_for(
                 meeting, lead, org_emails
             )
-            proposed_names = proposed_prospect_names_for(
-                meeting, lead, org_emails
-            )
             candidates = single_name_contact_candidates(
                 meeting, lead, org_emails
             )
             current, _current_detail = production.zoom_signal(
                 participants, prospect_emails, org_emails, current_names
             )
-            proposed, _proposed_detail = production.zoom_signal(
-                participants, prospect_emails, org_emails, proposed_names
+            proposed, _proposed_detail, proposed_reason = proposed_zoom_signal(
+                participants, meeting, lead, prospect_emails, org_emails
             )
             summary["zoom_evaluated"] += 1
             summary["candidate_accepted" if candidates else "candidate_rejected"] += 1
+            summary[f"unique_path_{proposed_reason}"] += 1
             if current != proposed:
                 summary["changed"] += 1
                 summary[f"change_{signal_label(current)}_to_{signal_label(proposed)}"] += 1
@@ -224,6 +301,7 @@ def run(lookback_days):
                     "candidate": "accepted" if candidates else "rejected",
                     "current": signal_label(current),
                     "proposed": signal_label(proposed),
+                    "proposed_reason": proposed_reason,
                     "diagnostics": diagnostics,
                 })
         except Exception as error:
@@ -238,7 +316,7 @@ def run(lookback_days):
             "TARGET name=Terri "
             f"date={row['date']} native={row['native']} "
             f"candidate={row['candidate']} current={row['current']} "
-            f"proposed={row['proposed']}"
+            f"proposed={row['proposed']} path={row['proposed_reason']}"
         )
         diagnostic_keys = [
             "external_attendees",
@@ -272,6 +350,7 @@ def run(lookback_days):
         "changed_native_completed",
         "changed_native_blank_or_other",
         "changed_with_nearby_attention",
+        "unique_path_unique_external_first_name_match",
         "errors",
     ]
     print(
