@@ -15,6 +15,39 @@ class AuditWindowTests(unittest.TestCase):
             shadow.audit_since(now_utc, True),
         )
 
+    def test_compact_evidence_excludes_raw_identities(self):
+        starts_at = datetime(2026, 9, 23, 17, 0, tzinfo=timezone.utc)
+        meeting = {
+            "starts_at": starts_at.isoformat(),
+            "attendees": [
+                {"email": "lead@example.com", "status": "accepted"},
+                {"email": "rep@modern-amenities.com", "status": "accepted"},
+            ],
+        }
+        activity_type = next(iter(shadow.production.ATTENTION_MEETING_TYPE_IDS))
+        result = shadow.compact_evidence_snapshot(
+            meeting,
+            {shadow.production.CF_TODAYS_DISPOSITION: "New Call Show"},
+            [{"type_id": activity_type, "at": starts_at}],
+            [{"at": starts_at, "duration": 601, "disposition": "answered"}],
+            [
+                {"name": "Rep", "email": "rep@modern-amenities.com", "seconds": 700},
+                {"name": "Lead", "email": "lead@example.com", "seconds": 650},
+                {"name": "Close Notetaker", "email": "", "seconds": 640},
+                {"name": "Unknown Person", "email": "", "seconds": 300},
+            ],
+            ORG_EMAILS,
+            ["Lead Example"],
+            {"lead"},
+        )
+        self.assertEqual(650, result["zoom"]["verified_prospect_seconds"])
+        self.assertEqual(700, result["zoom"]["internal_seconds"])
+        self.assertEqual(640, result["zoom"]["automation_seconds"])
+        self.assertEqual(300, result["zoom"]["unmatched_human_seconds"])
+        self.assertEqual([0], result["attention_offsets_minutes"])
+        self.assertEqual([601], result["answered_call_seconds"])
+        self.assertNotIn("lead@example.com", str(result))
+
 
 class EmailAliasTests(unittest.TestCase):
     def test_numeric_email_alias_matches_isaacd(self):

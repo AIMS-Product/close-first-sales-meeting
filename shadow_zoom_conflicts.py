@@ -262,6 +262,92 @@ def projected_first_call_value(
     )
 
 
+def compact_evidence_snapshot(
+    meeting: dict,
+    lead: dict,
+    acts: list[dict],
+    calls: list[dict],
+    participants: list[dict] | None,
+    org_emails: set[str],
+    prospect_names: list[str],
+    aliases: set[str],
+) -> dict:
+    """Return privacy-minimized evidence suitable for human verification."""
+    prospect_emails = {
+        (attendee.get("email") or "").casefold()
+        for attendee in meeting.get("attendees") or []
+        if attendee.get("email")
+        and (attendee.get("email") or "").casefold() not in org_emails
+    }
+    zoom_summary = {
+        "verified_prospect_seconds": 0,
+        "internal_seconds": 0,
+        "automation_seconds": 0,
+        "unmatched_human_seconds": 0,
+        "unmatched_human_max_seconds": 0,
+        "unmatched_human_count": 0,
+    }
+    for participant in participants or []:
+        seconds = int(participant.get("seconds") or 0)
+        email = (participant.get("email") or "").casefold()
+        name = participant.get("name") or ""
+        normalized_name = name.casefold()
+        if email and email in org_emails:
+            zoom_summary["internal_seconds"] += seconds
+            continue
+        if any(token in normalized_name for token in ("notetaker", "ai agent", " bot")):
+            zoom_summary["automation_seconds"] += seconds
+            continue
+        verified_seconds, _ = verified_identity_attendance(
+            [participant], aliases, org_emails, prospect_names
+        )
+        if email in prospect_emails or verified_seconds:
+            zoom_summary["verified_prospect_seconds"] += seconds
+            continue
+        zoom_summary["unmatched_human_seconds"] += seconds
+        zoom_summary["unmatched_human_max_seconds"] = max(
+            zoom_summary["unmatched_human_max_seconds"], seconds
+        )
+        zoom_summary["unmatched_human_count"] += 1
+
+    starts_at = production.parse_dt(meeting.get("starts_at"))
+    attention_offsets_minutes = []
+    answered_call_seconds = []
+    if starts_at is not None:
+        attention_offsets_minutes = [
+            round((activity["at"] - starts_at).total_seconds() / 60)
+            for activity in acts
+            if activity["type_id"] in production.ATTENTION_MEETING_TYPE_IDS
+            and abs((activity["at"] - starts_at).total_seconds())
+            <= production.ATTENTION_MATCH_HOURS * 3600
+        ]
+        meeting_day = production.pacific_date(starts_at)
+        answered_call_seconds = sorted(
+            [
+                int(call["duration"])
+                for call in calls
+                if call["disposition"] == "answered"
+                and production.pacific_date(call["at"]) == meeting_day
+            ],
+            reverse=True,
+        )
+    attendee_statuses = sorted(
+        {
+            str(attendee.get("status") or "unknown")
+            for attendee in meeting.get("attendees") or []
+            if (attendee.get("email") or "").casefold() not in org_emails
+        }
+    )
+    return {
+        "zoom": zoom_summary if participants is not None else None,
+        "attention_offsets_minutes": attention_offsets_minutes,
+        "answered_call_seconds": answered_call_seconds,
+        "external_attendee_statuses": attendee_statuses,
+        "disposition": lead.get(production.CF_TODAYS_DISPOSITION),
+        "lead_status": lead.get("status_label") or "",
+    }
+
+
 def close_status_signal(meeting: dict, lead_meetings: list[dict]) -> tuple[str | None, str | None]:
     if not production.is_canceledish(meeting):
         return None, None
@@ -479,6 +565,16 @@ def run() -> int:
                 "current_first_call_show": lead.get(production.CF_FIRST_CALL_SHOW),
                 "projected_first_call_show": projected_first_call_value(
                     meeting, lead, effective["shadow_outcome"]
+                ),
+                "verification_evidence": compact_evidence_snapshot(
+                    meeting,
+                    lead,
+                    evidence["acts"],
+                    evidence["calls"],
+                    participants,
+                    org_emails,
+                    shadow["prospect_names"],
+                    set(shadow["email_aliases"]),
                 ),
             }
             if current_outcome == "no_show":
