@@ -98,6 +98,49 @@ def alias_attendance_seconds(
     return seconds
 
 
+def verified_identity_attendance(
+    participants: list[dict],
+    aliases: set[str],
+    org_emails: set[str],
+    prospect_names: list[str],
+) -> tuple[int, set[str]]:
+    """Match only identities anchored to this meeting's verified attendees."""
+    seconds = 0
+    reasons: set[str] = set()
+    for participant in participants or []:
+        email = (participant.get("email") or "").casefold()
+        if email and email in org_emails:
+            continue
+        participant_name = participant.get("name") or ""
+        participant_aliases = zoom_name_aliases(participant_name)
+        reason = None
+        if aliases.intersection(participant_aliases):
+            reason = "attendee-email-alias"
+        else:
+            participant_tokens = re.findall(
+                r"[^\W_]+", participant_name.casefold(), flags=re.UNICODE
+            )
+            for prospect_name in prospect_names:
+                if production.same_surname(participant_name, prospect_name):
+                    reason = "same-surname"
+                    break
+                prospect_tokens = re.findall(
+                    r"[^\W_]+", prospect_name.casefold(), flags=re.UNICODE
+                )
+                if (
+                    len(participant_tokens) == 1
+                    and prospect_tokens
+                    and participant_tokens[0] == prospect_tokens[0]
+                    and any(alias.startswith(prospect_tokens[0]) for alias in aliases)
+                ):
+                    reason = "first-name-plus-email-alias"
+                    break
+        if reason:
+            seconds += int(participant.get("seconds") or 0)
+            reasons.add(reason)
+    return seconds, reasons
+
+
 def shadow_zoom_signal(
     participants: list[dict] | None,
     prospect_emails: set[str],
@@ -112,18 +155,22 @@ def shadow_zoom_signal(
     if outcome == "completed" or participants is None:
         return outcome, detail, "zoom"
 
-    alias_seconds = alias_attendance_seconds(participants, aliases, org_emails)
-    if alias_seconds >= production.MIN_ATTEND_SECONDS:
+    identity_seconds, identity_reasons = verified_identity_attendance(
+        participants, aliases, org_emails, prospect_names
+    )
+    reason_label = "+".join(sorted(identity_reasons))
+    if identity_seconds >= production.MIN_ATTEND_SECONDS:
         return (
             "completed",
-            f"verified attendee email alias on Zoom for {alias_seconds}s",
-            "zoom-email-alias",
+            f"verified Zoom identity ({reason_label}) for {identity_seconds}s",
+            "zoom-verified-identity",
         )
-    if alias_seconds > 0:
+    if identity_seconds > 0:
         return (
             None,
-            f"verified attendee email alias joined only {alias_seconds}s — review",
-            "zoom-email-alias",
+            f"verified Zoom identity ({reason_label}) joined only "
+            f"{identity_seconds}s — review",
+            "zoom-verified-identity",
         )
     return outcome, detail, "zoom"
 

@@ -45,8 +45,38 @@ class EmailAliasTests(unittest.TestCase):
             {"isaacd"},
         )
         self.assertEqual("completed", outcome)
-        self.assertEqual("zoom-email-alias", source)
+        self.assertEqual("zoom-verified-identity", source)
         self.assertIn("6708s", detail)
+
+    def test_one_word_first_name_requires_supporting_email_alias(self):
+        seconds, reasons = shadow.verified_identity_attendance(
+            [{"name": "Isaac", "email": "", "seconds": 6884}],
+            {"isaacd"},
+            ORG_EMAILS,
+            ["Isaac Dodds"],
+        )
+        self.assertEqual(6884, seconds)
+        self.assertEqual({"first-name-plus-email-alias"}, reasons)
+
+    def test_same_surname_counts_a_verified_household_attendee(self):
+        seconds, reasons = shadow.verified_identity_attendance(
+            [{"name": "Johannes Specks", "email": "", "seconds": 2207}],
+            set(),
+            ORG_EMAILS,
+            ["Markus Specks"],
+        )
+        self.assertEqual(2207, seconds)
+        self.assertEqual({"same-surname"}, reasons)
+
+    def test_different_surname_remains_rejected(self):
+        seconds, reasons = shadow.verified_identity_attendance(
+            [{"name": "Ashley Hoeger", "email": "", "seconds": 2400}],
+            set(),
+            ORG_EMAILS,
+            ["Ashley Trybus"],
+        )
+        self.assertEqual(0, seconds)
+        self.assertEqual(set(), reasons)
 
     def test_role_and_too_short_aliases_are_ignored(self):
         self.assertIsNone(shadow.email_alias("info@example.com"))
