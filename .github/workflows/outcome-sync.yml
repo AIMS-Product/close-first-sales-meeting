@@ -34,6 +34,18 @@ jobs:
 
       - run: pip install requests
 
+      - name: Diagnose requested show statuses
+        if: github.ref == 'refs/heads/codex/diagnose-show-status'
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+          ZOOM_ACCOUNT_ID: ${{ secrets.ZOOM_ACCOUNT_ID }}
+          ZOOM_CLIENT_ID: ${{ secrets.ZOOM_CLIENT_ID }}
+          ZOOM_CLIENT_SECRET: ${{ secrets.ZOOM_CLIENT_SECRET }}
+          MIN_ATTEND_SECONDS: "300"
+          HOST_MIN_SECONDS: "600"
+          ZOOM_AUTO_NOSHOW: "1"
+        run: python diagnose_named_shows.py
+
       - name: Run outcome sync
         if: github.ref == 'refs/heads/main'
         env:
