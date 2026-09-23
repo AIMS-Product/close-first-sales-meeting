@@ -43,6 +43,8 @@ ROLE_EMAIL_ALIASES = {
 # meeting-specific Attention record. The shadow reports the general classifier
 # result separately from this reviewed repair scenario.
 REVIEWED_COMPLETED_TARGETS = {
+    "acti_u2K0L4f7JXyl5wzfFxytiKRvgahNngjJ6IbGoGKGexA":
+        "reviewed one-word lead with exact meeting analysis confirms attendance",
     "acti_uIMvr0JeN1pm9fMEJbVyn47L4g4VLu3dhY90wo6gCuo":
         "reviewed post-call email exchange confirms attendance",
 }
@@ -202,6 +204,8 @@ def resolve_shadow_conflict(
     if phone_outcome == "completed":
         source = "phone-over-zoom" if zoom_outcome == "no_show" else "phone"
         return "completed", source, phone_detail or ""
+    if attention_outcome == "review":
+        return "review", "attention-identity-conflict", attention_detail or ""
     if disposition_outcome:
         if zoom_outcome == "no_show" and disposition_outcome == "completed":
             return (
@@ -225,6 +229,16 @@ def close_status_signal(meeting: dict, lead_meetings: list[dict]) -> tuple[str |
     if production.later_similar_meeting_exists(meeting, lead_meetings):
         return "rescheduled", "canceled + later booking exists"
     return "cancelled", "canceled, no later booking"
+
+
+def guard_identity_dependent_signal(
+    outcome: str | None, detail: str | None, prospect_names: list[str]
+) -> tuple[str | None, str | None]:
+    """Do not turn another attached contact's evidence into this lead's show."""
+    if outcome != "completed" or prospect_names:
+        return outcome, detail
+    suffix = "prospect identity is not verified against the Close lead"
+    return "review", f"{detail}; {suffix}" if detail else suffix
 
 
 def evaluate_meeting(
@@ -254,6 +268,9 @@ def evaluate_meeting(
     attention_outcome, attention_detail = production.attention_activity_signal(
         meeting, acts
     )
+    attention_outcome, attention_detail = guard_identity_dependent_signal(
+        attention_outcome, attention_detail, prospect_names
+    )
     phone_outcome, phone_detail = production.phone_evidence(meeting, calls, acts)
     disposition_outcome = production.attention_signal(
         meeting,
@@ -266,6 +283,9 @@ def evaluate_meeting(
         disposition_detail = (
             f"disposition={lead.get(production.CF_TODAYS_DISPOSITION)!r}"
         )
+    disposition_outcome, disposition_detail = guard_identity_dependent_signal(
+        disposition_outcome, disposition_detail, prospect_names
+    )
     external_statuses = [
         attendee.get("status")
         for attendee in attendees

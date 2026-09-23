@@ -130,6 +130,13 @@ class ConflictResolutionTests(unittest.TestCase):
         )
         self.assertEqual(("review", "zoom-disposition-conflict"), (outcome, source))
 
+    def test_unverified_attention_identity_routes_to_review(self):
+        outcome, source, _ = self.resolve(
+            attention_outcome="review",
+            attention_detail="identity is not verified",
+        )
+        self.assertEqual(("review", "attention-identity-conflict"), (outcome, source))
+
     def test_uncontradicted_host_only_stays_no_show(self):
         outcome, source, _ = self.resolve()
         self.assertEqual(("no_show", "zoom"), (outcome, source))
@@ -147,6 +154,20 @@ class ConflictResolutionTests(unittest.TestCase):
         self.assertEqual("completed", markus["shadow_outcome"])
         self.assertEqual("reviewed-override", markus["shadow_source"])
         self.assertEqual("review", unrelated["shadow_outcome"])
+
+    def test_identity_guard_blocks_different_contact_surname(self):
+        outcome, detail = shadow.guard_identity_dependent_signal(
+            "completed", "matching Attention timestamp", []
+        )
+        self.assertEqual("review", outcome)
+        self.assertIn("identity is not verified", detail)
+
+    def test_identity_guard_allows_verified_contact_surname(self):
+        outcome, detail = shadow.guard_identity_dependent_signal(
+            "completed", "matching Attention timestamp", ["Isaac Dodds"]
+        )
+        self.assertEqual("completed", outcome)
+        self.assertEqual("matching Attention timestamp", detail)
 
 
 if __name__ == "__main__":
