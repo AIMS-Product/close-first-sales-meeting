@@ -34,6 +34,12 @@ jobs:
 
       - run: pip install requests
 
+      - name: Verify requested show statuses
+        if: github.ref == 'refs/heads/codex/verify-show-status'
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+        run: python verify_named_shows.py
+
       - name: Run outcome sync
         if: github.ref == 'refs/heads/main'
         env:
