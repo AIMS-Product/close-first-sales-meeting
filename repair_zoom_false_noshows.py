@@ -134,7 +134,7 @@ def run():
         "errors": [],
     }
 
-    for meeting_id, lead_id in REPAIR_TARGETS.items():
+    for target_number, (meeting_id, lead_id) in enumerate(REPAIR_TARGETS.items(), start=1):
         try:
             planned, reason = evaluate_target(
                 session, zoom, org_emails, meeting_id, lead_id
@@ -144,8 +144,8 @@ def run():
                 continue
             report["planned"].append(planned)
             print(
-                f"{'APPLY' if APPLY_REPAIR else 'DRY'} {planned['lead_name']} | "
-                f"{planned['title']} | {planned['zoom_detail']}"
+                f"{'APPLY' if APPLY_REPAIR else 'DRY'} candidate "
+                f"{target_number}/{len(REPAIR_TARGETS)} validated"
             )
             if APPLY_REPAIR:
                 apply_target(session, planned)
@@ -163,7 +163,12 @@ def run():
         f"written={len(report['written'])} skipped={len(report['skipped'])} "
         f"errors={len(report['errors'])}"
     )
-    return 1 if report["errors"] else 0
+    fully_validated = (
+        len(report["planned"]) == len(REPAIR_TARGETS)
+        and not report["skipped"]
+        and not report["errors"]
+    )
+    return 0 if fully_validated else 1
 
 
 if __name__ == "__main__":

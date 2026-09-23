@@ -38,11 +38,3 @@ jobs:
           ZOOM_AUTO_NOSHOW: "1"
           APPLY_REPAIR: ${{ inputs.apply && '1' || '0' }}
         run: python repair_zoom_false_noshows.py
-
-      - name: Upload repair report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: zoom-outcome-repair-report
-          path: zoom_outcome_repair_report.json
-          retention-days: 14
