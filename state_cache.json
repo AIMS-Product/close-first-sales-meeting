@@ -117033,14 +117033,52 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_vsAY76O4Pn6qLTMP2J60ir6l3IbV3oAfe3TbC1CzomA": {
+      "date": "2026-09-23",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Jessica Zatkin",
+      "reactivation_user": "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_mOANGbqUKpLwT8FfyB3Qj4oXOLR02erQ2A4HfCd6Bmg": {
+      "date": "2026-09-25",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_3wxyw3XRo1sQIHgtYCZARHn8fh1GcLMJtYSa3iFO0bv": {
+      "date": "2026-09-24",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-22 23:40:49 UTC",
-  "count": 9915
+  "saved_at": "2026-09-23 00:10:58 UTC",
+  "count": 9918
 }
