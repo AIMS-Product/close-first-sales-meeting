@@ -59,6 +59,7 @@ Usage:
   python outcome_sync.py --selftest  # run built-in decision-logic tests, no network
 """
 
+import difflib
 import json
 import os
 import re
@@ -179,6 +180,26 @@ def resolve_calendly_zoom(url):
     _calendly_cache[url] = zoom_id
     return zoom_id
 
+
+def video_meeting_id(meeting):
+    """Return (provider, Zoom meeting ID or None) for a Close meeting."""
+    blob = f"{meeting.get('note') or ''} {meeting.get('location') or ''}"
+    direct = ZOOM_JOIN_RE.search(blob)
+    if direct:
+        return "zoom", direct.group(1)
+    calendly = CALENDLY_CONF_RE.search(blob)
+    if calendly and calendly.group(2).lower() == "google_meet":
+        return "google-meet", None
+    if calendly:
+        zoom_id = resolve_calendly_zoom(calendly.group(1))
+        provider = "zoom" if zoom_id else "zoom-calendly-unresolved"
+        return provider, zoom_id
+    if "meet.google.com" in blob.lower():
+        return "google-meet", None
+    if "zoom.us" in blob.lower():
+        return "zoom-link-unparsed", None
+    return "no-video-link", None
+
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
@@ -195,6 +216,8 @@ GRACE_MINUTES = env_int("GRACE_MINUTES", 90)  # skip meetings that ended < this 
 MIN_ATTEND_SECONDS = env_int("MIN_ATTEND_SECONDS", 300)
 HOST_MIN_SECONDS = env_int("HOST_MIN_SECONDS", 600)
 ZOOM_AUTO_NOSHOW = os.environ.get("ZOOM_AUTO_NOSHOW", "1") != "0"
+NAME_SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v"}
+NAME_METADATA_SUFFIXES = {"yo", "old"}
 MIN_PHONE_SHOW_SECONDS = env_int("MIN_PHONE_SHOW_SECONDS", 300)     # answered call = show
 MIN_PHONE_REVIEW_SECONDS = env_int("MIN_PHONE_REVIEW_SECONDS", 120)  # blocks auto-no-show
 
@@ -280,7 +303,7 @@ def fetch_meetings_window(s, since_dt, until_dt):
 def fetch_lead_brief(s, lead_id):
     return close_get(
         s, f"/lead/{lead_id}/",
-        {"_fields": f"id,display_name,status_label,{CF_TODAYS_DISPOSITION},"
+        {"_fields": f"id,display_name,status_label,contacts,{CF_TODAYS_DISPOSITION},"
                     f"{CF_FSCBD},{CF_FIRST_CALL_SHOW}"}
     )
 
@@ -540,6 +563,66 @@ def status_rsvp_signal(meeting, lead_status, ext_attendee_statuses):
     return None, None
 
 
+def prospect_names_for(meeting, lead, org_emails):
+    """Return external attendee names whose surname agrees with the lead."""
+    lead_name = lead.get("display_name") or ""
+    contacts = lead.get("contacts") or []
+    contacts_by_id = {
+        contact.get("id"): contact for contact in contacts if contact.get("id")
+    }
+    contacts_by_email = {}
+    for contact in contacts:
+        for email_item in contact.get("emails") or []:
+            email = (email_item.get("email") or "").lower()
+            if email:
+                contacts_by_email[email] = contact
+
+    names = []
+    for attendee in meeting.get("attendees") or []:
+        email = (attendee.get("email") or "").lower()
+        if email in org_emails:
+            continue
+        attendee_name = attendee.get("name") or ""
+        if same_surname(attendee_name, lead_name):
+            names.append(attendee_name)
+        contact = contacts_by_id.get(attendee.get("contact_id"))
+        if contact is None:
+            contact = contacts_by_email.get(email)
+        contact_name = (contact or {}).get("name") or ""
+        if same_surname(contact_name, lead_name):
+            names.append(contact_name)
+    return unique_names(names)
+
+
+def unique_names(names):
+    unique = []
+    seen = set()
+    for name in names:
+        cleaned = str(name or "").strip()
+        key = cleaned.casefold()
+        if cleaned and key not in seen:
+            unique.append(cleaned)
+            seen.add(key)
+    return unique
+
+
+def same_surname(left, right):
+    left_surname = name_surname(left)
+    right_surname = name_surname(right)
+    return bool(left_surname and right_surname and left_surname == right_surname)
+
+
+def name_surname(name):
+    tokens = re.findall(r"[^\W_]+", str(name or "").casefold(), flags=re.UNICODE)
+    while tokens and tokens[-1] in NAME_METADATA_SUFFIXES:
+        tokens.pop()
+    while tokens and tokens[-1].isdigit():
+        tokens.pop()
+    while tokens and tokens[-1] in NAME_SUFFIXES:
+        tokens.pop()
+    return tokens[-1] if len(tokens) >= 2 else ""
+
+
 def zoom_signal(participants, prospect_emails, org_emails, prospect_names=()):
     """
     -> ("completed" | "no_show" | None, detail)
@@ -572,8 +655,7 @@ def zoom_signal(participants, prospect_emails, org_emails, prospect_names=()):
 
 
 def _name_match(a, b):
-    import difflib
-    if not a or not b:
+    if not a or not b or not same_surname(a, b):
         return False
     return difflib.SequenceMatcher(None, a, b).ratio() >= 0.8
 
@@ -718,23 +800,7 @@ def run():
                 if (a.get("email") or "").lower() not in org_emails
             ]
 
-            blob = f"{m.get('note') or ''} {m.get('location') or ''}"
-            zoom_meeting_id = None
-            direct = ZOOM_JOIN_RE.search(blob)
-            calendly = CALENDLY_CONF_RE.search(blob)
-            if direct:
-                provider, zoom_meeting_id = "zoom", direct.group(1)
-            elif calendly and calendly.group(2).lower() == "google_meet":
-                provider = "google-meet"
-            elif calendly:  # calendly .../zoom redirect — resolve to real ID
-                zoom_meeting_id = resolve_calendly_zoom(calendly.group(1))
-                provider = "zoom" if zoom_meeting_id else "zoom-calendly-unresolved"
-            elif "meet.google.com" in blob.lower():
-                provider = "google-meet"
-            elif "zoom.us" in blob.lower():
-                provider = "zoom-link-unparsed"  # /my/ vanity or webinar link
-            else:
-                provider = "no-video-link"
+            provider, zoom_meeting_id = video_meeting_id(m)
 
             zoom_result = "skip"
             if zoom.enabled:
@@ -745,9 +811,7 @@ def run():
                         if (a.get("email") or "").lower() not in org_emails
                         and a.get("email")
                     }
-                    prospect_names = [a.get("name") or "" for a in attendees
-                                      if (a.get("email") or "").lower()
-                                      not in org_emails]
+                    prospect_names = prospect_names_for(m, lead, org_emails)
                     participants = zoom.participants_for(zoom_meeting_id, st)
                     zoom_result = (participants, prospect_emails,
                                    org_emails, prospect_names)
@@ -890,12 +954,19 @@ def selftest():
     r = decide(m_first, lead_meetings, None, z, now)
     checks.append(("zoom brief join flag", r[0] is None))
 
-    # 11. phone join matched by fuzzy name -> completed
+    # 11. phone join matched by fuzzy first name + exact surname -> completed
     parts = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 1800},
-             {"name": "steven kelly", "email": "", "seconds": 1500}]
+             {"name": "steve kelley", "email": "", "seconds": 1500}]
     z = (parts, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Steven Kelley"])
     r = decide(m_first, lead_meetings, None, z, now)
     checks.append(("zoom name match", r[0] == "completed"))
+
+    # 11b. fuzzy-looking name with a different surname never matches.
+    parts = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 1800},
+             {"name": "lowell gilliland", "email": "", "seconds": 1500}]
+    z = (parts, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Lowell Gill"])
+    r = decide(m_first, lead_meetings, None, z, now)
+    checks.append(("zoom surname guard", r[0] == "no_show"))
 
     # 12. no signal at all -> flag
     r = decide(m_first, lead_meetings, None, "skip", now)
@@ -999,6 +1070,34 @@ def selftest():
                 "2026-07-20T16:00:00+00:00")
     v = first_call_field_value(m_scr, "2026-07-20", OUTCOMES["completed"])
     checks.append(("project scraper title", v == "Yes"))
+
+    # 28. attendee contact name fills a missing attendee name.
+    meeting_with_contact = {
+        "attendees": [{"email": "debbie@example.com", "name": None,
+                       "contact_id": "contact_1"}]
+    }
+    debbie = {
+        "display_name": "Debbie Barca",
+        "contacts": [{"id": "contact_1", "name": "Debbie Barca",
+                      "emails": [{"email": "debbie@example.com"}]}],
+    }
+    names = prospect_names_for(meeting_with_contact, debbie,
+                               {"rep@vendingpreneurs.com"})
+    checks.append(("contact name fallback", names == ["Debbie Barca"]))
+
+    # 29. an attached contact with a different surname is a different person.
+    ashley = {
+        "display_name": "Ashley Trybus",
+        "contacts": [{"id": "contact_1", "name": "Ashley Hoeger",
+                      "emails": [{"email": "ashley@example.com"}]}],
+    }
+    names = prospect_names_for(meeting_with_contact, ashley,
+                               {"rep@vendingpreneurs.com"})
+    checks.append(("contact surname guard", names == []))
+
+    # 30. obvious Zoom age metadata does not become a surname.
+    checks.append(("zoom name metadata",
+                   _name_match("Chelsea Streeter 37 YO", "Chelsea Streeter")))
 
     failed = [name for name, ok in checks if not ok]
     for name, ok in checks:
