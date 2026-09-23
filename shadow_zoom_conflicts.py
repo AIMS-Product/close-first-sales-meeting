@@ -286,6 +286,9 @@ def compact_evidence_snapshot(
         "unmatched_human_seconds": 0,
         "unmatched_human_max_seconds": 0,
         "unmatched_human_count": 0,
+        "one_word_first_name_seconds": 0,
+        "different_surname_seconds": 0,
+        "unrelated_human_seconds": 0,
     }
     for participant in participants or []:
         seconds = int(participant.get("seconds") or 0)
@@ -309,6 +312,28 @@ def compact_evidence_snapshot(
             zoom_summary["unmatched_human_max_seconds"], seconds
         )
         zoom_summary["unmatched_human_count"] += 1
+        participant_tokens = re.findall(
+            r"[^\W_]+", name.casefold(), flags=re.UNICODE
+        )
+        prospect_token_sets = [
+            re.findall(r"[^\W_]+", prospect_name.casefold(), flags=re.UNICODE)
+            for prospect_name in prospect_names
+        ]
+        if len(participant_tokens) == 1 and any(
+            prospect_tokens
+            and participant_tokens[0] == prospect_tokens[0]
+            for prospect_tokens in prospect_token_sets
+        ):
+            zoom_summary["one_word_first_name_seconds"] += seconds
+        elif len(participant_tokens) >= 2 and any(
+            len(prospect_tokens) >= 2
+            and participant_tokens[0] == prospect_tokens[0]
+            and participant_tokens[-1] != prospect_tokens[-1]
+            for prospect_tokens in prospect_token_sets
+        ):
+            zoom_summary["different_surname_seconds"] += seconds
+        else:
+            zoom_summary["unrelated_human_seconds"] += seconds
 
     starts_at = production.parse_dt(meeting.get("starts_at"))
     attention_offsets_minutes = []

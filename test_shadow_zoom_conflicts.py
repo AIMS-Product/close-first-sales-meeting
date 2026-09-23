@@ -35,15 +35,20 @@ class AuditWindowTests(unittest.TestCase):
                 {"name": "Lead", "email": "lead@example.com", "seconds": 650},
                 {"name": "Close Notetaker", "email": "", "seconds": 640},
                 {"name": "Unknown Person", "email": "", "seconds": 300},
+                {"name": "Lead", "email": "", "seconds": 200},
+                {"name": "Lead Different", "email": "", "seconds": 100},
             ],
             ORG_EMAILS,
             ["Lead Example"],
-            {"lead"},
+            {"other"},
         )
         self.assertEqual(650, result["zoom"]["verified_prospect_seconds"])
         self.assertEqual(700, result["zoom"]["internal_seconds"])
         self.assertEqual(640, result["zoom"]["automation_seconds"])
-        self.assertEqual(300, result["zoom"]["unmatched_human_seconds"])
+        self.assertEqual(600, result["zoom"]["unmatched_human_seconds"])
+        self.assertEqual(200, result["zoom"]["one_word_first_name_seconds"])
+        self.assertEqual(100, result["zoom"]["different_surname_seconds"])
+        self.assertEqual(300, result["zoom"]["unrelated_human_seconds"])
         self.assertEqual([0], result["attention_offsets_minutes"])
         self.assertEqual([601], result["answered_call_seconds"])
         self.assertEqual(
