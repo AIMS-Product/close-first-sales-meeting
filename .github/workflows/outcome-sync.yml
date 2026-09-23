@@ -34,6 +34,22 @@ jobs:
 
       - run: pip install requests
 
+      - name: Test single-name shadow matcher
+        if: github.ref == 'refs/heads/codex/single-name-shadow-test'
+        run: python -m unittest -v test_single_name_shadow.py
+
+      - name: Run read-only single-name shadow
+        if: github.ref == 'refs/heads/codex/single-name-shadow-test'
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+          ZOOM_ACCOUNT_ID: ${{ secrets.ZOOM_ACCOUNT_ID }}
+          ZOOM_CLIENT_ID: ${{ secrets.ZOOM_CLIENT_ID }}
+          ZOOM_CLIENT_SECRET: ${{ secrets.ZOOM_CLIENT_SECRET }}
+          MIN_ATTEND_SECONDS: "300"
+          HOST_MIN_SECONDS: "600"
+          ZOOM_AUTO_NOSHOW: "1"
+        run: python single_name_shadow.py --lookback-days 14
+
       - name: Run outcome sync
         if: github.ref == 'refs/heads/main'
         env:
