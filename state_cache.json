@@ -48671,12 +48671,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_DsHdGUF84zT9VQpIqp4XZnGBVZSCUNwcDTKLgVlIBGE": {
       "date": "2025-09-02",
@@ -116494,17 +116494,17 @@
       "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
     },
     "lead_eRP3nvlthaQavBKBLeQG8t3aJ15LEhMZfw9GASwrgkM": {
-      "date": "2026-09-23",
+      "date": "2026-09-24",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "August Young",
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+      "quick_disc": null
     },
     "lead_NzKYuxVXKjP2ZYws3OLq2VywXK0VfWi2SFwz5UucQ8E": {
       "date": "2026-09-22",
@@ -116965,7 +116965,7 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_SglBHXI5utShSRlA8ui6LIAY3saWUPqzK8LGROZEhlO": {
-      "date": "2026-09-23",
+      "date": "2026-09-25",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
@@ -117004,7 +117004,7 @@
       "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
     },
     "lead_X0C44z8Co74z4dzOrP6DvYTzOpCzVU4kfjtPY63FPyP": {
-      "date": "2026-09-23",
+      "date": "2026-09-25",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
@@ -117336,12 +117336,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Charlie Ingram",
-      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_6iENwBnUkPsXZ6THvZgJZQi3Va3hTW6JOxN5I7HPpwr": {
       "date": "2026-09-25",
@@ -117624,12 +117624,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Connor George",
-      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
     },
     "lead_2C5z9KjogUcBSyT8VU9mu2WTS3ChpYmXfJwWkicaWZf": {
       "date": "2026-09-24",
@@ -117637,14 +117637,64 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_60O6Jw94yVC0ajZ6pdOm0uwJIP6UXFHRJ4cDGyJatvc": {
+      "date": "2026-09-24",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_06y11TgL51V2gwDv84OxV5nplLEmByxSYsycVm4MThK": {
+      "date": "2026-09-24",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
+    },
+    "lead_Uoghl1NlKB87jua4EflRS0zOiuox5W3ftwuK6SFEhIx": {
+      "date": "2026-09-24",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO",
       "reactivation_override_version": null,
       "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     },
-    "lead_60O6Jw94yVC0ajZ6pdOm0uwJIP6UXFHRJ4cDGyJatvc": {
+    "lead_bShvf4NgRkclKyS3rBGuiv48prGpzxMDDB14NSNBzxE": {
+      "date": "2026-09-26",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_db6QGoDoY1ILw6RDw0dWifVc3eYOiVT9ypxBhD05Lcy": {
       "date": "2026-09-24",
       "call_type": "Closer",
       "scraper": "YES",
@@ -117656,21 +117706,8 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
-    },
-    "lead_06y11TgL51V2gwDv84OxV5nplLEmByxSYsycVm4MThK": {
-      "date": "2026-09-24",
-      "call_type": "Closer",
-      "scraper": "YES",
-      "post_webinar": null,
-      "reactivation": "Connor George",
-      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
-      "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
-      "vendhub": null,
-      "vendhub_date": null,
-      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-23 18:41:02 UTC",
-  "count": 9966
+  "saved_at": "2026-09-23 19:11:48 UTC",
+  "count": 9969
 }
