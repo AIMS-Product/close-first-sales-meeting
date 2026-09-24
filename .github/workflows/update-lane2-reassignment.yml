@@ -1,27 +1,35 @@
-name: Lane 2 Daily Reassignment (Round Robin)
+name: Lane 2 — 30-Day Release (clear Lead Owner)
+
+# Clears Lead Owner on leads in Smart View "L2 Handoff: 30 Days since Booking"
+# (skipping Recapture State Booked / Suppressed). It assigns nothing: the
+# scraper assigner deals released leads from the unowned pool.
+#
+# Native GitHub schedule — cron-job.org is no longer used for this job.
+# Once a weekday, and ORDER MATTERS more than precision:
+#   12:00 UTC  this release     (05:00 PDT / 04:00 PST)
+#   13:00 UTC  assign_lane2_leads.yml  (06:00 PDT / 05:00 PST)
+# The hour gap absorbs GitHub's scheduling delay, so leads released here are
+# dealt the same morning. If the assigner's cron moves, move this one with it.
+#
+# A scheduled run sends no inputs, so dry_run is empty and the run is LIVE.
+# Keep it that way — a positive "apply" flag would make the schedule a no-op.
 
 on:
+  schedule:
+    - cron: '0 12 * * 1-5'
   workflow_dispatch:
     inputs:
       dry_run:
-        description: 'Dry run — read & report only, no writes, no tasks'
+        description: 'Dry run — report who would be released, write nothing'
         type: boolean
         default: false
-      skip_tasks:
-        description: 'Update fields & opps but create no tasks'
-        type: boolean
-        default: false
-  schedule:
-    # Weekdays only. Two crons bracket DST so the run lands at 8am Pacific
-    # year-round (15:00 UTC = 8am PDT, 16:00 UTC = 8am PST). The "off" hour run
-    # is a near no-op: reassigned leads have already dropped off the Smart Views,
-    # so it only sweeps up any stragglers. cron-job.org is the precise primary
-    # trigger; these are the fallback.
-    - cron: '0 15 * * 1-5'
-    - cron: '0 16 * * 1-5'
 
 permissions:
-  contents: write   # needed to commit the updated round-robin state cache
+  contents: read   # release mode writes nothing back to the repo
+
+concurrency:
+  group: lane2-30day-release
+  cancel-in-progress: false
 
 jobs:
   run:
@@ -35,18 +43,8 @@ jobs:
 
       - run: pip install requests
 
-      - name: Run Lane 2 reassignment
+      - name: Release 30-day aged leads
         run: python update_lane2_reassignment.py
         env:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
-          DRY_RUN:    ${{ inputs.dry_run }}
-          SKIP_TASKS: ${{ inputs.skip_tasks }}
-
-      - name: Commit updated state cache
-        if: ${{ inputs.dry_run != true }}
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add lane2_state_cache.json
-          git diff --staged --quiet || git commit -m "Update Lane 2 round-robin state cache [skip ci]"
-          git push
+          DRY_RUN: ${{ inputs.dry_run }}
