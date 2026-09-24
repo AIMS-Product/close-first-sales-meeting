@@ -4,28 +4,41 @@ outcome_sync.py — Close CRM Meeting Outcome Sync
 =================================================
 
 Writes Close's native Meeting Outcome (outcome_id) on past meetings.
-Evidence hierarchy (v5 — per-meeting evidence outranks lead-level fields):
+Evidence hierarchy (v7):
 
   1. Zoom attendance             (participant report via Server-to-Server OAuth)
   2. Close meeting status        (canceled -> Rescheduled/Cancelled)
-  3. Attention PER-CALL activity ("First Meeting Analysis"/"Meeting Analysis"
-                                  custom activity within +/-4h of the meeting
-                                  -> Completed; never overwritten by later calls)
-  4. Attention lead disposition  ("Todays Call Disposition (Opp)" — guarded:
-                                  latest meeting only, <=3 days old; kept as
-                                  secondary because the NEXT call overwrites it)
-  5. Phone conversation          (answered Close call >=5 min on the meeting's
+  3. Lead disposition            ("Todays Call Disposition (Opp)" — guarded:
+                                  latest meeting only, <=3 days old; legacy,
+                                  the NEXT call overwrites it)
+  4. Phone conversation          (answered Close call >=5 min on the meeting's
                                   day -> Completed when Zoom is inconclusive)
-  6. Lead status + RSVP          (status Canceled/No Show AND every external
+  5. Lead status + RSVP          (status Canceled/No Show AND every external
                                   attendee noreply/declined -> Cancelled/No Show)
-  7. Nothing conclusive          -> left blank + flagged in completeness report
+  6. Nothing conclusive          -> left blank + flagged in completeness report
 
-FIELD PROJECTION (v6): outcomes are the source of truth; the legacy
+v7 (2026-09-24) — REMOVED the "First Meeting Analysis custom activity
+exists -> Completed" rung. Two reasons:
+  a) avoma_to_close_first_meeting_sync.py now writes the Meeting Outcome
+     DIRECTLY from Avoma's Outcome tag (Show / No-Show / Rescheduled),
+     which is transcript-grounded and per-meeting — meetings it covers
+     arrive here already terminal and are skipped (projection still runs).
+  b) The rung became actively dangerous under Avoma: the CA is created for
+     analyzed NO-SHOW meetings too (Avoma records the rep waiting), so
+     "CA exists" no longer implies a conversation happened. Attention-era
+     assumption, no longer true.
+This sync is now the FALLBACK for meetings Avoma didn't tag.
+GRACE_MINUTES default raised 90 -> 180 so Avoma's tag (which can lag the
+meeting by a couple hours) usually gets first crack at the outcome before
+the Zoom rung does.
+
+FIELD PROJECTION (since v6): outcomes are the source of truth; the legacy
 "First Call Show Up (Opp)" lead field is kept in lockstep as a bridge for
 Smart Views / older reports. When THE first sales call (sales-titled meeting on
 the lead's FSCBD date) carries outcome Completed -> field "Yes"; No Show ->
 "No". Overwrites a differing value (outcome wins); runs for rep-set outcomes
-too; never touches "First Call Show (Override)".
+too; never touches "First Call Show (Override)". This is the ONLY automated
+writer of that field (the Avoma sync's direct write was removed 2026-09-24).
 
 Designed to live in the close-first-sales-meeting repo as a SEPARATE step in
 the 30-min workflow (isolated failure: a Zoom outage skips outcome sync, it
@@ -49,6 +62,8 @@ ENV / SECRETS
   ZOOM_CLIENT_SECRET   "
   DRY_RUN              "1" (default) = log only; "0" = write outcomes
   LOOKBACK_DAYS        how far back to scan past meetings (default 7)
+  GRACE_MINUTES        skip meetings that ended less than this long ago
+                       (default 180 — gives the Avoma tag first crack)
   MIN_ATTEND_SECONDS   prospect total time to count as attended (default 300)
   HOST_MIN_SECONDS     host presence required before auto No Show (default 600)
   ZOOM_AUTO_NOSHOW     "1" (default) allow auto No Show under the guard above;
@@ -94,7 +109,8 @@ TERMINAL_OUTCOME_IDS = {
 # Any other outcome id present on a meeting (call-type outcomes, future adds)
 # is also treated as terminal: we never overwrite anything non-blank/non-Scheduled.
 
-# Lead custom field: Attention writes its verdict here today.
+# Lead custom field: legacy Attention-era disposition. Avoma does NOT write
+# this — kept only as a fallback for any straggler automation still setting it.
 CF_TODAYS_DISPOSITION = "custom.cf_n2QvikNfeZ0uWObMsyCJmnXnrbWNLGlSvYiKJTwxTqU"
 
 # --- First Call Show Up projection (outcome -> legacy field bridge) ---------
@@ -122,7 +138,7 @@ SALES_TITLE_RE = re.compile("|".join([
 ]), re.IGNORECASE)
 FOLLOWUP_TITLE_RE = re.compile(r"follow[\s-]?up|fallow up|f/u", re.IGNORECASE)
 
-# Attention disposition -> outcome key. Grounded in the field's actual choices.
+# Legacy disposition -> outcome key. Grounded in the field's actual choices.
 DISPOSITION_TO_OUTCOME = {
     "new call show":              "completed",
     "follow up show":             "completed",
@@ -135,17 +151,14 @@ DISPOSITION_TO_OUTCOME = {
     "canceled - rescheduled":     "rescheduled",
 }
 
-# Attention PER-CALL custom activity types. These are per-event records that
-# later calls never overwrite — primary evidence (fixes the Dan Minton case,
-# where a Tuesday cancel overwrote Monday's show in the lead-level field).
-ATTENTION_MEETING_TYPE_IDS = {
-    "actitype_7Hnq4Sw2S223adPFUmTarD",   # Attention - First Meeting Analysis
-    "actitype_1hoSfW6deESpPKyZ4FORYV",   # Attention - Meeting Analysis
-}
+# v7: the "First Meeting Analysis CA exists -> Completed" rung was REMOVED
+# (see docstring). The CA type is still created — by the Avoma sync, which
+# reuses the Attention-era type — but its existence no longer proves a
+# conversation happened (Avoma analyzes no-show recordings too). Only the
+# dialer CA type is still consumed here, as weak phone evidence.
 ATTENTION_DIALER_TYPE_ID = "actitype_6odahlx7K817nuEYi4yL32"  # Close Dialer Call Analysis
-ATTENTION_MATCH_HOURS = 4  # meeting-analysis activity within +/- this of starts_at
 
-# Attention verdict is a LEAD-level "today's" field, so it is only trusted for
+# Disposition is a LEAD-level "today's" field, so it is only trusted for
 # a meeting when it unambiguously refers to it (see attention_signal()).
 ATTENTION_MAX_AGE_DAYS = 3
 
@@ -212,7 +225,11 @@ def env_int(name, default):
 
 DRY_RUN = os.environ.get("DRY_RUN", "1") != "0"
 LOOKBACK_DAYS = env_int("LOOKBACK_DAYS", 7)
-GRACE_MINUTES = env_int("GRACE_MINUTES", 90)  # skip meetings that ended < this long ago
+# v7: 90 -> 180. Avoma's Outcome tag (written to the meeting by
+# avoma_to_close_first_meeting_sync.py) can lag the meeting by a couple of
+# hours; waiting longer lets that transcript-grounded verdict land first,
+# so the Zoom rung here only judges meetings Avoma didn't cover.
+GRACE_MINUTES = env_int("GRACE_MINUTES", 180)
 MIN_ATTEND_SECONDS = env_int("MIN_ATTEND_SECONDS", 300)
 HOST_MIN_SECONDS = env_int("HOST_MIN_SECONDS", 600)
 ZOOM_AUTO_NOSHOW = os.environ.get("ZOOM_AUTO_NOSHOW", "1") != "0"
@@ -313,12 +330,13 @@ def set_lead_field(s, lead_id, field_key, value):
 
 
 def fetch_attention_acts(s, lead_id):
-    """Attention custom-activity instances on a lead -> [{'type_id','at'}]."""
+    """Dialer-analysis custom-activity instances on a lead -> [{'type_id','at'}].
+    (v7: meeting-analysis CAs are no longer evidence — see docstring.)"""
     data = close_get(s, "/activity/custom/", {"lead_id": lead_id, "_limit": 100})
     acts = []
     for a in data.get("data", []):
         tid = a.get("custom_activity_type_id")
-        if tid not in ATTENTION_MEETING_TYPE_IDS and tid != ATTENTION_DIALER_TYPE_ID:
+        if tid != ATTENTION_DIALER_TYPE_ID:
             continue
         at = parse_dt(a.get("activity_at") or a.get("date_created"))
         if at:
@@ -501,30 +519,13 @@ def first_call_field_value(meeting, fscbd_str, outcome_id):
     return None
 
 
-def attention_activity_signal(meeting, acts):
-    """
-    Per-meeting Attention evidence: a First Meeting / Meeting Analysis custom
-    activity within ATTENTION_MATCH_HOURS of the meeting start means Attention
-    analyzed a real conversation for THIS event -> Completed.
-    (Attention only produces a meeting analysis when a meeting actually ran.)
-    """
-    st = parse_dt(meeting.get("starts_at"))
-    if st is None:
-        return None, None
-    for a in acts or ():
-        if a["type_id"] in ATTENTION_MEETING_TYPE_IDS and \
-                abs((a["at"] - st).total_seconds()) <= ATTENTION_MATCH_HOURS * 3600:
-            return "completed", f"attention meeting-analysis at {a['at']:%m-%d %H:%M}"
-    return None, None
-
-
 def phone_evidence(meeting, calls, acts=()):
     """
     Phone conversation on the meeting's Pacific day (the Rashard case: prospect
     misses the Zoom link, rep reaches them by phone — that IS the show).
       answered call >= MIN_PHONE_SHOW_SECONDS   -> ("completed", detail)
       answered call >= MIN_PHONE_REVIEW_SECONDS
-        or an Attention dialer analysis that day -> ("review", detail)
+        or a dialer analysis that day            -> ("review", detail)
       else                                       -> (None, None)
     """
     st = parse_dt(meeting.get("starts_at"))
@@ -540,7 +541,7 @@ def phone_evidence(meeting, calls, acts=()):
     dialer = any(a["type_id"] == ATTENTION_DIALER_TYPE_ID
                  and pacific_date(a["at"]) == day for a in acts or ())
     if best >= MIN_PHONE_REVIEW_SECONDS or dialer:
-        why = f"answered call {best}s" if best else "attention dialer analysis"
+        why = f"answered call {best}s" if best else "dialer analysis"
         return "review", f"{why} on meeting day — review before no-show"
     return None, None
 
@@ -665,6 +666,10 @@ def decide(meeting, lead_meetings, disposition, zoom_result, now_utc,
     """
     -> (outcome_key or None, source, detail)
     zoom_result: (participants or None) pre-fetched, or "skip" if zoom disabled/no link.
+
+    v7 note: Avoma-tagged meetings normally never reach this function —
+    avoma_to_close_first_meeting_sync.py writes their outcome directly and
+    they get skipped as already-terminal. This is the fallback path.
     """
     # 1. Zoom attendance.
     zoom_detail = None
@@ -681,22 +686,17 @@ def decide(meeting, lead_meetings, disposition, zoom_result, now_utc,
             return "rescheduled", "close-status", "canceled + later booking exists"
         return "cancelled", "close-status", "canceled, no later booking"
 
-    # 3. Attention per-call activity — per-meeting record, never overwritten.
-    aa, aa_detail = attention_activity_signal(meeting, acts)
-    if aa:
-        return aa, "attention-activity", aa_detail
-
-    # 4. Attention lead-level disposition (guarded; secondary during transition).
+    # 3. Legacy lead-level disposition (guarded).
     a = attention_signal(meeting, disposition, lead_meetings, now_utc)
     if a:
         return a, "attention", f"disposition='{disposition}'"
 
-    # 5. Phone conversation on the meeting day.
+    # 4. Phone conversation on the meeting day.
     ph, ph_detail = phone_evidence(meeting, calls, acts)
     if ph == "completed":
         return "completed", "phone", ph_detail
 
-    # 6. Lead status + attendee RSVP negative evidence.
+    # 5. Lead status + attendee RSVP negative evidence.
     sr, sr_detail = status_rsvp_signal(meeting, lead_status, ext_attendee_statuses)
     if sr:
         return sr, "status-rsvp", sr_detail
@@ -768,8 +768,8 @@ def run():
         if st is None or st > now_utc:
             continue  # future meetings keep their Scheduled default
         # Grace period: don't judge a meeting that is in progress or just
-        # ended — Attention hasn't written its verdict and Zoom's participant
-        # report lags meeting end. The next 30-min run will pick it up.
+        # ended — Avoma's Outcome tag hasn't been written yet and Zoom's
+        # participant report lags meeting end. A later run picks it up.
         est_end = st + timedelta(seconds=int(m.get("duration") or 3600))
         if now_utc < est_end + timedelta(minutes=GRACE_MINUTES):
             continue
@@ -910,20 +910,20 @@ def selftest():
     r = decide(m_cancel, [m_cancel], None, "skip", now)
     checks.append(("cancel->cancelled", r[0] == "cancelled"))
 
-    # 3. attention show on latest past meeting -> completed
+    # 3. disposition show on latest past meeting -> completed
     r = decide(m_first, lead_meetings, "New Call Show", "skip", now)
     checks.append(("attention show", r[0] == "completed" and r[1] == "attention"))
 
-    # 4. attention no-show variants map correctly
+    # 4. disposition no-show variants map correctly
     r = decide(m_first, lead_meetings, "Reschedule No Show", "skip", now)
     checks.append(("attention noshow", r[0] == "no_show"))
 
-    # 5. attention ignored when meeting is NOT the latest past meeting
+    # 5. disposition ignored when meeting is NOT the latest past meeting
     m_old = mtg("m0", "Vending Strategy Call", "2026-07-18T16:00:00+00:00")
     r = decide(m_old, lead_meetings + [m_old], "New Call Show", "skip", now)
     checks.append(("attention guard: not latest", r[0] is None))
 
-    # 6. attention ignored when stale (> ATTENTION_MAX_AGE_DAYS)
+    # 6. disposition ignored when stale (> ATTENTION_MAX_AGE_DAYS)
     m_stale = mtg("ms", "Vending Strategy Call", "2026-07-10T16:00:00+00:00")
     r = decide(m_stale, [m_stale], "New Call Show", "skip", now)
     checks.append(("attention guard: stale", r[0] is None))
@@ -972,32 +972,16 @@ def selftest():
     r = decide(m_first, lead_meetings, None, "skip", now)
     checks.append(("no signal flag", r[0] is None and r[1] == "none"))
 
-    # --- v5: per-meeting evidence ---
-    MEETING_TYPE = next(iter(ATTENTION_MEETING_TYPE_IDS))
     mstart = parse_dt(m_first["starts_at"])
 
-    # 13. attention meeting-analysis activity within window -> completed
-    acts = [{"type_id": MEETING_TYPE, "at": mstart + timedelta(minutes=30)}]
-    r = decide(m_first, lead_meetings, None, "skip", now, acts=acts)
-    checks.append(("attention-activity match", r[0] == "completed"
-                   and r[1] == "attention-activity"))
-
-    # 14. attention activity outranks a contradicting lead disposition
-    r = decide(m_first, lead_meetings, "New Call No Show", "skip", now, acts=acts)
-    checks.append(("activity beats disposition", r[0] == "completed"
-                   and r[1] == "attention-activity"))
-
-    # 14b. Zoom participant report now outranks the Attention activity.
-    host_only = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 1800}]
-    zoom_noshow = (host_only, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Prospect"])
-    r = decide(m_first, lead_meetings, "New Call Show", zoom_noshow, now, acts=acts)
-    checks.append(("zoom beats attention activity", r[0] == "no_show"
-                   and r[1] == "zoom"))
-
-    # 15. attention activity outside +/-4h window -> not matched
-    acts_far = [{"type_id": MEETING_TYPE, "at": mstart + timedelta(hours=9)}]
-    r = decide(m_first, lead_meetings, None, "skip", now, acts=acts_far)
-    checks.append(("activity window guard", r[1] != "attention-activity"))
+    # 13. v7: a meeting-analysis CA is NOT evidence any more — a meeting with
+    #     no other signal still flags, even with acts present, because the CA
+    #     also gets created for analyzed no-shows (Avoma records the rep
+    #     waiting). Avoma's tag now reaches the outcome via its own sync.
+    fake_ca = [{"type_id": "actitype_7Hnq4Sw2S223adPFUmTarD",
+                "at": mstart + timedelta(minutes=30)}]
+    r = decide(m_first, lead_meetings, None, "skip", now, acts=fake_ca)
+    checks.append(("v7: CA existence not evidence", r[0] is None))
 
     # 16. Zoom no-show outranks an answered 400s phone call.
     calls = [{"at": mstart + timedelta(hours=2), "duration": 400,
@@ -1021,6 +1005,11 @@ def selftest():
     r = decide(m_first, lead_meetings, None, z, now, calls=calls_na)
     checks.append(("unanswered call ignored", r[0] == "no_show"))
 
+    # 18b. phone show fills in when Zoom is inconclusive
+    r = decide(m_first, lead_meetings, None, "skip", now, calls=calls)
+    checks.append(("phone show when no zoom", r[0] == "completed"
+                   and r[1] == "phone"))
+
     # 19. status+rsvp: Canceled (by Lead) + attendee noreply -> cancelled (Ruben fix)
     r = decide(m_first, lead_meetings, None, "skip", now,
                lead_status="🔻 Canceled (by Lead)",
@@ -1039,7 +1028,7 @@ def selftest():
                ext_attendee_statuses=["yes"])
     checks.append(("rsvp yes blocks status rung", r[0] is None))
 
-    # --- v6: First Call Show Up projection ---
+    # --- First Call Show Up projection ---
     # m_first starts 2026-07-20T16:00Z = 2026-07-20 Pacific (9am PDT)
     # 22. first sales call + Completed -> Yes
     v = first_call_field_value(m_first, "2026-07-20", OUTCOMES["completed"])
