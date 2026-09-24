@@ -5,9 +5,11 @@ Daily (weekday) round-robin reassignment of two Lane 2 lead buckets in Close CRM
 
 Buckets (driven by Close Smart Views, owner-filtered to Lane 1 reps):
   - Bucket 1  "L2 Handoff: 14-days No Comms"  -> Lane 2 Handraiser = "No Activity / Past 14 Days"
-  - Bucket 2  "L2 Handoff: 30 Days since Booking" -> Lane 2 Handraiser = "30 Day Aged Deals"
+  - Bucket 2  "L2 Handoff: 30 Days since Booking" -> RELEASE: clears Lead Owner only
+              (skips Recapture State Booked / Suppressed). The Lane 2 reconciler
+              and assign_lane2_leads.py handle everything after that.
 
-For each lead pulled from a view, the script:
+For each lead pulled from a round-robin view (Bucket 1), the script:
   1. Assigns the lead to the next Lane 2 rep in a round-robin rotation
      (each bucket keeps its OWN rotation pointer, persisted in lane2_state_cache.json).
   2. Sets the Lane 2 Handraiser custom field for that bucket.
@@ -87,10 +89,16 @@ BUCKETS = {
         "no_comms_days": 14,
     },
     "bucket2": {
-        # TEMPORARILY DISABLED — Smart View is catching leads it shouldn't; the
-        # 30-Day process is being revisited before it goes live. Flip back to
-        # True to re-enable (the query is still defined in lane2_view_filters.json).
-        "enabled":       False,
+        # RE-ENABLED 2026-09-24 as a RELEASE bucket. It no longer round-robins,
+        # writes Handraiser, moves opps or creates tasks. It only clears Lead
+        # Owner. From there the Lane 2 system takes over:
+        #   lane2_state.py            -> Owner Team = None (Recapture State is
+        #                                already owner-independent)
+        #   assign_lane2_leads.py     -> deals it from the unclaimed pool
+        #   sync_lead_owner_to_opp.py -> moves the opp once the new owner lands
+        # handraiser / task_text / index_key below are unused in release mode.
+        "enabled":       True,
+        "action":        "release",
         "label":         "30-Day Aged",
         "smart_view_id": "save_vUj7qzI7VqAcOj0kiYJVoSPGtTQVRXB9nqFNjPfMxXU",
         "handraiser":    "30 Day Aged Deals",
@@ -99,6 +107,16 @@ BUCKETS = {
     },
 }
 PROCESS_ORDER = ["bucket2", "bucket1"]  # Bucket 2 takes precedence on overlap
+
+# Release mode leaves these Recapture States alone. The assigner never deals
+# them, so clearing the owner would strand the lead with nobody on it:
+#   Booked     - a closer is actively working a live opp (Contract Sent /
+#                Follow Up / Reschedule + activity in 30 days). The 30-day view
+#                requires activity in the last 14 days, so every Follow Up /
+#                Reschedule lead in it lands here.
+#   Suppressed - DNC / Won / DQ. Nothing to hand off.
+RECAPTURE_STATE_FIELD = "cf_hKcyx4tQSMvHd7llfLX363bx3LGXMxVEmFHEtjpR5C2"
+RELEASE_SKIP_STATES   = {"Booked", "Suppressed"}
 
 
 # ---------------------------------------------------------------------------
@@ -359,6 +377,23 @@ def reassign_lead(lead_id, rep_id, handraiser_value):
         )
 
 
+def read_recapture_state(lead):
+    key = f"custom.{RECAPTURE_STATE_FIELD}"
+    if key in lead:
+        return lead[key]
+    cust = lead.get("custom", {}) or {}
+    return cust.get(RECAPTURE_STATE_FIELD) or cust.get("Recapture State")
+
+
+def release_lead(lead_id):
+    """Clear Lead Owner so the Lane 2 assigner can deal the lead. Verifies it took."""
+    updated = close_request("PUT", f"{BASE}/lead/{lead_id}/",
+                            json={f"custom.{LEAD_OWNER_FIELD}": None}).json()
+    if read_lead_owner(updated):
+        raise RuntimeError(f"Lead {lead_id}: owner clear did not take "
+                           f"(still {read_lead_owner(updated)!r}).")
+
+
 def reassign_opportunity(opp_id, rep_id):
     close_request("PUT", f"{BASE}/opportunity/{opp_id}/", json={"user_id": rep_id})
 
@@ -437,6 +472,21 @@ def main():
             lead = get_lead(lead_id)
             name = lead.get("display_name", lead_id)
 
+            if b.get("action") == "release":
+                state_val = read_recapture_state(lead)
+                if state_val in RELEASE_SKIP_STATES:
+                    skipped_owned += 1
+                    print(f"  SKIP ({state_val})  {name}")
+                    continue
+                if dry_run:
+                    print(f"  WOULD RELEASE  {name}  (Recapture State: {state_val})")
+                else:
+                    release_lead(lead_id)
+                    print(f"  RELEASED  {name}  (Recapture State: {state_val})")
+                handled.add(lead_id)
+                assigned += 1
+                continue
+
             # Safety belt: if the view ever returns a lead already on a Lane 2 rep,
             # don't reassign it and don't consume a rotation slot.
             if read_lead_owner(lead) in REP_IDS:
@@ -470,8 +520,13 @@ def main():
             assigned += 1
 
         totals[key] = assigned
-        print(f"  {b['label']}: assigned {assigned}, "
-              f"overlap-skipped {skipped_overlap}, already-owned-skipped {skipped_owned}")
+        if b.get("action") == "release":
+            print(f"  {b['label']}: released {assigned}, "
+                  f"overlap-skipped {skipped_overlap}, "
+                  f"Booked/Suppressed-skipped {skipped_owned}")
+        else:
+            print(f"  {b['label']}: assigned {assigned}, "
+                  f"overlap-skipped {skipped_overlap}, already-owned-skipped {skipped_owned}")
 
     if not dry_run:
         save_state(state)
