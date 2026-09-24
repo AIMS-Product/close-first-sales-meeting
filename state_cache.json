@@ -117949,13 +117949,14 @@
       "quick_disc": null
     },
     "lead_PjXm8uZNwgrUVVesY2ofaNuX4JDgmJ0DFca01FRpvI2": {
-      "date": "2026-09-24",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": null,
+      "reactivation": "Pearl Sathekge",
+      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Instagram",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -117991,12 +117992,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Connor George",
-      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
     },
     "lead_rFn6U8SFQrzNKAwyaRvm0x1WDKwQubb6scqeaNmr4XB": {
       "date": "2026-09-29",
@@ -118004,14 +118005,26 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_0Tj8DkziTIrrvVBDhQ3yIgbkZbMXWvop0W4WX0RFQ0w": {
+      "date": "2026-09-29",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-24 16:12:35 UTC",
-  "count": 9993
+  "saved_at": "2026-09-24 16:41:32 UTC",
+  "count": 9994
 }
