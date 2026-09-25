@@ -118268,8 +118268,21 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF"
+    },
+    "lead_XfaDRuCrBSB2JWDMf3b4ot1pFRE4ngNTqESgx6ZTN1r": {
+      "date": "2026-10-01",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Brad Savage",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF"
     }
   },
-  "saved_at": "2026-09-25 19:39:55 UTC",
-  "count": 10013
+  "saved_at": "2026-09-25 20:11:20 UTC",
+  "count": 10014
 }
