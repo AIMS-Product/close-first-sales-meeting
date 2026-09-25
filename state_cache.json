@@ -117055,13 +117055,14 @@
       "reactivation_user": "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp"
     },
     "lead_mOANGbqUKpLwT8FfyB3Qj4oXOLR02erQ2A4HfCd6Bmg": {
-      "date": "2026-09-25",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -117164,13 +117165,14 @@
       "quick_disc": null
     },
     "lead_1X77WaqG4uUNkBbly6PoAsc2t5MrAFJqIlJOJ4CU3a4": {
-      "date": "2026-09-25",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -117394,13 +117396,14 @@
       "quick_disc": null
     },
     "lead_gKPk4ApEPagnTKnKD9egUgrNkg8tRsDA84yDK3IYB5S": {
-      "date": "2026-09-25",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -118163,8 +118166,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_WCcjr80Y5JcHHhEZECAXEJNbQscI5NseJxiisEsNjuK": {
+      "date": "2026-09-25",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Rob Maxfield",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
     }
   },
-  "saved_at": "2026-09-25 16:41:56 UTC",
-  "count": 10005
+  "saved_at": "2026-09-25 17:13:25 UTC",
+  "count": 10006
 }
