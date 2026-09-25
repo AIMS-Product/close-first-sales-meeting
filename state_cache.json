@@ -118197,14 +118197,27 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Naria Torres",
-      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
     },
     "lead_uOCwCctsL5GKNRfeIIWPLvkZdJXtwiar6TBTVg7Hmu3": {
+      "date": "2026-09-28",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_89Vwtpp77csqqExZF5iIdDg75oLhPavl3OvVWyyKlUk": {
       "date": "2026-09-28",
       "call_type": "Closer",
       "scraper": "YES",
@@ -118216,8 +118229,34 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_yQXWYctC8cm1NUzm4OkJykDRCFPTok0TaMuTIrFq2Zz": {
+      "date": "2026-09-27",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_Is5iBHaEgcJIp5YtPvmM6opLNEzSY4f26yNxZwxqSUe": {
+      "date": "2026-09-30",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Brad Savage",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF"
     }
   },
-  "saved_at": "2026-09-25 18:40:30 UTC",
-  "count": 10009
+  "saved_at": "2026-09-25 19:10:24 UTC",
+  "count": 10012
 }
