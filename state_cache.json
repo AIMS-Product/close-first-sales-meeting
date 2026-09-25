@@ -118281,8 +118281,21 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF"
+    },
+    "lead_XFVCenKF93R82xD6u2cbQ9MEGz8G2GQVCqNejN4TpFw": {
+      "date": "2026-09-28",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Josh Stoffel",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_WdDkCcFt7B6F7nPJJiWGi6vl5g5jeqbluErfy6Syrfs"
     }
   },
-  "saved_at": "2026-09-25 20:11:20 UTC",
-  "count": 10014
+  "saved_at": "2026-09-25 20:40:21 UTC",
+  "count": 10015
 }
