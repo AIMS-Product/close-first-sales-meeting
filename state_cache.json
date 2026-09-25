@@ -117418,13 +117418,14 @@
       "quick_disc": null
     },
     "lead_92kiKeJ9izYNCx8dqzAZdt8K31ETR9lF313Gdgdzw6v": {
-      "date": "2026-09-25",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -118152,6 +118153,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-25 14:41:58 UTC",
+  "saved_at": "2026-09-25 15:12:03 UTC",
   "count": 10004
 }
