@@ -116069,11 +116069,12 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Google Ads",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": "Yes"
     },
     "lead_MwAwKXrPZM8a3dkzZxHDbfSWLvJ9bfmRzaop3qSNYhU": {
       "date": "2026-09-22",
@@ -118576,14 +118577,26 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_ASlRnZWM9pRRRkgIlK6CeefFJ5MqT8mZLGJoIvTx0rM": {
+      "date": "2026-09-29",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-27 23:10:48 UTC",
-  "count": 10038
+  "saved_at": "2026-09-27 23:40:57 UTC",
+  "count": 10039
 }
