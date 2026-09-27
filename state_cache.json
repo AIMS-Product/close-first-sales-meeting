@@ -118545,8 +118545,21 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_8UDC7WAhyYNxEyhrh3flGsYUqmXh9UVkn7Z1LOlY6Lm"
+    },
+    "lead_P3mKnU8G3beuDXeA9ORGikb4IsTNsBhwiVKMw6kOfb0": {
+      "date": null,
+      "call_type": null,
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "VSL",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-27 19:10:22 UTC",
-  "count": 10035
+  "saved_at": "2026-09-27 19:40:22 UTC",
+  "count": 10036
 }
