@@ -118532,8 +118532,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
+    },
+    "lead_evMn23WGNeNrQsujtqGJSIBYQVQbhZthXut35hZMmpC": {
+      "date": "2026-10-02",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Owen Hart",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_8UDC7WAhyYNxEyhrh3flGsYUqmXh9UVkn7Z1LOlY6Lm"
     }
   },
-  "saved_at": "2026-09-27 17:40:36 UTC",
-  "count": 10034
+  "saved_at": "2026-09-27 18:10:15 UTC",
+  "count": 10035
 }
