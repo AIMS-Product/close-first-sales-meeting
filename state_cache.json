@@ -118522,13 +118522,14 @@
       "quick_disc": null
     },
     "lead_aYwhDNrprIC3I4yUFrZJY2NJjqI2XpyflmcavkDOQgF": {
-      "date": "2026-09-28",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
@@ -118667,8 +118668,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_wxtwxZMaS42cigtOw2qP42gs0A07fa9D4lG8fD2GD21": {
+      "date": "2026-09-28",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-28 12:10:26 UTC",
-  "count": 10045
+  "saved_at": "2026-09-28 12:24:13 UTC",
+  "count": 10046
 }
