@@ -118954,9 +118954,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -118985,8 +118984,47 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
+    },
+    "lead_HIovmh46TDej6vJue85NHjXjz0nSJBqQD5wlMvYUCeG": {
+      "date": "2026-09-29",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_rwPZnnGOfeR9x061uHWCuJIrjZDBjGn3HQdlQne4R6x": {
+      "date": "2026-09-29",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": "Yes"
+    },
+    "lead_X65czlWRaUdok3BnaaE9Aq4ZiSWKuKZchd1h6ddaBNl": {
+      "date": "2026-09-30",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-28 21:41:10 UTC",
-  "count": 10070
+  "saved_at": "2026-09-28 22:10:21 UTC",
+  "count": 10073
 }
