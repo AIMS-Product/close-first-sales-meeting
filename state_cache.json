@@ -118010,13 +118010,13 @@
     },
     "lead_rFn6U8SFQrzNKAwyaRvm0x1WDKwQubb6scqeaNmr4XB": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
+      "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -119162,8 +119162,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
+    },
+    "lead_wMKDW993Xb6Jv1LPSU1LSUMD7IYe3aoVlwbvoNq75t3": {
+      "date": "2026-10-03",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-29 01:40:46 UTC",
-  "count": 10084
+  "saved_at": "2026-09-29 02:00:49 UTC",
+  "count": 10085
 }
