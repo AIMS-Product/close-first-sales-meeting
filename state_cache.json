@@ -119305,13 +119305,14 @@
       "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
     },
     "lead_P2SdASb8c5LkwUdtITnd6bAGe4XudgEwt7NzY8vzAwE": {
-      "date": "2026-09-30",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
@@ -119543,6 +119544,6 @@
       "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     }
   },
-  "saved_at": "2026-09-29 22:10:46 UTC",
+  "saved_at": "2026-09-29 22:40:31 UTC",
   "count": 10114
 }
