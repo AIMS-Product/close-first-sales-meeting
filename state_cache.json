@@ -118649,13 +118649,14 @@
       "quick_disc": null
     },
     "lead_q25SwThOUex8oq4oW51NNdBi8cIhEYXTrI6BpByKKpG": {
-      "date": "2026-09-29",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "YouTube",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -119188,6 +119189,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-09-29 12:23:43 UTC",
+  "saved_at": "2026-09-29 12:41:29 UTC",
   "count": 10086
 }
