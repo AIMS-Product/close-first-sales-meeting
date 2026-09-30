@@ -115731,12 +115731,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
+      "quick_disc": "Yes"
     },
     "lead_hpJGKEyjBEBDXIcK5GrpYoHWNA2VYS15y49jMAK5kgK": {
       "date": "2026-09-18",
@@ -115744,12 +115744,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
+      "quick_disc": "Yes"
     },
     "lead_8dPD1aavvatuAq01Sqj7TS8kQZN0WI8q5w8mxmVmpi5": {
       "date": "2026-09-18",
@@ -120129,7 +120129,6 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
       "funnel_name": null,
       "vendhub": null,
@@ -120147,8 +120146,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_p8FVwdW3af21WyetiK5gs96J94EmQjgTrrQCTAhnhNE": {
+      "date": "2026-10-01",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-09-30 23:10:50 UTC",
-  "count": 10163
+  "saved_at": "2026-09-30 23:40:57 UTC",
+  "count": 10164
 }
