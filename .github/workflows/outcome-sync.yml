@@ -46,7 +46,7 @@ jobs:
           LOOKBACK_DAYS: "7"
           MIN_ATTEND_SECONDS: "300"
           HOST_MIN_SECONDS: "600"
-          ZOOM_AUTO_NOSHOW: "1"
+          ZOOM_AUTO_NOSHOW: "0"
         run: python outcome_sync.py
 
       - name: Upload run report
