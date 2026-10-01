@@ -120183,8 +120183,21 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": null
+    },
+    "lead_K1pZey6exs0orf7ErMHD9mOAmfx1QWhiQZeDHSaQIQK": {
+      "date": "2026-10-02",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": "Yes"
     }
   },
-  "saved_at": "2026-10-01 00:38:11 UTC",
-  "count": 10166
+  "saved_at": "2026-10-01 01:33:52 UTC",
+  "count": 10167
 }
