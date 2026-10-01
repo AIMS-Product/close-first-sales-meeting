@@ -120524,8 +120524,34 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": null
+    },
+    "lead_3E1qkSn7xgxACtv23mpWeFVl1Ifn7KMRIbczSG0GEMp": {
+      "date": "2026-10-02",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_KsqW4UKWkWZmP16XAp5gaxuvC4dzLtNqPfU4LQ3ruOQ": {
+      "date": "2026-10-02",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-10-01 21:40:03 UTC",
-  "count": 10192
+  "saved_at": "2026-10-01 22:11:23 UTC",
+  "count": 10194
 }
