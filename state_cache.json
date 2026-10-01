@@ -120531,9 +120531,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -120544,14 +120543,14 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Vince Bartolini",
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     }
   },
-  "saved_at": "2026-10-01 22:11:23 UTC",
+  "saved_at": "2026-10-01 22:40:16 UTC",
   "count": 10194
 }
