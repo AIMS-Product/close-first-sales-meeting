@@ -120854,8 +120854,34 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_ZXgSvOkau5lLNSOijJGSjO9iuYyO0mlAahfM9wnDtUN": {
+      "date": "2026-10-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Owen Hart",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_8UDC7WAhyYNxEyhrh3flGsYUqmXh9UVkn7Z1LOlY6Lm"
+    },
+    "lead_t60pXNhlfjkuiMAZPy78NttQwXZ1MCSvro0lJx2VYn1": {
+      "date": "2026-10-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-10-02 21:11:09 UTC",
-  "count": 10218
+  "saved_at": "2026-10-02 21:40:21 UTC",
+  "count": 10220
 }
