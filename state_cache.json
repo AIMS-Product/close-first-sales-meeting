@@ -120534,11 +120534,12 @@
     "lead_3E1qkSn7xgxACtv23mpWeFVl1Ifn7KMRIbczSG0GEMp": {
       "date": "2026-10-02",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Connor George",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -120665,8 +120666,21 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_KShm7ayp4mamouhy4nw23AqfoSyVHTAAjtxES18QGbH": {
+      "date": "2026-10-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Rob Maxfield",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
     }
   },
-  "saved_at": "2026-10-02 15:12:26 UTC",
-  "count": 10203
+  "saved_at": "2026-10-02 15:40:33 UTC",
+  "count": 10204
 }
