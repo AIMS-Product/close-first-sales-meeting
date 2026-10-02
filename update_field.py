@@ -157,6 +157,7 @@ SCRAPER_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+ascent\s*-?\s*next\s+steps", re.IGNORECASE), "Owen Hart"),  # Vendingpreneurs Ascent - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+keystone\s*-?\s*next\s+steps", re.IGNORECASE), "Brad Savage"),  # Vendingpreneurs Keystone - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+summit\s*-?\s*next\s+steps", re.IGNORECASE), "Rob Maxfield"),  # Vendingpreneurs Summit - Next Steps
+    (re.compile(r"vendingpren[eu]+rs?\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Igor Trojanowski"),  # Vendingpreneurs Growth - Next Steps
 ]
 
 CLOSER_PATTERNS = [

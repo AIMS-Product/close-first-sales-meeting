@@ -63,6 +63,7 @@ SCRAPER_TITLE_MAP = [
     (re.compile(r"tlg\s+clarity\s*-?\s*next\s+steps",                        re.IGNORECASE), "Luna"),
     (re.compile(r"vendingpren[eu]+rs?\s+ascent\s*-?\s*next\s+steps",          re.IGNORECASE), "Owen Hart"),
     (re.compile(r"vendingpren[eu]+rs?\s+keystone\s*-?\s*next\s+steps",        re.IGNORECASE), "Brad Savage"),
+    (re.compile(r"vendingpren[eu]+rs?\s+growth\s*-?\s*next\s+steps",          re.IGNORECASE), "Igor Trojanowski"),
 ]
 
 EXCLUDED_OWNERS = {
