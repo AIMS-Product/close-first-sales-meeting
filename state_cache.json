@@ -120954,8 +120954,34 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_tfOi4Adx4gwLZs19iNfwOB2DgjuFT9IRJhI8ZbKiVj1": {
+      "date": "2026-10-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_Ei3FT5Bq059h3tV7dnxHRjTWr4Ki1Z0WZtA5a6bEEiv": {
+      "date": "2026-10-05",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-10-03 18:10:45 UTC",
-  "count": 10226
+  "saved_at": "2026-10-03 18:40:03 UTC",
+  "count": 10228
 }
