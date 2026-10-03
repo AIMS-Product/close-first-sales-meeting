@@ -120436,9 +120436,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -120896,6 +120895,6 @@
       "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
     }
   },
-  "saved_at": "2026-10-03 00:31:47 UTC",
+  "saved_at": "2026-10-03 01:10:46 UTC",
   "count": 10221
 }
