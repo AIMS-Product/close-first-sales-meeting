@@ -32650,11 +32650,12 @@
     "lead_PjpqunsslRS1NvmIEElctCJ6kTTrFDkZCfiVogYs7Xi": {
       "date": "2025-11-13",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -121153,6 +121154,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-05 14:44:12 UTC",
+  "saved_at": "2026-10-05 15:14:16 UTC",
   "count": 10242
 }
