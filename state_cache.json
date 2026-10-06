@@ -121441,14 +121441,38 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_HoywNIA03ccwGfMz2LOoZuYfDjxShShPvLThc4SOg6r": {
+      "date": "2026-10-06",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": "Yes"
+    },
+    "lead_PfOE8Xts769OaSS4FP0ftvoW62i5CQmynvNUVfqIAEa": {
+      "date": "2026-10-07",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": "Yes"
     }
   },
-  "saved_at": "2026-10-06 00:33:32 UTC",
-  "count": 10265
+  "saved_at": "2026-10-06 01:22:23 UTC",
+  "count": 10267
 }
