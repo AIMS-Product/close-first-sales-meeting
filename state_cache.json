@@ -121683,12 +121683,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "August Young",
-      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
     },
     "lead_czrfMe5XQ4LKBKsnfxWoVSaQpwhUG7rgvxL8AZK5iU1": {
       "date": "2026-10-07",
@@ -121704,6 +121704,6 @@
       "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF"
     }
   },
-  "saved_at": "2026-10-06 23:11:06 UTC",
+  "saved_at": "2026-10-06 23:40:39 UTC",
   "count": 10285
 }
