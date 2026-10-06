@@ -16,28 +16,26 @@ For each **past** meeting in the last 7 days (excluded owners skipped):
 
 1. **Already has a terminal outcome?** → skip. The script only ever writes when
    the outcome is blank or "Scheduled" — a rep's manual edit is never overwritten.
-2. **Canceled in Close** (status or "Canceled:" title) → `Rescheduled` if a later
-   booking exists on the lead, else `Cancelled`.
-3. **Attention verdict** — reads "Todays Call Disposition (Opp)" (which Attention
-   already writes) and maps it: New Call Show / Follow Up Show / Reschedule Show →
-   `Completed`; the No Show variants → `No Show`; Canceled → `Cancelled`;
-   Canceled - Rescheduled → `Rescheduled`. Guarded: only trusted when the meeting
-   is the lead's most recent past meeting and ≤ 3 days old (it's a lead-level
-   "today's" field, so it can only describe the latest call).
-4. **Zoom attendance** — parses the Zoom meeting ID from the meeting's join link,
+2. **Zoom attendance** — parses the Zoom meeting ID from the meeting's join link,
    pulls the participant report, matches the prospect by attendee email (fuzzy
    name match covers phone/renamed joins):
    - prospect on ≥ 5 min → `Completed`
    - prospect absent AND host on ≥ 10 min → `No Show` (listed as "auto no-show"
      in the report for review; disable entirely with `ZOOM_AUTO_NOSHOW=0`)
    - prospect on < 5 min, host barely present, or no Zoom data → **flag, no write**
-5. **No signal** → left blank and flagged in the completeness report — this is the
+3. **Canceled in Close** (status or "Canceled:" title) → `Rescheduled` if a later
+   booking exists on the lead, else `Cancelled`.
+4. **Phone conversation** — an answered Close call of at least 5 minutes on the
+   meeting's day → `Completed` when Zoom is inconclusive.
+5. **Lead status + attendee RSVP** — a Canceled or No Show lead status is used
+   only when every external attendee declined or did not reply.
+6. **No signal** → left blank and flagged in the completeness report — this is the
    "every show gets logged" guarantee: flagged meetings print as review links
    (`https://app.close.com/lead/...`) in the Actions log and land in
    `outcome_sync_report.json` (uploaded as a workflow artifact).
 
-Residual Google Meet meetings simply have no Zoom link → they resolve via
-Attention or get flagged. No Meet integration needed while that tail shrinks.
+Residual Google Meet meetings simply have no Zoom link → they resolve through
+Close call evidence or are flagged. No Meet integration needed while that tail shrinks.
 
 ## Setup steps
 
