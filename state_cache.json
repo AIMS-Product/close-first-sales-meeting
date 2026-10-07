@@ -122461,8 +122461,34 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_N1QCe1RWpzN5wfCFOLQZwdkMgGPZf7vEaiWf40v5l2N": {
+      "date": "2026-10-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Catalina",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": null
+    },
+    "lead_4fMd6dw29xYBVB1avKwr215NJGXIHCIyWM8zpH9JgJZ": {
+      "date": "2026-10-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-10-07 21:11:14 UTC",
-  "count": 10346
+  "saved_at": "2026-10-07 21:40:55 UTC",
+  "count": 10348
 }
