@@ -52329,12 +52329,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_RXAxB86CeNMSFXAxoWTmX2v9De5J77Kx2IvFoL0kNQn": {
       "date": "2026-03-26",
@@ -122430,9 +122430,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO",
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -122443,14 +122442,27 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Naria Torres",
-      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
+    },
+    "lead_ThXowr4VR6uW2Oio3TRuxYx3ckWzjecPo4ofKKS4nwH": {
+      "date": "2026-10-14",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Rob Maxfield",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
     }
   },
-  "saved_at": "2026-10-07 20:41:18 UTC",
-  "count": 10345
+  "saved_at": "2026-10-07 21:11:14 UTC",
+  "count": 10346
 }
