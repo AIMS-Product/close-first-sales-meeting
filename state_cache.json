@@ -121898,13 +121898,13 @@
     },
     "lead_Jct2fDHj9bCiguWx24VpqqdrN7TDSSfG2s1lQyxRx28": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
       "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -122164,6 +122164,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-07 04:10:13 UTC",
+  "saved_at": "2026-10-07 04:40:27 UTC",
   "count": 10323
 }
