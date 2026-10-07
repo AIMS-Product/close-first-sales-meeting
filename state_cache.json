@@ -122392,12 +122392,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Connor George",
-      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
     },
     "lead_okdaFoqswJR3yhHmAL8fASpNrDT5CacV9ZJaCgAs1gW": {
       "date": "2026-10-07",
@@ -122405,9 +122405,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO",
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -122424,8 +122423,34 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": null
+    },
+    "lead_oEgACpKeJEDPgN9NJhHLjlfib0RZ3Ek7hQ1Qqb8oL6n": {
+      "date": "2026-10-08",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO",
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_B5RvVrTX7CZTWy0l6OBcOQ3e7sysAotMtwB8KJTQFEQ": {
+      "date": "2026-10-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-10-07 20:11:49 UTC",
-  "count": 10343
+  "saved_at": "2026-10-07 20:41:18 UTC",
+  "count": 10345
 }
