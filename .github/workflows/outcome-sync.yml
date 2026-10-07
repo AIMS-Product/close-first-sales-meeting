@@ -41,6 +41,7 @@ jobs:
           ZOOM_ACCOUNT_ID: ${{ secrets.ZOOM_ACCOUNT_ID }}
           ZOOM_CLIENT_ID: ${{ secrets.ZOOM_CLIENT_ID }}
           ZOOM_CLIENT_SECRET: ${{ secrets.ZOOM_CLIENT_SECRET }}
+          ZOOM_REQUIRED: "1"
           # Flip to "0" after reviewing dry-run output in the Actions logs.
           DRY_RUN: "0"
           LOOKBACK_DAYS: "7"

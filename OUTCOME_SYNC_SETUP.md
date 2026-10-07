@@ -46,7 +46,7 @@ Close call evidence or are flagged. No Meet integration needed while that tail s
    hosts the sales meetings).
 2. Add scopes: `report:read:admin` and `meeting:read:admin`
    (granular equivalents: `report:read:list_meeting_participants:admin`,
-   `meeting:read:past_meeting:admin`).
+   `meeting:read:list_past_instances:admin`).
 3. Activate the app, copy **Account ID / Client ID / Client Secret**.
 
 > Requires a paid Zoom plan (reports API). The meetings must be hosted on this
@@ -63,6 +63,13 @@ GitHub → repo → Settings → Secrets and variables → Actions:
 | `ZOOM_CLIENT_SECRET` | from step 1 |
 
 (`CLOSE_API_KEY` already exists.)
+
+The workflow requires all three Zoom secrets. A missing secret or rejected
+OAuth token stops the sync before it writes to Close. The error log and uploaded
+report include Zoom's error category without printing the credentials. For an
+HTTP 400, compare the Account ID, Client ID, and Client Secret against the same
+Server-to-Server OAuth app's **App Credentials** page, then verify that app is
+activated. The Zoom account's profile number is not the app's Account ID.
 
 ### 3. Commit the two files, run in dry-run
 

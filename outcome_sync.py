@@ -57,6 +57,8 @@ ENV / SECRETS
   ZOOM_ACCOUNT_ID      required for Zoom signal (Server-to-Server OAuth app)
   ZOOM_CLIENT_ID       "
   ZOOM_CLIENT_SECRET   "
+  ZOOM_REQUIRED        "1" = fail before Close access if Zoom auth is unavailable
+                       (set by the GitHub workflow; optional for local dry runs)
   DRY_RUN              "1" (default) = log only; "0" = write outcomes
   LOOKBACK_DAYS        how far back to scan past meetings (default 7)
   GRACE_MINUTES        skip meetings that ended less than this long ago
@@ -342,8 +344,9 @@ def set_meeting_outcome(s, meeting_id, outcome_id):
 
 class Zoom:
     def __init__(self):
-        self.enabled = all(os.environ.get(k) for k in
-                           ("ZOOM_ACCOUNT_ID", "ZOOM_CLIENT_ID", "ZOOM_CLIENT_SECRET"))
+        self.credential_names = ("ZOOM_ACCOUNT_ID", "ZOOM_CLIENT_ID", "ZOOM_CLIENT_SECRET")
+        self.missing_credentials = [k for k in self.credential_names if not os.environ.get(k)]
+        self.enabled = not self.missing_credentials
         self._token = None
         self._token_exp = 0
 
@@ -357,7 +360,28 @@ class Zoom:
             auth=(os.environ["ZOOM_CLIENT_ID"], os.environ["ZOOM_CLIENT_SECRET"]),
             timeout=30,
         )
-        r.raise_for_status()
+        if r.status_code >= 400:
+            # requests' default exception only prints the URL. Zoom's structured
+            # OAuth error identifies bad credentials vs. a bad account ID, while
+            # avoiding a raw response body (which may contain sensitive values).
+            details = []
+            try:
+                body = r.json()
+            except ValueError:
+                body = {}
+            if isinstance(body, dict):
+                for key in ("error", "reason", "code"):
+                    value = body.get(key)
+                    if isinstance(value, (str, int)):
+                        value = str(value)
+                        for name in self.credential_names:
+                            secret = os.environ.get(name)
+                            if secret:
+                                value = value.replace(secret, "[redacted]")
+                        value = " ".join(value.split())
+                        details.append(f"{key}={value[:200]}")
+            suffix = f" ({', '.join(details)})" if details else ""
+            raise RuntimeError(f"Zoom OAuth HTTP {r.status_code}{suffix}")
         d = r.json()
         self._token = d["access_token"]
         self._token_exp = time.time() + d.get("expires_in", 3600)
@@ -653,11 +677,28 @@ def decide(meeting, lead_meetings, zoom_result, now_utc,
 def run():
     now_utc = datetime.now(timezone.utc)
     since = now_utc - timedelta(days=LOOKBACK_DAYS)
-    s = close_session()
     zoom = Zoom()
 
     print(f"outcome_sync: window={since:%Y-%m-%d}..{now_utc:%Y-%m-%d} "
           f"dry_run={DRY_RUN} zoom={'on' if zoom.enabled else 'OFF'}")
+
+    # The workflow requires Zoom evidence. If its credentials fail, stop before
+    # any Close writes; otherwise weaker evidence could decide a Zoom meeting.
+    if os.environ.get("ZOOM_REQUIRED") == "1":
+        try:
+            if zoom.missing_credentials:
+                raise RuntimeError("missing Zoom credentials: " +
+                                   ", ".join(zoom.missing_credentials))
+            zoom.token()
+        except (requests.RequestException, RuntimeError, ValueError, KeyError) as e:
+            error = f"Zoom authentication failed: {e}"
+            print(f"  ERROR {error}", file=sys.stderr)
+            with open("outcome_sync_report.json", "w") as fh:
+                json.dump({"generated_at": now_utc.isoformat(), "dry_run": DRY_RUN,
+                           "written": [], "errors": [{"error": error}]}, fh, indent=2)
+            return 1
+
+    s = close_session()
 
     users = fetch_org_users(s)
     org_emails = {u["email"] for u in users.values() if u["email"]}
