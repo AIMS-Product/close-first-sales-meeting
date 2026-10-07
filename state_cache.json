@@ -121753,13 +121753,14 @@
       "quick_disc": null
     },
     "lead_PEf5ldtsiL0rjlWTTHXbZuc8gHMfG0oCsFN2FXqlJfM": {
-      "date": "2026-10-09",
+      "date": "2026-10-10",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Pearl Sathekge",
+      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -121874,13 +121875,13 @@
     },
     "lead_LqPIYEhxbNp0sbIeuKExNMIh841aUa4loT1AMTVomoW": {
       "date": null,
-      "call_type": "Closer",
+      "call_type": null,
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
       "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -122203,6 +122204,6 @@
       "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ"
     }
   },
-  "saved_at": "2026-10-07 15:43:32 UTC",
+  "saved_at": "2026-10-07 15:58:41 UTC",
   "count": 10326
 }
