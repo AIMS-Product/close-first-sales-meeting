@@ -71,6 +71,9 @@ STATUS_MAP = {
     "stat_S4cxvnfOWWi8jOqTPtGoq34BzuU8ah9fKTPPfO5P9Yi": "stat_lGHxEKwhbVswuchbpRo6XcMMSXz0fV4CID9qFWT8KCO",  # Call Booked
     "stat_cqwPKIAezUGp8sJ4May80zRjJAlzCQzVXtAc4P9xyPd": "stat_2SmOUMCp1vDFJF0TcJ011hNnpLYWDGwugyo4JyiRMEP",  # Reschedule
     "stat_mApYfeCdMszhTCCp6TJMWBRCRtmMilVyvaMpVlzbZZR": "stat_kY1aMGKOui3jjlgniY2LQWMadXN78cr7vTHVMPDCliy",  # Follow Up
+    "stat_jHE5Cu3ciWfejf9F9mf5HwMOdB8VhogiLVTIqg3a2Xy": "stat_fOwpEPCfmjC2LhrJEZE5T1btfKJRcgkMinycBxLPwS5",  # WARM - Follow Up
+    "stat_2VATuVC6m5LfYjJv3jTNCbpryNn3aGCyCwptrt5cZtj": "stat_NLhRXdV70JtiafrG5jSbUzpcJxo5VcbV681OUurNWsX",  # Deposit Collected
+    "stat_fiEyGOvVizCBUKbW691nwHwpDcKCQJMRy3I7h76js3T": "stat_aP51Sa9Qv3IthtjKGhvtEriEiLgEB9WS7uvX1w5RP08",  # Reschedule Requested
     "stat_csQPyVHTXpTFBSDAK8kx10yGCtX40H0ONbD4QNXbJBI": "stat_vL6LDuMPhQHcpNvvT6bA6Ofc0soHWDBks1azdq8UTJk",  # Contract Sent
     "stat_NCXVjokjo3VXirJx2eSAcRoKlEDg1WsO1sjeLfU8udO": "stat_5CqIgNJnGYO357zXjSnH6BAkKyoCvYUOBxVvpYfDMZn",  # No Show
     "stat_9ae2fCnLhMKoWq15dKkAEb5drDFPXgV1PZHJegl3fuq": "stat_hWIGHjzyNpl4YjIFSFz3VK4fp2ny10SFJLKAihmo4KT",  # Canceled (by Lead)
