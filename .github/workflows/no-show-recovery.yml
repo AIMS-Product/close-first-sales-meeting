@@ -23,8 +23,9 @@ on:
         default: "48"
         type: string
 
-  schedule:
-    - cron: "17 */2 * * *"
+  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
+  # schedule:
+    # - cron: "17 */2 * * *"
 
 concurrency:
   group: no-show-recovery

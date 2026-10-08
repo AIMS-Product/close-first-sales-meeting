@@ -7,11 +7,12 @@ on:
         description: "Report only, make zero API writes"
         type: boolean
         default: false
-  schedule:
-    # Hourly at :20 — offset off update_field.py (:00/:30),
-    # update_followups.py (:15/:45) and update_sales_cycle.py (:05)
-    # to avoid Close API contention.
-    - cron: '20 * * * *'
+  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
+  # schedule:
+    # # Hourly at :20 — offset off update_field.py (:00/:30),
+    # # update_followups.py (:15/:45) and update_sales_cycle.py (:05)
+    # # to avoid Close API contention.
+    # - cron: '20 * * * *'
 
 jobs:
   update-funnel-name:

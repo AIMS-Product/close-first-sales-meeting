@@ -1,8 +1,9 @@
 name: Ingest Agency Notes
 
 on:
-  schedule:
-    - cron: '40 * * * *'   # hourly at :40, offset off the other jobs (:00, :05, :15, :20, :30, :45)
+  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
+  # schedule:
+    # - cron: '40 * * * *'   # hourly at :40, offset off the other jobs (:00, :05, :15, :20, :30, :45)
   workflow_dispatch:
     inputs:
       dry_run:

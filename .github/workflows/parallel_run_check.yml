@@ -6,8 +6,9 @@ name: Parallel Run Check
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 16 * * *"   # 9am PDT daily
+  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
+  # schedule:
+    # - cron: "0 16 * * *"   # 9am PDT daily
 
 jobs:
   check:

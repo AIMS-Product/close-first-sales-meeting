@@ -7,15 +7,16 @@ on:
         description: "Dry run (report only, no writes)"
         type: boolean
         default: false
-  schedule:
-    # Weekdays, a few times a day, offset to :20 so it doesn't collide with the
-    # other jobs (:00/:30 first-sales, :15/:45 follow-ups, :05 sales-cycle).
-    # Runs after the morning reassignment jobs so it picks up new owners.
-    # All UTC. Bump to every 30 min if you want near-real-time lane stamping —
-    # the all-leads scan is cheap.
-    - cron: "20 16 * * 1-5"   # ~8:20/9:20am Pacific (after Lane 2 + Lost reassignments)
-    - cron: "20 20 * * 1-5"   # ~12:20/1:20pm Pacific
-    - cron: "20 23 * * 1-5"   # ~3:20/4:20pm Pacific
+  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
+  # schedule:
+    # # Weekdays, a few times a day, offset to :20 so it doesn't collide with the
+    # # other jobs (:00/:30 first-sales, :15/:45 follow-ups, :05 sales-cycle).
+    # # Runs after the morning reassignment jobs so it picks up new owners.
+    # # All UTC. Bump to every 30 min if you want near-real-time lane stamping —
+    # # the all-leads scan is cheap.
+    # - cron: "20 16 * * 1-5"   # ~8:20/9:20am Pacific (after Lane 2 + Lost reassignments)
+    # - cron: "20 20 * * 1-5"   # ~12:20/1:20pm Pacific
+    # - cron: "20 23 * * 1-5"   # ~3:20/4:20pm Pacific
 
 jobs:
   update-sales-lane:

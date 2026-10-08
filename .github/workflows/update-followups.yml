@@ -2,10 +2,11 @@ name: Update Follow-Up Dates
 
 on:
   workflow_dispatch:
-  schedule:
-    # Offset from update_field.py (which runs at :00 and :30)
-    # so we don't compete for Close API throughput.
-    - cron: '15,45 * * * *'
+  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
+  # schedule:
+    # # Offset from update_field.py (which runs at :00 and :30)
+    # # so we don't compete for Close API throughput.
+    # - cron: '15,45 * * * *'
 
 jobs:
   update:

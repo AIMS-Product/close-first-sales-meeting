@@ -2,9 +2,10 @@ name: Update First Sales Meeting Field
 
 on:
   workflow_dispatch:
-  schedule:
-    # Backup schedule — cron-job.org is the primary trigger (hits workflow_dispatch via API)
-    - cron: '*/30 * * * *'
+  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
+  # schedule:
+    # # Backup schedule — cron-job.org is the primary trigger (hits workflow_dispatch via API)
+    # - cron: '*/30 * * * *'
 
 permissions:
   contents: write  # Required for checkpoint commits

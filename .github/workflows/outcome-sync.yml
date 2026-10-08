@@ -14,8 +14,9 @@ name: Meeting Outcome Sync
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "7,37 * * * *"   # offset from update-field to avoid Close rate-limit overlap
+  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
+  # schedule:
+    # - cron: "7,37 * * * *"   # offset from update-field to avoid Close rate-limit overlap
 
 concurrency:
   group: outcome-sync-${{ github.ref }}

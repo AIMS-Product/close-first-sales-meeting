@@ -3,10 +3,11 @@ name: Update Sales Cycle (Days)
 on:
   # Runs 4x/day. Offset to :05 so it doesn't collide with update_field.py (:00/:30)
   # or update_followups.py (:15/:45) for Close API throughput.
-  schedule:
-    - cron: '5 */6 * * *'        # 00:05, 06:05, 12:05, 18:05 UTC
-  # Manual trigger (and the cron-job.org webhook). Flip `backfill` on to ignore
-  # the state cache and recompute every won lead from scratch.
+  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
+  # schedule:
+    # - cron: '5 */6 * * *'        # 00:05, 06:05, 12:05, 18:05 UTC
+  # # Manual trigger (and the cron-job.org webhook). Flip `backfill` on to ignore
+  # # the state cache and recompute every won lead from scratch.
   workflow_dispatch:
     inputs:
       backfill:

@@ -15,8 +15,9 @@ name: Lane 2 — 30-Day Release (clear Lead Owner)
 # Keep it that way — a positive "apply" flag would make the schedule a no-op.
 
 on:
-  schedule:
-    - cron: '0 12 * * 1-5'
+  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
+  # schedule:
+    # - cron: '0 12 * * 1-5'
   workflow_dispatch:
     inputs:
       dry_run:

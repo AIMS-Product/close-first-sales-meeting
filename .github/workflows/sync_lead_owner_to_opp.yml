@@ -1,8 +1,9 @@
 name: Sync Lead Owner -> Opportunity Owner
 
 on:
-  schedule:
-    - cron: "*/30 * * * *"   # fallback -- primary trigger is cron-job.org (see setup doc)
+  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
+  # schedule:
+    # - cron: "*/30 * * * *"   # fallback -- primary trigger is cron-job.org (see setup doc)
   workflow_dispatch:
     inputs:
       dry_run:
