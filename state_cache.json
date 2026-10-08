@@ -122779,18 +122779,58 @@
       "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_mQRGLgpOxTsHCksB9AMHvU6sW75Bvwi9OKr4wX7AR3Q": {
-      "date": "2026-10-09",
+      "date": "2026-10-13",
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": null,
+      "reactivation": "Pearl Sathekge",
+      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_bwIZ7t876XH8RNs7QMBP73gV26AwUadgGmRf6GdLFTu": {
+      "date": "2026-10-12",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_3SZNVotaqXphU7AhBl5ONrY6pX0kCi0gJ8i3v8grzH3": {
+      "date": "2026-10-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Owen Hart",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_8UDC7WAhyYNxEyhrh3flGsYUqmXh9UVkn7Z1LOlY6Lm"
+    },
+    "lead_Hn7luqyBX4dSfYZXeOHQqf1m0LKq10GNVwUxrhHWxBz": {
+      "date": "2026-10-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-08 19:42:03 UTC",
-  "count": 10372
+  "saved_at": "2026-10-08 20:12:32 UTC",
+  "count": 10375
 }
