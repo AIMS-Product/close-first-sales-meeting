@@ -122174,10 +122174,9 @@
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
-      "reactivation": "Mariam Olufumi",
-      "reactivation_user": null,
+      "reactivation": null,
       "reactivation_override_version": null,
-      "funnel_name": "Linkedin",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -122655,13 +122654,14 @@
       "quick_disc": "Yes"
     },
     "lead_bKJCPqnls4xGzeBqUDwO2deM8x9R4IUhhbCM7EyReW1": {
-      "date": "2026-10-08",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": "Yes"
@@ -122842,8 +122842,21 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_m2KuqSrAVKIfcCb8IqSUNW64P2koKqxdSHq53zWvruZ"
+    },
+    "lead_m5JEtFarYTCK73WbbiDLkuTZPFuG1lXTSy4CX6gI6o8": {
+      "date": "2026-10-13",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-10-08 20:42:09 UTC",
-  "count": 10376
+  "saved_at": "2026-10-08 21:12:43 UTC",
+  "count": 10377
 }
