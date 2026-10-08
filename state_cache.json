@@ -121326,7 +121326,7 @@
       "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_AzGiv4kQAA7dIfb9cUMAxoGi0oVtZH3wuIvgMn4WVgC": {
-      "date": "2026-10-08",
+      "date": "2026-10-09",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
@@ -122739,8 +122739,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_8JDOgWt4FO5dO9dv6WJwkTswzO45c8bPEbNUJBkBC3b": {
+      "date": "2026-10-12",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-10-08 17:12:04 UTC",
-  "count": 10368
+  "saved_at": "2026-10-08 17:41:19 UTC",
+  "count": 10369
 }
