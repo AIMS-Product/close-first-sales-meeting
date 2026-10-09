@@ -1,12 +1,16 @@
 """
 Close CRM Field Updater
 ------------------------
-Updates three custom fields on each lead:
+Updates sales-call dates and related custom fields on each lead:
 
 1. "First Sales Call Booked Date" (cf_LFdYEQ6bsgp49YjZzefypDmdVx8iwuakWDSLPLpVrBq)
    — Date of the earliest qualifying first sales (closer) meeting, in Pacific time.
 
-2. "Closer / Setter Call" (cf_6yy8dqzeiBIQD2dhDfaVeiCmEhTW6ycmM4SVQ5sO6CG)
+2. "Latest Sales Call Booked Date" (cf_2PQJIcagevN5HvUHfmWGWR22pCvzLZk6tJPTicDvuS3)
+   — Latest qualifying meeting with a non-canceled/non-declined activity status,
+     or the lead's First Sales Call Booked Date if none remains.
+
+3. "Closer / Setter Call" (cf_6yy8dqzeiBIQD2dhDfaVeiCmEhTW6ycmM4SVQ5sO6CG)
    — Dropdown: "Closer" | "Setter" | blank
    — Rules:
        • Any qualifying sales meeting on the lead → "Closer"
@@ -15,7 +19,7 @@ Updates three custom fields on each lead:
        • No meetings of either type → blank
        • NEVER downgrade from "Closer" — once set, it stays.
 
-3. "Scraper Funnel" (cf_69vb5dGu6FcBrnLGJFeHQviYQTkk7zpnLRgMPW2vipd)
+4. "Scraper Funnel" (cf_69vb5dGu6FcBrnLGJFeHQviYQTkk7zpnLRgMPW2vipd)
    — Dropdown: "YES" | blank
    — Rules:
        • Any meeting title matching "Vendingpreneur Next Steps" → "YES"
@@ -50,12 +54,14 @@ SLEEP_BETWEEN_CALLS = 0.5
 
 # Custom fields
 FIELD_DATE_ID          = "cf_LFdYEQ6bsgp49YjZzefypDmdVx8iwuakWDSLPLpVrBq"
+FIELD_LATEST_DATE_ID   = "cf_2PQJIcagevN5HvUHfmWGWR22pCvzLZk6tJPTicDvuS3"
 FIELD_CALLTYPE_ID      = "cf_6yy8dqzeiBIQD2dhDfaVeiCmEhTW6ycmM4SVQ5sO6CG"
 FIELD_SCRAPER_ID       = "cf_69vb5dGu6FcBrnLGJFeHQviYQTkk7zpnLRgMPW2vipd"
 FIELD_POSTWEBINAR_ID   = "cf_inRBDlgKLV9CgE7gBgzoQB0CAhwwuOoTHWclHxZoZQW"
 FIELD_REACTIVATION_ID  = "cf_vz6kNiu4ItFxRA8Y9HKlWIoQMq3TsdaQqKekQ2YuxVk"
 FIELD_REACTIVATION_USER_ID = "cf_7W3UCpJWWaIQsniF1upSxGO7rMX1yDT5qppHXBGJIhO"
 FIELD_DATE_KEY         = f"custom.{FIELD_DATE_ID}"
+FIELD_LATEST_DATE_KEY  = f"custom.{FIELD_LATEST_DATE_ID}"
 FIELD_CALLTYPE_KEY     = f"custom.{FIELD_CALLTYPE_ID}"
 FIELD_SCRAPER_KEY      = f"custom.{FIELD_SCRAPER_ID}"
 FIELD_POSTWEBINAR_KEY  = f"custom.{FIELD_POSTWEBINAR_ID}"
@@ -72,7 +78,8 @@ FIELD_VENDHUB_ID          = "cf_2oYFNCsi4dcrjcIS6xFvGf37RGtraixl8jHYinwta9m"
 FIELD_VENDHUB_KEY         = f"custom.{FIELD_VENDHUB_ID}"
 FIELD_VENDHUB_DATE_ID     = "cf_qScR8i96dqsMDMirfPqPn8woMkeJrpl41mc4TmoU78q"
 FIELD_VENDHUB_DATE_KEY    = f"custom.{FIELD_VENDHUB_DATE_ID}"
-FIELDS_PARAM           = f"id,display_name,{FIELD_DATE_KEY},{FIELD_CALLTYPE_KEY},{FIELD_SCRAPER_KEY},{FIELD_POSTWEBINAR_KEY},{FIELD_REACTIVATION_KEY},{FIELD_REACTIVATION_USER_KEY},{FIELD_FUNNEL_KEY},{FIELD_VENDHUB_KEY},{FIELD_VENDHUB_DATE_KEY},{FIELD_QUICK_DISC_KEY}"
+FIELDS_PARAM           = f"id,display_name,{FIELD_DATE_KEY},{FIELD_LATEST_DATE_KEY},{FIELD_CALLTYPE_KEY},{FIELD_SCRAPER_KEY},{FIELD_POSTWEBINAR_KEY},{FIELD_REACTIVATION_KEY},{FIELD_REACTIVATION_USER_KEY},{FIELD_FUNNEL_KEY},{FIELD_VENDHUB_KEY},{FIELD_VENDHUB_DATE_KEY},{FIELD_QUICK_DISC_KEY}"
+LATEST_CANCELED_STATUSES = ("canceled", "cancelled", "declined")
 
 # Reactivation dropdown — Close accepts label strings directly for choice fields
 
@@ -131,29 +138,34 @@ RE_VENDHUB_ANY            = re.compile(r"vend[\s-]?hub", re.IGNORECASE)
 # Each maps to a setter label for the Reactivation - Setter Name field.
 # ORDER MATTERS: most specific pattern first (longer title before shorter).
 SCRAPER_TITLE_MAP = [
+    (re.compile(r"vendingpren[eu]+rs?\s+pinnacle\s*-\s*next\s+steps", re.IGNORECASE), "Monde"),  # Vendingpreneurs Pinnacle - Next Steps
+    (re.compile(r"vendingpren[eu]+rs?\s+executive\s*-\s*next\s+steps", re.IGNORECASE), "Finley Eastlake"),  # Vendingpreneurs Executive - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps\s+call", re.IGNORECASE),     "Charlie Ingram"),  # Vendingpreneurs - Next Steps Call (Jennifer replaced Kristin Nelson)
-    (re.compile(r"vendingpren[eu]+rs?\s+call\s+-\s+next\s+steps", re.IGNORECASE),     "Jacob Hepner"),      # Vendingpreneurs Call - Next Steps
+
     (re.compile(r"vendingpren[eu]+rs?\s+next\s+steps\s+call", re.IGNORECASE),         "Vince Bartolini"),   # Vendingpreneurs Next Steps Call
-    (re.compile(r"vendingpren[eu]+rs?\s+next\s+steps\s+session", re.IGNORECASE),      "Pearl Sathekge"),       # Vendingpreneurs Next Steps Session
-    (re.compile(r"vendingpren[eu]+rs?\s+discovery\s+-\s+next\s+steps", re.IGNORECASE),    "Kelly Schrader"),  # Vendingpreneurs Discovery - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps(?!\s+call)", re.IGNORECASE), "Jacob Herbig"),  # Vendingpreneurs - Next Steps
     (re.compile(r"vendingpren[eu]+r\s+next\s+steps", re.IGNORECASE),                  "William Nowak"),     # Vendingpreneur Next Steps
+    (re.compile(r"vendingpren[eu]+rs?\s+next\s+steps\s+session", re.IGNORECASE),      "Pearl Sathekge"),       # Vendingpreneurs Next Steps Session
+
+
     (re.compile(r"vending\s+discovery\s+call\s+-\s+next\s+steps", re.IGNORECASE),    "August Young"),      # Vending Discovery Call - Next Steps
-    (re.compile(r"vending\s+discovery\s+-\s+next\s+steps", re.IGNORECASE),           "Spencer Reynolds"),  # Vending Discovery - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+strategy\s*-?\s*next\s+steps", re.IGNORECASE), "Amy Mulch"),         # Vendingpreneurs Strategy - Next Steps
+
+
     (re.compile(r"vending\s+opportunity\s*-?\s*next\s+steps", re.IGNORECASE),          "Cassie Caraballo"),  # Vending Opportunity - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+connect\s*-?\s*next\s+steps", re.IGNORECASE),  "Jessica Zatkin"),    # Vendingpreneurs Connect - Next Steps
-    (re.compile(r"vending\s+success\s*-?\s*next\s+steps", re.IGNORECASE),              "Abigail Garza"),     # Vending Success - Next Steps
+
     (re.compile(r"vendingpren[eu]+rs?\s+momentum\s*-?\s*next\s+steps", re.IGNORECASE), "Connor George"),  # Vendingpreneurs Momentum - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+launch\s*-?\s*next\s+steps", re.IGNORECASE), "Dana Lesiuk"),  # Vendingpreneurs Launch - Next Steps
+
     (re.compile(r"vendingpren[eu]+rs?\s+pathway\s*-?\s*next\s+steps", re.IGNORECASE), "Naria Torres"),  # Vendingpreneurs Pathway - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+blueprint\s*-?\s*next\s+steps", re.IGNORECASE), "Melia King"),  # Vendingpreneurs Blueprint - Next Steps
+    (re.compile(r"tlg\s+pinnacle\s*-?\s*next\s+steps", re.IGNORECASE), "Kaylane Nunes"),  # TLG Pinnacle - Next Steps
     (re.compile(r"tlg\s+compass\s*-?\s*next\s+steps", re.IGNORECASE), "Josh Stoffel"),  # TLG Compass - Next Steps
-    (re.compile(r"tlg\s+horizon\s*-?\s*next\s+steps", re.IGNORECASE), "Beatrice Braescu Cojocaru"),  # TLG Horizon - Next Steps
+
     (re.compile(r"tlg\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Catalina"),  # TLG Elevate - Next Steps
-    (re.compile(r"ppa\s+catalyst\s*-?\s*next\s+steps", re.IGNORECASE), "Raiya"),  # PPA Catalyst - Next Steps
-    (re.compile(r"ppa\s+pinnacle\s*-?\s*next\s+steps", re.IGNORECASE), "Jessica Hernandez"),  # PPA Pinnacle - Next Steps
+
+
     (re.compile(r"tlg\s+clarity\s*-?\s*next\s+steps", re.IGNORECASE), "Luna"),  # TLG Clarity - Next Steps
+    (re.compile(r"tlg\s+vanguard\s*-?\s*next\s+steps", re.IGNORECASE), "Connor Mason"),  # TLG Vanguard - Next Steps
+    (re.compile(r"tlg\s+northstar\s*-?\s*next\s+steps", re.IGNORECASE), "Jonathan Quinn"),  # TLG Northstar - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+ascent\s*-?\s*next\s+steps", re.IGNORECASE), "Owen Hart"),  # Vendingpreneurs Ascent - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+keystone\s*-?\s*next\s+steps", re.IGNORECASE), "Brad Savage"),  # Vendingpreneurs Keystone - Next Steps
     (re.compile(r"vendingpren[eu]+rs?\s+summit\s*-?\s*next\s+steps", re.IGNORECASE), "Rob Maxfield"),  # Vendingpreneurs Summit - Next Steps
@@ -369,6 +381,7 @@ def calculate_desired_state(all_meetings: list, users_by_name: dict | None = Non
     {
       lead_id: {
         "date":      "YYYY-MM-DD" or None,  # earliest closer meeting date
+        "latest_meeting_date": "YYYY-MM-DD" or None,  # latest active closer meeting
         "call_type": "Closer" | "Setter" | None,
         "scraper":   "YES" | None
       }
@@ -388,6 +401,7 @@ def calculate_desired_state(all_meetings: list, users_by_name: dict | None = Non
     desired = {}
     for lead_id, meetings in by_lead.items():
         closer_dates    = []
+        latest_dates    = []
         has_setter      = False
         has_scraper     = False
         has_postwebinar = False
@@ -410,6 +424,9 @@ def calculate_desired_state(all_meetings: list, users_by_name: dict | None = Non
             if tier in ("closer", "post_webinar", "scraper", "vendhub_consultation", "vendhub_nextsteps", "react_email", "quick_discovery"):
                 if date:
                     closer_dates.append(date)
+                    status = str(m.get("status") or "").lower().strip()
+                    if not status.startswith(LATEST_CANCELED_STATUSES):
+                        latest_dates.append(date)
                 if tier == "post_webinar":
                     has_postwebinar = True
                 elif tier == "scraper":
@@ -475,6 +492,7 @@ def calculate_desired_state(all_meetings: list, users_by_name: dict | None = Non
         if call_type is not None or has_scraper or has_postwebinar or funnel_name or vendhub_value or vendhub_date or earliest_react_email or has_quick_disc:
             desired_for_lead = {
                 "date":         min(closer_dates) if closer_dates else None,
+                "latest_meeting_date": max(latest_dates) if latest_dates else None,
                 "call_type":    call_type,
                 "scraper":      "YES" if has_scraper else None,
                 "post_webinar": "YES" if has_postwebinar else None,
@@ -617,6 +635,24 @@ def api_get(path: str, params: dict = None, retry: int = 5) -> dict:
     raise RuntimeError(f"GET {path} failed after {retry} attempts")
 
 
+def api_post(path: str, payload: dict, retry: int = 5) -> dict:
+    url = f"{BASE_URL}{path}"
+    for attempt in range(retry):
+        time.sleep(SLEEP_BETWEEN_CALLS)
+        resp = session.post(url, json=payload, timeout=30)
+        if resp.status_code == 429:
+            wait = int(resp.headers.get("Retry-After", 10))
+            print(f"  [rate limit] sleeping {wait}s ...", flush=True)
+            time.sleep(wait)
+            continue
+        if 500 <= resp.status_code < 600 and attempt < retry - 1:
+            time.sleep(2 ** attempt)
+            continue
+        resp.raise_for_status()
+        return resp.json()
+    raise RuntimeError(f"POST {path} failed after {retry} attempts")
+
+
 def api_put(path: str, payload: dict, retry: int = 5) -> dict:
     url = f"{BASE_URL}{path}"
     for _ in range(retry):
@@ -662,6 +698,61 @@ def fetch_all_meetings() -> list:
     return all_meetings
 
 
+def fetch_leads_with_first_date() -> dict:
+    """Read live first/latest dates for the cohort that needs latest-date upkeep."""
+    query = {
+        "type": "and", "negate": False,
+        "queries": [
+            {"type": "object_type", "negate": False, "object_type": "lead"},
+            {"type": "field_condition", "negate": False,
+             "field": {"type": "custom_field", "custom_field_id": FIELD_DATE_ID},
+             "condition": {"type": "exists"}},
+        ],
+    }
+    leads = {}
+    cursor = None
+    seen_cursors = set()
+    pages = 0
+    duplicate_rows = 0
+    while True:
+        body = {
+            "query": query,
+            "_fields": {"lead": ["id", FIELD_DATE_KEY, FIELD_LATEST_DATE_KEY]},
+            "_limit": 200,
+        }
+        if cursor:
+            body["cursor"] = cursor
+        result = api_post("/data/search/", body)
+        pages += 1
+        batch = result.get("data")
+        if not isinstance(batch, list) or (result.get("cursor") and not batch):
+            raise RuntimeError("Close first-date search returned an incomplete page")
+        for item in batch:
+            lead = item.get("lead", item)
+            lead_id = lead.get("id")
+            if not lead_id:
+                raise RuntimeError("Close first-date search returned a lead without an ID")
+            if lead_id in leads:
+                duplicate_rows += 1
+                continue
+            leads[lead_id] = {
+                "first": lead.get(FIELD_DATE_KEY),
+                "latest": lead.get(FIELD_LATEST_DATE_KEY),
+            }
+        cursor = result.get("cursor")
+        if not cursor:
+            break
+        if cursor in seen_cursors or pages >= 200:
+            raise RuntimeError("Close first-date search cursor repeated or exceeded safety cap")
+        seen_cursors.add(cursor)
+    print(
+        f"First-date cohort: {len(leads)} leads in {pages} pages "
+        f"({duplicate_rows} duplicate rows).",
+        flush=True,
+    )
+    return leads
+
+
 # ─────────────────────────────────────────────
 # Write fields to a single lead
 # ─────────────────────────────────────────────
@@ -687,6 +778,14 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
     new_date = desired.get("date")
     if cur_date != new_date:
         payload[FIELD_DATE_KEY] = new_date
+
+    # The first-date calculation above remains unchanged. The latest date uses
+    # the same qualifying title tiers, but excludes canceled/declined activities.
+    cur_latest_date = (current.get("latest_date") or "")[:10] or None
+    effective_first_date = new_date if FIELD_DATE_KEY in payload else cur_date
+    new_latest_date = desired.get("latest_meeting_date") or effective_first_date
+    if cur_latest_date != new_latest_date:
+        payload[FIELD_LATEST_DATE_KEY] = new_latest_date
 
     # ── Call type field ─────────────────────────────────────────────────────
     cur_type = current.get("call_type")
@@ -788,6 +887,8 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
     changes = []
     if FIELD_DATE_KEY in payload:
         changes.append(f"date: {cur_date or 'blank'} → {new_date or 'cleared'}")
+    if FIELD_LATEST_DATE_KEY in payload:
+        changes.append(f"latest date: {cur_latest_date or 'blank'} → {new_latest_date or 'cleared'}")
     if FIELD_CALLTYPE_KEY in payload:
         changes.append(f"type: {cur_type or 'blank'} → {new_type or 'cleared'}")
     if FIELD_SCRAPER_KEY in payload:
@@ -835,16 +936,64 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
 # Routine run (fast path — cache exists)
 # ─────────────────────────────────────────────
 
-def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict) -> dict:
+def cacheable_state(desired: dict) -> dict:
+    # The latest meeting candidate is checked against live Close dates each run.
+    # Keeping it out of the old cache avoids a one-time all-lead cache diff.
+    return {key: value for key, value in desired.items() if key != "latest_meeting_date"}
+
+
+def reconcile_latest_only(desired_state: dict, live_first_leads: dict, excluded_ids: set) -> tuple[int, int]:
+    """Write only LSCBD for otherwise unchanged leads in the live first-date cohort."""
+    candidates = {
+        lead_id: desired_state.get(lead_id, {}).get("latest_meeting_date") or (live.get("first") or "")[:10]
+        for lead_id, live in live_first_leads.items()
+        if lead_id not in excluded_ids and live.get("first")
+    }
+    mismatches = [
+        lead_id
+        for lead_id, proposed in candidates.items()
+        if proposed and proposed != ((live_first_leads[lead_id].get("latest") or "")[:10] or None)
+    ]
+    print(f"Latest-date live diff: {len(mismatches)} leads to recheck.", flush=True)
+    updated = 0
+    errors = 0
+    for i, lead_id in enumerate(mismatches, 1):
+        try:
+            lead = api_get(
+                f"/lead/{lead_id}/",
+                params={"_fields": f"id,{FIELD_DATE_KEY},{FIELD_LATEST_DATE_KEY}"},
+            )
+            first = (lead.get(FIELD_DATE_KEY) or "")[:10] or None
+            if not first:
+                continue
+            proposed = desired_state.get(lead_id, {}).get("latest_meeting_date") or first
+            current = (lead.get(FIELD_LATEST_DATE_KEY) or "")[:10] or None
+            if current == proposed:
+                continue
+            payload = {FIELD_LATEST_DATE_KEY: proposed}
+            if set(payload) != {FIELD_LATEST_DATE_KEY}:
+                raise RuntimeError("Latest-only write contains another field")
+            api_put(f"/lead/{lead_id}/", payload)
+            updated += 1
+            print(f"  Latest date: {lead_id} | {current or 'blank'} → {proposed}", flush=True)
+        except Exception as e:
+            errors += 1
+            print(f"  [{i}/{len(mismatches)}] ERROR updating latest date on {lead_id}: {e}", flush=True)
+    return updated, errors
+
+
+def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict, live_first_leads: dict | None = None) -> dict:
     """
     Compare desired vs cached in memory.
     Only fetch + update leads where something changed.
     """
-    # Leads where desired differs from cache
+    cached_desired = {lead_id: cacheable_state(desired) for lead_id, desired in desired_state.items()}
+
+    # Leads where the original cached fields differ; LSCBD uses the live scan below.
     to_check = {
         lead_id: desired
         for lead_id, desired in desired_state.items()
-        if cached_state.get(lead_id) != desired
+        if cached_state.get(lead_id) != cached_desired[lead_id]
     }
 
     # Leads cached as having a value but no longer in desired (stale)
@@ -869,14 +1018,12 @@ def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict)
     )
 
     if not all_changes:
-        print("Nothing to update.", flush=True)
-        new_cache = {**cached_state, **desired_state}
-        return new_cache
+        print("No cached fields to update.", flush=True)
 
     updated = 0
     errors  = 0
     new_cache = dict(cached_state)
-    new_cache.update(desired_state)
+    new_cache.update(cached_desired)
 
     for i, (lead_id, desired) in enumerate(all_changes.items(), 1):
         try:
@@ -884,6 +1031,7 @@ def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict)
             lead_name = lead_data.get("display_name", lead_id)
             current   = {
                 "date":         lead_data.get(FIELD_DATE_KEY),
+                "latest_date":  lead_data.get(FIELD_LATEST_DATE_KEY),
                 "call_type":    lead_data.get(FIELD_CALLTYPE_KEY),
                 "scraper":      lead_data.get(FIELD_SCRAPER_KEY),
                 "post_webinar": lead_data.get(FIELD_POSTWEBINAR_KEY),
@@ -900,7 +1048,7 @@ def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict)
                 updated += 1
                 new_cache[lead_id] = result
             else:
-                new_cache[lead_id] = desired
+                new_cache[lead_id] = cacheable_state(desired)
 
         except Exception as e:
             errors += 1
@@ -909,7 +1057,14 @@ def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict)
         if i % 100 == 0:
             print(f"  [{i}/{len(all_changes)}] still processing... ({updated} updated so far)", flush=True)
 
-    print(f"\nRoutine run complete. Updated: {updated} | Errors: {errors}", flush=True)
+    latest_updated, latest_errors = reconcile_latest_only(
+        desired_state, live_first_leads or {}, set(all_changes)
+    )
+    print(
+        f"\nRoutine run complete. Cached-field updates: {updated} | "
+        f"Latest-only updates: {latest_updated} | Errors: {errors + latest_errors}",
+        flush=True,
+    )
     return new_cache
 
 
@@ -945,6 +1100,7 @@ def backfill(desired_state: dict, already_processed: set, users_by_name: dict) -
             lead_name = lead_data.get("display_name", lead_id)
             current   = {
                 "date":         lead_data.get(FIELD_DATE_KEY),
+                "latest_date":  lead_data.get(FIELD_LATEST_DATE_KEY),
                 "call_type":    lead_data.get(FIELD_CALLTYPE_KEY),
                 "scraper":      lead_data.get(FIELD_SCRAPER_KEY),
                 "post_webinar": lead_data.get(FIELD_POSTWEBINAR_KEY),
@@ -962,7 +1118,7 @@ def backfill(desired_state: dict, already_processed: set, users_by_name: dict) -
                 built_cache[lead_id] = result
             else:
                 skipped += 1
-                built_cache[lead_id] = desired
+                built_cache[lead_id] = cacheable_state(desired)
 
             processed.add(lead_id)
 
@@ -991,7 +1147,7 @@ def main():
     print(
         f"═══════════════════════════════════════════\n"
         f"Close CRM Field Updater\n"
-        f"Fields: First Sales Call Booked Date | Closer / Setter Call | Scraper Funnel\n"
+        f"Fields: First and Latest Sales Call Booked Date | Closer / Setter Call | Scraper Funnel\n"
         f"Started: {start.strftime('%Y-%m-%d %H:%M:%S UTC')}\n"
         f"═══════════════════════════════════════════\n",
         flush=True,
@@ -1019,11 +1175,20 @@ def main():
         flush=True,
     )
 
+    # The cache predates LSCBD. Read the live first-date cohort so rebookings and
+    # cancellations are detected without forcing all cached leads through the
+    # multi-field writer. Existing FSCBD maintenance can continue if this fails.
+    try:
+        live_first_leads = fetch_leads_with_first_date()
+    except Exception as e:
+        print(f"Warning: latest-date cohort search failed ({e}); retry next run.", flush=True)
+        live_first_leads = {}
+
     # 5. Update Close
     if cached_state and not is_resuming_backfill:
         # ── Fast routine path ───────────────────────────────────────────────
         print("\nMode: ROUTINE", flush=True)
-        new_cache = routine_update(desired_state, cached_state, users_by_name)
+        new_cache = routine_update(desired_state, cached_state, users_by_name, live_first_leads)
         save_state_cache(new_cache)
 
     else:
@@ -1034,6 +1199,14 @@ def main():
         built_cache, all_processed = backfill(desired_state, already_processed, users_by_name)
 
         if len(all_processed) >= len(desired_state):
+            latest_updated, latest_errors = reconcile_latest_only(
+                desired_state, live_first_leads, set(desired_state)
+            )
+            print(
+                f"Latest-only fallback leads: {latest_updated} updated | "
+                f"{latest_errors} errors",
+                flush=True,
+            )
             save_state_cache(built_cache)
             clear_checkpoint()
             print("\nBackfill complete — switching to fast routine mode on next run.", flush=True)
