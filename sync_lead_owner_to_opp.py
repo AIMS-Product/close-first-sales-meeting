@@ -109,8 +109,15 @@ class CloseClient:
 
     def _request(self, method, path, **kwargs):
         url = f"{BASE_URL}{path}"
+        kwargs.setdefault("timeout", 60)
         for attempt in range(5):
-            resp = self.session.request(method, url, **kwargs)
+            try:
+                resp = self.session.request(method, url, **kwargs)
+            except (requests.Timeout, requests.ConnectionError):
+                if attempt == 4:
+                    raise
+                time.sleep(2 * (attempt + 1))
+                continue
             if resp.status_code == 429:
                 wait = float(resp.headers.get("Retry-After", 2 * (attempt + 1)))
                 time.sleep(wait)
@@ -197,7 +204,7 @@ def run(dry_run, limit):
 
             try:
                 result = client.set_opportunity_owner(opp["id"], lead_owner_user_id)
-            except requests.HTTPError as e:
+            except requests.RequestException as e:
                 failed += 1
                 print(f"ERROR updating opp {opp['id']}: {e}")
                 continue
