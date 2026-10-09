@@ -3154,15 +3154,15 @@
     "lead_LI1YoyOg0VPnbreSyOjqIBf5BCFACSauialGjqPPeLr": {
       "date": "2026-03-17",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_JF7zJJ774YSdo0fv1M5bbA4Cf60anCpXIj1qk0TJTmp": {
       "date": "2026-03-17",
@@ -3546,15 +3546,15 @@
     "lead_XHPFJbWamAy8SLp8gzOgD4Kj6tc2zkuaRKCTb4FZwef": {
       "date": "2025-09-10",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_tburDSAES2lFyyYGZhg3bV4vfEgLT230iHVmxdfDQZV": {
       "date": "2026-03-16",
@@ -3616,15 +3616,15 @@
     "lead_PEmgUEkwCDg2AHoVHOKkVpWxqfoeXLQKgeVkeqQauw5": {
       "date": "2026-02-27",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_rtg8gcXMXkWodnrYieg0GcoTktN6W4wMy5418wxwe98": {
       "date": "2026-03-13",
@@ -6906,15 +6906,15 @@
     "lead_DWqxZOUt3waWWpfYNoz4IYGDa15iAvPxMc3kXQZWgyV": {
       "date": "2026-02-13",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_6aSLT7e0HSXDAFZieJlwP7l2VfxDF3PsDg0uBpFnqQD": {
       "date": null,
@@ -18791,15 +18791,15 @@
     "lead_szlFAIDPkMQ4EU3XPCehj2CdtPmtQ85iaHIFP43VyPf": {
       "date": "2026-01-21",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_k5G5F7kUXT7LBUBQ8tTqQYFc82nA7HJuX4jAoNL09r9": {
       "date": "2026-01-29",
@@ -24239,11 +24239,11 @@
     "lead_FG9ttuYVzYpBfiHqmgKHDsSVgMtops1KOoZGOOw0Y9s": {
       "date": "2025-12-26",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
       "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
-      "reactivation_override_version": 1,
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
@@ -39723,11 +39723,11 @@
     "lead_O6ksnq4qsJA0liT8aVhgebBnvVAcJhDs1xo64duV8qf": {
       "date": "2025-12-26",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
       "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
-      "reactivation_override_version": 1,
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
@@ -50240,15 +50240,15 @@
     "lead_Ag6AW3JwpnpQ05qX4J628Z3aW8dqco0SBROnPVjHmQY": {
       "date": "2026-03-31",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Kelly Schrader",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7"
+      "quick_disc": null
     },
     "lead_kQ0cNhXNiVHtdxVcvc8uLDhqpDjHY7R1NQRJxUYWPWj": {
       "date": "2026-03-23",
@@ -50788,17 +50788,17 @@
       "quick_disc": null
     },
     "lead_GTajKusoXiGhvLVoLxrkn9Lk4DfCzGItZ3C5nSH5czE": {
-      "date": "2026-04-15",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_6I2kG3d90NU7NQdJ5JF60mxvGdeI7fzrCzvorTTOVZX": {
       "date": "2026-03-31",
@@ -50957,17 +50957,17 @@
       "quick_disc": null
     },
     "lead_I3Ux81KDDApiG9JYBz6I4kRR3uhWJpgN5eGfQC1w7sK": {
-      "date": "2026-04-09",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_Hx48nx9gabZYLdiJwotBai40TpFxg5pn5iVINliFzSy": {
       "date": null,
@@ -57734,15 +57734,15 @@
     "lead_krK4HMjJYHUb45Y6N6739uE01vpOKa3EQ8vrp4NsEiR": {
       "date": "2026-04-07",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_LUvoIgliVest8viM2BC6mKmeit3VKHayrCoIQq3jKs3": {
       "date": "2026-04-06",
@@ -58913,15 +58913,15 @@
     "lead_wnnlYXbnTITIryPQ3v9QOyFa3lCcnXs9J6TTneoARQT": {
       "date": "2026-04-14",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_cQur05XUSWVyRfVYkwkEwPclb2E5FdKEbQkE8bh4vVD": {
       "date": "2026-04-10",
@@ -61503,17 +61503,17 @@
       "earliest_scraper_date": null
     },
     "lead_l68zkFVeRUQ9nt2e2xngjCB7I84sDDVPQ5o7uMGs4PZ": {
-      "date": "2026-04-23",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_vwYBaQSwb5NKRjwXc3EMUOyVg3sBeI20FxcQ8Kx0PqZ": {
       "date": "2026-04-15",
@@ -61675,15 +61675,15 @@
     "lead_o8dMyShNDfT1YupnzMwq64QiOg4oVxnToQI5BvNVrhK": {
       "date": "2026-04-20",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_77gpW29tdwzRS3fFph1N25n2SziYgkvWfzSweRSAKpm": {
       "date": "2026-04-16",
@@ -61787,17 +61787,17 @@
       "earliest_scraper_date": null
     },
     "lead_KfDSumd5vJKHXJvQWSWCGQYNMABD6iFM51gukW5cmvu": {
-      "date": "2026-04-20",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_HWhDTG1c3GJqCawhgYxEU75J1jlSXlHVF050q622ZZJ": {
       "date": "2026-04-16",
@@ -63645,17 +63645,17 @@
       "quick_disc": null
     },
     "lead_cTcuhOcNYbZm60TroYAF9QP4CZLzdoafEFD8mziAFZA": {
-      "date": "2026-04-27",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_9i37sQjw80ZEZNp7jinSP8OcvwbjNQzVeHHaLlFOwe5": {
       "date": null,
@@ -64390,17 +64390,17 @@
       "quick_disc": null
     },
     "lead_ktVqbL9ApR6Q5wzZ4fDihfmOT8g1hQ4YKtnz3jMMkft": {
-      "date": "2026-04-23",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_9MUxJ2vpRuzE7VeCF6R1dvhQVxvCQWLJmpX9lhwZxyn": {
       "date": null,
@@ -64824,15 +64824,15 @@
     "lead_DtSRgsHq2woVdK0eaBofpt9rTKC7HV8Tj7TDgLHrTKM": {
       "date": "2026-04-24",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_95v9ZtPVlrjIaZxAP4tfJ1K3tew4qsFBgj31zTmxeeC": {
       "date": "2026-04-23",
@@ -65020,17 +65020,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_S3um60JczmGu6wdoiya0R8ygib4M3gMxYj27bzEk3hd": {
-      "date": "2026-04-24",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_HsbB1RURqd8oj5fvD1GlVDeyidDXe0BvIf5iDb7Z6Fl": {
       "date": "2026-04-21",
@@ -65137,17 +65137,17 @@
       "quick_disc": null
     },
     "lead_7Y7k3fTb5jaFv5Wv6P2WWqfgWm2AFeX0BX1ZxylldrD": {
-      "date": "2026-04-27",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_qUwebaEE23Whosh3EDFpI0oHP6AbEgcr83OJuEdW9pB": {
       "date": null,
@@ -65206,17 +65206,17 @@
       "quick_disc": null
     },
     "lead_mKbe9ME21xCbpbfYJr8PZTnplxWZbxeLhugfMqOA4Rl": {
-      "date": "2026-05-05",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_Skf5Qf8748RIfpSs7IJSYbCd7RH53oIfmbA3N9akF55": {
       "date": null,
@@ -65906,17 +65906,17 @@
       "quick_disc": null
     },
     "lead_EpKbONc7v24W1ntLriblOXT732tOB7KfVsmGnPVQ2al": {
-      "date": "2026-06-26",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_EKX0rUfspEdpqPlMolZnbVnCurVWL7Xe8FOxEtpWROI": {
       "date": null,
@@ -67100,17 +67100,17 @@
       "quick_disc": null
     },
     "lead_eP3H0eY3i6m4QsLwfspX1rLfWGyh1oK1kjBiZNhL5av": {
-      "date": "2026-05-04",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_CIolgkkM3uv39eYlJ8bWRpdInMBvWS2M4TnRFhp6EgZ": {
       "date": null,
@@ -68438,17 +68438,17 @@
       "earliest_scraper_date": null
     },
     "lead_0FkQ8o9sRufzAJlbxyVyt0nJlVfkACZVsqzpcodY8kw": {
-      "date": "2026-05-04",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_x0cbTBgaf4AQUFQy78XeuJgY2CBo9FCNgsGhuQ7I90X": {
       "date": "2025-11-21",
@@ -70340,17 +70340,17 @@
       "quick_disc": null
     },
     "lead_XwUFYTD9LkBHHSobTGdZfGS9qyS244o9g0HBFLRsTyU": {
-      "date": "2026-05-06",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_YUbRzT4A59dILLzNR38Vg38E43LWnHKVwhl9XLmowqi": {
       "date": "2026-05-05",
@@ -72298,17 +72298,17 @@
       "quick_disc": null
     },
     "lead_LajqgLWhGPcbOHXKNjYWmVHWQgA130Cx9VjDMLqPB0A": {
-      "date": "2026-05-06",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_TRvVS1dhhNBGq0zVsBeJglBAtpSedZ0o9pdbsu3vqwI": {
       "date": "2026-05-11",
@@ -72919,15 +72919,15 @@
     "lead_e97U84i72xh9iDw6cXkYpO24CH0fKddWDbJ6zv6h0EN": {
       "date": "2026-05-12",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_QpVW0IxqNLROpDV6Dp8X9xMzAep4nOccbAfbRo1vr8l": {
       "date": "2026-05-11",
@@ -73148,15 +73148,15 @@
     "lead_1R20U8G9mnuAv5m7ACqxGjgtatIEezQVVipCr3HIIoD": {
       "date": "2026-05-11",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Kelly Schrader",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7"
+      "quick_disc": null
     },
     "lead_WeCNWHKVwFKqtlg0p58D858iyw1TMUwwA8LYHoSTm8l": {
       "date": "2026-05-12",
@@ -86353,13 +86353,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Jacob Hepner",
+      "reactivation": "William Nowak",
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_LIVq3FA5TqoLbsV71TKM9d5HcFZrpgu4HjXDpCKHGDc": {
       "date": "2026-06-15",
@@ -87786,17 +87786,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_45CQG5LvMoBTr00s9fzCm8a6bWHZX2LQAkcNEiL5fjR": {
-      "date": "2026-06-19",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_2bgsJUnuS3A67RJIq1XoL4e200TMoJNfUrONd5JiMam": {
       "date": "2026-06-18",
@@ -87918,17 +87918,17 @@
       "quick_disc": null
     },
     "lead_9oGSDp63EHbY6E56AMeKvF7FJ8AMabIkMrRda3wD07E": {
-      "date": "2026-06-19",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_4qe9yT2Th0f2XoUUwARdkIvjQo2uHUblsALFjtyiGIQ": {
       "date": "2026-06-25",
@@ -87944,30 +87944,30 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_QrparmIjW0ZBLoUKkJ0Cdp6Je60SwiZm49FZWrEkBPi": {
-      "date": "2026-06-22",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_2P9fKxBfLko2lGfmJOyqk1oV55ZBH0vwfLLeYSNBOKF": {
-      "date": "2026-06-22",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_MKYmCdqzq3RFlvRsXRP1319xdqzEa9SjRfyoMv1zKpi": {
       "date": "2026-06-26",
@@ -88065,17 +88065,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_BkrItpPRcKMsl9MzW6m4M6Vi1IEcvMojmrDws9TOcvQ": {
-      "date": "2026-06-19",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_Njfo3c3L7yT6g9ULoUDc4hxNJHACi0qmaFlSOYfRLWx": {
       "date": "2026-06-20",
@@ -88201,17 +88201,17 @@
       "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_voQXDoAwGqb36vxhBNkWnhWDmCqoSc071RxgCOZ95fd": {
-      "date": "2026-06-23",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_jYRrtn9Ntd2MHVUhBTY3zyPlhsUADMze8ssXRM2LGOm": {
       "date": "2026-06-22",
@@ -88226,17 +88226,17 @@
       "quick_disc": null
     },
     "lead_bmXdOIRi15tNNVNh5r2tDbCDmyo5ROgCKH2dUIlKUuc": {
-      "date": "2026-06-19",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_5IumslOz14ZJOC00FXaOqY5y3WP76CLDIaajGfLsQhn": {
       "date": "2026-06-19",
@@ -88473,17 +88473,17 @@
       "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_NEnL4UIjZfSAIIIfAdYFkYA1vjYjHQSwkquUxRrpBEQ": {
-      "date": "2026-06-23",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_jTt6iTg5HDUtte68shGhxZYGH8KX7sKhxusS9Cw7tcb": {
       "date": "2026-06-23",
@@ -88537,17 +88537,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_vYpBViMW2oDhoqRnTFpEw3TfsJwlDZPckL24IlwtUKV": {
-      "date": "2026-06-24",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_nE9dzYL1OFDZtPEq8jC85cijthH0akUzR9l0qTaewnx": {
       "date": "2026-06-22",
@@ -88840,17 +88840,17 @@
       "quick_disc": null
     },
     "lead_PYN4h499efRjo4Je15KSRhFwbjhJxr1vJWuTDHH4uu0": {
-      "date": "2026-06-23",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_XOdWbH2mFUVr8lrVrZ9z946teBy5pAwYsFhik36LwKR": {
       "date": "2026-06-25",
@@ -88879,17 +88879,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_D6RlMXLG0nwjdTX0W7Dj0QF8UBUCdQF9XFWNXMGc8M0": {
-      "date": "2026-06-26",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_7mlyXO5deGxUR0m0eT6kxQ3pG7vj87QgZiMaEqYlDF3": {
       "date": "2026-06-23",
@@ -88988,17 +88988,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_EcfarMRPTXxQnzh39loL5On6cGoGmAMIT0F7DOBP5Lv": {
-      "date": "2026-06-24",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_dcoqQ1ALiFQsE5v8cAtN8rek26iZL64dGAgEwqftuW2": {
       "date": "2026-06-22",
@@ -89305,17 +89305,17 @@
       "quick_disc": null
     },
     "lead_j0i5MLWzMPHccDuqqTcdIpGAWo6q2eFsRb8ZbSngsEM": {
-      "date": "2026-06-26",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_RtCeTAnJCsuRp8xrVIgPOAntC6hlDcyDCGglZ4olKdq": {
       "date": "2026-06-24",
@@ -89398,17 +89398,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_EKTFWQc9lEjfKdbgYDuEXnf9edmYNctGPunVjt9DIzX": {
-      "date": "2026-06-26",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_cy720Xuf4xJ1wEQR9clLLH254lVDeaUNNO913seH5TV": {
       "date": "2026-07-03",
@@ -89532,17 +89532,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_BPhV6BJ1LQZFDfpxNA8QBpEwemJYCEcXNqq2TqKPn2a": {
-      "date": "2026-06-25",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_e6MlWGusEzL6XLvSh3VHK1oQpcsbhiP88G2CAos29g1": {
       "date": "2026-06-24",
@@ -89558,17 +89558,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_u6u5XIdImKxEBoG1CjkdMNjWJ6aFGe5JwzXGrETAfjV": {
-      "date": "2026-06-25",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_hKhDX1one12YL57qsUas6TAgveCpCzKDXdN71TT4Q0P": {
       "date": "2026-06-25",
@@ -89597,17 +89597,17 @@
       "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ"
     },
     "lead_F9PbiGcR0k0uPzylYrL2GB09FHOFoZhZIaRyvgc3PQ0": {
-      "date": "2026-06-25",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_Bvi6IwIiAVJS6M2ZzvwIULexHogPRJ1cdx9Ko2t0c9E": {
       "date": "2026-06-24",
@@ -89706,17 +89706,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_S83subwjQ6Sp4kKZQMRtj9eOdUtK11HWSPJYGJRtTJh": {
-      "date": "2026-06-25",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_9eH2w7BpIJVRteehtb6VPMAzVikZo9VKqW45w9kXtzY": {
       "date": "2026-06-25",
@@ -89732,17 +89732,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_05LqphqFYqzKDHnZmOpL5bA0FZKAsaBYJmmYaDW9vQt": {
-      "date": "2026-06-29",
+      "date": "2026-06-30",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
+      "quick_disc": null
     },
     "lead_w5MEvTM25YosuJBPi85EgcwPLKxcKnee0vmjzozd6uX": {
       "date": "2026-07-06",
@@ -90217,17 +90217,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_q4TCIMTV8peFkCI3EfHDhO5KbKX7D8HBTVh8dJWBTug": {
-      "date": "2026-06-30",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_tkokeTRQfqUOEAWp6gxAU6iPThmY1U0JUazsEeSs90a": {
       "date": "2026-06-29",
@@ -90256,17 +90256,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_mIKw3xkTHohq9uvu43lsme0XXTbepOej2vu8ckE8XRc": {
-      "date": "2026-06-30",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_SJKjARW0BSduaMfGGXmqFbbQC0kUxE4MqVPj8jv6bun": {
       "date": "2026-06-29",
@@ -90295,17 +90295,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_fhoDPv7K86XDTL0mGoX4pSntNX07wo8fJ5PAbiaxxzP": {
-      "date": "2026-06-29",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_TjqCc7DOfStSbR7St5EH8CjL2DF3Z2kWZdluP6u5ns1": {
       "date": "2026-06-29",
@@ -90698,17 +90698,17 @@
       "quick_disc": null
     },
     "lead_mr1PYMv3jktOshdAvQOzJaGMvTMnKTgOC7ooSzKz2nN": {
-      "date": "2026-07-03",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_DnsqcGMwq2tksKOsZCUC5zkIETKH0M8aKjJ2Se7nNaM": {
       "date": "2026-06-30",
@@ -90724,17 +90724,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_SLfecNM3LU4n754t6CI5S15c4fDZfeKaFHKXg0UbNNK": {
-      "date": "2026-07-01",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_p1dMobYLLQ24xPqeulwhYXeme9LLvFGlD8WoWMwtSrh": {
       "date": "2026-06-09",
@@ -91153,17 +91153,17 @@
       "quick_disc": null
     },
     "lead_pQBVURtGq4ZYJbESh2Xw3ipmrplIwfEoBGDK9kLHHrr": {
-      "date": "2026-07-01",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_BnUpwC2EDnvP2mZEDP0OWNmK7Ozpy8UdHQOMlPWrMgl": {
       "date": "2026-07-03",
@@ -91191,17 +91191,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_1RLTuLxL04a1aZVFzgtFDZMWoi8x806bVCL0w2Jb5Ku": {
-      "date": "2026-07-02",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_IBD1lUYleuKpasTNGrBdZClfRP9fPuHkGRHyxlzSMNP": {
       "date": "2026-07-02",
@@ -91927,17 +91927,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_L5UWR8aENgnrGPaIPpNDx7MfGUiQGe4jSipvj7BNJof": {
-      "date": "2026-07-02",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_MP0k1QK2DUv5r81vY4WQWuifKjmzJbHMsrxaTvsSxxl": {
       "date": "2026-07-01",
@@ -92070,17 +92070,17 @@
       "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_9eN101Gi7CJ4VHhOgrQciEzzCLYq1ZFmHjFZZQLB0j7": {
-      "date": "2026-07-02",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_LzzntUHde9aUmaqfMp9bpLYZHM5PW5jjQhUO9lKLihW": {
       "date": "2026-07-02",
@@ -92280,17 +92280,17 @@
       "quick_disc": null
     },
     "lead_dQgbe3L3m3JdYqK6TZ4z6KUpXSDA1QZD02dk2fzNplV": {
-      "date": "2026-07-02",
+      "date": "2026-08-25",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Vince Bartolini",
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+      "quick_disc": null
     },
     "lead_xBJaMDLPiLJaFXTuAgR9hgHzJcNRXhgSFLpPFl8kMXv": {
       "date": "2026-07-03",
@@ -92447,17 +92447,17 @@
       "funnel_name": null
     },
     "lead_SFHa6zhbmBZNFI5iKwsNjsmvN8rr5qBMpNNcuEkaGfU": {
-      "date": "2026-07-06",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_at9YeFdNkl6u0fYDboiYDtqt86bv5JrZ4uIZJmVoYTM": {
       "date": "2026-07-03",
@@ -92499,17 +92499,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_T23Ho8Hk3FsCSucjSbMHbts6J0WcxA0Bf2hUtBGg3mG": {
-      "date": "2026-07-06",
+      "date": "2026-07-15",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
+      "quick_disc": null
     },
     "lead_8ddXnKHDTUpCDs0CC6dzUuWUjR5CF6idsKwMuzPlMLy": {
       "date": "2026-07-06",
@@ -92524,17 +92524,17 @@
       "quick_disc": null
     },
     "lead_y46kiqTPHrWzSh7hwurPvjSU6aUgm60SfCQhrqo7GSI": {
-      "date": "2026-07-08",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_kvJt5ZcpchBXHWxFQ40K2tlUVjNctfyWA2fVUEx0eIu": {
       "date": "2026-07-05",
@@ -92692,17 +92692,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_KWm5PPPvea4rPjXcCxWMeVJLd0SHbyH3uDh6ajz4rAV": {
-      "date": "2026-07-07",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_9CXpeG5oCcydsygu1mXfXHM9YwoxuGeuTCtEqFU6f9J": {
       "date": "2026-07-04",
@@ -93652,17 +93652,17 @@
       "funnel_name": "VSL"
     },
     "lead_xSb7ZT9RFjAikXCD5s8dtwAUJXPCLHmO9RsFtas173u": {
-      "date": "2026-07-08",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_wp1Y1VbKkizeTQT5YC0lG3uUaV9HMjbTLB2gbGLdUgA": {
       "date": "2026-07-06",
@@ -94399,17 +94399,17 @@
       "vendhub": null
     },
     "lead_1w83fsdkuplyJIuLEhpu5b8uW5OySEHRJX7tRBvmvKr": {
-      "date": "2026-07-09",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_NDJYgO1KRtO3SpkNlxdd2evjxfyDomcmln88OA74VO1": {
       "date": "2026-07-12",
@@ -94798,17 +94798,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_NdQlOlFX2GjAJ7Ta0zECIbKVoXzDDdNboMmJqm4c93Z": {
-      "date": "2026-07-15",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_GCfWOu2Bb9GOsJCFy6ZPrG46PMALPpzOgD1uEvEX43X": {
       "date": "2026-07-09",
@@ -94866,17 +94866,17 @@
       "quick_disc": null
     },
     "lead_qttoRVM7GqKlkhFNfwXs8uf6HLvLnEPm0YgOsami5Cx": {
-      "date": "2026-07-16",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_Pm8vd8qtYzAdyHO5bA8xyLf8pfydBi4GLomfjs2gCQa": {
       "date": "2026-07-10",
@@ -94904,17 +94904,17 @@
       "quick_disc": null
     },
     "lead_iR6SQqZlddPBO7gyM2bNzOmVk7khleqM5WglHhxUDUn": {
-      "date": "2026-07-14",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_4FaieD0fOjroItDAca7PXWDCJOiDez1bqTG3UtZzEXJ": {
       "date": "2026-07-11",
@@ -94942,30 +94942,30 @@
       "quick_disc": null
     },
     "lead_eZKCwGDslssZ310VCkInDg0QBvhhhU07mgVo8gdjHAP": {
-      "date": "2026-07-14",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_umSAE5DBDvK6fJojfJelVCVuMaoSjWFr2wVhU1VGD8x": {
-      "date": "2026-07-13",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_74KovYCMXnPeR2TTLHCh5qkurAC5TfkTSmtmZGGBpuQ": {
       "date": "2026-07-10",
@@ -95087,17 +95087,17 @@
       "quick_disc": null
     },
     "lead_HZrHZ9Okwlm4O0W96iUyUPNuAqrZYXutu4uphayQiux": {
-      "date": "2026-07-16",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_ttGJC4GYiUIM0gDnk0FMDYQLyP5oD7dNueZjZ1yBHh3": {
       "date": "2026-07-10",
@@ -95913,17 +95913,17 @@
       "quick_disc": null
     },
     "lead_lbEwbSpsi2c5zqQbPzl3eJSabZLNlc7VnCNu4sYNqtA": {
-      "date": "2026-07-16",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_A5c1ern8dzXJITpyfOpFYHyjPrHvVkIKWRR3vwrh8uu": {
       "date": null,
@@ -95995,17 +95995,17 @@
       "vendhub": null
     },
     "lead_4MJyEgNO0qxqeYsGu0mMgdkw2apzVg15QwA8di0RKQv": {
-      "date": "2026-07-15",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_H8Ctrz3Sakv7uWXQQLDnM9sXhb4D5yPDOI3q0I1hyXS": {
       "date": "2026-07-14",
@@ -96393,17 +96393,17 @@
       "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ"
     },
     "lead_GVLHwcewyAqpUsBRgfw39x7lHhK7byWAF6R3lz6clKd": {
-      "date": "2026-07-20",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_9Sqhc8cpK42wTy5jj3BzqE0638h9BL2DdlNUm7yCu8K": {
       "date": "2026-07-14",
@@ -96427,17 +96427,17 @@
       "vendhub": null
     },
     "lead_jt7tYfZWG84A7bsSkH4NCKdZfHwUtpFpNksGD1zu5SY": {
-      "date": "2026-07-16",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_JsbGmBmESqp2LT9FdC37bph2s2ZwEye3ulyFx9axgxS": {
       "date": "2026-07-16",
@@ -97404,17 +97404,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_pKdqBuRrou02Z0jdCv8LCBwFcBNhmNeP10f6mVVwNcN": {
-      "date": "2026-07-21",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_B7r0DKWIzq8ekZlsCiiT1Z5vzXIUVh6qzKCQCGLtbh7": {
       "date": "2026-07-17",
@@ -97512,30 +97512,30 @@
       "quick_disc": null
     },
     "lead_VZu5O0J6XfHoAjsZsBrVwO8iJRVXmxIEeKnXY2GxGoY": {
-      "date": "2026-07-21",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_dyJOCmmlLN3uV0YJwDLZZCXLLh1MsIghMdu6sMxbUni": {
-      "date": "2026-07-29",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_1ZuKluIkATugTsqDNUWd95LZtbgRrueC1P59Cp8SiEq": {
       "date": "2026-07-21",
@@ -97614,17 +97614,17 @@
       "quick_disc": null
     },
     "lead_a1Ok8PS8Aw8aGObG74f6RtRUGOl9AW9RvguudNTCWUz": {
-      "date": "2026-07-21",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_4I4aAW8m6eL4bdDoIxoJYI6pKzI3oPojYW6gVGESjvp": {
       "date": "2026-07-29",
@@ -97829,30 +97829,30 @@
       "quick_disc": null
     },
     "lead_l0NW7Nq3ZpV35LXTkBRHPo82XFmlWkMgHbk9Ey7YMUP": {
-      "date": "2026-07-26",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_HTejGc86KKFJFfQPWR2rMzbRx9bsKvx5jASHCGSJOTU": {
-      "date": "2026-07-22",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_iYEyJKTxvmIpiRdMA3UhvYmMCZebI423wYqBSdxFxMo": {
       "date": "2026-07-20",
@@ -97868,17 +97868,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_mq1wFSfIwsuzAq03eO1YwYDplFyBPO5ZJAp4ZjMN5Vl": {
-      "date": "2026-07-22",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_tXxdMCo0EI8lYvQNqDleS8ET9DksRRRwOwTUqJs23Kc": {
       "date": "2026-07-20",
@@ -97943,17 +97943,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_TGIfQAjKeQLpsekvBAJBFz9oIMqG1WR6hnZOEy4yF0o": {
-      "date": "2026-07-22",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_ZDCedJLo9rSt8FM1w8MuLHQDDbn4NkshFfuM1HKX12l": {
       "date": "2026-07-20",
@@ -97968,17 +97968,17 @@
       "quick_disc": null
     },
     "lead_iSejH8eIIavYOGMylPEfCcayLqtU43bhw9TGq25l8oR": {
-      "date": "2026-07-20",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_ADKD6Xb8V49qs0FzLNPHrpzct5Zcj9ukF5zC7OjZ0wL": {
       "date": "2026-07-17",
@@ -98481,17 +98481,17 @@
       "quick_disc": null
     },
     "lead_uaAQFllF0MC14Sc0LBbvfveOh37EJRQeqkVccONkPIM": {
-      "date": "2026-07-23",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_QFruw4pB0fmn6fESHCt3CmcR2BqIVEfsb2daOTRC6wo": {
       "date": "2026-07-23",
@@ -98543,17 +98543,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_CgjODIJsz0SrJo22Q9GjbquKFogdekrm2J8x0J8oZVm": {
-      "date": "2026-07-22",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_fp0r98SujeC0IZ3aBrbKengNuTe8jHPVpcViz9rr0p4": {
       "date": "2026-07-22",
@@ -98748,17 +98748,17 @@
       "quick_disc": null
     },
     "lead_EoShjSyIHnwvooSxeMTRnHqp2mX5pqJSTWuXa6swNAc": {
-      "date": "2026-07-22",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_xl8WcShYXTD0z2n5G64lo9x5H7sbwESkWzJy80MCuXg": {
       "date": "2026-07-22",
@@ -98809,17 +98809,17 @@
       "quick_disc": null
     },
     "lead_FQ2sr2uOKijHVeaId7xLljYVOwoRjYi1fbszOfrxaME": {
-      "date": "2026-07-22",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_QCqnOSlqhn02xH3NCLYlJuhLJUG5rcJ8oJOgnyTOkXi": {
       "date": "2026-07-21",
@@ -98932,17 +98932,17 @@
       "quick_disc": null
     },
     "lead_M1sRLTqSdGdwiIm2Wcwl4VzQyCRlxDoTgA5g2YFLGne": {
-      "date": "2026-07-27",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_EHntIP1zdYtVL09yr5IjCbW1LB45BBF8DV3IomsRtQO": {
       "date": "2026-07-27",
@@ -98990,17 +98990,17 @@
       "quick_disc": null
     },
     "lead_6mmJFZl6q6Z7pGxPJUHdJ8Eaou5NvkZl1YzywZpr5CZ": {
-      "date": "2026-07-24",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_Eof9I6LdjprIGtt6F4FWYKVBHays5FN9hxhSCtXWRID": {
       "date": null,
@@ -99034,17 +99034,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_0dDhatbOPz9JYfD7nr362SmHL7bNSR8GYjSwmyEKdZn": {
-      "date": "2026-07-28",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_epENgR6m49ohAdl3kbCQtvW3CRhjVoRKXx80PLDJb7l": {
       "date": "2026-07-25",
@@ -99153,17 +99153,17 @@
       "quick_disc": null
     },
     "lead_BZytPtMcRM3v0FGcyIfw5CSAHc1dHlSZUqgiJeMU3pE": {
-      "date": "2026-07-23",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_p8PVt0gNKZZYArDrqNZ84XSrVmc0FHk8g8E7WnrsxSB": {
       "date": "2026-07-22",
@@ -99212,17 +99212,17 @@
       "vendhub": null
     },
     "lead_qAC5bJyJOhYENuAwg2VR098Xna4wvQDdaluYlL01L04": {
-      "date": "2026-07-23",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_kvWv2YLIkDSQi6SAmNJe647cEy9W7O3oO904Dpt8kaU": {
       "date": "2026-07-24",
@@ -99298,17 +99298,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_vXxmU4uLol7PmDogxWJMjNJnoXXZ0PFXr1nhGYvpgsm": {
-      "date": "2026-07-23",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_93efDN73TZEkYdcu5gr0Id5uD9ghUq1vJpChDheztyg": {
       "date": "2026-07-23",
@@ -99335,17 +99335,17 @@
       "quick_disc": null
     },
     "lead_c4jTfR0gZbJY0WygfdjAUaSe80OWd2JMven4ssqeynK": {
-      "date": "2026-07-24",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_YKx0UzPZScXufxKlavbt59Ny7pwx17eoxX2Xtq0p6f1": {
       "date": "2026-07-27",
@@ -99468,17 +99468,17 @@
       "quick_disc": null
     },
     "lead_REct2626FSkIZyhOq8DeI9YJtO5JluwNbcOJJ3L8XIr": {
-      "date": "2026-07-25",
+      "date": "2026-07-27",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
+      "quick_disc": null
     },
     "lead_p87VOPxFz5kyOJlPYKuScn5DuKLLyLZ18TeiuR9rlVx": {
       "date": "2026-07-24",
@@ -99742,17 +99742,17 @@
       "vendhub": null
     },
     "lead_8Gr3jHMfnxKHDlvnd68CE0G7pycS5moPqR26fM2Muig": {
-      "date": "2026-07-24",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_pqUFhSmow9u9iqAsoLTBa778vvl0SqW96sIiMV3668k": {
       "date": "2026-07-28",
@@ -99957,30 +99957,30 @@
       "vendhub_date": null
     },
     "lead_R1LpYanmUzNmiPFoCvqClrtIUzOvSkIOYjqUysZ4Wgc": {
-      "date": "2026-07-30",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_kDcKbTfg9AEzIItuXqlhywfc4Y2DlXjbRTBlAT0KhK0": {
-      "date": "2026-07-28",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_7AJY5WADqFhQMGjK8VwMKLqX1q230rU6kGJnD5luvam": {
       "date": "2026-07-27",
@@ -100005,30 +100005,30 @@
       "vendhub_date": null
     },
     "lead_lxC2mDb5HKPsU741HHdyL3zMqwSeSbzUXSVMl4Zf0Ek": {
-      "date": "2026-07-27",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_aj2m6nrWVPE0KogxkQnb8Rs8A1XJLyXwR4HPKdk3fXP": {
-      "date": "2026-07-27",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_tgAauYAosD2CgSH5Dd7NWZz5nebtxiFCgu9GiOsg8iD": {
       "date": null,
@@ -100957,30 +100957,30 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_GT6Tf8vxMRV7xkrgzIbfuz5apNIbXnuhM4tEqNyUC0W": {
-      "date": "2026-07-29",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_wBIZPvsvSOMfBMAaCUohRNQuRPtwrB9tYgAdUylETFy": {
-      "date": "2026-07-29",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_W5dYxwvhtO9Mnr54oiCjOBBv24eQkAgp1VDa0fm6AiJ": {
       "date": "2026-07-28",
@@ -101129,17 +101129,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_5wRD57lyRG9hid4JhadDV51VDX7JN8y4PKawIX251wf": {
-      "date": "2026-07-29",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_yei01Ihfh3dWoujHidla99m2RAHEpO8OBT8PhXlc9IH": {
       "date": "2026-07-29",
@@ -101227,17 +101227,17 @@
       "quick_disc": null
     },
     "lead_mXmmKmJQD8socFEQomDQIx3MeoLvHExlArCK2L86dus": {
-      "date": "2026-07-30",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_n9CswTJepWsQzSE43eZGm1atHnZg8I8SRUwppR0TH18": {
       "date": "2026-06-14",
@@ -101493,17 +101493,17 @@
       "quick_disc": null
     },
     "lead_TSxsbLSLun57RmvT0ywmLy8zt4wYlyrecX1pGTWsVEd": {
-      "date": "2026-07-31",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_wSJIP2YFcXXqQyEZG8YwAKYniybEVYM73frLhFTYd7C": {
       "date": "2026-07-29",
@@ -101541,30 +101541,30 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_r7waTaeGpC5h4XUYWYAbJ0aAIFX6cEK1fY3TlTlbpl9": {
-      "date": "2026-07-31",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
+      "quick_disc": null
     },
     "lead_JIzlxMzJs5F5q56rQItKWM7RqrT8zqY9cVr105kGBs0": {
-      "date": "2026-07-31",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_JQkKzuMk22k7FRytTo6sPIhzGUzpkKJEPRM7ocHlwiC": {
       "date": "2026-07-30",
@@ -101580,17 +101580,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_YhZupOGlbjJvp6TTzzwzaC5HIneYn99mUT0fAVUf02P": {
-      "date": "2026-07-31",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_GwmH7TmVURKPL0iC0yVTOtKqLSsfJpEEQfrIFoIqsXa": {
       "date": "2026-07-31",
@@ -101931,17 +101931,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_tAJpNqIuHndQWOXdSdWRIz4mnMqKUITGtb9lfzObkh9": {
-      "date": "2026-07-30",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_tWdnGeAsI9uYq4QcxFrfxoNQwaMRolV0F0YmKi2QDUQ": {
       "date": "2026-07-30",
@@ -102029,17 +102029,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_sveyr5Tv3PGmAWzCKAVeE20XQ6h2EbOYaFr7XNvztY5": {
-      "date": "2026-07-31",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_KpeRydfJW4ceRWO7nyeJEAHlUrwe1tNzVxNOiBEeBTc": {
       "date": "2026-07-31",
@@ -102252,30 +102252,30 @@
       "quick_disc": null
     },
     "lead_ifUkm8zscMngljhb6IDRFhpDisatyoZLN3hxQoDwoU1": {
-      "date": "2026-08-03",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_abkrMfy0olA8qgKkUcI63bIJOOMAF0Fw03aX8D66yei": {
-      "date": "2026-08-03",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_tWm8cYla5Ed39KSSiSxHj41BZQvkZTWI5yIPmoHcfkL": {
       "date": "2026-08-04",
@@ -102729,17 +102729,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_3c028t284eyaqxExI9BI2sq1sJTSngN9IxUEnxg17ux": {
-      "date": "2026-08-04",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_TDFfy9hXHI3SwOy6k4Mn0MnhmGG0TMR2E8SfRxzr6At": {
       "date": null,
@@ -102754,17 +102754,17 @@
       "quick_disc": null
     },
     "lead_juawYpV8z0S8hQ3FWSXIdb1w3YtDf9suN2WyRaPcInx": {
-      "date": "2026-08-04",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_hAF37S0tDPKEH25sO3GoYgSHuOXrEvxzhy8Mcrjsqeu": {
       "date": "2026-08-04",
@@ -102982,17 +102982,17 @@
       "quick_disc": null
     },
     "lead_VALC9Xz3pJrlUZVkdkGVWnKr5qt2AJ673byybeDZFh9": {
-      "date": "2026-08-05",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_kma7eqlqAcsHEnY2hSQsGxfj3JAt96FX47IoBFO7VPm": {
       "date": "2026-08-08",
@@ -103218,17 +103218,17 @@
       "quick_disc": null
     },
     "lead_bpU7AqOXwCPwTOLVsY5H8FWsn9m0EoWKtX7SMo1eLOi": {
-      "date": "2026-08-06",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_1G6PhAoRkKsS9xNKtSo4wnkEhwQJnYLDSeGHid2hZjg": {
       "date": "2026-08-07",
@@ -103596,17 +103596,17 @@
       "quick_disc": null
     },
     "lead_71fY8e1R9SyvR7VS4WU0gXTB1G67xiGmK9GieaMoZuu": {
-      "date": "2026-08-09",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_fvGxcaB5XtaWZRhG1HhgMoNGGO7smQMKxVsVxp3NJb7": {
       "date": "2026-08-07",
@@ -103682,17 +103682,17 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_pUq9B6gnFF8hKPu6iEDTdWzVpZIGAIsooABM33X8ntd": {
-      "date": "2026-08-07",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_lyUjF2d9K2BUno6hwvyNQ7mvZNuDfzv50hrFgXp05pR": {
       "date": "2026-08-10",
@@ -103855,17 +103855,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_DnDljDJ6ItxQnAgQpCLtCIQq5I8BbIc9XRqnYCGUwM0": {
-      "date": "2026-08-09",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_idgix82Hb2GhBjFOsKrZw1KZDDX2ZPIc49VxJdkXDy2": {
       "date": "2026-08-09",
@@ -103916,17 +103916,17 @@
       "vendhub_date": null
     },
     "lead_9hFqLS9pLYRen2gmQBjRwLeHPgzHVNL52FFzdyCJcPL": {
-      "date": "2026-08-08",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_I2DRDJiPvaLEEo8PuoDpVGr4ILu6VLJsmSDdvMVuys4": {
       "date": "2026-08-10",
@@ -103991,17 +103991,17 @@
       "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_rNSkeL3XhuIqBIXDKeZTERn7lbw8fUG6uDH5zXo0gmZ": {
-      "date": "2026-08-09",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_VM4TZAS2ariUDB3mnXdJda2SaaayfMPA6i2jANOWhVH": {
       "date": "2026-08-10",
@@ -104335,17 +104335,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_NGxVQ5qUUGgDhzGD5ViPNf8mlctuFlkHHZPox5fLYDR": {
-      "date": "2026-08-11",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_0io1zKe2tk7hdYos3HUyY64ch3NcLhdV3gRla52iwhI": {
       "date": "2026-08-11",
@@ -104361,17 +104361,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_xttVsekOEQbFZmtbi6At6dR3z3SuDjXstiUfvdQ092t": {
-      "date": "2026-08-11",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_p8hf9dqyj0fBGj3ecUpHQTfVN7yjSqYYWg0wTpO0ByP": {
       "date": "2026-08-11",
@@ -104409,17 +104409,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_QpLdcTS6iGO2R3xkgnVwhfC7LbUyYa0lT6C8Y7CmzJ5": {
-      "date": "2026-08-11",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_SA0wGyQYYGNSv1LdPtprb87Oe3d3MSOUaiNmCz1hc4q": {
       "date": "2026-08-12",
@@ -104448,30 +104448,30 @@
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_hr1Is4XkVfYCFOPdHVg7WXic0Z6AyQDCtuNtnEtN0xV": {
-      "date": "2026-08-11",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_5B3540MeqsqUsdpLxLx5pAVGt2vYsYiBiRWyIXZ0zoh": {
-      "date": "2026-08-14",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_AV1O7Ni61XdngPphPnsPjA5ACEh1IzQUyiewkbt6xHW": {
       "date": "2026-08-10",
@@ -104569,17 +104569,17 @@
       "quick_disc": null
     },
     "lead_QZ1AyW5pNoqm1BfLBAFI4JsXvKSxGwxj3BaJ7RJawoV": {
-      "date": "2026-08-12",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_cIDlQiZtSDHCFCA1ckuUe1bs4fSudc9JPWQzGMrr3fA": {
       "date": "2026-08-11",
@@ -104618,17 +104618,17 @@
       "quick_disc": null
     },
     "lead_IBNGFvYu6LpNFMTXbeiOYoRPHTten3G1eFGnmSCpMl3": {
-      "date": "2026-08-13",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_UbR4UrYhcud01ahBKCGvam8oOYRFH6PlIOeIgqwsU7P": {
       "date": "2026-08-12",
@@ -104924,17 +104924,17 @@
       "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_vAcyB4zN9gNFES9dZJsbWfhX3XPEVK5MBy2YVUuUp2f": {
-      "date": "2026-08-14",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_834c6oKQ5HrOS2XPnY9IwJPibJ3bqqaXStOpVJljPNg": {
       "date": "2026-08-17",
@@ -104961,17 +104961,17 @@
       "quick_disc": null
     },
     "lead_WPNclHKjRni9b24PTiVsauuMlKZlus6WlcCtV94f11F": {
-      "date": "2026-08-13",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_IeM2VbQTuDPuR5mSSzr919Y3sbIoXvMZW3v68OFIm6i": {
       "date": "2026-08-12",
@@ -105203,17 +105203,17 @@
       "quick_disc": null
     },
     "lead_A1O2VLJ5C2vgyEvM8hCtoMdMxhxyZohU9f0jeh0X7VM": {
-      "date": "2026-08-14",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_tH1oJcVeHyXVwrmH4I7Tz6zln12ADgZGVlK3yuEEpT7": {
       "date": "2026-08-13",
@@ -105278,30 +105278,30 @@
       "quick_disc": "Yes"
     },
     "lead_EoAu3tzP92crPD6oJvK2jXka6esNdU2iZsX9I8v14Ah": {
-      "date": "2026-08-15",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_lOq09zfzlDN6pvjOVSvvqlI5NfH2Hikx4aOsNKUdhVH": {
-      "date": "2026-08-15",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_UejYUdWcuFk4lRFNF84csxUFTUVPbrGIijFMgXYvXxg": {
       "date": "2026-08-13",
@@ -105450,17 +105450,17 @@
       "quick_disc": null
     },
     "lead_fAt4RqXaAO4wPoWzNLlU5XjXvmf1Vafag4Dmni5ryjK": {
-      "date": "2026-08-18",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_sH6g0rwQXRnJO7yohue1CqxOhhKhF5YNI78CKnlKwoE": {
       "date": "2026-08-14",
@@ -105476,17 +105476,17 @@
       "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_WrRAJhvrCQ33nGwHVIf0Tb0zGOp44xUjgv3b1BnpJWV": {
-      "date": "2026-08-14",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Jacob Hepner",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z"
+      "quick_disc": null
     },
     "lead_5HDNiUUd8jTnuzpKMeLPUILrFLqu4I8W7AQCzaNwsv2": {
       "date": "2026-08-14",
@@ -105539,30 +105539,30 @@
       "quick_disc": null
     },
     "lead_LNwHqTpIdA31i3AEmYLDPhrxlvOBUuosWpSIG6LenEE": {
-      "date": "2026-08-17",
+      "date": "2026-08-20",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
+      "quick_disc": null
     },
     "lead_B4UlGtxsBEG7AA6UcZUeUwKH2aQ9DvHaiJy7gyZwPXs": {
-      "date": "2026-08-14",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Spencer Reynolds",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM"
+      "quick_disc": null
     },
     "lead_RNarFjehVLCwR1Ep7mPlkOAq80li1c2uSjdcF4FRNoc": {
       "date": "2026-08-15",
@@ -105578,17 +105578,17 @@
       "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ"
     },
     "lead_TpdBvBP4xLRiHJux2VOQEQ2p4fTQqiTKV6HKYDhf2qK": {
-      "date": "2026-08-17",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Kelly Schrader",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7"
+      "quick_disc": null
     },
     "lead_4xpKjeGcOsJJuxq1UzouHRO3czsTwXFm823dCOUE33c": {
       "date": "2026-08-17",
@@ -107578,17 +107578,17 @@
       "quick_disc": null
     },
     "lead_mQ5MJYgH7uhyjdqeEfog82GPizxjqaoG8FX3RddpveH": {
-      "date": "2026-09-04",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Kelly Schrader",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7"
+      "quick_disc": null
     },
     "lead_36UVpicGk1wqE8A450U6PRrxACP8XIAVkuIAf9ASH3e": {
       "date": "2026-08-26",
@@ -108263,30 +108263,30 @@
       "quick_disc": null
     },
     "lead_avGfU9h6dGQANvIlONUp9OR3IyjY21Du2qnkVeYyuNH": {
-      "date": "2026-08-29",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Spencer Reynolds",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM"
+      "quick_disc": null
     },
     "lead_dcXI5gMnfTpbhG15sIKJNCf6Pvf9IYcnJ0S49rJY7L4": {
-      "date": "2026-08-26",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Spencer Reynolds",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM"
+      "quick_disc": null
     },
     "lead_HMhBY2kchHWEJmGxYW4Cp0fZMT35iULRmdRgQPX6CEf": {
       "date": null,
@@ -108888,17 +108888,17 @@
       "quick_disc": null
     },
     "lead_xKy0xuYiNmu4ah0TeAJ4hm5ntJvaxp1knOOvycL35xg": {
-      "date": "2026-08-27",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Spencer Reynolds",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM"
+      "quick_disc": null
     },
     "lead_O6JEoGQdRl6YT1WjodhkR5pl1ANHlHFDRIi72tEnrHZ": {
       "date": "2026-08-27",
@@ -109349,17 +109349,17 @@
       "quick_disc": null
     },
     "lead_tCLiEcBGuQpTMudRd3qxXsU66sqj4Byl0OI6l19vtem": {
-      "date": "2026-08-28",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Spencer Reynolds",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM"
+      "quick_disc": null
     },
     "lead_jIoE5d7VERGIabgX7X8oxoLwK7PH7k4OCST7ZI1rseq": {
       "date": "2026-08-29",
@@ -110217,17 +110217,17 @@
       "quick_disc": null
     },
     "lead_tnRLY4wFmccopf2JiTtOlbppgcmhgVMy74ynRZoqP1f": {
-      "date": "2026-09-02",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Kelly Schrader",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7"
+      "quick_disc": null
     },
     "lead_Y7dzf64Jd6IEEUyCVlfijqdb4P0U2RwbCuENOFetvgF": {
       "date": "2026-09-02",
@@ -110442,15 +110442,15 @@
     "lead_kft4APMptUGjxRU77jBp8qa20JaY2G2MN5wMKoImoUD": {
       "date": "2026-09-02",
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Spencer Reynolds",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM"
+      "quick_disc": null
     },
     "lead_jzCmpCZ5TQw5vjv4FD5niLLEuqN8Rv5y7eOJqy4CwlY": {
       "date": "2026-09-03",
@@ -111595,17 +111595,17 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_uZbQezCy2qX2eqbqIRKc8IUzm6FByMDomU7aexJxDLJ": {
-      "date": "2026-09-12",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Spencer Reynolds",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM"
+      "quick_disc": null
     },
     "lead_9SppA98u4SWXRYl7wgPuc00Prqy20zPvu6G5G4TtVDZ": {
       "date": "2026-09-12",
@@ -113377,17 +113377,17 @@
       "quick_disc": null
     },
     "lead_udBnRdaKBaCgQJmZeyWvAMAqpGdXRXeV3DrWkf2H8U0": {
-      "date": "2026-09-11",
+      "date": null,
       "call_type": "Closer",
-      "scraper": "YES",
+      "scraper": null,
       "post_webinar": null,
       "reactivation": "Kelly Schrader",
-      "reactivation_override_version": 1,
+      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7",
+      "reactivation_override_version": null,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7"
+      "quick_disc": null
     },
     "lead_WNpYt5klGLaetafgvIHRCdV2JngK8lZZEvwcxWwg0RQ": {
       "date": "2026-09-10",
@@ -116578,17 +116578,17 @@
       "quick_disc": null
     },
     "lead_ohpWQl4XAf6mActDlHTnOINYnMF1FhsujmRmfr8bcTp": {
-      "date": "2026-09-29",
-      "call_type": "Closer",
-      "scraper": "YES",
+      "date": null,
+      "call_type": null,
+      "scraper": null,
       "post_webinar": null,
-      "reactivation": "Raiya",
-      "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": null
+      "quick_disc": null
     },
     "lead_3zJJSd3aUIoz0AvVCMPVNFgcg0MCqqdwAfKSlwqBeYx": {
       "date": "2026-09-24",
@@ -121502,17 +121502,17 @@
       "quick_disc": null
     },
     "lead_LzvIBC0lTbIgqquHvH7OthHqc91s3OIhpe4A31DCKSc": {
-      "date": "2026-10-07",
-      "call_type": "Closer",
-      "scraper": "YES",
+      "date": null,
+      "call_type": null,
+      "scraper": null,
       "post_webinar": null,
-      "reactivation": "Raiya",
-      "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": null
+      "quick_disc": null
     },
     "lead_FHZxdvvpBiQikyEa9L27wVS6IqOSX3Kl7oTJ0wioSsT": {
       "date": "2026-10-06",
@@ -121841,13 +121841,14 @@
       "quick_disc": null
     },
     "lead_BcWq20GvMOKmKyD4chh5lXtoa3S8T3azKflOYf7TbKh": {
-      "date": "2026-10-09",
+      "date": "2026-10-10",
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -122960,13 +122961,14 @@
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_8SPU2FufIbsq67SmsoWAHSGgEle9HVkmhbmX3TcpUPU": {
-      "date": "2026-10-09",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Google Ads",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -123008,8 +123010,99 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_6gaJeQKDluDL6iAGPJY7Qq2PgNC3JJv3qTLdhhPLiRB": {
+      "date": "2026-10-11",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Charlie Ingram",
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_jT1JzFbKqMrSMIeNWPumqjSUEc75KJjat8LuT9jFXZy": {
+      "date": "2026-10-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_XEdFIQm2KKumYtipofU00riz95aAEXzX42kh9qV0Io1": {
+      "date": "2026-10-11",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_gjPW9l3iN5zMnbUUAi0DXZOzyU1Wv4BIrCc8zsCUFmr": {
+      "date": "2026-10-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor Mason",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_RXqPV5zrF4dPBwGJtxs8W77fNgCXir4RrT0K0TGNaoh"
+    },
+    "lead_6jnjxY4eJjeu8o1yYT5HZvL2jDiHCC5bfj2KCEEgsFL": {
+      "date": "2026-10-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor Mason",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_RXqPV5zrF4dPBwGJtxs8W77fNgCXir4RrT0K0TGNaoh"
+    },
+    "lead_2gIlIKKpaUL2KPYwA8vCCSp9QPpzsYnCszyOMGoGr8g": {
+      "date": "2026-10-07",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor Mason",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_RXqPV5zrF4dPBwGJtxs8W77fNgCXir4RrT0K0TGNaoh"
+    },
+    "lead_AZS1tX7D37neU6i2DQCT4qPgADoSv6WsXuFakNrrdN9": {
+      "date": "2026-10-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor Mason",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_RXqPV5zrF4dPBwGJtxs8W77fNgCXir4RrT0K0TGNaoh"
     }
   },
-  "saved_at": "2026-10-09 07:42:02 UTC",
-  "count": 10389
+  "saved_at": "2026-10-09 17:41:01 UTC",
+  "count": 10396
 }
