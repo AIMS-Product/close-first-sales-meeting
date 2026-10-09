@@ -34,6 +34,29 @@ def meeting(lead_id, title, starts_at, status="completed"):
 
 
 class LatestSalesCallUpdaterTests(unittest.TestCase):
+    def test_unavailable_reactivation_choice_keeps_sales_call_dates(self):
+        desired = updater.calculate_desired_state([
+            meeting("lead_a", "TLG Vanguard - Next Steps", "2026-10-07T18:00:00Z"),
+        ])
+        self.assertEqual(desired["lead_a"]["reactivation"], "Connor Mason")
+
+        skipped = updater.suppress_invalid_reactivation_choices(desired, {"Connor George"})
+
+        self.assertEqual(skipped, {"Connor Mason": 1})
+        self.assertEqual(desired["lead_a"]["date"], "2026-10-07")
+        self.assertEqual(desired["lead_a"]["latest_meeting_date"], "2026-10-07")
+        self.assertIsNone(desired["lead_a"]["reactivation"])
+        self.assertNotIn("reactivation_user", desired["lead_a"])
+
+    def test_rejected_lead_write_stays_out_of_success_cache(self):
+        desired = updater.calculate_desired_state([
+            meeting("lead_a", "Vending Consult Call", "2026-10-08T18:00:00Z"),
+        ])
+        cached = {"lead_a": {"date": "2026-10-01"}}
+        with patch.object(updater, "api_get", side_effect=RuntimeError("Close rejected write")):
+            new_cache = updater.routine_update(desired, cached, {})
+        self.assertEqual(new_cache, cached)
+
     def test_rebooked_meetings_keep_first_date_and_move_latest_to_newest_active(self):
         desired = updater.calculate_desired_state([
             meeting("lead_a", "Vending Consult Call", "2026-10-08T18:00:00Z"),

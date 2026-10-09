@@ -942,6 +942,19 @@ def cacheable_state(desired: dict) -> dict:
     return {key: value for key, value in desired.items() if key != "latest_meeting_date"}
 
 
+def suppress_invalid_reactivation_choices(desired_state: dict, allowed_choices: set[str]) -> dict[str, int]:
+    """Leave meeting dates intact when a mapped setter is absent from Close's dropdown."""
+    skipped = {}
+    for desired in desired_state.values():
+        label = desired.get("reactivation")
+        if label and label not in allowed_choices:
+            skipped[label] = skipped.get(label, 0) + 1
+            desired["reactivation"] = None
+            desired.pop("reactivation_user", None)
+            desired["reactivation_override_version"] = None
+    return skipped
+
+
 def reconcile_latest_only(desired_state: dict, live_first_leads: dict, excluded_ids: set) -> tuple[int, int]:
     """Write only LSCBD for otherwise unchanged leads in the live first-date cohort."""
     candidates = {
@@ -1022,8 +1035,8 @@ def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict,
 
     updated = 0
     errors  = 0
+    # A rejected Close write must remain different from desired on the next run.
     new_cache = dict(cached_state)
-    new_cache.update(cached_desired)
 
     for i, (lead_id, desired) in enumerate(all_changes.items(), 1):
         try:
@@ -1166,6 +1179,13 @@ def main():
 
     # 4. Calculate desired state in Python — zero API calls
     desired_state = calculate_desired_state(all_meetings, users_by_name)
+    choice_field = api_get(f"/custom_field/lead/{FIELD_REACTIVATION_ID}/")
+    choices = choice_field.get("choices")
+    if not isinstance(choices, list) or not choices or not all(isinstance(value, str) for value in choices):
+        raise RuntimeError("Reactivation setter dropdown choices are unavailable")
+    skipped_choices = suppress_invalid_reactivation_choices(desired_state, set(choices))
+    if skipped_choices:
+        print(f"Unavailable reactivation setter choices skipped: {skipped_choices}", flush=True)
 
     closer_count = sum(1 for v in desired_state.values() if v.get("call_type") == "Closer")
     setter_count = sum(1 for v in desired_state.values() if v.get("call_type") == "Setter")
