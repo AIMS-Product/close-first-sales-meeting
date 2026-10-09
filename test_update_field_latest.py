@@ -38,6 +38,7 @@ class LatestSalesCallUpdaterTests(unittest.TestCase):
         desired = updater.calculate_desired_state([
             meeting("lead_a", "TLG Vanguard - Next Steps", "2026-10-07T18:00:00Z"),
         ])
+        desired["lead_a"]["reactivation_user"] = "user_connor_mason"
         self.assertEqual(desired["lead_a"]["reactivation"], "Connor Mason")
 
         skipped = updater.suppress_invalid_reactivation_choices(desired, {"Connor George"})
@@ -46,7 +47,24 @@ class LatestSalesCallUpdaterTests(unittest.TestCase):
         self.assertEqual(desired["lead_a"]["date"], "2026-10-07")
         self.assertEqual(desired["lead_a"]["latest_meeting_date"], "2026-10-07")
         self.assertIsNone(desired["lead_a"]["reactivation"])
-        self.assertNotIn("reactivation_user", desired["lead_a"])
+        self.assertEqual(desired["lead_a"]["reactivation_user"], "user_connor_mason")
+        writes = []
+        with patch.object(updater, "api_put", side_effect=lambda path, payload: writes.append(payload)):
+            updater.write_lead("lead_a", "Lead A", {}, desired["lead_a"], {})
+        self.assertEqual(writes[0][updater.FIELD_REACTIVATION_USER_KEY], "user_connor_mason")
+        self.assertNotIn(updater.FIELD_REACTIVATION_KEY, writes[0])
+
+    def test_allowed_reactivation_choice_writes_name_and_user(self):
+        desired = updater.calculate_desired_state([
+            meeting("lead_a", "Vendingpreneurs Momentum - Next Steps", "2026-10-07T18:00:00Z"),
+        ])
+        desired["lead_a"]["reactivation_user"] = "user_connor_george"
+        updater.suppress_invalid_reactivation_choices(desired, {"Connor George"})
+        writes = []
+        with patch.object(updater, "api_put", side_effect=lambda path, payload: writes.append(payload)):
+            updater.write_lead("lead_a", "Lead A", {}, desired["lead_a"], {})
+        self.assertEqual(writes[0][updater.FIELD_REACTIVATION_KEY], "Connor George")
+        self.assertEqual(writes[0][updater.FIELD_REACTIVATION_USER_KEY], "user_connor_george")
 
     def test_rejected_lead_write_stays_out_of_success_cache(self):
         desired = updater.calculate_desired_state([

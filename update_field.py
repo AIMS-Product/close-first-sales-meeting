@@ -831,7 +831,9 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
         payload[FIELD_REACTIVATION_KEY] = new_reactivation_label
 
     effective_reactivation_label = new_reactivation_label or cur_reactivation
-    desired_reactivation_user = resolve_reactivation_user_id(effective_reactivation_label, users_by_name)
+    desired_reactivation_user = user_field_id(desired.get("reactivation_user")) or resolve_reactivation_user_id(
+        effective_reactivation_label, users_by_name
+    )
 
     if effective_reactivation_label and not desired_reactivation_user:
         print(
@@ -950,8 +952,7 @@ def suppress_invalid_reactivation_choices(desired_state: dict, allowed_choices: 
         if label and label not in allowed_choices:
             skipped[label] = skipped.get(label, 0) + 1
             desired["reactivation"] = None
-            desired.pop("reactivation_user", None)
-            desired["reactivation_override_version"] = None
+            # The dropdown is limited, but the mapped Close user can still be set.
     return skipped
 
 
