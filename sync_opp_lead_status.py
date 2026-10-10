@@ -104,6 +104,23 @@ ORPHAN_OPP_STATUS_IDS = {
 }
 
 
+# Lead statuses that mean "a call is on the calendar". Adam's rule (2026-10-07): a lead is never moved out of these
+# while it still has an upcoming meeting, unless the lead cancels it themselves (the meeting then disappears or is
+# marked canceled, and the guard lets the next run through). On Oct 7-8 this sync moved 30 booked leads to
+# HOT / Lost / "Canceled (by Lead)" from an older opportunity while their Calendly booking was still active.
+BOOKED_LEAD_STATUS_IDS = {
+    "stat_lGHxEKwhbVswuchbpRo6XcMMSXz0fV4CID9qFWT8KCO",  # Call Booked
+    "stat_2SmOUMCp1vDFJF0TcJ011hNnpLYWDGwugyo4JyiRMEP",  # Call Rescheduled
+}
+
+
+def guard_blocks(current_lead_status_id, target_lead_status_id, has_upcoming_meeting):
+    """True when the write would pull a lead off a booked status while its call is still upcoming. Pure."""
+    return (current_lead_status_id in BOOKED_LEAD_STATUS_IDS
+            and target_lead_status_id not in BOOKED_LEAD_STATUS_IDS
+            and has_upcoming_meeting)
+
+
 def pick_winning_opportunity(opps):
     """Given a list of opportunity dicts (each with date_updated), return
     the one updated most recently. Pure function -- no network -- so it's
@@ -155,6 +172,16 @@ class CloseClient:
                 return
             skip += page_size
 
+    def has_upcoming_meeting(self, lead_id, now=None):
+        """True if Close holds a meeting for this lead that starts in the future and is not canceled."""
+        now = now or datetime.now(timezone.utc)
+        data = self._request("GET", "/activity/meeting/", params={"lead_id": lead_id, "_fields": "starts_at,status", "_limit": 50})
+        for m in data.get("data", []):
+            starts = m.get("starts_at")
+            if starts and m.get("status") != "canceled" and datetime.fromisoformat(starts.replace("Z", "+00:00")) > now:
+                return True
+        return False
+
     def set_lead_status(self, lead_id, status_id):
         return self._request(
             "PUT", f"/lead/{lead_id}/", json={"status_id": status_id}
@@ -179,7 +206,7 @@ def run(dry_run, limit, lookback_days):
     print(f"Fetching leads (with opportunities embedded){f', limit {limit}' if limit else ''}...")
     leads_scanned = 0
     leads_with_opps = 0
-    updated = already_correct = orphan_skipped = stale_skipped = failed = 0
+    updated = already_correct = orphan_skipped = stale_skipped = failed = guarded = 0
 
     for lead in client.paginate_leads_with_opportunities(limit=limit):
         leads_scanned += 1
@@ -219,6 +246,20 @@ def run(dry_run, limit, lookback_days):
             already_correct += 1
             continue
 
+        if lead["status_id"] in BOOKED_LEAD_STATUS_IDS and mapped_status_id not in BOOKED_LEAD_STATUS_IDS:
+            try:
+                upcoming = client.has_upcoming_meeting(lead_id)
+            except requests.HTTPError as e:
+                # Fail closed: if we cannot tell whether a call is upcoming, do not touch a booked lead.
+                failed += 1
+                print(f"ERROR lead {lead_id}: meeting lookup failed ({e}); booked lead left untouched")
+                continue
+            if guard_blocks(lead["status_id"], mapped_status_id, upcoming):
+                guarded += 1
+                print(f"GUARD lead {lead_id}: booked with an upcoming call -- not moved to {mapped_status_id} "
+                      f"(https://app.close.com/lead/{lead_id}/)")
+                continue
+
         if dry_run:
             print(f"WOULD SET lead {lead_id} ({lead.get('display_name', '')}): "
                   f"{lead['status_id']} -> {mapped_status_id}")
@@ -247,6 +288,7 @@ def run(dry_run, limit, lookback_days):
     print(f"Already correct:                   {already_correct}")
     print(f"Orphan / unmapped status (flag):   {orphan_skipped}")
     print(f"Skipped (outside lookback window): {stale_skipped}")
+    print(f"Guarded (booked, call upcoming):   {guarded}")
     print(f"Failed:                            {failed}")
     if dry_run:
         print("\nDRY RUN -- no writes were made.")
@@ -273,8 +315,16 @@ def selftest():
     check("single opp is its own winner",
           pick_winning_opportunity([opps[0]])["id"] == "a")
 
+    # Call Booked guard
+    booked, hot = "stat_lGHxEKwhbVswuchbpRo6XcMMSXz0fV4CID9qFWT8KCO", "stat_x"
+    check("guard blocks booked -> other while a call is upcoming", guard_blocks(booked, hot, True))
+    check("guard allows booked -> other once no call is upcoming", not guard_blocks(booked, hot, False))
+    check("guard allows booked -> rescheduled", not guard_blocks(booked, "stat_2SmOUMCp1vDFJF0TcJ011hNnpLYWDGwugyo4JyiRMEP", True))
+    check("guard ignores leads that are not booked", not guard_blocks(hot, booked, True))
+    check("booked statuses are real STATUS_MAP targets", BOOKED_LEAD_STATUS_IDS <= set(STATUS_MAP.values()))
+
     # STATUS_MAP integrity
-    check("STATUS_MAP has 17 entries", len(STATUS_MAP) == 17)
+    check("STATUS_MAP has 20 entries", len(STATUS_MAP) == 20)
     check("ORPHAN_OPP_STATUS_IDS has 8 entries", len(ORPHAN_OPP_STATUS_IDS) == 8)
     check("no overlap between STATUS_MAP and ORPHAN_OPP_STATUS_IDS",
           set(STATUS_MAP.keys()).isdisjoint(ORPHAN_OPP_STATUS_IDS.keys()))
