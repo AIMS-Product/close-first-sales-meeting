@@ -25,23 +25,18 @@ from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 
 from lane2_state import (
-    BASE, F_OWNER, F_OVERRIDE, TLG_SETTERS, SUPPRESS_STATUSES, BL_TLG,
+    BASE, F_OWNER, F_OVERRIDE, SUPPRESS_STATUSES, BL_TLG,
     CloseError, WRITE_WORKERS, SKIP_CAP, PROBE_CAP,
     _wrap, _req, cf, search, status_in, business_line_is,
 )
+from lane2_roster import OFFER_TLG, assignment_roster
 
 # ============================================================================
 # CONFIG
 # ============================================================================
 
-# Who gets dealt TLG leads. Mirrors the roster in lane2_state.TLG_SETTERS, which
-# drives Owner Team stamping — this one drives dealing. Same split as every other
-# lane, and the same reason: the two can legitimately differ.
-#
-# Beatrice is ALSO a VP Scraper (see lane2_state.TLG_SETTERS). She is in both on
-# purpose. Her VP book and her TLG book never mix, because each assigner and each
-# view set filters on business line.
-ROTATION = dict(TLG_SETTERS)
+# Certified TLG assignment seats come from the shared roster.
+ROTATION, MISSING_READY_USER_IDS = assignment_roster(OFFER_TLG)
 
 # Target book per rep. Stephen, 2026-09-11: "to begin, we want to give both Josh
 # and Beatrice 1000 leads to start."
@@ -102,6 +97,8 @@ def main():
     args = ap.parse_args()
     target = None if args.max_queue == 0 else args.max_queue
 
+    if MISSING_READY_USER_IDS and args.apply:
+        sys.exit("Ready TLG reps are missing Close user IDs: " + ", ".join(MISSING_READY_USER_IDS))
     if not ROTATION:
         sys.exit("No TLG setters configured in lane2_state.TLG_SETTERS.")
 

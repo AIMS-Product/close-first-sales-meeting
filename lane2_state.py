@@ -29,6 +29,7 @@ from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 
 import requests
+from lane2_roster import owner_team_rosters
 
 API_KEY = os.environ.get("CLOSE_API_KEY")
 if not API_KEY:
@@ -150,40 +151,11 @@ LANE1_OPP_STATUSES = [OPP_CONTRACT_SENT, OPP_FOLLOW_UP, OPP_RESCHEDULE]
 LANE1_ACTIVE_DAYS = 30
 
 # --- rosters (user_id -> Owner Team) ----------------------------------------
-SETTERS = {
-    "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F": "William Nowak",
-    "user_4sfuKGMbv0LQZ4hpS8ipASv406kKTSNP5Xx79jOwSqM": "Spencer Reynolds",
-}
-SCRAPERS = {
-    "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy": "Vince Bartolini",
-    "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z": "Jacob Hepner",
-    "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ": "Jacob Herbig",
-    "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb": "Charlie Ingram",
-    "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ": "Pearl Sathekge",
-    "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7": "Kelly Schrader",  # moved to Lane 2 2026-08-05
-    "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H": "August Young",    # added 2026-08-06
-    "user_rGhjlxgkAA0mXchgw6zggbWXqHSYpfpzCvO6UgkqVnm": "Amy Mulch",      # added 2026-08-06
-    "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL": "Cassie Caraballo",  # added 2026-08-07
-    "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp": "Jessica Zatkin",    # added 2026-08-07
-    "user_O9qFgDidrldSA1zU3pKPpz5zUbCcNpoEBTCrtAolDUi": "Abigail Garza",     # added 2026-08-12
-    "user_stO6qgPWPprrhNp8wBxHFzkYLrG8JAN9wBiWXru1xvJ": "Beatrice Braescu Cojocaru", # added 2026-09-08
-    "user_SstZur4m512IhMhhIWPIehvCpkkSndAKZiWPhQ13jaQ": "Catalina", # added 2026-09-11
-    "user_JM69zsjxDPj2MVQKI3kCcfToub01d0eoKP9sxFwUEQY": "Raiya", # added 2026-09-11
-    "user_bT94lFhgyA2c4inUFezZLSmGp9pRpfvc9LG7Io8luN7": "Luna", # added 2026-09-11
-    "user_8UDC7WAhyYNxEyhrh3flGsYUqmXh9UVkn7Z1LOlY6Lm": "Owen Hart", # added 2026-09-16
-    "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF": "Brad Savage", # added 2026-09-16
-    "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj": "Jason Aaron",  # lane manager
-    # Not started — add once their Close users exist:
-    # "user_...": "Connor George",
-    # Sydney Boyd — not joining, removed 2026-08-06.
-}
-
-# Setters who also run their own booked calls rather than handing off to Lane 1.
-# Kept in their own dict, not merged into SETTERS, so their lead mix can diverge
-# later without unpicking anything.
-HYBRID_SETTERS = {
-    "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO": "Ariella Irvine",  # added 2026-08-06
-}
+_OWNER_TEAM_ROSTERS = owner_team_rosters()
+SETTERS = _OWNER_TEAM_ROSTERS["SETTERS"]
+HYBRID_SETTERS = _OWNER_TEAM_ROSTERS["HYBRID_SETTERS"]
+SCRAPERS = _OWNER_TEAM_ROSTERS["SCRAPERS"]
+TLG_SETTERS = _OWNER_TEAM_ROSTERS["TLG_SETTERS"]
 
 # What Owner Team gets stamped for a Hybrid Setter.
 #

@@ -40,7 +40,7 @@ PREFIX = "L2 · "          # every view this script owns starts with this
 from lane2_state import (
     LANE_1, LANE1_OPP_STATUSES, has_opp_status,
     F_BUSINESS, BL_TLG, EXCLUDED_BUSINESS_LINES,
-    business_line_is, not_excluded_business_line,
+    business_line_is, not_excluded_business_line, TLG_SETTERS,
 )
 
 # ---------------------------------------------------------------------------
@@ -496,11 +496,8 @@ SETTER_ONLY = {
     "Setter · Webinar — Recent Cohort",
 }
 
-# The Land Geek setter lane. Keep in sync with lane2_state.TLG_SETTERS.
-TLG_SETTERS_FOR_SHARING = [
-    "user_stO6qgPWPprrhNp8wBxHFzkYLrG8JAN9wBiWXru1xvJ",   # Beatrice Braescu Cojocaru
-    "user_WdDkCcFt7B6F7nPJJiWGi6vl5g5jeqbluErfy6Syrfs",   # Josh Stoffel
-]
+# The Land Geek setter lane comes from the shared Lane 2 roster.
+TLG_SETTERS_FOR_SHARING = list(TLG_SETTERS)
 
 # TLG ONLY — a separate offer, so these are shared with its two reps and managers
 # and nobody else. The business-line gate in view() already guarantees a VP rep

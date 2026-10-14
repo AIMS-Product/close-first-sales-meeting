@@ -43,6 +43,8 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+from lane2_roster import SCRAPER_TITLE_MAP
+
 # ─────────────────────────────────────────────
 # Config
 # ─────────────────────────────────────────────
@@ -134,44 +136,6 @@ RE_VENDHUB_NEXTSTEPS      = re.compile(r"vendhub\s+next\s+steps\s+call", re.IGNO
 # Catches: VendHub, Vendhub, Vend Hub (with space), vend_hub etc.
 RE_VENDHUB_ANY            = re.compile(r"vend[\s-]?hub", re.IGNORECASE)
 
-# Scraper meeting titles — all contain "Next Steps" so checked before hard excludes.
-# Each maps to a setter label for the Reactivation - Setter Name field.
-# ORDER MATTERS: most specific pattern first (longer title before shorter).
-SCRAPER_TITLE_MAP = [
-    (re.compile(r"vendingpren[eu]+rs?\s+pinnacle\s*-\s*next\s+steps", re.IGNORECASE), "Monde"),  # Vendingpreneurs Pinnacle - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+executive\s*-\s*next\s+steps", re.IGNORECASE), "Finley Eastlake"),  # Vendingpreneurs Executive - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps\s+call", re.IGNORECASE),     "Charlie Ingram"),  # Vendingpreneurs - Next Steps Call (Jennifer replaced Kristin Nelson)
-
-    (re.compile(r"vendingpren[eu]+rs?\s+next\s+steps\s+call", re.IGNORECASE),         "Vince Bartolini"),   # Vendingpreneurs Next Steps Call
-    (re.compile(r"vendingpren[eu]+r\s+next\s+steps", re.IGNORECASE),                  "William Nowak"),     # Vendingpreneur Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+next\s+steps\s+session", re.IGNORECASE),      "Pearl Sathekge"),       # Vendingpreneurs Next Steps Session
-
-
-    (re.compile(r"vending\s+discovery\s+call\s+-\s+next\s+steps", re.IGNORECASE),    "August Young"),      # Vending Discovery Call - Next Steps
-
-
-    (re.compile(r"vending\s+opportunity\s*-?\s*next\s+steps", re.IGNORECASE),          "Cassie Caraballo"),  # Vending Opportunity - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+connect\s*-?\s*next\s+steps", re.IGNORECASE),  "Jessica Zatkin"),    # Vendingpreneurs Connect - Next Steps
-
-    (re.compile(r"vendingpren[eu]+rs?\s+momentum\s*-?\s*next\s+steps", re.IGNORECASE), "Connor George"),  # Vendingpreneurs Momentum - Next Steps
-
-    (re.compile(r"vendingpren[eu]+rs?\s+pathway\s*-?\s*next\s+steps", re.IGNORECASE), "Naria Torres"),  # Vendingpreneurs Pathway - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+blueprint\s*-?\s*next\s+steps", re.IGNORECASE), "Melia King"),  # Vendingpreneurs Blueprint - Next Steps
-    (re.compile(r"tlg\s+pinnacle\s*-?\s*next\s+steps", re.IGNORECASE), "Kaylane Nunes"),  # TLG Pinnacle - Next Steps
-    (re.compile(r"tlg\s+compass\s*-?\s*next\s+steps", re.IGNORECASE), "Josh Stoffel"),  # TLG Compass - Next Steps
-
-    (re.compile(r"tlg\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Catalina"),  # TLG Elevate - Next Steps
-
-
-    (re.compile(r"tlg\s+clarity\s*-?\s*next\s+steps", re.IGNORECASE), "Luna"),  # TLG Clarity - Next Steps
-    (re.compile(r"tlg\s+vanguard\s*-?\s*next\s+steps", re.IGNORECASE), "Connor Mason"),  # TLG Vanguard - Next Steps
-    (re.compile(r"tlg\s+northstar\s*-?\s*next\s+steps", re.IGNORECASE), "Jonathan Quinn"),  # TLG Northstar - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+ascent\s*-?\s*next\s+steps", re.IGNORECASE), "Owen Hart"),  # Vendingpreneurs Ascent - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+keystone\s*-?\s*next\s+steps", re.IGNORECASE), "Brad Savage"),  # Vendingpreneurs Keystone - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+summit\s*-?\s*next\s+steps", re.IGNORECASE), "Rob Maxfield"),  # Vendingpreneurs Summit - Next Steps
-    (re.compile(r"vendingpren[eu]+rs?\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Igor Trojanowski"),  # Vendingpreneurs Growth - Next Steps
-]
-
 CLOSER_PATTERNS = [
     re.compile(r"vending\s+strategy\s+call", re.IGNORECASE),
     re.compile(r"vendingpren[eu]+rs?\s+consultation", re.IGNORECASE),
@@ -226,7 +190,9 @@ def classify_meeting(meeting: dict) -> tuple:
     title   = (meeting.get("title") or "").strip()
 
     # Scraper check first — before hard excludes (titles contain "Next Steps")
-    for pattern, setter_name in SCRAPER_TITLE_MAP:
+    for scraper in SCRAPER_TITLE_MAP:
+        pattern = scraper["pattern"]
+        setter_name = scraper["rep"]
         if pattern.search(title):
             if user_id not in EXCLUDED_OWNERS:
                 return "scraper", setter_name

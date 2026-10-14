@@ -33,64 +33,20 @@ from concurrent.futures import ThreadPoolExecutor
 # Close's 10,000-row pagination cap.
 from lane2_state import (
     BASE, F_OWNER, F_STATE, F_ENTRY, F_OVERRIDE, SUPPRESS_STATUSES,
+    BL_BK, BL_AOC, BL_TLG, BL_PPA,
     not_excluded_business_line,
     CloseError, _req, _wrap, cf, search, status_in, WRITE_WORKERS,
     SKIP_CAP, PROBE_CAP,
 )
 from vp_end_release import release_vp_end_leads
+from lane2_roster import OFFER_VP, assignment_roster
 
 # ============================================================================
 # CONFIG
 # ============================================================================
 
-# The dialing rotation. Setters are deliberately excluded — William Nowak and
-# Spencer Reynolds work inbound, not the dormant book.
-SCRAPERS = {
-    "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy": "Vince Bartolini",
-    "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z": "Jacob Hepner",
-    "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ": "Jacob Herbig",
-    "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb": "Charlie Ingram",
-    "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ": "Pearl Sathekge",
-    "user_WquWudQN7dghZsAPiNY80eJUmg1EadQg2UCQdvgbif7": "Kelly Schrader",  # moved to Lane 2 2026-08-05
-    "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H": "August Young",    # added 2026-08-06
-    "user_rGhjlxgkAA0mXchgw6zggbWXqHSYpfpzCvO6UgkqVnm": "Amy Mulch",      # added 2026-08-06
-    "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL": "Cassie Caraballo",  # added 2026-08-07
-    "user_WmBJj4uIsE9WRLKMn5Y1i8MinIDJG5GjOHPeX2sUJCp": "Jessica Zatkin",    # added 2026-08-07
-    "user_O9qFgDidrldSA1zU3pKPpz5zUbCcNpoEBTCrtAolDUi": "Abigail Garza",     # added 2026-08-12
-    "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi": "Connor George", # added 2026-08-18
-    "user_OsKxvuqk3YYRh22NXqonG3PbfFoTC39bn4vGFRKBdMZ": "Dana Lesiuk", # added 2026-08-18
-    "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY": "Naria Torres", # added 2026-08-24
-    "user_32021LR58tWOSl2MX2nFVMSP8PoaGV1DjZEF0v0yGXs": "Melia King", # added 2026-08-24
-    "user_stO6qgPWPprrhNp8wBxHFzkYLrG8JAN9wBiWXru1xvJ": "Beatrice Braescu Cojocaru", # added 2026-09-08
-    "user_SstZur4m512IhMhhIWPIehvCpkkSndAKZiWPhQ13jaQ": "Catalina", # added 2026-09-11
-    "user_JM69zsjxDPj2MVQKI3kCcfToub01d0eoKP9sxFwUEQY": "Raiya", # added 2026-09-11
-    "user_bT94lFhgyA2c4inUFezZLSmGp9pRpfvc9LG7Io8luN7": "Luna", # added 2026-09-11
-    "user_8UDC7WAhyYNxEyhrh3flGsYUqmXh9UVkn7Z1LOlY6Lm": "Owen Hart", # added 2026-09-16
-    "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF": "Brad Savage", # added 2026-09-16
-    # Ariella Irvine — Hybrid Setter, added to the dialing rotation 2026-08-12.
-    # She is in BOTH queues on purpose: assign_setter_leads.py deals her fresh
-    # hot inbound (she books and runs her own calls), and this script gives her
-    # a dormant book to work between them.
-    #
-    # She stays in HYBRID_SETTERS in lane2_state.py — do NOT copy her into
-    # SCRAPERS there. That dict drives Owner Team, and lane2_state's roster
-    # guard fails hard on anyone listed twice. Her Owner Team stays "Setter".
-    "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO": "Ariella Irvine",
-
-    # Setters (NOT in this rotation): William Nowak, Spencer Reynolds.
-    # Sydney Boyd is not joining — removed 2026-08-06.
-    #
-    # This list is NO LONGER a mirror of SCRAPERS in lane2_state.py — Ariella is
-    # here and not there, deliberately (see above). That one drives Owner Team,
-    # this one drives who gets dealt leads. Everyone else appears in both.
-
-    # Not started yet — add when their Close users exist:
-    # "user_...": "Connor George",
-
-    # Jason Aaron manages Lane 2 and holds lost deals — not a dialing seat.
-    # Uncomment only if he should receive round-robin volume.
-    # "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj": "Jason Aaron",
-}
+# Certified VP assignment seats come from the shared roster.
+SCRAPERS, MISSING_READY_USER_IDS = assignment_roster(OFFER_VP)
 
 # Target queue size per rep. None = uncapped (deal the whole pool).
 #
@@ -444,6 +400,8 @@ def main():
                          "(default 10000) — a backstop against a bad active-user "
                          "lookup treating everyone as departed")
     args = ap.parse_args()
+    if MISSING_READY_USER_IDS and args.apply:
+        sys.exit("Ready VP reps are missing Close user IDs: " + ", ".join(MISSING_READY_USER_IDS))
     target = None if args.max_queue == 0 else args.max_queue
 
     if not SCRAPERS:
@@ -512,7 +470,7 @@ def main():
     print("Counting current queues...", file=sys.stderr)
     held = search(
         _wrap(status_in(SUPPRESS_STATUSES, negate=True),
-              not_excluded_business_line(),          # TLG is a separate motion
+              not_excluded_business_line(excluded=[BL_BK, BL_AOC, BL_TLG, BL_PPA]),          # TLG is a separate motion
               owner_is(SCRAPERS.keys()),
               state_is(PRIORITY_STATES)),
         fields=["id", "contacts", f"custom.{F_OWNER}"])
@@ -592,7 +550,7 @@ def main():
         remaining = (cap_need - len(pool)) if (args.no_census and target) else None
         rows = search(
             _wrap(status_in(SUPPRESS_STATUSES, negate=True),
-                  not_excluded_business_line(),      # never deal TLG to a VP Scraper
+                  not_excluded_business_line(excluded=[BL_BK, BL_AOC, BL_TLG, BL_PPA]),      # never deal TLG to a VP Scraper
                   owner_empty(), state_is([state])),
             fields=["id", "display_name", "date_created",
                     f"custom.{F_OVERRIDE}", f"custom.{F_ENTRY}"],

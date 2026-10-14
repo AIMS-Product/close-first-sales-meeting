@@ -21,6 +21,8 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+from lane2_roster import MEETING_COUNT_TITLE_MAP as SCRAPER_TITLE_MAP
+
 # ─────────────────────────────────────────────
 # Config
 # ─────────────────────────────────────────────
@@ -31,40 +33,6 @@ DATE_END      = os.environ["DATE_END"]     # YYYY-MM-DD
 BASE_URL      = "https://api.close.com/api/v1"
 PACIFIC       = ZoneInfo("America/Los_Angeles")
 SLEEP         = 0.5
-
-# ─────────────────────────────────────────────
-# Scraper title → setter name map
-# Mirrors SCRAPER_TITLE_MAP in update_field.py
-# ─────────────────────────────────────────────
-
-SCRAPER_TITLE_MAP = [
-    (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps\s+call",              re.IGNORECASE), "Charlie Ingram"),
-    (re.compile(r"vendingpren[eu]+rs?\s+call\s+-\s+next\s+steps",              re.IGNORECASE), "Jacob Hepner"),
-    (re.compile(r"vendingpren[eu]+rs?\s+next\s+steps\s+call",                  re.IGNORECASE), "Vince Bartolini"),
-    (re.compile(r"vendingpren[eu]+rs?\s+next\s+steps\s+session",               re.IGNORECASE), "Pearl Sathekge"),
-    (re.compile(r"vendingpren[eu]+rs?\s+discovery\s+-\s+next\s+steps",         re.IGNORECASE), "Kelly Schrader"),
-    (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps(?!\s+call)",          re.IGNORECASE), "Jacob Herbig"),
-    (re.compile(r"vendingpren[eu]+r\s+next\s+steps",                           re.IGNORECASE), "William Nowak"),
-    (re.compile(r"vending\s+consult\s+call",                                   re.IGNORECASE), "William Nowak"),
-    (re.compile(r"vending\s+discovery\s+call\s+-\s+next\s+steps",              re.IGNORECASE), "August Young"),
-    (re.compile(r"vending\s+discovery\s+-\s+next\s+steps",                    re.IGNORECASE), "Spencer Reynolds"),
-    (re.compile(r"vendingpren[eu]+rs?\s+strategy\s*-?\s*next\s+steps",        re.IGNORECASE), "Amy Mulch"),
-    (re.compile(r"vending\s+opportunity\s*-?\s*next\s+steps",                 re.IGNORECASE), "Cassie Caraballo"),
-    (re.compile(r"vendingpren[eu]+rs?\s+connect\s*-?\s*next\s+steps",         re.IGNORECASE), "Jessica Zatkin"),
-    (re.compile(r"vending\s+success\s*-?\s*next\s+steps",                     re.IGNORECASE), "Abigail Garza"),
-    (re.compile(r"vendingpren[eu]+rs?\s+momentum\s*-?\s*next\s+steps",        re.IGNORECASE), "Connor George"),
-    (re.compile(r"vendingpren[eu]+rs?\s+launch\s*-?\s*next\s+steps",          re.IGNORECASE), "Dana Lesiuk"),
-    (re.compile(r"vendingpren[eu]+rs?\s+pathway\s*-?\s*next\s+steps",         re.IGNORECASE), "Naria Torres"),
-    (re.compile(r"vendingpren[eu]+rs?\s+blueprint\s*-?\s*next\s+steps",       re.IGNORECASE), "Melia King"),
-    (re.compile(r"vendingpren[eu]+rs?\s+compass\s*-?\s*next\s+steps",         re.IGNORECASE), "Josh Stoffel"),
-    (re.compile(r"vendingpren[eu]+rs?\s+horizon\s*-?\s*next\s+steps",         re.IGNORECASE), "Beatrice Braescu Cojocaru"),
-    (re.compile(r"tlg\s+elevate\s*-?\s*next\s+steps",                        re.IGNORECASE), "Catalina"),
-    (re.compile(r"vendingpren[eu]+rs?\s+catalyst\s*-?\s*next\s+steps",        re.IGNORECASE), "Raiya"),
-    (re.compile(r"tlg\s+clarity\s*-?\s*next\s+steps",                        re.IGNORECASE), "Luna"),
-    (re.compile(r"vendingpren[eu]+rs?\s+ascent\s*-?\s*next\s+steps",          re.IGNORECASE), "Owen Hart"),
-    (re.compile(r"vendingpren[eu]+rs?\s+keystone\s*-?\s*next\s+steps",        re.IGNORECASE), "Brad Savage"),
-    (re.compile(r"vendingpren[eu]+rs?\s+growth\s*-?\s*next\s+steps",          re.IGNORECASE), "Igor Trojanowski"),
-]
 
 EXCLUDED_OWNERS = {
     "user_5cZRqXu8kb4O1IeBVA98UMcMEhYZUhx1fnCHfSL0YMV",  # Stephen Olivas

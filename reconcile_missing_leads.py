@@ -21,6 +21,8 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+from lane2_roster import MISSING_LEAD_RECONCILIATION_TITLE_MAP as SCRAPER_TITLE_MAP
+
 # ─────────────────────────────────────────────
 # Config
 # ─────────────────────────────────────────────
@@ -79,12 +81,6 @@ RE_FOLLOWUP      = re.compile(r"follow[\-\s]?up|fallow\s+up|f/u\b|next\s+steps|r
 RE_ENROLLMENT    = re.compile(r"enrollment|silver\s+start\s*up|bronze\s+enrollment|questions\s+on\s+enrollment", re.IGNORECASE)
 RE_DISCOVERY     = re.compile(r"vending\s+quick\s+discovery", re.IGNORECASE)
 RE_POSTWEBINAR   = re.compile(r"post\s+masterclass\s+strategy\s+call", re.IGNORECASE)
-
-SCRAPER_TITLE_MAP = [
-    (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps\s+call", re.IGNORECASE),       "Kristin Nelson"),
-    (re.compile(r"vendingpren[eu]+rs?\s+-\s+next\s+steps(?!\s+call)", re.IGNORECASE),   "Spencer Reynolds"),
-    (re.compile(r"vendingpren[eu]+r\s+next\s+steps", re.IGNORECASE),                    "Mallory Kent"),
-]
 
 CLOSER_PATTERNS = [
     re.compile(r"vending\s+strategy\s+call", re.IGNORECASE),
