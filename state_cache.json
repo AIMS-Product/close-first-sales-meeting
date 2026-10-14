@@ -124326,8 +124326,47 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_UrngTY6TmnKOhMUDL3IOueuoqCXC8LyN0rrGIpB2VN1": {
+      "date": "2026-10-18",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_qlVps1fohDlbx0HL8tvWiS4jS7nxcC9pzaTnXJpOOk7": {
+      "date": "2026-10-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_vJ3gGT14m9lsoTYIjsqK7q3CwTAmIV4rx7GfWHr0RCz": {
+      "date": "2026-10-19",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-10-14 21:54:47 UTC",
-  "count": 10495
+  "saved_at": "2026-10-14 23:17:48 UTC",
+  "count": 10498
 }
