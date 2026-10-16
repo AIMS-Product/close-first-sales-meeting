@@ -124062,13 +124062,14 @@
       "quick_disc": null
     },
     "lead_5JEHbCJ9KJs2P3lV6RpxpDNa1MLMaylZkOZRnBPvRR4": {
-      "date": "2026-10-16",
+      "date": "2026-10-23",
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -124956,7 +124957,6 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
       "funnel_name": null,
       "vendhub": null,
@@ -124988,8 +124988,34 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_W6iKUhdlRrGzyJt35R4M18kxSCcIml0VtDR4Fy2xZPS": {
+      "date": "2026-10-19",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_Bnm91mkHgNV8Og65gSKCkK9ZiH5UBOH17gYH0VnJWbP": {
+      "date": "2026-10-19",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Google Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-10-16 17:14:02 UTC",
-  "count": 10545
+  "saved_at": "2026-10-16 18:36:55 UTC",
+  "count": 10547
 }
