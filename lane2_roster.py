@@ -6,6 +6,7 @@ import re
 OFFER_VP = "Vendingpreneurs (VP)"
 OFFER_TLG = "The Land Geek (TLG)"
 OFFER_PPA = "Publishing Profits Academy (PPA)"
+OFFER_AA = "Acquisition Ace (AA)"
 
 
 # Missing user IDs are resolved by exact name from Close's organization user
@@ -197,12 +198,24 @@ LANE2_ROSTER = [
         "rep": "Jason Aaron", "user_id": "user_MrBLkl5wCqTm7QxHxPo2ydNV5KxMllg6YZDVc12Aqzj",
         "offer": OFFER_VP, "ready_for_leads": False, "title_patterns": [],
     },
+    {
+        "rep": "Eduardo Santos", "email": "eduardo.santos@modern-amenities.com",
+        "start_date": "2026-10-19",
+        "user_id": "", "offer": OFFER_AA, "ready_for_leads": False,
+        "title_patterns": [r"acquisition\s+ace\s+launch\s*-?\s*next\s+steps"],
+    },
+    {
+        "rep": "Sam Norris", "email": "sam.norris@modern-amenities.com",
+        "start_date": "2026-10-19",
+        "user_id": "", "offer": OFFER_AA, "ready_for_leads": False,
+        "title_patterns": [r"acquisition\s+ace\s+growth\s*-?\s*next\s+steps"],
+    },
 ]
 
 # Owner Team role is still distinct from offer and certification. Keep its role
 # membership here too so the reconciler and assignment scripts share identities.
 OWNER_GROUPS = {
-    "SETTERS": {"William Nowak", "Spencer Reynolds"},
+    "SETTERS": {"William Nowak", "Spencer Reynolds", "Eduardo Santos", "Sam Norris"},
     "HYBRID_SETTERS": {"Ariella Irvine"},
     "SCRAPERS": {
         "Vince Bartolini", "Charlie Ingram", "Pearl Sathekge", "August Young",
@@ -272,9 +285,13 @@ MEETING_COUNT_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+ascent\s*-?\s*next\s+steps", re.IGNORECASE), "Owen Hart"),
     (re.compile(r"vendingpren[eu]+rs?\s+keystone\s*-?\s*next\s+steps", re.IGNORECASE), "Brad Savage"),
     (re.compile(r"vendingpren[eu]+rs?\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Igor Trojanowski"),
+    (re.compile(r"acquisition\s+ace\s+launch\s*-?\s*next\s+steps", re.IGNORECASE), "Eduardo Santos"),
+    (re.compile(r"acquisition\s+ace\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Sam Norris"),
 ]
 
 MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
+    (re.compile(r"acquisition\s+ace\s+launch\s*-?\s*next\s+steps", re.IGNORECASE), "Eduardo Santos"),
+    (re.compile(r"acquisition\s+ace\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Sam Norris"),
     (re.compile(r"ppa\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Tony Parton"),
     (re.compile(r"vendingpren[eu]+rs?\s+enterprise\s*-?\s*next\s+steps", re.IGNORECASE), "Ashley Atencio"),
     (re.compile(r"vendingpren[eu]+rs?\s+velocity\s*-?\s*next\s+steps", re.IGNORECASE), "Ibraheem Khan"),
