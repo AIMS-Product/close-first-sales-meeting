@@ -116313,13 +116313,14 @@
       "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
     },
     "lead_jH3WlgsIjY0uTSCU2viYkmtKQlwKOzxG28NPy0Rcz3l": {
-      "date": "2026-10-17",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_user": "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO",
       "reactivation_override_version": null,
-      "funnel_name": null,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -124067,9 +124068,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -125008,14 +125008,52 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_eFmR1Tymt90Y6M47JVcucN7FIjwnxuVl52DU3J7ALmm": {
+      "date": "2026-10-19",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Connor George",
+      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_ivv8fAA5kfEW3fTIlNQSfOLM3WBWCDtPMtNYsZ5cg0T": {
+      "date": "2026-10-20",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO",
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_A6H2ocxnbYe1fvlo7SJHXo12TXROekSiUxyjLqWGcRB": {
+      "date": "2026-10-19",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
       "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-16 18:36:55 UTC",
-  "count": 10547
+  "saved_at": "2026-10-16 19:59:20 UTC",
+  "count": 10550
 }
