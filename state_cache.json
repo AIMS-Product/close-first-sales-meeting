@@ -125249,6 +125249,18 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_BjbAbjD6HajnH4m6gD7NAoUd3fv0Iy145jYqYpazb48": {
+      "date": "2026-10-19",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
       "reactivation_user": null,
       "reactivation_override_version": null,
       "funnel_name": null,
@@ -125257,6 +125269,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-18 01:05:20 UTC",
-  "count": 10566
+  "saved_at": "2026-10-18 02:21:06 UTC",
+  "count": 10567
 }
