@@ -210,12 +210,27 @@ LANE2_ROSTER = [
         "user_id": "", "offer": OFFER_AA, "ready_for_leads": False,
         "title_patterns": [r"acquisition\s+ace\s+growth\s*-?\s*next\s+steps"],
     },
+    {
+        "rep": "Jennifer Murray", "email": "jennifer.murray@modern-amenities.com",
+        "start_date": "2026-10-19",
+        "user_id": "", "offer": OFFER_VP, "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps"],
+    },
+    {
+        "rep": "Osheana Mitchell", "email": "osheana@modern-amenities.com",
+        "start_date": "2026-10-19",
+        "user_id": "", "offer": OFFER_VP, "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps"],
+    },
 ]
 
 # Owner Team role is still distinct from offer and certification. Keep its role
 # membership here too so the reconciler and assignment scripts share identities.
 OWNER_GROUPS = {
-    "SETTERS": {"William Nowak", "Spencer Reynolds", "Eduardo Santos", "Sam Norris"},
+    "SETTERS": {
+        "William Nowak", "Spencer Reynolds", "Eduardo Santos", "Sam Norris",
+        "Jennifer Murray", "Osheana Mitchell",
+    },
     "HYBRID_SETTERS": {"Ariella Irvine"},
     "SCRAPERS": {
         "Vince Bartolini", "Charlie Ingram", "Pearl Sathekge", "August Young",
@@ -287,11 +302,15 @@ MEETING_COUNT_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Igor Trojanowski"),
     (re.compile(r"acquisition\s+ace\s+launch\s*-?\s*next\s+steps", re.IGNORECASE), "Eduardo Santos"),
     (re.compile(r"acquisition\s+ace\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Sam Norris"),
+    (re.compile(r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Jennifer Murray"),
+    (re.compile(r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps", re.IGNORECASE), "Osheana Mitchell"),
 ]
 
 MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
     (re.compile(r"acquisition\s+ace\s+launch\s*-?\s*next\s+steps", re.IGNORECASE), "Eduardo Santos"),
     (re.compile(r"acquisition\s+ace\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Sam Norris"),
+    (re.compile(r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Jennifer Murray"),
+    (re.compile(r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps", re.IGNORECASE), "Osheana Mitchell"),
     (re.compile(r"ppa\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Tony Parton"),
     (re.compile(r"vendingpren[eu]+rs?\s+enterprise\s*-?\s*next\s+steps", re.IGNORECASE), "Ashley Atencio"),
     (re.compile(r"vendingpren[eu]+rs?\s+velocity\s*-?\s*next\s+steps", re.IGNORECASE), "Ibraheem Khan"),
