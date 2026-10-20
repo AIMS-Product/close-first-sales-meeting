@@ -222,6 +222,18 @@ LANE2_ROSTER = [
         "user_id": "", "offer": OFFER_VP, "ready_for_leads": False,
         "title_patterns": [r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps"],
     },
+    {
+        "rep": "Tara Hall", "email": "tara.hall@modern-amenities.com",
+        "start_date": "2026-10-19",
+        "user_id": "", "offer": OFFER_VP, "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+pioneer\s*-?\s*next\s+steps"],
+    },
+    {
+        "rep": "Antonio Garcia", "email": "antonio.garcia@modern-amenities.com",
+        "start_date": "2026-10-19",
+        "user_id": "", "offer": OFFER_VP, "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+legacy\s*-?\s*next\s+steps"],
+    },
 ]
 
 # Owner Team role is still distinct from offer and certification. Keep its role
@@ -229,7 +241,7 @@ LANE2_ROSTER = [
 OWNER_GROUPS = {
     "SETTERS": {
         "William Nowak", "Spencer Reynolds", "Eduardo Santos", "Sam Norris",
-        "Jennifer Murray", "Osheana Mitchell",
+        "Jennifer Murray", "Osheana Mitchell", "Tara Hall", "Antonio Garcia",
     },
     "HYBRID_SETTERS": {"Ariella Irvine"},
     "SCRAPERS": {
@@ -304,6 +316,8 @@ MEETING_COUNT_TITLE_MAP = [
     (re.compile(r"acquisition\s+ace\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Sam Norris"),
     (re.compile(r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Jennifer Murray"),
     (re.compile(r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps", re.IGNORECASE), "Osheana Mitchell"),
+    (re.compile(r"vendingpren[eu]+rs?\s+pioneer\s*-?\s*next\s+steps", re.IGNORECASE), "Tara Hall"),
+    (re.compile(r"vendingpren[eu]+rs?\s+legacy\s*-?\s*next\s+steps", re.IGNORECASE), "Antonio Garcia"),
 ]
 
 MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
@@ -311,6 +325,8 @@ MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
     (re.compile(r"acquisition\s+ace\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Sam Norris"),
     (re.compile(r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Jennifer Murray"),
     (re.compile(r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps", re.IGNORECASE), "Osheana Mitchell"),
+    (re.compile(r"vendingpren[eu]+rs?\s+pioneer\s*-?\s*next\s+steps", re.IGNORECASE), "Tara Hall"),
+    (re.compile(r"vendingpren[eu]+rs?\s+legacy\s*-?\s*next\s+steps", re.IGNORECASE), "Antonio Garcia"),
     (re.compile(r"ppa\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Tony Parton"),
     (re.compile(r"vendingpren[eu]+rs?\s+enterprise\s*-?\s*next\s+steps", re.IGNORECASE), "Ashley Atencio"),
     (re.compile(r"vendingpren[eu]+rs?\s+velocity\s*-?\s*next\s+steps", re.IGNORECASE), "Ibraheem Khan"),
