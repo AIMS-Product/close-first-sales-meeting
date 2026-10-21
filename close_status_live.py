@@ -6,6 +6,8 @@ from queue import Empty, Queue
 from threading import Event, Lock, Thread, local
 from time import monotonic, sleep
 import json
+import math
+import os
 
 from close_status_batch import ACTIVITY_FIELDS, BODY_FIELDS, TASK_FIELDS, SnapshotCache
 from close_status_policy import ORG, OWNER, Evidence, held_hash
@@ -13,8 +15,11 @@ from close_status_reader import CloseClient, SnapshotReader
 
 
 class RequestLimiter:
-    def __init__(self, requests_per_second=5):
-        self.interval = 1 / requests_per_second
+    def __init__(self, requests_per_second=None):
+        rate=float(os.environ.get('CLOSE_STATUS_REQUESTS_PER_SECOND','5')) if requests_per_second is None else float(requests_per_second)
+        if not math.isfinite(rate) or not 1 <= rate <= 10:
+            raise ValueError('Maintenance request rate must be between 1 and 10 per second')
+        self.interval = 1 / rate
         self.next_start = 0.0
         self.lock = Lock()
 
@@ -68,13 +73,14 @@ class SharedTransport:
 
 class FreshSnapshotBroker:
     """Coalesce only currently waiting reads. Every call loads all sources anew."""
-    def __init__(self, read_client, write_client, *, group_size=50, collect_seconds=.15):
+    def __init__(self, read_client, write_client, *, group_size=50, collect_seconds=.15, capture_first=None):
         if read_client.write_enabled:
             raise PermissionError('Snapshot transport must reject writes')
         if not 1 <= group_size <= 50:
             raise ValueError('Snapshot group must contain 1–50 leads')
         self.read_client, self.client = read_client, write_client
         self.group_size, self.collect_seconds = group_size, collect_seconds
+        self.capture_first = capture_first
         self.queue, self.pending = Queue(), deque()
         self.raw_first, self.capture_receipts = {}, []
         self.worker = Thread(target=self._serve, daemon=True)
@@ -148,7 +154,10 @@ class FreshSnapshotBroker:
         for lead_id, lead in leads.items():
             if lead['id'] != lead_id or lead['organization_id'] != ORG:
                 raise ValueError('Fresh native lead scope mismatch')
-            self.raw_first.setdefault(lead_id, lead)
+            if lead_id not in self.raw_first:
+                if self.capture_first:
+                    self.capture_first(lead_id, lead)
+                self.raw_first[lead_id] = lead
             raw = lead.get('custom.' + OWNER)
             owners = tuple(raw) if isinstance(raw, list) else (raw,) if raw else ()
             if set(owners) & roster.closer_ids:

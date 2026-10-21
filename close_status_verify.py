@@ -1,4 +1,6 @@
 """Independent native readbacks and business-field preservation checks."""
+from collections import Counter
+from dataclasses import asdict
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import json
@@ -52,15 +54,15 @@ def verify_batch(path, api_key, *, policy_replay=True):
         with FreshSnapshotBroker(client,client) as reader:
             def plan(result):
                 decision=StatusExecutor(reader,roster,held).preview(result['lead_id'])
-                return {'lead_id':result['lead_id'],'kind':decision.kind,'reason':decision.reason}
+                return {'lead_id':result['lead_id'],**asdict(decision)}
             with ThreadPoolExecutor(max_workers=50) as pool:
                 replay=list(pool.map(plan,written))
     journal=path/'write-journal.ndjson'
     entries=[json.loads(row) for row in journal.read_text().splitlines()] if journal.exists() else []
     intents=[r for r in entries if r['state']=='intent'];responses=[r for r in entries if r['state']=='response_received']
-    planned_ids={r['lead_id'] for r in results}
-    valid_paths={f'/lead/{lead_id}/' for lead_id in planned_ids}|{f'/opportunity/{r["opportunity_id"]}/' for r in results if r.get('opportunity_id')}
-    matched_receipts=len(intents)==len(responses) and all(r['path'] in valid_paths for r in intents)
+    receipt_key=lambda r:(r['path'],r['status_id'],r['at'])
+    allowed_statuses={(f'/lead/{r["lead_id"]}/',r.get('lead_status')) for r in results}|{(f'/opportunity/{r["opportunity_id"]}/',r.get('opportunity_status')) for r in results if r.get('opportunity_id')}
+    matched_receipts=Counter(map(receipt_key,intents))==Counter(map(receipt_key,responses)) and all((r['path'],r['status_id']) in allowed_statuses for r in intents) and not any(r['state']=='unknown_outcome_stop_and_reconcile' for r in entries)
     pending_changes=[r for r in replay if r['kind']=='change']
     unexpected_replays=[r for r in replay if r['kind']!='keep']
     summary={'written_leads':len(written),'native_targets_verified':sum(r['targets_match'] for r in records),

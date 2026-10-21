@@ -82,9 +82,22 @@ class LiveReadTests(unittest.TestCase):
   self.assertEqual(sum(c[0]=='PUT' for c in self.transport.calls),4)
   self.assertTrue(all(l['status_id']==GENERAL for l in self.transport.leads.values()))
   self.assertEqual(sum(r['state']=='intent' for r in receipts),4)
+ def test_durable_before_snapshot_must_succeed_before_any_put(self):
+  self.transport.add('lead_test')
+  capture=Mock(side_effect=OSError('disk unavailable'))
+  with FreshSnapshotBroker(self.transport,self.transport,collect_seconds=.001,capture_first=capture) as broker,self.assertRaises(OSError):self.read(broker,'lead_test')
+  self.assertFalse(any(call[0]=='PUT' for call in self.transport.calls));capture.assert_called_once()
  def test_write_capable_snapshot_transport_rejected(self):
   self.transport.write_enabled=True
   with self.assertRaises(PermissionError):FreshSnapshotBroker(self.transport,self.transport)
+class LimiterTests(unittest.TestCase):
+ def test_rate_is_bounded_and_defaults_to_five(self):
+  import os
+  with patch.dict(os.environ,{},clear=True):self.assertEqual(RequestLimiter().interval,.2)
+  with patch.dict(os.environ,{'CLOSE_STATUS_REQUESTS_PER_SECOND':'10'}):self.assertEqual(RequestLimiter().interval,.1)
+  for rate in [0,11,float('nan'),float('inf')]:
+   with self.assertRaises(ValueError):RequestLimiter(rate)
+
 class TransportFenceTests(unittest.TestCase):
  def test_unknown_put_outcome_closes_shared_write_fence(self):
   fake=Mock();fake.requests=[];fake.request.side_effect=requests.ConnectionError('unknown')
