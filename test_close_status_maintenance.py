@@ -256,6 +256,24 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(journal[0]['state'],'intent')
         self.assertEqual(decide(done,ROSTER,set(),NOW).kind,'keep')
 
+    def test_opportunity_side_effect_needs_no_redundant_lead_write(self):
+        reconciled=replace(BASE,status=GENERAL,opportunities=(replace(OPP,status=OPP_GENERAL),))
+        executor,reader,_=self.executor([BASE,reconciled])
+        reader.client.request.return_value={'id':OPP.id,'lead_id':BASE.lead_id,'status_id':OPP_GENERAL}
+        result=executor.apply(BASE.lead_id,decide(BASE,ROSTER,set(),NOW))
+        self.assertEqual(result['state'],'verified')
+        self.assertEqual(result['reason'],'target_already_reconciled')
+        self.assertEqual(len(result['writes']),1)
+        reader.client.request.assert_called_once()
+
+    def test_matching_target_with_changed_owner_stays_held(self):
+        changed=replace(BASE,status=GENERAL,owners=('user_other',),opportunities=(replace(OPP,status=OPP_GENERAL),))
+        executor,reader,_=self.executor([BASE,changed])
+        reader.client.request.return_value={'id':OPP.id,'lead_id':BASE.lead_id,'status_id':OPP_GENERAL}
+        result=executor.apply(BASE.lead_id,decide(BASE,ROSTER,set(),NOW))
+        self.assertEqual(result['state'],'partial')
+        reader.client.request.assert_called_once()
+
     def test_owner_transfer_before_first_write_cancels(self):
         executor,reader,_=self.executor([replace(BASE,owners=('user_other',))])
         self.assertEqual(executor.apply(BASE.lead_id,decide(BASE,ROSTER,set(),NOW))['state'],'held')
