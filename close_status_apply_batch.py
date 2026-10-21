@@ -43,7 +43,8 @@ def run_batch(ids, output, *, apply=False, expected=None, concurrency=50):
     results = []
     def journal(entry):
         receipt('write-journal.ndjson', entry, durable=True)
-    with FreshSnapshotBroker(reads, writes) as reader:
+    with FreshSnapshotBroker(reads, writes, capture_first=lambda lead_id, lead:
+            receipt('before-leads.ndjson', {'lead_id':lead_id,'lead':lead}, durable=apply)) as reader:
         def process(lead_id):
             executor = StatusExecutor(reader, roster, held, journal=journal)
             try:
