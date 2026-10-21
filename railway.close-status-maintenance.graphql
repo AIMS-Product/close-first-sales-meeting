@@ -1,0 +1,13 @@
+mutation ConfigureCloseStatusMaintenance($serviceId: String!, $environmentId: String!) {
+  serviceInstanceUpdate(
+    serviceId: $serviceId
+    environmentId: $environmentId
+    input: {
+      dockerfilePath: "Dockerfile"
+      startCommand: "python close_status_cycle.py"
+      cronSchedule: "17 * * * *"
+      restartPolicyType: NEVER
+      numReplicas: 1
+    }
+  )
+}

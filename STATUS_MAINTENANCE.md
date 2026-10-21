@@ -1,6 +1,6 @@
 # Close-only HOT/status maintenance
 
-Build status: tested for a bounded live pilot; **ongoing maintenance is not scheduled**. The default command only reads Close. No Close status definitions, saved views, subscriptions, queues, owners, or custom fields are changed by a preview.
+Build status: guarded batches and a dedicated scheduled worker are implemented. The worker defaults to disabled; follow the startup and activation gates below before enabling writes. The default command only reads Close. No Close status definitions, saved views, subscriptions, queues, owners, or custom fields are changed by a preview.
 
 ## Rules
 
@@ -39,18 +39,58 @@ Outputs are private local `results.json`, `summary.json`, `read-trace.json` and 
 
 There were no legacy Unresponsive references in the existing sync map to replace. Close saved-view changes and deletion of the old native status are deferred; protected and held leads still use it.
 
-## Write path, kept disabled
+## Bounded write paths
 
-There is no new cron schedule or workflow trigger. An authorized bounded apply requires BOTH `--apply` and `CLOSE_STATUS_MAINTENANCE_ENABLE_WRITES=1`. `DRY_RUN=0` alone cannot enable maintenance writes. An apply requires exact `--lead-ids`, uses fresh per-lead evidence rather than the batch cache, and defaults to at most 10 changed leads (`--max-changes`). Example: `CLOSE_STATUS_MAINTENANCE_ENABLE_WRITES=1 python close_status_maintenance.py --lead-ids /private/path/pilot.json --apply --max-changes 10 --output /private/path/new-pilot`. Do not enable writes during a preview.
+The default CLI remains preview-only. An authorized bounded apply requires BOTH `--apply` and `CLOSE_STATUS_MAINTENANCE_ENABLE_WRITES=1`. `DRY_RUN=0` alone cannot enable maintenance writes. An apply requires exact `--lead-ids`, uses fresh per-lead evidence rather than the batch cache, and defaults to at most 10 changed leads (`--max-changes`). Example: `CLOSE_STATUS_MAINTENANCE_ENABLE_WRITES=1 python close_status_maintenance.py --lead-ids /private/path/pilot.json --apply --max-changes 10 --output /private/path/new-pilot`. Do not enable writes during a preview.
 
 The executor re-reads and replans before either status-only PUT, refreshes unsubscribe evidence, and requires the same owner before writing the lead. It writes and fsyncs an intent receipt before each request. Unknown write outcomes are not retried blindly. An owner, inbound, meeting or suppression race between the two records stops the second write and emits a partial result for reconciliation. Close does not provide an atomic transaction spanning opportunity and lead updates; a final-read-to-PUT race cannot be eliminated. No rollback overwrites intervening business activity.
 
-Full-history reads intentionally favor complete suppression evidence. A full-cohort scan can be expensive; measure its runtime in preview before choosing a cadence or enabling a schedule. The full-current-cohort read-only preview on October 20, 2026 reconciled 9,530 leads. It retained all 75 explicit exclusions (73 in this cohort; two outside), excluded active closers, completed 8,894 activity-evidence evaluations, and rechecked all 4,936 initial proposals against current lead/owner/contact/opportunity evidence. Final output: 4,854 proposals, 3,533 unchanged, 1,143 held, zero unresolved read errors, and zero Close writes. The 82 records changed during preview were held. The preview used a batched read-only transport over the same policy/reader; its 10.4-minute runtime through final checks is not a production timing measurement of the default per-lead CLI. The production CLI now supports `--batched` previews using the same policy and hydration/fence checks; this mode cannot apply changes. Ongoing cadence remains disabled. Full preview evidence is retained in the private local task artifacts.
+Full-history reads intentionally favor complete suppression evidence. A full-cohort scan can be expensive; measure its runtime in preview before choosing a cadence or enabling a schedule. The full-current-cohort read-only preview on October 20, 2026 reconciled 9,530 leads. It retained all 75 explicit exclusions (73 in this cohort; two outside), excluded active closers, completed 8,894 activity-evidence evaluations, and rechecked all 4,936 initial proposals against current lead/owner/contact/opportunity evidence. Final output: 4,854 proposals, 3,533 unchanged, 1,143 held, zero unresolved read errors, and zero Close writes. The 82 records changed during preview were held. The preview used a batched read-only transport over the same policy/reader; its 10.4-minute runtime through final checks is not a production timing measurement of the default per-lead CLI. The production CLI now supports `--batched` previews using the same policy and hydration/fence checks; this mode cannot apply changes. This was the original preview; current rollout and deployed schedule evidence are retained separately. Full preview evidence is retained in the private local task artifacts.
+
+## Scheduled maintenance worker
+
+`close_status_cycle.py` implements a separate Railway cron worker. Its default is disabled. Each enabled run inventories all four follow-up statuses read-only, selects at most `CLOSE_STATUS_MAX_CHANGES` (default 200), and uses independently verified batches of at most 100. Every write uses new owner, meeting, suppression, opportunity, and inbound evidence. Full histories are never reused between validation waves. Open tasks use Close's documented single-lead filter, paginate to completion, and reject a response outside that lead/organization or with an invalid completion flag. Deferred requests of the same kind coalesce into one fresh snapshot wave.
+
+The dedicated worker does not replace the existing opportunity-to-lead sync or change its schedule. It reuses the existing Close secret and Lakebase roster credentials through service references. No SteelTrap database or immutable-ledger writes occur.
+
+### Deployment
+
+Create an isolated upload directory containing the published `close_status*.py` modules, both sealed exclusion JSON files, `requirements-status-maintenance.txt`, and `Dockerfile.close-status-maintenance` copied as **Dockerfile**. Do not upload environment files, local evidence, tests, caches, or other automation scripts.
+
+Use a dedicated service and a persistent `/data` volume in the existing Railway production project. Apply `railway.close-status-maintenance.graphql` with that service's exact `serviceId` and `environmentId`, then upload the isolated bundle. The explicit service settings select the conventional Dockerfile, start command, hourly schedule at minute 17, one replica, and no automatic restart. They avoid the deprecated railway.toml configuration path. Check effective service settings and the mounted volume after deployment.
+
+Set these variables through the existing secret mechanism:
+
+| Variable | Value or purpose |
+| --- | --- |
+| `CLOSE_API_KEY` | Existing Close secret/service reference |
+| `LAKEBASE_HOST`, `LAKEBASE_DATABASE`, `LAKEBASE_USER`, `LAKEBASE_PASSWORD` | Existing roster credentials/service references; SQL forces read-only transactions and verified TLS |
+| `CLOSE_STATUS_DATA_DIR` | `/data` |
+| `CLOSE_STATUS_SOURCE_REVISION` | Published source Git SHA |
+| `CLOSE_STATUS_PROOF_LEAD_ID` | One exact authorized native lead used only for a tenant proof GET |
+| `CLOSE_STATUS_STARTUP_CHECK_ONLY` | Start at `1`; executes only roster/exclusion/tenant read checks |
+| `CLOSE_STATUS_MAINTENANCE_ENABLED` | Start at `0`; `1` permits normal cycles after startup-only is disabled |
+| `CLOSE_STATUS_MAINTENANCE_ENABLE_WRITES` | Start at `0`; enabled cycles also require `1` |
+| `CLOSE_STATUS_MAX_CHANGES` | `200` initially; validated range 1–1000; each write batch remains capped at 100 |
+| `CLOSE_STATUS_REQUESTS_PER_SECOND` | `5` by default; validated range 1–10; all concurrent reads and writes share one limiter |
+
+First run in startup-check-only mode and verify a private startup receipt, expected Close organization, current active-closer roster, all 157 exclusions, and zero Close writes. Finish the authorized cleanup and its verification before enabling recurring writes. Set startup-only to `0`, enabled to `1`, and the write gate to `1`; observe an actual complete cron run and its durable summary before calling the schedule operational.
+
+### Receipts, interrupted runs, and stopping
+
+A persistent-volume file lock serializes overlapping starts. Every run writes private evidence beneath `/data/runs/`. Before snapshots and write intents are fsynced before a PUT. Independent verification reads native leads and targeted opportunities, compares unrelated business fields, reconciles exact path/status/time receipt pairs, and replays the current policy.
+
+Legacy Unresponsive consolidation may produce one subsequent HOT promotion for recent inbound. That follow-up receives its own fresh checks, receipts, and independent verification. Any other verification mismatch stops the cycle. The original receipts remain intact; a separate reconciliation receipt records a successful follow-up.
+
+If a process exits after any write intent, `/data/active-run.json` blocks the next cycle. Do not delete it to retry. Reconcile native state read-only against `before-leads.ndjson`, the write journal, and result records, retaining the original evidence. Unknown PUT outcomes are not retried blindly, and intervening business activity is never rolled back. Only after reconciliation should an operator clear the interlock and resume.
+
+To stop future writes, set `CLOSE_STATUS_MAINTENANCE_ENABLED=0` and deploy that gate. Allow an already-running batch to finish and verify; an abrupt stop leaves the reconciliation interlock in place. Schedules that overlap an active run do not start a second writer. No automatic messaging or notifications are sent.
+
 
 ## Offline verification
 
 ```sh
-python -m unittest test_close_status_batch test_close_status_maintenance test_close_status_sync_guard
+python -m unittest test_close_status_batch test_close_status_maintenance test_close_status_sync_guard test_close_status_live test_close_status_cycle
 python sync_opp_lead_status.py --selftest
 python -m compileall -q close_status_policy.py close_status_reader.py close_status_maintenance.py sync_opp_lead_status.py
 ```
