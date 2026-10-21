@@ -30,11 +30,15 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install -r requirements-status-maintenance.txt
 
       - name: Run sync
         env:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+          LAKEBASE_HOST: ${{ secrets.LAKEBASE_HOST }}
+          LAKEBASE_DATABASE: ${{ secrets.LAKEBASE_DATABASE }}
+          LAKEBASE_USER: ${{ secrets.LAKEBASE_USER }}
+          LAKEBASE_PASSWORD: ${{ secrets.LAKEBASE_PASSWORD }}
         run: |
           ARGS=""
           if [ "${{ inputs.dry_run }}" = "true" ]; then

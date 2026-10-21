@@ -204,12 +204,21 @@ def run(dry_run, limit, lookback_days):
         print(f"Lookback active: only evaluating opportunities updated since {cutoff.isoformat()}")
 
     print(f"Fetching leads (with opportunities embedded){f', limit {limit}' if limit else ''}...")
+    from close_status_policy import HOT, held_hash, load_exclusions
+    from close_status_maintenance import hot_sync_guard
+    maintenance_held = load_exclusions()
+    allow_hot = None
+    hot_guard_unavailable = False
+
     leads_scanned = 0
     leads_with_opps = 0
     updated = already_correct = orphan_skipped = stale_skipped = failed = guarded = 0
 
     for lead in client.paginate_leads_with_opportunities(limit=limit):
         leads_scanned += 1
+        if held_hash(lead["id"]) in maintenance_held:
+            guarded += 1
+            continue
         opps = lead.get("opportunities") or []
         if not opps:
             continue
@@ -260,6 +269,23 @@ def run(dry_run, limit, lookback_days):
                       f"(https://app.close.com/lead/{lead_id}/)")
                 continue
 
+        if mapped_status_id == HOT:
+            try:
+                if hot_guard_unavailable:
+                    raise RuntimeError("HOT policy evidence unavailable")
+                if allow_hot is None:
+                    allow_hot = hot_sync_guard(api_key)
+                if not allow_hot(lead_id):
+                    guarded += 1
+                    print(f"GUARD lead {lead_id}: Close-only HOT policy did not authorize HOT")
+                    continue
+            except Exception as error:
+                # Never restore HOT if ownership, suppression, or inbound evidence cannot be verified.
+                hot_guard_unavailable = allow_hot is None
+                failed += 1
+                print(f"GUARD lead {lead_id}: HOT verification failed ({type(error).__name__}); unchanged")
+                continue
+
         if dry_run:
             print(f"WOULD SET lead {lead_id} ({lead.get('display_name', '')}): "
                   f"{lead['status_id']} -> {mapped_status_id}")
@@ -288,7 +314,7 @@ def run(dry_run, limit, lookback_days):
     print(f"Already correct:                   {already_correct}")
     print(f"Orphan / unmapped status (flag):   {orphan_skipped}")
     print(f"Skipped (outside lookback window): {stale_skipped}")
-    print(f"Guarded (booked, call upcoming):   {guarded}")
+    print(f"Guarded (held, booked, HOT policy):   {guarded}")
     print(f"Failed:                            {failed}")
     if dry_run:
         print("\nDRY RUN -- no writes were made.")
