@@ -1,9 +1,0 @@
-[build]
-builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile.close-status-maintenance"
-
-[deploy]
-startCommand = "python close_status_cycle.py"
-cronSchedule = "17 * * * *"
-restartPolicyType = "NEVER"
-numReplicas = 1
