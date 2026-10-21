@@ -11,11 +11,23 @@ from close_status_policy import OWNER, load_exclusions
 from close_status_reader import load_roster
 
 STATUS_METADATA = {'status_id','status_label','status_display_name','status_type','date_updated','updated_by','updated_by_name'}
+# Close can alternate these equivalent IANA names on successive reads of an
+# unchanged, phone-inferred contact. Keep the exception narrow: manual values,
+# other zones, source changes and every other contact field remain protected.
+INFERRED_TIMEZONE_ALIASES = {'Arctic/Longyearbyen': 'Europe/Oslo'}
+
+
+def comparable_contacts(contacts):
+    return [dict(contact, timezone=INFERRED_TIMEZONE_ALIASES.get(contact['timezone'],contact['timezone']))
+            if contact.get('timezone_source')=='inferred_from_phone_number' and contact.get('timezone')
+            else contact for contact in contacts]
 
 
 def business_differences(before, after, target_opportunity=None):
     differences = [key for key in set(before) | set(after)
-        if key not in STATUS_METADATA | {'opportunities'} and before.get(key) != after.get(key)]
+        if key not in STATUS_METADATA | {'opportunities','contacts'} and before.get(key) != after.get(key)]
+    if ('contacts' in before) != ('contacts' in after) or comparable_contacts(before.get('contacts',[])) != comparable_contacts(after.get('contacts',[])):
+        differences.append('contacts')
     old = {row['id']:row for row in before['opportunities']}
     new = {row['id']:row for row in after['opportunities']}
     if set(old) != set(new):

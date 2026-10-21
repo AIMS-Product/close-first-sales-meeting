@@ -138,6 +138,23 @@ class TransportFenceTests(unittest.TestCase):
    with self.assertRaises(PermissionError):transport.request('PUT','/lead/lead_other/',{'status_id':GENERAL})
   self.assertEqual(fake.request.call_count,1)
 class FieldAuditTests(unittest.TestCase):
+ def test_equivalent_phone_inferred_timezone_aliases_do_not_hide_other_contact_changes(self):
+  from close_status_verify import business_differences
+  before={'contacts':[{'id':'cont_one','timezone':'Europe/Oslo','timezone_source':'inferred_from_phone_number','date_updated':'unchanged','name':'same'}],'opportunities':[]}
+  after=copy.deepcopy(before);after['contacts'][0]['timezone']='Arctic/Longyearbyen'
+  self.assertEqual(business_differences(before,after),[])
+  self.assertEqual(business_differences(after,before),[])
+  for field,value in [('name','changed'),('date_updated','changed'),('timezone_source','manual'),('timezone','America/Chicago')]:
+   changed=copy.deepcopy(after);changed['contacts'][0][field]=value
+   self.assertIn('contacts',business_differences(before,changed),field)
+  manual_before=copy.deepcopy(before);manual_after=copy.deepcopy(after)
+  for row in [manual_before,manual_after]:row['contacts'][0]['timezone_source']='manual'
+  self.assertIn('contacts',business_differences(manual_before,manual_after))
+  for row in [manual_before,manual_after]:row['contacts'][0].pop('timezone_source')
+  self.assertIn('contacts',business_differences(manual_before,manual_after))
+  self.assertIn('contacts',business_differences(before,{'contacts':[],'opportunities':[]}))
+  self.assertEqual(before['contacts'][0]['timezone'],'Europe/Oslo')
+  self.assertEqual(after['contacts'][0]['timezone'],'Arctic/Longyearbyen')
  def test_status_display_changes_are_derived_but_custom_changes_are_not(self):
   from close_status_verify import business_differences
   before={'status_id':HOT,'custom.owner':'same','contacts':[],'opportunities':[{'id':'oppo_one','status_id':OPP_HOT,'status_display_name':'HOT'}]}
