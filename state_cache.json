@@ -126320,7 +126320,6 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
       "funnel_name": null,
       "vendhub": null,
@@ -126359,9 +126358,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126392,6 +126390,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-21 00:30:07 UTC",
+  "saved_at": "2026-10-21 01:50:37 UTC",
   "count": 10657
 }
