@@ -96,3 +96,11 @@ python -m compileall -q close_status_policy.py close_status_reader.py close_stat
 ```
 
 All write-order/race tests use fake clients. No test requires live writes. No database migration or immutable-ledger backfill is part of this feature.
+## Verification of inferred contact timezones
+
+Close can return `Europe/Oslo` and `Arctic/Longyearbyen` on successive GETs of the
+same unchanged, phone-inferred contact. Independent verification compares this
+specific equivalent pair semantically only when `timezone_source` is
+`inferred_from_phone_number`. It still detects manual timezone changes, other
+timezone differences, source changes, contact version changes, and all other
+business fields. No contact fields are written by this worker.
