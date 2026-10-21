@@ -110,6 +110,15 @@ class FreshSnapshotBroker:
             if first is None:
                 return
             group = [first]
+            # Requests deferred behind another kind remain eligible for this wave.
+            # Leaving them in pending would serialize each into its own full snapshot.
+            waiting=list(self.pending)
+            self.pending.clear()
+            for item in waiting:
+                if item is not None and item[0]==first[0] and len(group)<self.group_size:
+                    group.append(item)
+                else:
+                    self.pending.append(item)
             deadline = monotonic() + self.collect_seconds
             while len(group) < self.group_size:
                 remaining = deadline - monotonic()
@@ -174,13 +183,15 @@ class FreshSnapshotBroker:
                 sources[path] = {lead_id: [] for lead_id in active}
                 for row in rows:
                     sources[path][row['lead_id']].append(row)
-            tasks = self.read_client.list('/task/', {'is_complete': 'false', '_fields': TASK_FIELDS})
-            if any(row['organization_id'] != ORG or type(row['is_complete']) is not bool for row in tasks):
-                raise ValueError('Fresh task snapshot incomplete or wrong organization')
-            sources['/task/'] = {lead_id: [] for lead_id in active}
-            for row in tasks:
-                if row.get('lead_id') in sources['/task/']:
-                    sources['/task/'][row['lead_id']].append(row)
+            # Tasks accept one lead_id, unlike activity endpoints' comma-separated IDs.
+            # Read each lead's complete open-task pages; never interpret an ignored filter as empty.
+            def open_tasks(lead_id):
+                tasks=self.read_client.list('/task/', {'lead_id':lead_id,'is_complete':'false','_fields':TASK_FIELDS})
+                if any(row['lead_id']!=lead_id or row['organization_id']!=ORG or row['is_complete'] is not False for row in tasks):
+                    raise ValueError('Fresh lead task snapshot incomplete or wrong scope')
+                return tasks
+            with ThreadPoolExecutor(max_workers=8) as pool:
+                sources['/task/']=dict(zip(active,pool.map(open_tasks,active)))
             reader = SnapshotReader(SnapshotCache(leads, sources), suppressions.unsubscribed)
             reader.blocked_phones = suppressions.blocked_phones
             for lead_id, now, _, _ in requests:
