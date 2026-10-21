@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
-from close_status_policy import FOLLOW_UP, HOT, ORG, decide, load_exclusions
+from close_status_policy import FOLLOW_UP, HOT, NONRESPONSIVE, ORG, decide, load_exclusions
 from close_status_reader import CloseClient, SnapshotReader, load_roster
 
 
@@ -50,9 +50,15 @@ class StatusExecutor:
             if result.get('id') != lead_id or result.get('status_id') != expected.lead_status:
                 raise RuntimeError('Lead write unverified; stop and reconcile')
             writes.append({'type': 'lead', 'id': lead_id, 'status_id': expected.lead_status})
-        verification = self.preview(lead_id)
-        complete = verification.kind == 'keep'
-        return {'state': 'verified' if complete else 'partial', 'reason': verification.reason, 'writes': writes}
+        now = self.clock()
+        current = self.reader.read(lead_id, now, held=self.held, roster=self.roster)
+        verification = decide(current, self.roster, self.held, now)
+        normalization_pending_hot = (expected.reason == 'consolidate_legacy_status'
+            and current.status == NONRESPONSIVE and current.owners == expected.owner_ids
+            and verification.reason == 'recent_inbound' and verification.lead_status == HOT)
+        complete = verification.kind == 'keep' or normalization_pending_hot
+        reason = 'legacy_normalized_pending_hot_refresh' if normalization_pending_hot else verification.reason
+        return {'state': 'verified' if complete else 'partial', 'reason': reason, 'writes': writes}
 
     def write_status(self, path, status_id):
         intent = {'path': path, 'status_id': status_id, 'at': self.clock().isoformat()}

@@ -274,6 +274,16 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(result['state'],'partial')
         reader.client.request.assert_called_once()
 
+    def test_fresh_legacy_normalization_is_verified_before_hot_followup(self):
+        initial=replace(BASE,status=LEGACY,opportunities=(),latest_inbound=NOW)
+        current=replace(initial,status=NONRESPONSIVE)
+        executor,reader,_=self.executor([initial,initial,current])
+        reader.client.request.return_value={'id':BASE.lead_id,'status_id':NONRESPONSIVE}
+        result=executor.apply(BASE.lead_id,decide(initial,ROSTER,set(),NOW))
+        self.assertEqual(result['state'],'verified')
+        self.assertEqual(result['reason'],'legacy_normalized_pending_hot_refresh')
+        reader.client.request.assert_called_once()
+
     def test_owner_transfer_before_first_write_cancels(self):
         executor,reader,_=self.executor([replace(BASE,owners=('user_other',))])
         self.assertEqual(executor.apply(BASE.lead_id,decide(BASE,ROSTER,set(),NOW))['state'],'held')
