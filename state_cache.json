@@ -126395,9 +126395,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126408,9 +126407,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126421,9 +126419,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126434,9 +126431,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126447,9 +126443,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126460,9 +126455,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126473,9 +126467,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126486,9 +126479,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126499,9 +126491,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126512,9 +126503,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126525,9 +126515,8 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -126538,14 +126527,13 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-21 04:03:58 UTC",
+  "saved_at": "2026-10-21 05:20:44 UTC",
   "count": 10669
 }
