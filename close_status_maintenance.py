@@ -35,7 +35,15 @@ class StatusExecutor:
             writes.append({'type': 'opportunity', 'id': expected.opportunity_id, 'status_id': expected.opportunity_status})
         if expected.lead_status:
             self.reader.refresh_unsubscribed()
-            continuing = self.preview(lead_id)
+            now = self.clock()
+            current = self.reader.read(lead_id, now, held=self.held, roster=self.roster)
+            continuing = decide(current, self.roster, self.held, now)
+            opportunity_applied = not expected.opportunity_id or any(
+                opp.id == expected.opportunity_id and opp.status == expected.opportunity_status
+                for opp in current.opportunities)
+            if (continuing.kind == 'keep' and current.status == expected.lead_status
+                    and current.owners == expected.owner_ids and opportunity_applied):
+                return {'state': 'verified', 'reason': 'target_already_reconciled', 'writes': writes}
             if not continuing.changes or continuing.lead_status != expected.lead_status or continuing.opportunity_id or continuing.owner_ids != expected.owner_ids:
                 return {'state': 'partial' if writes else 'held', 'reason': 'changed_before_lead_write', 'writes': writes}
             result = self.write_status(f'/lead/{lead_id}/', expected.lead_status)
