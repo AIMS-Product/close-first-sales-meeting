@@ -82499,13 +82499,14 @@
       "quick_disc": null
     },
     "lead_REOQtTIV7usgS53PkJVN1KaZsHXpbeVkbrSVdDlsJr2": {
-      "date": null,
-      "call_type": "Setter",
-      "scraper": null,
+      "date": "2026-10-27",
+      "call_type": "Closer",
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -127501,14 +127502,39 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": "user_BaN2TstWtyF34eaQSSLG11j6DhKKm67Y6JltbIYCafO",
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_2YCRisiud6gseuna1Exd9VYHr66pcQe4AnQYMc5OLug": {
+      "date": "2026-10-31",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_432GdPuecCgHAiZaWw1DNl7VvMWbmeEJiC1mI3r1qwh": {
+      "date": "2026-10-29",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Google Ads",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-26 16:42:13 UTC",
-  "count": 10746
+  "saved_at": "2026-10-26 18:31:48 UTC",
+  "count": 10748
 }
