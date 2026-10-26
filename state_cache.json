@@ -114075,11 +114075,12 @@
     "lead_Si3098jJPMq6GzVKIXRAayKCc8geOSSPcw6JD5KJRt8": {
       "date": "2026-09-16",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Pearl Sathekge",
+      "reactivation_user": "user_0SuNg0OWd2reYMeyuDVqiVvjiGcRiFheKKOXXZpyaPZ",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -127495,6 +127496,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-26 11:00:36 UTC",
+  "saved_at": "2026-10-26 12:23:28 UTC",
   "count": 10745
 }
