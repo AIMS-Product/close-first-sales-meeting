@@ -15,7 +15,10 @@ LANE2_ROSTER = [
     {
         "rep": "Tony Parton", "user_id": "user_vw2xwmG2n6zLu3pjkuZHS7ZPNlg1dyImRUguk60YCbN", "offer": OFFER_PPA,
         "ready_for_leads": False,
-        "title_patterns": [r"ppa\s+growth\s*-?\s*next\s+steps"],
+        "title_patterns": [
+            r"ppa\s+growth\s*-?\s*next\s+steps",
+            r"acquisition\s+ace\s+strategy\s+call",
+        ],
     },
     {
         "rep": "Ashley Atencio", "user_id": "user_3VLmKDrh5OfMOmxRCBcxdYV6ltOhvXaB0tJSdV9LKS4", "offer": OFFER_VP,
@@ -278,6 +281,7 @@ SCRAPER_TITLE_MAP = [
 # reports have different historical attributions for some identical titles.
 MEETING_COUNT_TITLE_MAP = [
     (re.compile(r"ppa\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Tony Parton"),
+    (re.compile(r"acquisition\s+ace\s+strategy\s+call", re.IGNORECASE), "Tony Parton"),
     (re.compile(r"vendingpren[eu]+rs?\s+enterprise\s*-?\s*next\s+steps", re.IGNORECASE), "Ashley Atencio"),
     (re.compile(r"vendingpren[eu]+rs?\s+velocity\s*-?\s*next\s+steps", re.IGNORECASE), "Ibraheem Khan"),
     (re.compile(r"vendingpren[eu]+rs?\s+pinnacle\s*-\s*next\s+steps", re.IGNORECASE), "Monde"),
@@ -323,6 +327,7 @@ MEETING_COUNT_TITLE_MAP = [
 MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
     (re.compile(r"acquisition\s+ace\s+launch\s*-?\s*next\s+steps", re.IGNORECASE), "Eduardo Santos"),
     (re.compile(r"acquisition\s+ace\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Sam Norris"),
+    (re.compile(r"acquisition\s+ace\s+strategy\s+call", re.IGNORECASE), "Tony Parton"),
     (re.compile(r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Jennifer Murray"),
     (re.compile(r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps", re.IGNORECASE), "Osheana Mitchell"),
     (re.compile(r"vendingpren[eu]+rs?\s+pioneer\s*-?\s*next\s+steps", re.IGNORECASE), "Tara Hall"),
