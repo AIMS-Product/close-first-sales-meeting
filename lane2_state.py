@@ -59,6 +59,7 @@ DEEP_NURTURE_MONTHS = 6     # active -> deep (months, not days — see within())
 
 # --- fields we write --------------------------------------------------------
 F_STATE = "cf_hKcyx4tQSMvHd7llfLX363bx3LGXMxVEmFHEtjpR5C2"   # Recapture State
+QA_TRIAGE_STATE = "QA Triage"  # Manual hold: preserve the state during reconciliation.
 F_ENTRY = "cf_FI1V2Zw8M0aoSg7yJKJo0wb8NbRU8LafnkgHrpLcfYA"   # Entry Source
 F_TEAM = "cf_3SkrryGiRGT83UHgsBOXpUYbVSyc9RmKKfmKY1uWWib"    # Owner Team
 F_ANGLE = "cf_6jVIeFyPI8qeQbZSo3ZoaKpjeeLD7du6k2nec8tNPZi"   # Objection Angle
@@ -817,6 +818,8 @@ def main():
             if want is None:
                 continue
             have = cf(lead, fid)
+            if fid == F_STATE and have == QA_TRIAGE_STATE:
+                continue                        # never overwrite the manual QA hold
             if want == "None" and not have and fid == F_TEAM:
                 continue                        # don't churn empties
             if have != want:
