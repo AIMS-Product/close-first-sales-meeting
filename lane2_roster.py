@@ -85,7 +85,10 @@ LANE2_ROSTER = [
     {
         "rep": "Naria Torres", "user_id": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
         "offer": OFFER_VP, "ready_for_leads": True,
-        "title_patterns": [r"vendingpren[eu]+rs?\s+pathway\s*-?\s*next\s+steps"],
+        "title_patterns": [
+            r"vendingpren[eu]+rs?\s+pathway\s*-?\s*next\s+steps",
+            r"vendingpren[eu]+rs?\s+navigator\s*-\s*next\s+steps",
+        ],
     },
     {
         "rep": "Melia King", "user_id": "user_32021LR58tWOSl2MX2nFVMSP8PoaGV1DjZEF0v0yGXs",
@@ -302,6 +305,7 @@ MEETING_COUNT_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+momentum\s*-?\s*next\s+steps", re.IGNORECASE), "Connor George"),
     (re.compile(r"vendingpren[eu]+rs?\s+launch\s*-?\s*next\s+steps", re.IGNORECASE), "Dana Lesiuk"),
     (re.compile(r"vendingpren[eu]+rs?\s+pathway\s*-?\s*next\s+steps", re.IGNORECASE), "Naria Torres"),
+    (re.compile(r"vendingpren[eu]+rs?\s+navigator\s*-\s*next\s+steps", re.IGNORECASE), "Naria Torres"),
     (re.compile(r"vendingpren[eu]+rs?\s+blueprint\s*-?\s*next\s+steps", re.IGNORECASE), "Melia King"),
     (re.compile(r"vendingpren[eu]+rs?\s+compass\s*-?\s*next\s+steps", re.IGNORECASE), "Josh Stoffel"),
     (re.compile(r"vendingpren[eu]+rs?\s+horizon\s*-?\s*next\s+steps", re.IGNORECASE), "Beatrice Braescu Cojocaru"),
@@ -335,6 +339,7 @@ MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
     (re.compile(r"ppa\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Tony Parton"),
     (re.compile(r"vendingpren[eu]+rs?\s+enterprise\s*-?\s*next\s+steps", re.IGNORECASE), "Ashley Atencio"),
     (re.compile(r"vendingpren[eu]+rs?\s+velocity\s*-?\s*next\s+steps", re.IGNORECASE), "Ibraheem Khan"),
+    (re.compile(r"vendingpren[eu]+rs?\s+navigator\s*-\s*next\s+steps", re.IGNORECASE), "Naria Torres"),
     (re.compile(r"tlg\s+pathfinder\s*-?\s*next\s+steps", re.IGNORECASE), "Kaylane Nunes"),
     (re.compile(r"vendingpren[eu]+rs?\s+pinnacle\s*-\s*next\s+steps", re.IGNORECASE), "Monde"),
     (re.compile(r"vendingpren[eu]+rs?\s+executive\s*-\s*next\s+steps", re.IGNORECASE), "Finley Eastlake"),
