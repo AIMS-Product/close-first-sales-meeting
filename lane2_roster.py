@@ -245,7 +245,6 @@ LANE2_ROSTER = [
         "start_date": "2026-10-19",
         "user_id": "", "offer": OFFER_VP, "ready_for_leads": False,
         "title_patterns": [
-            r"vendingpren[eu]+rs?\s+pioneer\s*-?\s*next\s+steps",
             r"vendingpren[eu]+rs?\s+visionary\s*-?\s*next\s+steps",
         ],
     },
@@ -342,7 +341,6 @@ MEETING_COUNT_TITLE_MAP = [
     (re.compile(r"acquisition\s+ace\s+frontier\s*-?\s*next\s+steps", re.IGNORECASE), "Bella Gregori"),
     (re.compile(r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Jennifer Murray"),
     (re.compile(r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps", re.IGNORECASE), "Osheana Mitchell"),
-    (re.compile(r"vendingpren[eu]+rs?\s+pioneer\s*-?\s*next\s+steps", re.IGNORECASE), "Tara Hall"),
     (re.compile(r"vendingpren[eu]+rs?\s+visionary\s*-?\s*next\s+steps", re.IGNORECASE), "Tara Hall"),
     (re.compile(r"vendingpren[eu]+rs?\s+legacy\s*-?\s*next\s+steps", re.IGNORECASE), "Antonio Garcia"),
 ]
@@ -355,7 +353,6 @@ MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
     (re.compile(r"acquisition\s+ace\s+frontier\s*-?\s*next\s+steps", re.IGNORECASE), "Bella Gregori"),
     (re.compile(r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Jennifer Murray"),
     (re.compile(r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps", re.IGNORECASE), "Osheana Mitchell"),
-    (re.compile(r"vendingpren[eu]+rs?\s+pioneer\s*-?\s*next\s+steps", re.IGNORECASE), "Tara Hall"),
     (re.compile(r"vendingpren[eu]+rs?\s+visionary\s*-?\s*next\s+steps", re.IGNORECASE), "Tara Hall"),
     (re.compile(r"vendingpren[eu]+rs?\s+legacy\s*-?\s*next\s+steps", re.IGNORECASE), "Antonio Garcia"),
     (re.compile(r"ppa\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Tony Parton"),
