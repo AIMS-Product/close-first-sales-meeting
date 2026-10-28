@@ -128418,14 +128418,39 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_i70VSb2j4PaWWIZIU7F6ZlK3MtR2NjUNlw9bLkTkJXF": {
+      "date": "2026-10-30",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
       "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "YouTube",
+      "funnel_name": "WWWS",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_FB6ulj4ZDvg1dIFCB2bmKPqsz560fdzSsUjHCpWQRq5": {
+      "date": "2026-11-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-28 17:15:24 UTC",
-  "count": 10819
+  "saved_at": "2026-10-28 17:42:42 UTC",
+  "count": 10821
 }
