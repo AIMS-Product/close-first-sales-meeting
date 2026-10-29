@@ -127,6 +127,7 @@ S_NEW = "stat_EwxduBOxA2CLBUrvXAyB7ZrVXKGw7v9i5xz0f2JuIY9"
 S_LOST = "stat_aR2jBa8YnTNZmHAnPsnlQuinBdaXpSBCkZGP3UvoBlV"
 S_NOSHOW = "stat_5CqIgNJnGYO357zXjSnH6BAkKyoCvYUOBxVvpYfDMZn"
 S_CANCELED = "stat_hWIGHjzyNpl4YjIFSFz3VK4fp2ny10SFJLKAihmo4KT"
+QA_TRIAGE_RELEASE_STATUSES = {S_NOSHOW, S_CANCELED}
 S_WON = "stat_0oW3iRpVp9z5DJq0cuwI1HgR0XhHAhykEPPIq4TFsxd"
 S_DNC = "stat_U9MI7pqsvIjceTv3pCU7b1EghO8Q83h1HUcL6fGVyi6"
 S_DQ = "stat_p3oblSTnbsyDAw4rWqZDePGYMOlKBgV2FjbqIMDrfvF"
@@ -652,6 +653,79 @@ def _near_duplicates(counter):
                 out.append((vs[i], vs[i + 1]))
     return out
 
+
+def qa_triage_terminal_plan():
+    """Return QA Triage no-show/cancellation leads and their Lane 2 states."""
+    status_q = status_in(sorted(QA_TRIAGE_RELEASE_STATUSES))
+    state_q = {"type": "field_condition", "negate": False,
+               "field": {"type": "custom_field", "custom_field_id": F_STATE},
+               "condition": {"type": "term", "values": [QA_TRIAGE_STATE]}}
+    candidates = search(
+        _wrap(status_q, state_q),
+        fields=["id", "display_name", "status_id", f"custom.{F_STATE}",
+                f"custom.{F_OWNER}", f"custom.{F_OVERRIDE}"])
+    if len(candidates) >= SKIP_CAP:
+        raise CloseError("QA Triage terminal query reached Close's result cap; refusing an incomplete release")
+
+    releasable = [lead for lead in candidates if cf(lead, F_OVERRIDE) != "Yes"]
+    state_of = {}
+    for _label, state, query in BUCKETS:
+        scoped = add_condition(add_condition(query, status_q), state_q)
+        ids = {lead["id"] for lead in search(scoped, fields=["id"], limit=SKIP_CAP)}
+        for lead_id in ids - set(state_of):
+            state_of[lead_id] = state
+    for lead in releasable:
+        state_of.setdefault(lead["id"], FALLTHROUGH)
+        # Terminal QA outcomes must enter Lane 2's assignable queue even when
+        # the normal booking protection would mark them as Booked.
+        if state_of[lead["id"]] == "Booked":
+            state_of[lead["id"]] = "Active-Nurture"
+    return candidates, releasable, state_of
+
+
+def reconcile_qa_triage_terminal(*, apply=False, max_writes=None):
+    """Release terminal outcomes from QA Triage to the normal Lane 2 assigner."""
+    candidates, releasable, state_of = qa_triage_terminal_plan()
+    print(f"QA Triage terminal candidates: {len(candidates):,}")
+    print(f"Released to Lane 2: {len(releasable):,} (manual overrides skipped: {len(candidates)-len(releasable):,})")
+    print("  By status:")
+    for status_id, count in Counter(lead["status_id"] for lead in releasable).items():
+        label = "No Show" if status_id == S_NOSHOW else "Canceled"
+        print(f"    {label:<10} {count:>6,}")
+    print("  By Recapture State:")
+    for state, count in Counter(state_of[lead["id"]] for lead in releasable).items():
+        print(f"    {state:<16} {count:>6,}")
+
+    changes = []
+    for lead in releasable:
+        payload = {f"custom.{F_STATE}": state_of[lead["id"]]}
+        if cf(lead, F_OWNER):
+            payload[f"custom.{F_OWNER}"] = None
+        if cf(lead, F_STATE) != state_of[lead["id"]] or f"custom.{F_OWNER}" in payload:
+            changes.append((lead, payload))
+    if max_writes is not None:
+        changes = changes[:max_writes]
+        print(f"Capped to {len(changes):,} writes for this run.")
+    print(f"Changes to apply: {len(changes):,}")
+    if not apply:
+        print("DRY RUN — nothing written.")
+        return 0
+
+    def _write(item):
+        lead, payload = item
+        try:
+            _req("PUT", f"{BASE}/lead/{lead['id']}/", json=payload)
+            return None
+        except Exception as exc:
+            return str(exc)
+
+    with ThreadPoolExecutor(max_workers=WRITE_WORKERS) as executor:
+        errors = [err for err in executor.map(_write, changes) if err]
+    print(f"Applied {len(changes)-len(errors):,}/{len(changes):,} QA Triage releases.")
+    if errors:
+        raise CloseError(f"{len(errors):,} QA Triage release write(s) failed")
+    return len(changes)
+
 # ============================================================================
 # derivation
 # ============================================================================
@@ -728,6 +802,8 @@ def main():
                     help="cap writes this run; re-run to continue (idempotent)")
     ap.add_argument("--emit-views", action="store_true",
                     help="print each bucket's query JSON (paste into a smart view) and exit")
+    ap.add_argument("--qa-triage-terminal-only", action="store_true",
+                    help="reconcile only QA Triage no-show/cancellation leads")
     args = ap.parse_args()
 
     if args.emit_views:
@@ -736,6 +812,14 @@ def main():
             print(json.dumps({"query": q, "results_limit": None, "sort": []}, indent=1))
         print(f"\n===== {FALLTHROUGH} =====\n(fallthrough — everything not matched above)")
         return
+
+    qa_writes = reconcile_qa_triage_terminal(apply=args.apply, max_writes=args.max_writes)
+    if args.qa_triage_terminal_only:
+        return
+    if args.apply and args.max_writes:
+        args.max_writes = max(0, args.max_writes - qa_writes)
+        if args.max_writes == 0:
+            return
 
     read_fields = ["id", "display_name", "status_id",
                    f"custom.{F_OWNER}", f"custom.{F_HANDRAISER}", f"custom.{F_FUNNEL}",

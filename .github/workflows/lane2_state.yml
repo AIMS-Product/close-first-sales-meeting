@@ -24,6 +24,11 @@ on:
         required: false
         default: ""
         type: string
+      qa_triage_terminal_only:
+        description: "Only release QA Triage no-shows and cancellations to Lane 2."
+        required: false
+        default: false
+        type: boolean
 
   # No native `schedule:` by design — triggered externally by cron-job.org hitting
   # the workflow_dispatch endpoint, matching the pattern used by the other scripts
@@ -66,6 +71,7 @@ jobs:
           if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS=""; fi
           if [ -n "${{ inputs.limit }}" ]; then ARGS="$ARGS --limit ${{ inputs.limit }}"; fi
           if [ -n "${{ inputs.max_writes }}" ]; then ARGS="$ARGS --max-writes ${{ inputs.max_writes }}"; fi
+          if [ "${{ inputs.qa_triage_terminal_only }}" = "true" ]; then ARGS="$ARGS --qa-triage-terminal-only"; fi
           echo "Running: lane2_state.py $ARGS"
           python lane2_state.py $ARGS | tee report.txt
 
