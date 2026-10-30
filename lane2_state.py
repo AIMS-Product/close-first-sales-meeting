@@ -805,6 +805,8 @@ def main():
     ap.add_argument("--qa-triage-terminal-only", action="store_true",
                     help="reconcile only QA Triage no-show/cancellation leads")
     args = ap.parse_args()
+    if args.max_writes is not None and args.max_writes < 0:
+        ap.error("--max-writes must be non-negative")
 
     if args.emit_views:
         for label, state, q in BUCKETS:
@@ -813,11 +815,26 @@ def main():
         print(f"\n===== {FALLTHROUGH} =====\n(fallthrough — everything not matched above)")
         return
 
+    if args.apply and args.max_writes == 0:
+        print("Write budget is zero; nothing written.")
+        return
     qa_writes = reconcile_qa_triage_terminal(apply=args.apply, max_writes=args.max_writes)
     if args.qa_triage_terminal_only:
         return
-    if args.apply and args.max_writes:
+    if args.apply and args.max_writes is not None:
         args.max_writes = max(0, args.max_writes - qa_writes)
+        if args.max_writes == 0:
+            return
+
+    # Release timing stays in the Lane 1 service. At the staged handoff, only a
+    # native Completed outcome permits QA ownership; unconfirmed leads use Lane 2.
+    from route_released_leads import HandoffReader, run as route_staged_releases
+    handoff = {"verified_writes": 0}
+    if not args.limit:
+        handoff = route_staged_releases(HandoffReader(sys.modules[__name__]),
+                                        apply=args.apply, max_writes=args.max_writes)
+    if args.apply and args.max_writes is not None:
+        args.max_writes = max(0, args.max_writes - handoff["verified_writes"])
         if args.max_writes == 0:
             return
 
