@@ -29,7 +29,7 @@ from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 
 import requests
-from lane2_roster import owner_team_rosters
+from lane2_roster import LANE2_ROSTER, owner_team_rosters, resolve_missing_user_ids
 
 API_KEY = os.environ.get("CLOSE_API_KEY")
 if not API_KEY:
@@ -550,6 +550,39 @@ def _req(method, url, **kw):
         return r
     raise CloseError(f"gave up after retries: {r.status_code if r else '?'} {url}")
 
+
+def refresh_owner_team_rosters():
+    """Resolve linked Close users before stamping the configured owner roster."""
+    users, skip = [], 0
+    while True:
+        page = _req("GET", f"{BASE}/user/",
+                    params={"_skip": skip, "_limit": 100}).json()
+        users.extend(page.get("data", []))
+        if not page.get("has_more"):
+            break
+        skip += 100
+
+    resolve_missing_user_ids(users)
+    required_reps = {
+        "Igor Trojanowski", "Ashley Atencio", "Finley Eastlake",
+        "Ibraheem Khan", "Monde", "Tara Hall", "Osheana Mitchell",
+        "Jennifer Murray", "Eduardo Santos",
+    }
+    missing_ids = sorted(
+        rep["rep"] for rep in LANE2_ROSTER
+        if rep["rep"] in required_reps and not rep["user_id"]
+    )
+    if missing_ids:
+        raise CloseError("Owner Team roster has unresolved Close users: "
+                         + ", ".join(missing_ids))
+
+    global _OWNER_TEAM_ROSTERS, SETTERS, HYBRID_SETTERS, SCRAPERS, TLG_SETTERS
+    _OWNER_TEAM_ROSTERS = owner_team_rosters()
+    SETTERS = _OWNER_TEAM_ROSTERS["SETTERS"]
+    HYBRID_SETTERS = _OWNER_TEAM_ROSTERS["HYBRID_SETTERS"]
+    SCRAPERS = _OWNER_TEAM_ROSTERS["SCRAPERS"]
+    TLG_SETTERS = _OWNER_TEAM_ROSTERS["TLG_SETTERS"]
+
 SKIP_CAP = 10000   # Close rejects cursor skip > 10,000. Hard API limit.
 
 PROBE_CAP = 6000   # See search(). Must stay comfortably above the largest
@@ -821,6 +854,7 @@ def main():
     qa_writes = reconcile_qa_triage_terminal(apply=args.apply, max_writes=args.max_writes)
     if args.qa_triage_terminal_only:
         return
+    refresh_owner_team_rosters()
     if args.apply and args.max_writes is not None:
         args.max_writes = max(0, args.max_writes - qa_writes)
         if args.max_writes == 0:

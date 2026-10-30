@@ -256,13 +256,13 @@ LANE2_ROSTER = [
     },
     {
         "rep": "Adam Linn", "email": "adam.linn@modern-amenities.com",
-        "user_id": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e", "offer": OFFER_VP,
+        "user_id": "", "close_account_linked": False, "offer": OFFER_VP,
         "ready_for_leads": False,
         "title_patterns": [r"vendingpren[eu]+rs?\s+apex\s*-?\s*next\s+steps"],
     },
     {
         "rep": "Rosita Purwaningsih", "email": "rosita@modern-amenities.com",
-        "user_id": "user_tXVHKNA1SzWGgSVIIv18AnEf5QjTV2EYZAV2TuPs7nV", "offer": OFFER_VP,
+        "user_id": "", "close_account_linked": False, "offer": OFFER_VP,
         "ready_for_leads": False,
         "title_patterns": [r"vendingpren[eu]+rs?\s+venture\s*-?\s*next\s+steps"],
     },
@@ -272,9 +272,8 @@ LANE2_ROSTER = [
 # membership here too so the reconciler and assignment scripts share identities.
 OWNER_GROUPS = {
     "SETTERS": {
-        "William Nowak", "Spencer Reynolds", "Eduardo Santos", "Sam Norris",
-        "Wes Wan", "Sreeteja Pampati", "Bella Gregori", "Jennifer Murray",
-        "Osheana Mitchell", "Tara Hall", "Antonio Garcia",
+        "William Nowak", "Spencer Reynolds", "Sam Norris", "Wes Wan",
+        "Sreeteja Pampati", "Bella Gregori", "Antonio Garcia",
     },
     "HYBRID_SETTERS": {"Ariella Irvine"},
     "SCRAPERS": {
@@ -284,6 +283,9 @@ OWNER_GROUPS = {
         "Jason Aaron", "Jacob Hepner", "Jacob Herbig", "Kelly Schrader",
         "Amy Mulch", "Abigail Garza", "Dana Lesiuk", "Beatrice Braescu Cojocaru",
         "Catalina", "Luna", "Adam Linn", "Rosita Purwaningsih",
+        "Igor Trojanowski", "Ashley Atencio", "Finley Eastlake",
+        "Ibraheem Khan", "Monde", "Tara Hall", "Jennifer Murray",
+        "Osheana Mitchell", "Eduardo Santos",
     },
     "TLG_SETTERS": {
         "Beatrice Braescu Cojocaru", "Josh Stoffel", "Catalina", "Luna",
@@ -411,6 +413,7 @@ def names_requiring_user_id():
     return [
         rep["rep"] for rep in LANE2_ROSTER
         if not rep["user_id"]
+        and rep.get("close_account_linked") is not False
         and (rep["ready_for_leads"] or rep["owner_groups"])
     ]
 
@@ -432,7 +435,8 @@ def resolve_missing_user_ids(users):
 
     unresolved = []
     for rep in LANE2_ROSTER:
-        if rep["user_id"] or not (rep["ready_for_leads"] or rep["owner_groups"]):
+        if (rep["user_id"] or rep.get("close_account_linked") is False
+                or not (rep["ready_for_leads"] or rep["owner_groups"])):
             continue
         name = " ".join(rep["rep"].split()).casefold()
         user_id = by_name.get(name)
