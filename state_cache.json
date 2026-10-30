@@ -129056,8 +129056,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_h1KjtpSAO5RYIeoa6RG54K3LlBSRWhjgamz8sXYkWBT": {
+      "date": "2026-11-01",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-10-30 21:13:58 UTC",
-  "count": 10868
+  "saved_at": "2026-10-30 22:14:08 UTC",
+  "count": 10869
 }
