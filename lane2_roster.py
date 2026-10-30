@@ -254,6 +254,18 @@ LANE2_ROSTER = [
         "user_id": "", "offer": OFFER_VP, "ready_for_leads": False,
         "title_patterns": [r"vendingpren[eu]+rs?\s+legacy\s*-?\s*next\s+steps"],
     },
+    {
+        "rep": "Adam Linn", "email": "adam.linn@modern-amenities.com",
+        "user_id": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e", "offer": OFFER_VP,
+        "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+apex\s*-?\s*next\s+steps"],
+    },
+    {
+        "rep": "Rosita Purwaningsih", "email": "rosita@modern-amenities.com",
+        "user_id": "user_tXVHKNA1SzWGgSVIIv18AnEf5QjTV2EYZAV2TuPs7nV", "offer": OFFER_VP,
+        "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+venture\s*-?\s*next\s+steps"],
+    },
 ]
 
 # Owner Team role is still distinct from offer and certification. Keep its role
@@ -271,7 +283,7 @@ OWNER_GROUPS = {
         "Melia King", "Raiya", "Owen Hart", "Brad Savage", "Rob Maxfield",
         "Jason Aaron", "Jacob Hepner", "Jacob Herbig", "Kelly Schrader",
         "Amy Mulch", "Abigail Garza", "Dana Lesiuk", "Beatrice Braescu Cojocaru",
-        "Catalina", "Luna",
+        "Catalina", "Luna", "Adam Linn", "Rosita Purwaningsih",
     },
     "TLG_SETTERS": {
         "Beatrice Braescu Cojocaru", "Josh Stoffel", "Catalina", "Luna",
@@ -298,6 +310,8 @@ SCRAPER_TITLE_MAP = [
 # one source of truth. These are intentionally workflow-specific: the two older
 # reports have different historical attributions for some identical titles.
 MEETING_COUNT_TITLE_MAP = [
+    (re.compile(r"vendingpren[eu]+rs?\s+apex\s*-?\s*next\s+steps", re.IGNORECASE), "Adam Linn"),
+    (re.compile(r"vendingpren[eu]+rs?\s+venture\s*-?\s*next\s+steps", re.IGNORECASE), "Rosita Purwaningsih"),
     (re.compile(r"ppa\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Tony Parton"),
     (re.compile(r"vendingpren[eu]+rs?\s+enterprise\s*-?\s*next\s+steps", re.IGNORECASE), "Ashley Atencio"),
     (re.compile(r"vendingpren[eu]+rs?\s+velocity\s*-?\s*next\s+steps", re.IGNORECASE), "Ibraheem Khan"),
@@ -346,6 +360,8 @@ MEETING_COUNT_TITLE_MAP = [
 ]
 
 MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
+    (re.compile(r"vendingpren[eu]+rs?\s+apex\s*-?\s*next\s+steps", re.IGNORECASE), "Adam Linn"),
+    (re.compile(r"vendingpren[eu]+rs?\s+venture\s*-?\s*next\s+steps", re.IGNORECASE), "Rosita Purwaningsih"),
     (re.compile(r"acquisition\s+ace\s+launch\s*-?\s*next\s+steps", re.IGNORECASE), "Eduardo Santos"),
     (re.compile(r"acquisition\s+ace\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Sam Norris"),
     (re.compile(r"acquisition\s+ace\s+thrive\s*-?\s*next\s+steps", re.IGNORECASE), "Wes Wan"),
