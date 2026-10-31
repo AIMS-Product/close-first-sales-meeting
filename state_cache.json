@@ -98879,13 +98879,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "William Nowak",
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
+      "quick_disc": null
     },
     "lead_eeUSpXRxUb6wzREHdbwQQKrwUOzi148M8obgAw3YRLB": {
       "date": "2026-07-26",
@@ -129115,7 +129115,6 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
       "funnel_name": null,
       "vendhub": null,
@@ -129123,6 +129122,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-31 18:13:04 UTC",
+  "saved_at": "2026-10-31 18:43:19 UTC",
   "count": 10873
 }
