@@ -111194,11 +111194,12 @@
     "lead_SBstDBdLI9ig04FIQ3fpXM8RtPq7LhdLmaCJPoaOqkf": {
       "date": "2026-09-03",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -129102,6 +129103,18 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
+      "reactivation_override_version": null,
+      "funnel_name": null,
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_qLzjW1epPqiQL7RfIOZGhtgCYwGJkYlXnDOTs7qMLs4": {
+      "date": "2026-11-02",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
       "reactivation_user": null,
       "reactivation_override_version": null,
       "funnel_name": null,
@@ -129110,6 +129123,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-10-31 17:43:06 UTC",
-  "count": 10872
+  "saved_at": "2026-10-31 18:13:04 UTC",
+  "count": 10873
 }
