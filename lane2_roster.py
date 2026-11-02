@@ -266,6 +266,11 @@ LANE2_ROSTER = [
         "ready_for_leads": False,
         "title_patterns": [r"vendingpren[eu]+rs?\s+venture\s*-?\s*next\s+steps"],
     },
+    {
+        "rep": "Sergio Villamizar", "user_id": "", "offer": OFFER_AA,
+        "ready_for_leads": False,
+        "title_patterns": [r"acquisition\s+ace\s+momentum\s*-?\s*next\s+steps"],
+    },
 ]
 
 # Owner Team role is still distinct from offer and certification. Keep its role
@@ -355,6 +360,7 @@ MEETING_COUNT_TITLE_MAP = [
     (re.compile(r"acquisition\s+ace\s+thrive\s*-?\s*next\s+steps", re.IGNORECASE), "Wes Wan"),
     (re.compile(r"acquisition\s+ace\s+ascend\s*-?\s*next\s+steps", re.IGNORECASE), "Sreeteja Pampati"),
     (re.compile(r"acquisition\s+ace\s+frontier\s*-?\s*next\s+steps", re.IGNORECASE), "Bella Gregori"),
+    (re.compile(r"acquisition\s+ace\s+momentum\s*-?\s*next\s+steps", re.IGNORECASE), "Sergio Villamizar"),
     (re.compile(r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Jennifer Murray"),
     (re.compile(r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps", re.IGNORECASE), "Osheana Mitchell"),
     (re.compile(r"vendingpren[eu]+rs?\s+visionary\s*-?\s*next\s+steps", re.IGNORECASE), "Tara Hall"),
@@ -369,6 +375,7 @@ MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
     (re.compile(r"acquisition\s+ace\s+thrive\s*-?\s*next\s+steps", re.IGNORECASE), "Wes Wan"),
     (re.compile(r"acquisition\s+ace\s+ascend\s*-?\s*next\s+steps", re.IGNORECASE), "Sreeteja Pampati"),
     (re.compile(r"acquisition\s+ace\s+frontier\s*-?\s*next\s+steps", re.IGNORECASE), "Bella Gregori"),
+    (re.compile(r"acquisition\s+ace\s+momentum\s*-?\s*next\s+steps", re.IGNORECASE), "Sergio Villamizar"),
     (re.compile(r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps", re.IGNORECASE), "Jennifer Murray"),
     (re.compile(r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps", re.IGNORECASE), "Osheana Mitchell"),
     (re.compile(r"vendingpren[eu]+rs?\s+visionary\s*-?\s*next\s+steps", re.IGNORECASE), "Tara Hall"),
