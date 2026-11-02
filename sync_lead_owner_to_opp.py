@@ -64,6 +64,7 @@ import argparse
 import time
 
 import requests
+from workflow_holds import guard_request
 
 BASE_URL = "https://api.close.com/api/v1"
 
@@ -106,18 +107,22 @@ class CloseClient:
     def __init__(self, api_key):
         self.session = requests.Session()
         self.session.auth = (api_key, "")
+        self.session.request = guard_request(self.session.request)
 
     def _request(self, method, path, **kwargs):
         url = f"{BASE_URL}{path}"
         kwargs.setdefault("timeout", 60)
-        for attempt in range(5):
+        for attempt in range(1 if method.upper() == "PUT" else 5):
             try:
                 resp = self.session.request(method, url, **kwargs)
             except (requests.Timeout, requests.ConnectionError):
-                if attempt == 4:
+                if method.upper() == "PUT" or attempt == 4:
                     raise
                 time.sleep(2 * (attempt + 1))
                 continue
+            if method.upper() == "PUT":
+                resp.raise_for_status()
+                return resp.json() if resp.content else {}
             if resp.status_code == 429:
                 wait = float(resp.headers.get("Retry-After", 2 * (attempt + 1)))
                 time.sleep(wait)

@@ -57,6 +57,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
 import requests
+from workflow_holds import guard_request
 
 BASE_URL = "https://api.close.com/api/v1"
 
@@ -136,11 +137,15 @@ class CloseClient:
     def __init__(self, api_key):
         self.session = requests.Session()
         self.session.auth = (api_key, "")
+        self.session.request = guard_request(self.session.request)
 
     def _request(self, method, path, **kwargs):
         url = f"{BASE_URL}{path}"
-        for attempt in range(5):
+        for attempt in range(1 if method.upper() == "PUT" else 5):
             resp = self.session.request(method, url, **kwargs)
+            if method.upper() == "PUT":
+                resp.raise_for_status()
+                return resp.json() if resp.content else {}
             if resp.status_code == 429:
                 wait = float(resp.headers.get("Retry-After", 2 * (attempt + 1)))
                 time.sleep(wait)

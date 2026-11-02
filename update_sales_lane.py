@@ -44,6 +44,7 @@ import sys
 import time
 
 import requests
+from workflow_holds import guard_request
 
 # ---------------------------------------------------------------------------
 # Config
@@ -111,6 +112,8 @@ def make_session():
 
 def request_with_retry(session, method, url, max_retries=5, **kwargs):
     """Issue a request, backing off on 429 / 5xx. Returns the final Response."""
+    if method.upper() == "PUT":
+        return guard_request(session.request)(method, url, timeout=60, **kwargs)
     for attempt in range(max_retries):
         resp = session.request(method, url, timeout=60, **kwargs)
         if resp.status_code == 429 or resp.status_code >= 500:

@@ -39,6 +39,7 @@ import json
 import time
 import argparse
 import requests
+from workflow_holds import guard_request
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
@@ -143,6 +144,7 @@ def save_state(state):
 # Close API helpers
 # ---------------------------------------------------------------------------
 
+@guard_request
 def close_request(method, url, max_retries=6, **kwargs):
     """
     Wrapper around requests that retries on HTTP 429 (rate limit) with backoff.
@@ -153,6 +155,8 @@ def close_request(method, url, max_retries=6, **kwargs):
     runs that issue many PUT/POST calls while reassigning leads.
     """
     kwargs.setdefault("auth", AUTH)
+    if method.upper() == 'PUT' or (method.upper() == 'POST' and not url.endswith('/data/search/')):
+        max_retries = 0
     for attempt in range(max_retries + 1):
         r = requests.request(method, url, **kwargs)
         if r.status_code != 429:
@@ -362,13 +366,13 @@ def get_active_opportunities(lead_id):
     return [o for o in j.get("data", []) if o.get("status_type") == "active"]
 
 
-def reassign_lead(lead_id, rep_id, handraiser_value):
+def reassign_lead(lead_id, rep_id, handraiser_value, *, expected_owner):
     """PUT the Lead Owner + Lane 2 Handraiser, then verify the owner actually took."""
     payload = {
         f"custom.{LEAD_OWNER_FIELD}":       rep_id,
         f"custom.{LANE2_HANDRAISER_FIELD}": handraiser_value,
     }
-    updated = close_request("PUT", f"{BASE}/lead/{lead_id}/", json=payload).json()
+    updated = close_request("PUT", f"{BASE}/lead/{lead_id}/", json=payload, expected_owner=expected_owner).json()
     new_owner = read_lead_owner(updated)
     if new_owner != rep_id:
         raise RuntimeError(
@@ -385,17 +389,17 @@ def read_recapture_state(lead):
     return cust.get(RECAPTURE_STATE_FIELD) or cust.get("Recapture State")
 
 
-def release_lead(lead_id):
+def release_lead(lead_id, *, expected_owner):
     """Clear Lead Owner so the Lane 2 assigner can deal the lead. Verifies it took."""
     updated = close_request("PUT", f"{BASE}/lead/{lead_id}/",
-                            json={f"custom.{LEAD_OWNER_FIELD}": None}).json()
+                            json={f"custom.{LEAD_OWNER_FIELD}": None}, expected_owner=expected_owner).json()
     if read_lead_owner(updated):
         raise RuntimeError(f"Lead {lead_id}: owner clear did not take "
                            f"(still {read_lead_owner(updated)!r}).")
 
 
 def reassign_opportunity(opp_id, rep_id):
-    close_request("PUT", f"{BASE}/opportunity/{opp_id}/", json={"user_id": rep_id})
+    close_request("PUT", f"{BASE}/opportunity/{opp_id}/", json={"user_id": rep_id}, expected_owner=rep_id)
 
 
 def create_task(lead_id, rep_id, text):
@@ -481,7 +485,7 @@ def main():
                 if dry_run:
                     print(f"  WOULD RELEASE  {name}  (Recapture State: {state_val})")
                 else:
-                    release_lead(lead_id)
+                    release_lead(lead_id, expected_owner=read_lead_owner(lead))
                     print(f"  RELEASED  {name}  (Recapture State: {state_val})")
                 handled.add(lead_id)
                 assigned += 1
@@ -505,7 +509,7 @@ def main():
                 print(f"           -> Task ({'skipped' if skip_tasks else 'high priority'}): "
                       f"{b['task_text']!r}")
             else:
-                reassign_lead(lead_id, rep_id, b["handraiser"])
+                reassign_lead(lead_id, rep_id, b["handraiser"], expected_owner=read_lead_owner(lead))
                 for opp in opps:
                     if opp.get("user_id") != rep_id:
                         reassign_opportunity(opp["id"], rep_id)

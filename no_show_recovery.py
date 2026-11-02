@@ -38,6 +38,7 @@ import time
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
+from workflow_holds import guard_request
 
 BASE = "https://api.close.com/api/v1"
 
@@ -98,10 +99,13 @@ class CloseClient:
             self.session = requests.Session()
             self.session.auth = (api_key, "")
             self.session.headers["Content-Type"] = "application/json"
+            self.session.request = guard_request(self.session.request)
 
     def request(self, method, path, **kwargs):
         url = f"{BASE}{path}"
         if not self.requests:
+            if method.upper() != 'GET' and not (method.upper() == 'POST' and path == '/data/search/'):
+                raise CloseError('Mutation requires the shared requests hold guard; install existing requests dependency')
             return self.urllib_request(method, url, **kwargs)
 
         last = None

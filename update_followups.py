@@ -27,6 +27,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 import requests
+from workflow_holds import guard_request
 
 # ────────────────────────────────────────────────────────────────────────────
 # Configuration
@@ -164,6 +165,7 @@ def is_qualifying_first_sales_call(title: str, owner_name: str) -> bool:
 
 session = requests.Session()
 session.auth = (CLOSE_API_KEY, "")
+session.request = guard_request(session.request)
 
 
 def fetch_users() -> dict:

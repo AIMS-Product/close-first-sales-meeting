@@ -34,6 +34,7 @@ import json
 import os
 import sys
 import requests
+from workflow_holds import guard_request
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
@@ -200,7 +201,7 @@ def get_current_owner_id(lead):
     return val
 
 
-def update_lead(lead_id, target_user_id):
+def update_lead(lead_id, target_user_id, *, expected_owner):
     """PUT custom fields with `custom.cf_xxx` key prefix. Verify the response
     reflects the new Lead Owner; otherwise raise."""
     if DRY_RUN:
@@ -209,7 +210,7 @@ def update_lead(lead_id, target_user_id):
         f"custom.{LEAD_OWNER_FIELD}":        target_user_id,
         f"custom.{LANE_2_HANDRAISER_FIELD}": HANDRAISER_VALUE,
     }
-    r = requests.put(f"{BASE}/lead/{lead_id}/", json=payload, auth=AUTH)
+    r = guard_request(requests.request)("PUT", f"{BASE}/lead/{lead_id}/", json=payload, auth=AUTH, expected_owner=expected_owner)
     r.raise_for_status()
     updated = r.json()
 
@@ -239,7 +240,7 @@ def create_task(lead_id, lead_name, sales_call_date_iso, assignee_user_id):
             f"Lead reassigned to you for review/outreach."
         ),
     }
-    r = requests.post(f"{BASE}/task/", json=payload, auth=AUTH)
+    r = guard_request(requests.request)("POST", f"{BASE}/task/", json=payload, auth=AUTH)
     r.raise_for_status()
 
 
@@ -296,7 +297,7 @@ def main():
             print(f"           → Lane 2 Handraiser: {HANDRAISER_VALUE}")
             print(f"           → task: 'First sales call was {pretty_date}'")
         else:
-            update_lead(lead_id, target_user_id)   # raises if update didn't take
+            update_lead(lead_id, target_user_id, expected_owner=current_owner)
             create_task(lead_id, name, sales_call_iso, target_user_id)
             suffix = " (task skipped)" if SKIP_TASKS else ""
             print(f"  DONE   {name} → {target_name}{suffix}")

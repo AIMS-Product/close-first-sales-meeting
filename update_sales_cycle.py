@@ -43,6 +43,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import requests
+from workflow_holds import guard_request
 
 # --------------------------------------------------------------------------- #
 # Configuration
@@ -85,6 +86,7 @@ def _session() -> requests.Session:
         sys.exit("ERROR: CLOSE_API_KEY environment variable is not set.")
     s = requests.Session()
     s.auth = (CLOSE_API_KEY, "")          # Close uses the API key as basic-auth username
+    s.request = guard_request(s.request)
     s.headers.update({"Content-Type": "application/json"})
     return s
 

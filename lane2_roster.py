@@ -204,7 +204,7 @@ LANE2_ROSTER = [
     {
         "rep": "Eduardo Santos", "email": "eduardo.santos@modern-amenities.com",
         "start_date": "2026-10-19",
-        "user_id": "", "offer": OFFER_AA, "ready_for_leads": False,
+        "user_id": "user_Skhc1Tm9B1WM0Tq9NiHHzgTKqRrEZd8qpCnSS9k3yMe", "offer": OFFER_AA, "ready_for_leads": False,
         "title_patterns": [r"acquisition\s+ace\s+launch\s*-?\s*next\s+steps"],
     },
     {
@@ -231,19 +231,19 @@ LANE2_ROSTER = [
     {
         "rep": "Jennifer Murray", "email": "jennifer.murray@modern-amenities.com",
         "start_date": "2026-10-19",
-        "user_id": "", "offer": OFFER_VP, "ready_for_leads": False,
+        "user_id": "user_cYj9jcC1UVL5XIq6pSiXC1F9Jpl7NsqHdTqKJcmfbvZ", "offer": OFFER_VP, "ready_for_leads": False,
         "title_patterns": [r"vendingpren[eu]+rs?\s+elevate\s*-?\s*next\s+steps"],
     },
     {
         "rep": "Osheana Mitchell", "email": "osheana@modern-amenities.com",
         "start_date": "2026-10-19",
-        "user_id": "", "offer": OFFER_VP, "ready_for_leads": False,
+        "user_id": "user_gOS3U6C6okz7YlnTywDU4N7ynG1lmVYZhhzZFRmsudP", "offer": OFFER_VP, "ready_for_leads": False,
         "title_patterns": [r"vendingpren[eu]+rs?\s+accelerate\s*-?\s*next\s+steps"],
     },
     {
         "rep": "Tara Hall", "email": "tara.hall@modern-amenities.com",
         "start_date": "2026-10-19",
-        "user_id": "", "offer": OFFER_VP, "ready_for_leads": False,
+        "user_id": "user_eQU8NtY1DEGcWY0KikTakVlAxVG420UmEQGJV1I8UpV", "offer": OFFER_VP, "ready_for_leads": False,
         "title_patterns": [
             r"vendingpren[eu]+rs?\s+visionary\s*-?\s*next\s+steps",
         ],

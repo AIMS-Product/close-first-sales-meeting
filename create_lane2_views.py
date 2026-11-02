@@ -24,6 +24,7 @@ import os
 import sys
 
 import requests
+from workflow_holds import no_sales_hold_query
 
 API_KEY = os.environ.get("CLOSE_API_KEY")
 if not API_KEY:
@@ -371,7 +372,7 @@ NOT_SUPPRESSED = status_in(SUPPRESS, negate=True)
 # affected by the same hole. Verify that view has rows after any change here.
 NO_UPCOMING = None   # not applied to any view — see above
 
-def view(*conds, tlg=False):
+def view(*conds, tlg=False, sales_queue=True):
     """Wrap conditions into a saved-search query.
 
     Two things are applied to EVERY view here, so no individual view can forget:
@@ -390,7 +391,8 @@ def view(*conds, tlg=False):
     gate = business_line_is([BL_TLG]) if tlg else not_excluded_business_line()
     return {"negate": False, "type": "and", "queries": [
         {"negate": False, "object_type": "lead", "type": "object_type"},
-        {"negate": False, "type": "and", "queries": [NOT_SUPPRESSED, gate, *conds]},
+        {"negate": False, "type": "and", "queries": [NOT_SUPPRESSED, gate,
+            *([no_sales_hold_query()] if sales_queue else []), *conds]},
     ]}
 
 # SORT_ASC_RATIONALE
@@ -695,7 +697,7 @@ VIEWS = [
      "No communication in 6+ months. Intended source list for the low-touch content drip "
      "(Instantly) once that sync is built — nothing exports yet. Mixes 'went quiet after "
      "engaging' with 'imported, never contacted' — segment before sending.",
-     view(choice(F_STATE, ["Deep-Nurture"])),
+     view(choice(F_STATE, ["Deep-Nurture"]), sales_queue=False),
      sort_by("last_communication_date", "asc"), cols(F_ENTRY, F_RESOURCE)),
 
     ("Ops · Unassigned Recapture Universe",
@@ -704,7 +706,7 @@ VIEWS = [
      "loses a roster owner gets set to None rather than blanked.",
      view({"negate": False, "type": "or",
            "queries": [exists(F_TEAM, negate=True), choice(F_TEAM, ["None"])]},
-          choice(F_STATE, ["Hot-Inbound", "Blitz", "Active-Nurture"])),
+          choice(F_STATE, ["Hot-Inbound", "Blitz", "Active-Nurture"]), sales_queue=False),
      sort_by("date_created"), cols(F_STATE, F_TEAM, F_ANGLE)),
 
     # ---------------- The Land Geek (separate offer) ----------------
@@ -730,12 +732,12 @@ VIEWS = [
     ("TLG · Ops — All TLG Leads",
      "Every Land Geek lead with its state and owner, calling hours ignored. Use to check the "
      "import landed, to confirm the assigner split evenly, and as the ground-truth count.",
-     view(tlg=True),
+     view(tlg=True, sales_queue=False),
      sort_by("date_created"), cols(F_STATE, F_TEAM, F_ENTRY, F_EVERCALL)),
 
     ("Ops · Recapture State — Audit",
      "Every non-suppressed lead with its state and team. Use to eyeball the reconciler.",
-     view(exists(F_STATE)),
+     view(exists(F_STATE), sales_queue=False),
      sort_by("date_created"), cols(F_STATE, F_TEAM, F_ANGLE, F_ENTRY, F_EVERCALL)),
 ]
 

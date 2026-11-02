@@ -49,6 +49,7 @@ import time
 from collections import defaultdict
 
 import requests
+from workflow_holds import guard_request
 
 API_BASE = "https://api.close.com/api/v1"
 PAGE_SIZE = 100
@@ -99,6 +100,7 @@ PROTECTED_OWNERS = {
 }
 
 SESSION = requests.Session()
+SESSION.request = guard_request(SESSION.request)
 
 LEAD_ID_COLUMNS = ("lead_id", "leadid", "id", "close_lead_id", "close id", "lead id")
 EMAIL_COLUMNS = ("email", "contact_email", "email_address", "primary_email", "emails")

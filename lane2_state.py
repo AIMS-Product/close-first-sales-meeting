@@ -30,6 +30,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 from lane2_roster import LANE2_ROSTER, owner_team_rosters, resolve_missing_user_ids
+from workflow_holds import no_sales_hold_query, guard_request
 
 API_KEY = os.environ.get("CLOSE_API_KEY")
 if not API_KEY:
@@ -529,10 +530,14 @@ FALLTHROUGH = "Deep-Nurture"
 class CloseError(Exception):
     pass
 
+@guard_request
 def _req(method, url, **kw):
     r = None
     for attempt in range(6):
         r = requests.request(method, url, auth=AUTH, timeout=45, **kw)
+        if method.upper() == 'PUT':
+            r.raise_for_status()
+            return r
         if r.status_code == 429:
             time.sleep(float(r.headers.get("retry-after", 2)) + attempt)
             continue
@@ -619,6 +624,7 @@ def _month_windows(start=None):
 
 
 def search(query, fields=None, limit=None):
+    query = {"type":"and","queries":[query,no_sales_hold_query()]}
     """
     Run a Close search, partitioning by month of date_created only when we have to.
 

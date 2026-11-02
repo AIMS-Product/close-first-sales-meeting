@@ -12,6 +12,9 @@ from unittest.mock import patch
 class FakeSession:
     auth = None
 
+    def request(self, *args, **kwargs):
+        raise AssertionError('Offline classification tests cannot make provider requests')
+
 
 with patch.dict(os.environ, {"CLOSE_API_KEY": "test-key"}), patch.dict(
     sys.modules, {"requests": types.SimpleNamespace(Session=FakeSession)}

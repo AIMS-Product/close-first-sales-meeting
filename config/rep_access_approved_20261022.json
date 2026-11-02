@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "companyId": "88a28173-2a61-4cbb-92ea-f6b8be4592f3",
+  "recordedAt": "2026-10-22T20:08:58+00:00",
+  "approvedBy": "Anthony Kolodziej",
+  "approvalReportedBy": "Dom Ellis",
+  "originalApprovalAt": null,
+  "approvalEvidence": {
+    "kind": "user_confirmation_and_attachment",
+    "attachment": "codex-clipboard-7bfad70a-7a01-4a2f-848c-32cb42593870.png",
+    "sha256": "ed15e551d73d7ba061d2023bd701f410472da589aea5568359fa17523ee8bbde",
+    "userStatement": "this was the current tiers I sent to anthony and he okayed it"
+  },
+  "activation": "off",
+  "productionWritesAuthorized": false,
+  "reps": [
+    {
+      "rep": "Ariella Irvine",
+      "baseTier": "Top",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Cassie Caraballo",
+      "baseTier": "Proven",
+      "reactivationAccess": false,
+      "overrideEvidence": {
+        "kind": "direct_user_instruction",
+        "instruction": "put cassie in proven not top",
+        "date": "2026-10-22"
+      }
+    },
+    {
+      "rep": "Charlie Ingram",
+      "baseTier": "Top",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Connor George",
+      "baseTier": "Top",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Vince Bartolini",
+      "baseTier": "Top",
+      "reactivationAccess": true
+    },
+    {
+      "rep": "August Young",
+      "baseTier": "Proven",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Pearl Sathekge",
+      "baseTier": "Proven",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Brad Savage",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Naria Torres",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Rob Maxfield",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Antonio Garcia",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Ashley Atencio",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Eduardo Santos",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Finley Eastlake",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Ibraheem Khan",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Igor Trojanowski",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Jennifer Murray",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Jonathan Quinn",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Kaylane Nunes",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Monde Janzen",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Osheana Mitchell",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Sam Norris",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Tara Hall",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    },
+    {
+      "rep": "Tony Parton",
+      "baseTier": "Ramp",
+      "reactivationAccess": false
+    }
+  ]
+}

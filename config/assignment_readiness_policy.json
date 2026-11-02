@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "companyId": "88a28173-2a61-4cbb-92ea-f6b8be4592f3",
+  "confirmedBy": "Dom Ellis",
+  "confirmedOn": "2026-10-23",
+  "sourceInstruction": "no lead assignment starts after they are certified",
+  "beforeCertification": {
+    "roadmapPhase": "Before Roadmap",
+    "retainApprovedTier": true,
+    "canReceiveLeads": false
+  },
+  "afterCertification": {
+    "useApprovedTier": true,
+    "legacyReadinessFlagIsAdditionalGate": false,
+    "requiresActiveIdentityMembershipAndLeadProtections": true
+  },
+  "activation": "off",
+  "productionWritesAuthorized": false
+}

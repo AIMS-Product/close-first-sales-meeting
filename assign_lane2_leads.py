@@ -399,7 +399,13 @@ def main():
                     help="refuse to release more than this many leads in one run "
                          "(default 10000) — a backstop against a bad active-user "
                          "lookup treating everyone as departed")
+    from tier_routing_rollout import add_arguments, dispatch
+    add_arguments(ap)
     args = ap.parse_args()
+    # Select the bounded tier path before any legacy census, reclaim or release.
+    # It never falls back into legacy assignment if a tier safety check fails.
+    if dispatch(args):
+        return
     if MISSING_READY_USER_IDS and args.apply:
         sys.exit("Ready VP reps are missing Close user IDs: " + ", ".join(MISSING_READY_USER_IDS))
     target = None if args.max_queue == 0 else args.max_queue
@@ -440,7 +446,7 @@ def main():
                 def _clear(item):
                     lid = item[0]["id"]
                     try:
-                        _req("PUT", f"{BASE}/lead/{lid}/", json={f"custom.{F_OWNER}": None})
+                        _req("PUT", f"{BASE}/lead/{lid}/", json={f"custom.{F_OWNER}": None}, expected_owner=item[1])
                         return True
                     except Exception:
                         return False
@@ -676,7 +682,7 @@ def main():
     def _write(item):
         lid, uid = item
         try:
-            _req("PUT", f"{BASE}/lead/{lid}/", json={f"custom.{F_OWNER}": uid})
+            _req("PUT", f"{BASE}/lead/{lid}/", json={f"custom.{F_OWNER}": uid}, expected_owner=None)
             return None
         except Exception as e:
             return f"  {lid}: {str(e)[:180]}"
