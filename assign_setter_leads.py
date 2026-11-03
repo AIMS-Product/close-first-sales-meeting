@@ -496,7 +496,7 @@ def main():
     def _write(item):
         lid, uid = item
         try:
-            _req("PUT", f"{BASE}/lead/{lid}/", json={f"custom.{F_OWNER}": uid})
+            _req("PUT", f"{BASE}/lead/{lid}/", json={f"custom.{F_OWNER}": uid}, expected_owner=None)
             return True, None
         except Exception as e:
             return False, f"{lid}: {e}"

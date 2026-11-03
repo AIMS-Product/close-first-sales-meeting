@@ -1,0 +1,44 @@
+{
+  "captured_at": "2026-10-23T20:10:10.019606+00:00",
+  "source": "Read-only company roster joined to active Close provider accounts",
+  "changes": [
+    {
+      "rep": "Eduardo Santos",
+      "before": "",
+      "after": "user_Skhc1Tm9B1WM0Tq9NiHHzgTKqRrEZd8qpCnSS9k3yMe",
+      "ready_for_leads_preserved": false
+    },
+    {
+      "rep": "Sam Norris",
+      "before": "",
+      "after": "user_ITYBQg9HXqkQSn7i009T4JpoRxFyT5nXvXep5VycxUh",
+      "ready_for_leads_preserved": false
+    },
+    {
+      "rep": "Jennifer Murray",
+      "before": "",
+      "after": "user_cYj9jcC1UVL5XIq6pSiXC1F9Jpl7NsqHdTqKJcmfbvZ",
+      "ready_for_leads_preserved": false
+    },
+    {
+      "rep": "Osheana Mitchell",
+      "before": "",
+      "after": "user_gOS3U6C6okz7YlnTywDU4N7ynG1lmVYZhhzZFRmsudP",
+      "ready_for_leads_preserved": false
+    },
+    {
+      "rep": "Tara Hall",
+      "before": "",
+      "after": "user_eQU8NtY1DEGcWY0KikTakVlAxVG420UmEQGJV1I8UpV",
+      "ready_for_leads_preserved": false
+    },
+    {
+      "rep": "Antonio Garcia",
+      "before": "",
+      "after": "user_F9HcFV4HzUp5uIT5T39M9xFW7FZSCAtrDyyC5JLT7RZ",
+      "ready_for_leads_preserved": false
+    }
+  ],
+  "production_writes": 0,
+  "readiness_changes": 0
+}

@@ -53,6 +53,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 import requests
+from workflow_holds import guard_request
 
 # --------------------------------------------------------------------------- #
 # Config
@@ -107,6 +108,7 @@ REQUIRE_LIVE_MEETING = True
 
 SESSION = requests.Session()
 SESSION.auth = (CLOSE_API_KEY, "")
+SESSION.request = guard_request(SESSION.request)
 SESSION.headers.update({"Content-Type": "application/json"})
 
 # --------------------------------------------------------------------------- #

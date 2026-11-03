@@ -6,6 +6,7 @@ import os
 import re
 import time
 import requests
+from workflow_holds import guard_status_request, BATCH, custom
 from close_status_policy import (COMPANY, ORG, OWNER, DNC, Evidence, Opportunity, Roster, timestamp, held_hash)
 
 EXACT_STOP = re.compile(r'^(stop|stopall|unsubscribe|cancel|end|quit|revoke|opt\s*out)[.!\s]*$', re.I)
@@ -27,8 +28,9 @@ class CloseClient:
         self.write_enabled = write_enabled
         self.pause = pause
         self.requests = []
+        self.request = guard_status_request(self.request, self.validate_request)
 
-    def request(self, method, path, payload=None):
+    def validate_request(self, method, path, payload=None):
         if method not in ('GET', 'POST', 'PUT'):
             raise ValueError('Unsupported Close operation')
         if method == 'POST' and path != '/data/search/':
@@ -40,6 +42,8 @@ class CloseClient:
                 raise ValueError('Status writer path rejected')
             if not isinstance(payload, dict) or set(payload) != {'status_id'} or not isinstance(payload['status_id'], str):
                 raise ValueError('Only one native status_id may be written')
+    def request(self, method, path, payload=None):
+        self.validate_request(method, path, payload)
         for attempt in range(6):
             self.pause(0.12 if method != 'POST' else 0.6)
             self.requests.append({'method': method, 'path': path.split('?')[0]})
@@ -156,6 +160,8 @@ class SnapshotReader:
         else:
             raise ValueError('Invalid owner field')
         status = lead['status_id']
+        if 'STH1' in str(custom(lead, BATCH) or ''):
+            return Evidence(lead_id, status, owners, review_reasons=('shared_sales_hold',))
         if set(owners) & roster.closer_ids:
             return Evidence(lead_id, status, owners)
         contacts = lead['contacts']

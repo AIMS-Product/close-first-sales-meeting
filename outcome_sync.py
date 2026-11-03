@@ -84,6 +84,7 @@ from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 import requests
+from workflow_holds import guard_request
 
 # ---------------------------------------------------------------------------
 # Constants — KEEP IN SYNC with update_field.py where noted
@@ -224,6 +225,7 @@ def close_session():
     s = requests.Session()
     s.auth = (os.environ["CLOSE_API_KEY"], "")
     s.headers["Content-Type"] = "application/json"
+    s.request = guard_request(s.request)
     return s
 
 
@@ -239,6 +241,10 @@ def close_get(s, path, params=None):
 
 
 def close_put(s, path, payload):
+    if path.startswith('/lead/') or path.startswith('/opportunity/'):
+        r = s.put(f"{CLOSE_API}{path}", json=payload, timeout=60)
+        r.raise_for_status()
+        return r.json()
     for attempt in range(5):
         r = s.put(f"{CLOSE_API}{path}", json=payload, timeout=60)
         if r.status_code == 429:

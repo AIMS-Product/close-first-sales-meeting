@@ -47,6 +47,7 @@ from datetime import datetime, timedelta, timezone, date
 from zoneinfo import ZoneInfo
 
 import requests
+from workflow_holds import guard_request
 
 PACIFIC = ZoneInfo("America/Los_Angeles")
 CLOSE_API = "https://api.close.com/api/v1"
@@ -100,6 +101,7 @@ SKIP_RECENT_DAYS = int(os.environ.get("SKIP_RECENT_DAYS", "7"))
 def close_session():
     s = requests.Session()
     s.auth = (os.environ["CLOSE_API_KEY"], "")
+    s.request = guard_request(s.request)
     s.headers["Content-Type"] = "application/json"
     return s
 

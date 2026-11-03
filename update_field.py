@@ -42,6 +42,7 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 import requests
+from workflow_holds import guard_request
 
 from lane2_roster import SCRAPER_TITLE_MAP
 
@@ -584,6 +585,7 @@ def clear_checkpoint() -> None:
 
 session = requests.Session()
 session.auth = (CLOSE_API_KEY, "")
+session.request = guard_request(session.request)
 
 
 def api_get(path: str, params: dict = None, retry: int = 5) -> dict:

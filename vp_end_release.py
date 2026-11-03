@@ -21,7 +21,7 @@ def _open_vp_end_lead_ids(paginate):
 
 def release_vp_end_leads(rows, *, owner_of, owner_names, paginate, write_owner,
                          apply, max_release, label):
-    """Report or clear owners for rows with an open terminal task.
+    """Reserve terminal leads for the durable SMS workflow; never clear owners here.
 
     Returns their IDs so callers can prevent same-run reassignment.
     """
@@ -36,13 +36,5 @@ def release_vp_end_leads(rows, *, owner_of, owner_names, paginate, write_owner,
     for owner, count in by_owner.most_common():
         print(f"  {owner_names.get(owner, owner):<28} {count:>6,}")
     ids = {row["id"] for row in candidates}
-    if not candidates or not apply:
-        print("  (dry run — not released)" if candidates else "  (none)")
-        return ids
-    with ThreadPoolExecutor(max_workers=8) as executor:
-        failures = [result for result in executor.map(write_owner, ids) if result]
-    if failures:
-        raise RuntimeError(f"released {len(ids)-len(failures):,}/{len(ids):,}; "
-                           f"{len(failures):,} failed")
-    print(f"  Released {len(ids):,} lead owner(s).")
+    print("  Terminal leads reserved for SMS final-call/rest workflow; no immediate owner clears.")
     return ids
