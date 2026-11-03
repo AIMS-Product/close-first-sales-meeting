@@ -2,14 +2,14 @@
 
 Candidate only. No production writes, schema changes, queue publication, or activation.
 
-## October 23 read-only preview
+## Historical October 23 read-only preview
 
 `tier-preview-20261023-r4/index.html` renders the captured roster, current ownership
 counts, exact metadata candidates, exclusions, conditional owner patch and four
 replacement queue definitions. The capture used existing credentials, read-only
 database transactions and 148 Close read/search requests; no data was written.
 
-- 22 active classified reps: 4 Top, 3 Proven and 15 Ramp. Cassie is Proven.
+- The October 23 snapshot contained 22 active classified reps: 4 Top, 3 Proven and 15 Ramp. Cassie is Proven. This is a historical snapshot, not the current approved roster.
 - 20 certified reps have captured ownership counts. Eduardo and Jennifer remain
   Before Roadmap, retain their approved Ramp tier and receive no assignments.
 - Certification opens tier eligibility. Legacy readiness flags add no second gate.
@@ -43,17 +43,29 @@ hold projection remain prerequisites to queue publication.
 1. The VP assignment entry point now selects the tier planner only with an explicit
    pilot flag. It defaults off and production still uses existing logic. See
    `TIER_ROUTING_PILOT.md` for limits, approval requirements and entry-point evidence.
-2. Complete the shared control-store migration and grants through the authorized
-   migration path. The candidate is `sql/sms_rest_control.sql`; it has not run.
+2. The `crm_workflow_control` schema and grants were installed on staging,
+   production and primary on November 2 using existing credentials, then read back.
+   This installed dormant control state only; it did not deploy or prove the guards.
 3. Verify the shared gate across every assignment, release, sales enrollment and
    outbound dispatch path, with coordination across the deployed hosts. Current
    Owner Since is not certified as a genuine ownership-generation fence.
-4. Prepare a bounded executable pilot with fresh tier, source, certification,
+4. Reconcile the current Lakebase roster before selecting pilot reps: 22 active
+   Lane 2 rows were present on November 2. Six lack approved tier metadata; two
+   have duplicate/unlinked Close identity rows to reconcile. Only 16 have stored
+   approved access today. Do not infer tiers for the six from tenure or certification.
+5. Prepare a bounded executable pilot with fresh tier, source, certification,
    membership, owner, capacity, suppression and hold checks. Include exact rep
    permission changes and conditional lead patches for approval.
-5. Obtain approval before production metadata writes, migration, list publication,
+6. Obtain release approval before production metadata changes, list publication,
    lead assignment or activation. Preserve hourly maintenance and the immutable
-   audit ledger.
+   audit ledger. The V2 flag and scheduled invocation remain off.
+
+The approved policy source is Anthony's October 13–14 Slack thread:
+https://modern-amenities.slack.com/archives/D0C0UUQ3N9M/p1792005677696509?thread_ts=1791931099.718719&cid=D0C0UUQ3N9M
+It defines lead age bands, cumulative access, real-opt-in sourcing for Top,
+24-hour fresh-lead overflow, and the seven-day no-activity ownership release.
+The dated approved access file records the individual tier list and Vince's
+separate Reactivation permission. Per-rep policy proposals remain non-writing.
 
 The October 30 local integration aligns SMS return tags with actual lead age and
 provides a tier-aware, capacity-checked return planner. Finishing 90 days of rest

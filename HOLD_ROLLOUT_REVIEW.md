@@ -11,20 +11,20 @@ Status: locally implemented and tested. Production writes and activation remain 
   removes a hold. Uncertain provider writes require reconciliation before retry.
 - Explicit reviewed marketing-only workflow classification. Marketing can continue
   during an SMS-only rest; another workflow's hold cannot be bypassed by that exception.
-- An atomic, tenant/version-checked installation candidate at
+- An atomic, tenant/version-checked installation source at
   `sql/sms_rest_control.sql`, with grants limited to the five CRM control tables and
   their write-intent identity sequence. Existing runtime credentials are reused.
   No audit-ledger privileges, new accounts or Close fields are added.
 - Fresh deployment evidence is mandatory for pilot authorization. The template
   contains pending entries; local tests never certify production deployment.
 
-## Read-only production findings, October 23
+## Historical read-only production findings, October 23
 
 Packet: `tier-preview-20261023-hold-readiness/`.
 
 | Item | Finding |
 | --- | --- |
-| Shared control tables | Absent; current runtime role cannot create the schema |
+| Shared control tables | Absent in the October 23 snapshot; installed November 2 on staging, production and primary |
 | Saved searches inspected | 151 |
 | Existing Lane 2 views | 25; none currently has the shared hold exclusion |
 | Proposed sales-list changes | 21; exact existing query plus the hold exclusion |
@@ -40,10 +40,11 @@ preserved. The initial diagnostic included four audit/marketing views; those
 changes were withdrawn from the final candidate file. The original diagnostic
 and its 25 filter validations are retained as evidence, not publication scope.
 
-## Remaining production gates
+## Current release gates (November 2)
 
-1. Install the reviewed shared schema/grants through the existing authorized
-   migration path, after approval. Read back tenant, contract, tables and privileges.
+1. The reviewed shared schema/grants are installed on staging, production and
+   primary. The installation is dormant; retain the tenant, contract, table and
+   privilege readbacks as deployment evidence.
 2. Deploy the candidate guards with the mandatory shared backend to participating
    CRM writers. Verify separate Railway status/ownership writers and the QA and
    education bridges; do not change their workflow-specific rules or release holds.
@@ -59,8 +60,12 @@ and its 25 filter validations are retained as evidence, not publication scope.
 5. Verify manual calling/texting and workflow-resume controls in Close, including
    alternate views and pending call tasks. Queue exclusion alone does not certify
    this requirement. Leave the corresponding manifest entries pending until proven.
-6. Produce the final fresh pilot approval using stored rep permissions, current
-   lead evidence and complete deployment receipts. Tier routing and SMS rest remain off.
+6. Reconcile the current roster before preparing pilot approval. The November 2
+   Lakebase read found 22 active Lane 2 rows, of which 16 have stored approved
+   access; six remain unclassified, including two identity-reconciliation cases.
+7. Produce the final fresh pilot approval using only stored rep permissions,
+   current lead evidence and complete deployment receipts. Tier routing and SMS
+   rest remain off.
 
 Close documents that its power dialer can run from any saved Smart View, so the
 list inventory needs to cover every sales entry point. See
