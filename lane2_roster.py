@@ -15,7 +15,10 @@ LANE2_ROSTER = [
     {
         "rep": "Tony Parton", "user_id": "user_vw2xwmG2n6zLu3pjkuZHS7ZPNlg1dyImRUguk60YCbN", "offer": OFFER_PPA,
         "ready_for_leads": False,
-        "title_patterns": [r"ppa\s+growth\s*-?\s*next\s+steps"],
+        "title_patterns": [
+            r"ppa\s+growth\s*-?\s*next\s+steps",
+            r"tlg\s+momentum\s*-?\s*next\s+steps",
+        ],
     },
     {
         "rep": "Ashley Atencio", "user_id": "user_3VLmKDrh5OfMOmxRCBcxdYV6ltOhvXaB0tJSdV9LKS4", "offer": OFFER_VP,
@@ -271,6 +274,47 @@ LANE2_ROSTER = [
         "ready_for_leads": False,
         "title_patterns": [r"acquisition\s+ace\s+momentum\s*-?\s*next\s+steps"],
     },
+    # VP setter cohort starting 2026-11-02.
+    {
+        "rep": "Angel Rojo", "start_date": "2026-11-02",
+        "user_id": "user_RYUSwXoy5dCwwN1tIuMQV9ZyGvn8JqYORGI4l2QGLa5",
+        "offer": OFFER_VP, "rep_type": "full", "daily_dial_goal": 100,
+        "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+atlas\s*-?\s*next\s+steps"],
+    },
+    {
+        "rep": "Claude Shany Toussaint", "start_date": "2026-11-02",
+        "user_id": "", "offer": OFFER_VP, "rep_type": "full",
+        "daily_dial_goal": 100, "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+beacon\s*-?\s*next\s+steps"],
+    },
+    {
+        "rep": "Andrea Harris", "start_date": "2026-11-02",
+        "user_id": "user_K4Bd8ZXYjoeM8rDuezL8yCiF9936JoBWAKpJd2yt5w6",
+        "offer": OFFER_VP, "rep_type": "full", "daily_dial_goal": 100,
+        "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+nexus\s*-?\s*next\s+steps"],
+    },
+    {
+        "rep": "Reginald Barnwell", "start_date": "2026-11-02",
+        "user_id": "", "offer": OFFER_VP, "rep_type": "full",
+        "daily_dial_goal": 100, "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+trailblazer\s*-?\s*next\s+steps"],
+    },
+    {
+        "rep": "Helena Seitz", "start_date": "2026-11-02",
+        "user_id": "user_YcSjJALANlwwgpAFdu7DHbZMfpOB5wif2QuWfgy1xeg",
+        "offer": OFFER_VP, "rep_type": "full", "daily_dial_goal": 100,
+        "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+pathfinder\s*-?\s*next\s+steps"],
+    },
+    {
+        "rep": "Ariadna Rufrancos", "start_date": "2026-11-02",
+        "user_id": "user_xNKHgse6l4Vild8jtW9eJZNSDxJ2A8hANLnCRJ6Cjyb",
+        "offer": OFFER_VP, "rep_type": "full", "daily_dial_goal": 100,
+        "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+frontier\s*-?\s*next\s+steps"],
+    },
 ]
 
 # Owner Team role is still distinct from offer and certification. Keep its role
@@ -279,6 +323,8 @@ OWNER_GROUPS = {
     "SETTERS": {
         "William Nowak", "Spencer Reynolds", "Sam Norris", "Wes Wan",
         "Sreeteja Pampati", "Bella Gregori", "Antonio Garcia",
+        "Angel Rojo", "Claude Shany Toussaint", "Andrea Harris",
+        "Reginald Barnwell", "Helena Seitz", "Ariadna Rufrancos",
     },
     "HYBRID_SETTERS": {"Ariella Irvine"},
     "SCRAPERS": {
@@ -319,7 +365,14 @@ SCRAPER_TITLE_MAP = [
 MEETING_COUNT_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+apex\s*-?\s*next\s+steps", re.IGNORECASE), "Adam Linn"),
     (re.compile(r"vendingpren[eu]+rs?\s+venture\s*-?\s*next\s+steps", re.IGNORECASE), "Rosita Purwaningsih"),
+    (re.compile(r"vendingpren[eu]+rs?\s+atlas\s*-?\s*next\s+steps", re.IGNORECASE), "Angel Rojo"),
+    (re.compile(r"vendingpren[eu]+rs?\s+beacon\s*-?\s*next\s+steps", re.IGNORECASE), "Claude Shany Toussaint"),
+    (re.compile(r"vendingpren[eu]+rs?\s+nexus\s*-?\s*next\s+steps", re.IGNORECASE), "Andrea Harris"),
+    (re.compile(r"vendingpren[eu]+rs?\s+trailblazer\s*-?\s*next\s+steps", re.IGNORECASE), "Reginald Barnwell"),
+    (re.compile(r"vendingpren[eu]+rs?\s+pathfinder\s*-?\s*next\s+steps", re.IGNORECASE), "Helena Seitz"),
+    (re.compile(r"vendingpren[eu]+rs?\s+frontier\s*-?\s*next\s+steps", re.IGNORECASE), "Ariadna Rufrancos"),
     (re.compile(r"ppa\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Tony Parton"),
+    (re.compile(r"tlg\s+momentum\s*-?\s*next\s+steps", re.IGNORECASE), "Tony Parton"),
     (re.compile(r"vendingpren[eu]+rs?\s+enterprise\s*-?\s*next\s+steps", re.IGNORECASE), "Ashley Atencio"),
     (re.compile(r"vendingpren[eu]+rs?\s+velocity\s*-?\s*next\s+steps", re.IGNORECASE), "Ibraheem Khan"),
     (re.compile(r"vendingpren[eu]+rs?\s+pinnacle\s*-\s*next\s+steps", re.IGNORECASE), "Monde"),
@@ -370,6 +423,12 @@ MEETING_COUNT_TITLE_MAP = [
 MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+apex\s*-?\s*next\s+steps", re.IGNORECASE), "Adam Linn"),
     (re.compile(r"vendingpren[eu]+rs?\s+venture\s*-?\s*next\s+steps", re.IGNORECASE), "Rosita Purwaningsih"),
+    (re.compile(r"vendingpren[eu]+rs?\s+atlas\s*-?\s*next\s+steps", re.IGNORECASE), "Angel Rojo"),
+    (re.compile(r"vendingpren[eu]+rs?\s+beacon\s*-?\s*next\s+steps", re.IGNORECASE), "Claude Shany Toussaint"),
+    (re.compile(r"vendingpren[eu]+rs?\s+nexus\s*-?\s*next\s+steps", re.IGNORECASE), "Andrea Harris"),
+    (re.compile(r"vendingpren[eu]+rs?\s+trailblazer\s*-?\s*next\s+steps", re.IGNORECASE), "Reginald Barnwell"),
+    (re.compile(r"vendingpren[eu]+rs?\s+pathfinder\s*-?\s*next\s+steps", re.IGNORECASE), "Helena Seitz"),
+    (re.compile(r"vendingpren[eu]+rs?\s+frontier\s*-?\s*next\s+steps", re.IGNORECASE), "Ariadna Rufrancos"),
     (re.compile(r"acquisition\s+ace\s+launch\s*-?\s*next\s+steps", re.IGNORECASE), "Eduardo Santos"),
     (re.compile(r"acquisition\s+ace\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Sam Norris"),
     (re.compile(r"acquisition\s+ace\s+thrive\s*-?\s*next\s+steps", re.IGNORECASE), "Wes Wan"),
@@ -381,6 +440,7 @@ MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
     (re.compile(r"vendingpren[eu]+rs?\s+visionary\s*-?\s*next\s+steps", re.IGNORECASE), "Tara Hall"),
     (re.compile(r"vendingpren[eu]+rs?\s+legacy\s*-?\s*next\s+steps", re.IGNORECASE), "Antonio Garcia"),
     (re.compile(r"ppa\s+growth\s*-?\s*next\s+steps", re.IGNORECASE), "Tony Parton"),
+    (re.compile(r"tlg\s+momentum\s*-?\s*next\s+steps", re.IGNORECASE), "Tony Parton"),
     (re.compile(r"vendingpren[eu]+rs?\s+enterprise\s*-?\s*next\s+steps", re.IGNORECASE), "Ashley Atencio"),
     (re.compile(r"vendingpren[eu]+rs?\s+velocity\s*-?\s*next\s+steps", re.IGNORECASE), "Ibraheem Khan"),
     (re.compile(r"vendingpren[eu]+rs?\s+navigator\s*-\s*next\s+steps", re.IGNORECASE), "Naria Torres"),
