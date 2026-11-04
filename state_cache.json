@@ -129616,14 +129616,13 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-11-04 03:44:16 UTC",
+  "saved_at": "2026-11-04 04:13:59 UTC",
   "count": 10913
 }
