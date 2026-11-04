@@ -129549,8 +129549,73 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_6nI2aN699yic2Zjl8gPH7Sf8CaWqYUKtJmyA54jivSH": {
+      "date": "2026-11-05",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_H9EGFpMO0BH1rLBKq3RAe3KvRYOKByZQeEzAFs4Uo9O": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_SLIdWQ4t3hAf6qdYxTeFKg1tQ0Z9xIkdVDMkLjv0mrl": {
+      "date": "2026-11-05",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_RSk6vUlPBZKdB2vJgGRDkhVtdRWFsW9pVnzz7L52gf0": {
+      "date": "2026-11-05",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_njOX6qItzmYxRB8kjlQsMLi9TeGGyi1plXXwZEfJbR1": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Internal Webinar",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-11-04 02:42:54 UTC",
-  "count": 10907
+  "saved_at": "2026-11-04 03:14:30 UTC",
+  "count": 10912
 }
