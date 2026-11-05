@@ -129648,7 +129648,7 @@
       "quick_disc": null
     },
     "lead_ZQLErlioFhRDckUkxoPFu3k9fptL4hEuzezH9Tf0Mu0": {
-      "date": "2026-11-06",
+      "date": null,
       "call_type": "Closer",
       "scraper": null,
       "post_webinar": null,
@@ -129661,6 +129661,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-11-05 01:44:30 UTC",
+  "saved_at": "2026-11-05 02:16:03 UTC",
   "count": 10916
 }
