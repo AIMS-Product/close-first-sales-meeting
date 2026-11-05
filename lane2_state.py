@@ -348,8 +348,13 @@ def created_between(start, end):
 def add_condition(query, extra):
     """Return a copy of `query` with one more ANDed condition."""
     q = json.loads(json.dumps(query))
-    q["queries"][1]["queries"].append(extra)
-    return q
+    if isinstance(q, dict) and q.get("type") == "and" and isinstance(q.get("queries"), list):
+        # Search() adds its own outer AND for the no-sales hold guard. Add
+        # partition predicates at the root so both the query and that guard
+        # remain required, regardless of how deeply the original query nests.
+        q["queries"].append(extra)
+        return q
+    return {"negate": False, "type": "and", "queries": [q, extra]}
 
 def has_incoming(kind, days):
     """Lead received an inbound sms / email / call in the last N days."""

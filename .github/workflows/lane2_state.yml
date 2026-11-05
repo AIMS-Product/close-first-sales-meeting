@@ -73,6 +73,7 @@ jobs:
           if [ -n "${{ inputs.max_writes }}" ]; then ARGS="$ARGS --max-writes ${{ inputs.max_writes }}"; fi
           if [ "${{ inputs.qa_triage_terminal_only }}" = "true" ]; then ARGS="$ARGS --qa-triage-terminal-only"; fi
           echo "Running: lane2_state.py $ARGS"
+          set -o pipefail
           python lane2_state.py $ARGS | tee report.txt
 
       - name: Publish report
