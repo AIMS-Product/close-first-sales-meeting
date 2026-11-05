@@ -7,6 +7,7 @@ Native Meeting Outcome is attendance evidence; calendar status alone is not.
 """
 import argparse
 import json
+import requests
 from collections import Counter
 from datetime import datetime, timezone
 
@@ -31,6 +32,15 @@ def custom(lead, field):
     return lead.get(f"custom.{field}", (lead.get("custom") or {}).get(field))
 
 
+def has_release_marker(batch):
+    if not isinstance(batch, str):
+        return False
+    markers = [part.strip() for part in batch.split("|")
+               if part.strip().startswith("Released - ")
+               and part.strip()[len("Released - "):].strip()]
+    return len(markers) == 1
+
+
 def instant(value):
     if not isinstance(value, str):
         raise ValueError("meeting_timestamp_missing")
@@ -47,7 +57,7 @@ def handoff_plan(snapshot, *, now, terminal_statuses, suppressed_statuses):
     batch = custom(lead, BATCH_FIELD)
     if lead.get("organization_id") != ORGANIZATION_ID:
         return held("organization_mismatch")
-    if custom(lead, OWNER_FIELD) != DOM_ID or not isinstance(batch, str) or not batch.startswith("Released - "):
+    if custom(lead, OWNER_FIELD) != DOM_ID or not has_release_marker(batch):
         return held("not_a_staged_release")
     if "STH1" in batch or "STL1" in batch:
         return held("workflow_hold_or_separate_qa_episode")
@@ -109,8 +119,7 @@ class HandoffReader:
                                       limit=self.lane2.SKIP_CAP)
         if len(rows) >= self.lane2.SKIP_CAP:
             raise RuntimeError("staged_release_search_incomplete")
-        return [row for row in rows if isinstance(custom(row, BATCH_FIELD), str)
-                and custom(row, BATCH_FIELD).startswith("Released - ")]
+        return [row for row in rows if has_release_marker(custom(row, BATCH_FIELD))]
 
     def related(self, path, lead_id, fields):
         rows, seen = [], set()
@@ -172,29 +181,47 @@ def run(reader, *, apply=False, max_writes=None):
     candidates = reader.candidates()
     if candidates:
         reader.preflight()
-    counts, written = Counter(), 0
+    counts, verified_destinations, written = Counter(), Counter(), 0
+    def hold_read(error):
+        reason = str(error)
+        if not reason or any(character not in "abcdefghijklmnopqrstuvwxyz_" for character in reason):
+            reason = "handoff_read_failure"
+        counts["held"] += 1
+        counts["held_" + reason] += 1
     for lead in candidates:
         lead_id = lead["id"]
-        snapshot = reader.snapshot(lead_id)
-        plan = handoff_plan(snapshot, now=datetime.now(timezone.utc),
-                            terminal_statuses=reader.lane2.QA_TRIAGE_RELEASE_STATUSES,
-                            suppressed_statuses=reader.lane2.SUPPRESS_STATUSES)
+        try:
+            snapshot = reader.snapshot(lead_id)
+            plan = handoff_plan(snapshot, now=datetime.now(timezone.utc),
+                                terminal_statuses=reader.lane2.QA_TRIAGE_RELEASE_STATUSES,
+                                suppressed_statuses=reader.lane2.SUPPRESS_STATUSES)
+        except (RuntimeError, requests.RequestException) as error:
+            hold_read(error)
+            continue
         counts[plan["destination"]] += 1
         if not plan["changes"]:
             counts["held_" + plan["reason"]] += 1
             continue
         if apply and (max_writes is None or written < max_writes):
-            fresh = reader.snapshot(lead_id)
-            fresh_plan = handoff_plan(fresh, now=datetime.now(timezone.utc),
-                                      terminal_statuses=reader.lane2.QA_TRIAGE_RELEASE_STATUSES,
-                                      suppressed_statuses=reader.lane2.SUPPRESS_STATUSES)
+            try:
+                fresh = reader.snapshot(lead_id)
+                fresh_plan = handoff_plan(fresh, now=datetime.now(timezone.utc),
+                                          terminal_statuses=reader.lane2.QA_TRIAGE_RELEASE_STATUSES,
+                                          suppressed_statuses=reader.lane2.SUPPRESS_STATUSES)
+            except (RuntimeError, requests.RequestException) as error:
+                hold_read(error)
+                continue
             if fresh != snapshot or fresh_plan != plan:
                 counts["changed_before_write"] += 1
                 continue
+            # Any attempted PUT or failed readback remains fatal. Never retry an
+            # unknown write outcome as though it were a harmless read hold.
             reader.write_once(lead_id, plan["changes"])
             written += 1
+            verified_destinations[plan["destination"]] += 1
     result = {"mode": "apply" if apply else "dry_run", "staged_candidates": len(candidates),
-              "destinations": dict(counts), "verified_writes": written}
+              "destinations": dict(counts), "verified_writes": written,
+              "verified_destinations": dict(verified_destinations)}
     print(json.dumps(result, sort_keys=True))
     return result
 
