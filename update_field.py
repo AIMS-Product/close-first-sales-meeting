@@ -725,6 +725,11 @@ def fetch_leads_with_first_date() -> dict:
 # Write fields to a single lead
 # ─────────────────────────────────────────────
 
+def normalized_yes_flag(value):
+    """Keep the existing cache's YES marker while accepting Close's Yes label."""
+    return 'YES' if isinstance(value, str) and value.casefold() == 'yes' else value
+
+
 def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users_by_name: dict) -> dict | None:
     """
     Compares current vs desired state for one lead and writes only what changed.
@@ -767,7 +772,7 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
         payload[FIELD_CALLTYPE_KEY] = new_type
 
     # ── Scraper Funnel field ────────────────────────────────────────────────
-    cur_scraper = current.get("scraper")
+    cur_scraper = normalized_yes_flag(current.get("scraper"))
     new_scraper = desired.get("scraper")
 
     # Never clear once set to YES
@@ -775,10 +780,10 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
         new_scraper = "YES"
 
     if cur_scraper != new_scraper:
-        payload[FIELD_SCRAPER_KEY] = new_scraper
+        payload[FIELD_SCRAPER_KEY] = "Yes" if new_scraper == "YES" else new_scraper
 
     # ── Post-Webinar Sales Booked field ─────────────────────────────────────
-    cur_postwebinar = current.get("post_webinar")
+    cur_postwebinar = normalized_yes_flag(current.get("post_webinar"))
     new_postwebinar = desired.get("post_webinar")
 
     # Never clear once set to YES
@@ -786,7 +791,7 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
         new_postwebinar = "YES"
 
     if cur_postwebinar != new_postwebinar:
-        payload[FIELD_POSTWEBINAR_KEY] = new_postwebinar
+        payload[FIELD_POSTWEBINAR_KEY] = "Yes" if new_postwebinar == "YES" else new_postwebinar
 
     # ── Reactivation - Setter Name + shadow User fields ──────────────────────────
     cur_reactivation       = current.get("reactivation")
