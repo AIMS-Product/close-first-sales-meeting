@@ -37,6 +37,34 @@ def meeting(lead_id, title, starts_at, status="completed"):
 
 
 class LatestSalesCallUpdaterTests(unittest.TestCase):
+    def test_existing_close_yes_flags_do_not_repeat_writes(self):
+        with patch.object(updater, 'api_put') as write:
+            result = updater.write_lead('lead_fixture', 'Fixture',
+                {'scraper': 'Yes', 'post_webinar': 'Yes'},
+                {'scraper': 'YES', 'post_webinar': 'YES'}, {})
+        write.assert_not_called()
+        self.assertIsNone(result)
+
+    def test_existing_yes_flags_cannot_be_cleared_by_a_missing_meeting(self):
+        with patch.object(updater, 'api_put') as write:
+            result = updater.write_lead('lead_fixture', 'Fixture',
+                {'scraper': 'Yes', 'post_webinar': 'Yes'}, {}, {})
+        write.assert_not_called()
+        self.assertIsNone(result)
+
+    def test_new_flags_use_close_labels_and_preserve_cache_markers(self):
+        with patch.object(updater, 'api_put') as write:
+            result = updater.write_lead('lead_fixture', 'Fixture', {},
+                {'scraper': 'YES', 'post_webinar': 'YES'}, {})
+        self.assertEqual(write.call_args.args[1], {
+            updater.FIELD_SCRAPER_KEY: 'Yes', updater.FIELD_POSTWEBINAR_KEY: 'Yes'})
+        self.assertEqual((result['scraper'], result['post_webinar']), ('YES', 'YES'))
+
+    def test_only_yes_labels_are_normalized(self):
+        self.assertEqual(updater.normalized_yes_flag('yEs'), 'YES')
+        for value in ('No', None, 'unrecognized'):
+            self.assertEqual(updater.normalized_yes_flag(value), value)
+
     def test_unavailable_reactivation_choice_keeps_sales_call_dates(self):
         desired = updater.calculate_desired_state([
             meeting("lead_a", "TLG Vanguard - Next Steps", "2026-10-07T18:00:00Z"),

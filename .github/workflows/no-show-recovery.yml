@@ -51,8 +51,8 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install -r requirements-status-maintenance.txt
 
-      - name: Verify shared write guards and recovery choices
-        run: python -m unittest test_shared_hold_guards test_sales_dispatch_holds test_no_show_choice_values -q
+      - name: Verify shared write guards and field choices
+        run: python -m unittest test_shared_hold_guards test_sales_dispatch_holds test_no_show_choice_values test_update_field_latest -q
 
       - name: Reconcile no-show recovery
         env:
