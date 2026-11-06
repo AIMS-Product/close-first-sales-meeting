@@ -5487,14 +5487,15 @@
     "lead_J00d0qo4nixe9OlcYiPrSev0zPulYtFAXXV4ngvJiIq": {
       "date": "2025-11-26",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_DW7E77Vkc7Md0Tiomy8YwrlrlpT9YzoPTnld7leDwMC": {
       "date": "2026-03-02",
@@ -15837,12 +15838,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_9z1CAYuzBhcfFgzxSe29bZdMOEI8OaeccgfMh6rdH9Z": {
       "date": "2026-02-16",
@@ -22026,12 +22027,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_O7KDeeSOKwVIU4hKAbMZ2AzfRRpOktno7a7m8k1GjiY": {
       "date": null,
@@ -22283,12 +22284,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_QFTyXLYft6kdiyNhmCjKVZlFmA2amrdpcN0OxVFctvY": {
       "date": null,
@@ -22716,13 +22717,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
+      "reactivation": null,
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null,
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+      "reactivation_user": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e"
     },
     "lead_3hyidBzFUrRclD8PnztduZIIrOSGi3k1J2hCbUhwzOc": {
       "date": "2026-01-26",
@@ -24246,12 +24247,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
     },
     "lead_clJSISFriakqOjeQXZfChXNxqTqoyQ6MmgFoJQmRiJu": {
       "date": "2026-01-30",
@@ -24983,12 +24984,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "YouTube",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_VI8oyduzGH9f8l7kCwpoB8S8Z8ldjFh1hyuEPAI5hkA": {
       "date": "2025-12-04",
@@ -28916,12 +28917,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_dLUdQoy8T1Z2wsNqP3benLDFqzjh5iFsGFVbY8ZFNr7": {
       "date": null,
@@ -33622,12 +33623,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_59QD2ynAfM7E9o2EoEME3coXOYjsE1CzxiYUtjg3Oz2": {
       "date": "2026-01-19",
@@ -33635,12 +33636,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_RSRZcB0zc3yIydd9Huj3HFmpO8EoCfe43at6lrK4TxP": {
       "date": "2026-08-25",
@@ -35464,14 +35465,15 @@
     "lead_1TLSfcEWl35UtX7ThyoPzzThrZwkUCNWjfSflTY5Ahj": {
       "date": "2025-12-10",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_9HoQMRaKxbMDvAzzALLR5Vis30T51RDBhKL6FX2yeiu": {
       "date": "2025-12-09",
@@ -37974,12 +37976,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_FjbAXQeYT7Cm8Hle9pesZX9nJUNbWQ2B63A6VAwYnMx": {
       "date": null,
@@ -39731,12 +39733,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Jacob Herbig",
-      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_p2y1gLbIgUb9xognGTvuXoRpzp4Ro8QkO20ltgF1CvJ"
     },
     "lead_xlwjEdwTwyU9SNqogkcDY5WiIH8pk6eBRV2ysBaJXqT": {
       "date": "2025-12-29",
@@ -48213,12 +48215,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_9JOWHtgQmobTrEQ5PAAzb8bxT9YooPjq6Yl09Hvt7rz": {
       "date": "2025-10-01",
@@ -51188,12 +51190,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_0L6PPAsntqkC68xcKqkTJlZwojMYLJxrgAOYUBZ2klj": {
       "date": "2026-03-26",
@@ -51495,9 +51497,8 @@
       "scraper": null,
       "post_webinar": "YES",
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -51897,9 +51898,8 @@
       "scraper": null,
       "post_webinar": "YES",
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -52267,12 +52267,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_8ZoAoz70ATYdqykcMzN27bqSo4q6QM1L4c2wjItB5M5": {
       "date": "2026-03-26",
@@ -52280,12 +52280,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_fg0WAEAiV2DR767mTZjqRBGta7jBqMf2414Qa2hCI6w": {
       "date": "2026-03-10",
@@ -52293,12 +52293,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_C9ghUY4BGTyaTMqp0Fywg2g3ixOgdcJwuhcpSVzJ75q": {
       "date": "2026-03-27",
@@ -52306,12 +52306,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_D5Z1TC6jfEl0Q2e4kE3vJWSeb83AifqHNqctLgAZ6XK": {
       "date": "2026-03-27",
@@ -52319,12 +52319,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_WquIaqx00mmzjg0z1ULREH1tWpD8N4q8vwXAH6Vv0RT": {
       "date": "2026-03-26",
@@ -52332,12 +52332,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_AFNVfZNkvNSJm8JUk3pn2DrC8Nel1KWwR2NwpRIcMA7": {
       "date": "2026-03-23",
@@ -52358,12 +52358,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_tqgSKXVoMeODCoCnZoOPGecwdwey1Sk4Vl5MaFCG55H": {
       "date": "2026-03-23",
@@ -52371,12 +52371,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_SZEpcd3VorU8TBQ6zOK6wGwvxiuhux6ya6gjFOkXpUx": {
       "date": "2026-03-26",
@@ -52384,12 +52384,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_NedFNrWQA4k0PWRA7lMk5vJUc192jPRnLDm5vxLGPfK": {
       "date": "2026-03-23",
@@ -52397,12 +52397,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_LY4E57NXddysAyuEjLKo69WWVJMDU4Qs8ieQ3COA4np": {
       "date": "2026-03-26",
@@ -52410,12 +52410,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_rldkjM48E2f9q4EgF8HcyMaPRluLrtbDXi05SdVxUYT": {
       "date": "2026-03-24",
@@ -52430,12 +52430,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_C50F8gCns68Ix6yjN3DCMsF5c3sIxTKMlhaxokCRGOP": {
       "date": "2026-03-24",
@@ -52443,12 +52443,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_20UxyqAGHlIUFYlkDwWGc6fGApaH5mXMg4qO0Ol0kMy": {
       "date": "2026-03-23",
@@ -52456,12 +52456,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_lnRZtJlxAyK0V6MFLYniWuc4PAHpJqrdB92ebvPRp1M": {
       "date": "2026-03-20",
@@ -52482,12 +52482,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_RYgu51fOLtCYZ7IopvRvl2nEeloPZb9H4zrIlefzBxz": {
       "date": "2026-03-19",
@@ -52495,12 +52495,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_9k8phMjGFcMteg25n93oCH0exKA9NnOK3ngu9Fwpl9r": {
       "date": "2026-03-18",
@@ -52508,12 +52508,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_XCPEoqWP2otH1FBFlDSwsupLuD70n1glGEyYLvrddiT": {
       "date": "2026-03-20",
@@ -52521,12 +52521,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_0HKfKyaaMUfWdt5mnuapKHw7nA3S4Ve52rMt0MemIdV": {
       "date": "2026-03-20",
@@ -52534,12 +52534,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_0xQP2dQFxkcAFfPniHFh8zuQGJP6xEzTD3z5JDd890p": {
       "date": "2026-03-20",
@@ -52547,12 +52547,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_PeFj8E2k9p3DYbAqhJoQOR6vTmV4XQmKzqr5YjTF7Qd": {
       "date": "2026-03-19",
@@ -52560,12 +52560,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_GRYQRxRyax1R2rOYLCdYb9MgyDJZo17EwnMWVknRcY7": {
       "date": "2026-03-18",
@@ -52573,12 +52573,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_kEZ4ByLvYnk1wlgVBkMC9j9C26vxQ3WGyNvcTe7KIkM": {
       "date": "2026-01-02",
@@ -52593,12 +52593,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_WRYCyxvLhihvpVUTwFJn4ezIGUrYz9pppFps8tPF7cd": {
       "date": "2026-03-16",
@@ -52614,12 +52614,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_Pw28I4Dp5yxKydyErB4hh64aUYgbIfoHwIvb4N70ul9": {
       "date": "2026-03-07",
@@ -52627,12 +52627,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_atLZTgWlOsNGqjRRFpsrwISFWgQqFvmow9pBfByTNuD": {
       "date": "2026-03-02",
@@ -52640,12 +52640,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_Cn1e9XtJU4N89VIOBZZHlxZajqilWfjxx8K4CFzImTp": {
       "date": "2026-03-03",
@@ -52653,12 +52653,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_ILnCBe3mcaH9tk4PjUptr04A6QfCNfqnW5trTP6fYSQ": {
       "date": "2026-03-12",
@@ -52666,12 +52666,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_q9uXsF23OQ41mQRZVikJB82akCFSSU7F6diyr3ys0L0": {
       "date": "2026-03-12",
@@ -52679,12 +52679,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_sUZpJ4v32Zth8RPjeVj4stg7fjqY3Huc5JbwwwzilIo": {
       "date": "2026-03-11",
@@ -52692,12 +52692,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_bKI35ecwK5VUYOPoctPIjUit3EHjAuc4xbcVz55pvtw": {
       "date": "2026-03-12",
@@ -52705,12 +52705,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_nuY4q9cZ0WxsLhKpO300A4hyzAReQn5R0mQP0ivzH3d": {
       "date": "2026-03-11",
@@ -52718,12 +52718,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_30oFuAvf9vTa1jzcN1xnvOMKi2qPduiZ3ytqG06EBjI": {
       "date": "2026-03-07",
@@ -52731,12 +52731,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_EEZgsP0msQ5pBzF0IeyDhaMf3NmAwTYaZHJmVIgcmod": {
       "date": "2026-03-09",
@@ -52744,12 +52744,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_JdIHH8fydSHzTWaMutGXNkmo5wzKa7wbI5y13cZExDS": {
       "date": "2026-03-06",
@@ -52757,12 +52757,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_P0NXDXye1gJZQAf6Y94eSFXazRiU3QrRRA0oT8bOgQ1": {
       "date": "2026-03-09",
@@ -52770,12 +52770,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_nL0npF6MHgjOTwlJAhQnh535Kwsp2Q6io4tmQaHVmpR": {
       "date": "2026-03-06",
@@ -52783,12 +52783,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_gmVEz4xAjENI0yn2S3MUfL0h1cDf8xlhYiyRSLlkMfT": {
       "date": "2026-03-06",
@@ -52796,12 +52796,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_M1sb0ZVGyQKeIpjWn8V0BPQu5fAljv0ZQ7oPJNJ8dpK": {
       "date": "2026-03-05",
@@ -52809,12 +52809,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_FQvK2INENkMxnb1e5BZ4PkP4xeew5ZzAGDMPJK9x6GM": {
       "date": "2026-03-04",
@@ -52822,12 +52822,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Vince Bartolini",
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_DE3zVj0DgRsabAsw24NzHeSDTyTGgVoKgP5a7eyCNhR": {
       "date": "2026-03-05",
@@ -52835,12 +52835,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_q09kkhdzZCkMm4QCNBqAG9RlrGlSsXdngi9h1PRakXb": {
       "date": "2026-03-02",
@@ -52848,12 +52848,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_49dVfKnoAxjl4XNswqQxDM0qrrxgaIbgEAxMvyLcVXV": {
       "date": "2026-02-26",
@@ -52861,12 +52861,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_p2STtIghGEEkA1PpDBAYnDevILxHvP94hPSrhDcnmnH": {
       "date": "2026-03-03",
@@ -52874,12 +52874,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_HvF8wdvHBD8ikGs6MsNylm1TR0AnzUWhsod8IJ7fXfg": {
       "date": "2026-03-02",
@@ -52887,12 +52887,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_fktuNBkdF7IZ54On4D0nqeTYWiJhQmgUhmVZBEKexKh": {
       "date": "2026-03-02",
@@ -52900,12 +52900,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_xz5zLzSWxdl23D1nWix8W1fMBIPquyePO8kllp3MuNA": {
       "date": "2026-02-27",
@@ -52913,12 +52913,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_WqD60lkap99Qh9pmvrDhoBJeU15upIYCEoB3Q6hUUfz": {
       "date": "2026-03-02",
@@ -52926,12 +52926,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_f3xUrFFJPkfuJd6QQT8TuFJwnMxELUZJNCsiSobyk92": {
       "date": "2026-02-27",
@@ -52939,12 +52939,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_PCYvQAv3WC7uu3GTf1B8uZm8Fw0hfWBO4BbmyvSuZ7S": {
       "date": "2026-03-02",
@@ -52952,12 +52952,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_7CVhrcDF1zB13khCMdTAyWKErZNyoxN6J9ncgpjwM7I": {
       "date": "2026-03-02",
@@ -52965,12 +52965,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_94iCGFZtr92dtK3qTZZ2Wm5zKQped4boXPmnNgdczjw": {
       "date": "2026-02-27",
@@ -52978,12 +52978,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_ZLtGxai0fs8cTZVlTRf2hBaRI674vSNds2bAhH8jhbj": {
       "date": "2026-02-25",
@@ -52991,12 +52991,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_wroSHhjftdFYeVijazfvyaxhtmDnY287jw97Ur4bI2T": {
       "date": "2026-02-27",
@@ -53004,12 +53004,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_vGLangQL3Rp2E6dbeXlSknIAV1CG9oFEas44KIm8RlX": {
       "date": "2026-02-27",
@@ -53017,12 +53017,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_upgt1veNHK4IZJkEKM5QhEjLjP8FbSuitUUMDtL3359": {
       "date": "2026-02-20",
@@ -53030,12 +53030,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_iTyrufjHDMlsqVPELT8LCMcnVwm7XpY128XVCuUxRh6": {
       "date": "2026-02-21",
@@ -53043,12 +53043,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_qTnDlC5t3EzdXILxzPPF2LsjVvG0kBk16Sqpcs4R33I": {
       "date": "2026-02-17",
@@ -53056,12 +53056,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_mVFIQc8aR0u4FRliHd7wTduDOzHN23JWDK3jVn6Cd6F": {
       "date": "2026-02-17",
@@ -53069,12 +53069,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_yXzoFO8iwHWtJM61yXCHhaxXotL11ek6WmcMITLFqW0": {
       "date": "2026-02-21",
@@ -53082,12 +53082,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_D8du61VZjZmKIHMfUiNySRU01HmwdDiUJrJU3HrjnL2": {
       "date": "2026-02-18",
@@ -53095,12 +53095,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_iRnWIabr9jGegl07h4W03bDY7knFvzzWLtKqMKPGodf": {
       "date": "2026-02-18",
@@ -53108,12 +53108,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_OZlYGiLfvyHDnM4ieBHUBl7cr94KKeW7ZGcwysGrqi8": {
       "date": "2026-02-13",
@@ -53121,12 +53121,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_LyaylUAWNPVPvVwlWwCdD3Z4FhOS2XfZGZwQTw8ZeiG": {
       "date": "2026-02-13",
@@ -53134,12 +53134,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_RwaOiut5NiOh7rh0Zv6gbTYF44RGKCP1yVI17GuyJTb": {
       "date": "2026-02-12",
@@ -53154,12 +53154,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_aKDfYy8fmDMzBVhWkQm7An6n8nLfm06dGkKGHKoeFkn": {
       "date": "2026-02-10",
@@ -53167,12 +53167,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_5FO3IdDbZ8HczUrd7FZ8kaIvpsIE7WdAdcnKJBVTNlT": {
       "date": "2026-02-06",
@@ -53180,12 +53180,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_01F04xk8jM4b1f3eo3mTLPm0cCg0I1vfe6nzkddQzcG": {
       "date": "2026-02-09",
@@ -53193,12 +53193,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_BLsDDNJfWHnM0t3Qb6LJ1jhEvfXZqTlb4iFnGeLQVxl": {
       "date": "2026-02-06",
@@ -53206,12 +53206,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_xpuAc3pFNHZIdtUgnYLtaMaNeYVgNHvJK9IJo01v85c": {
       "date": "2026-02-10",
@@ -53219,12 +53219,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_wXKWcSWa89t2mcMu1kUyD8dmKTMzHxfBvqs13f3z3XH": {
       "date": "2026-02-10",
@@ -53232,12 +53232,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_XiAG2Lb07r2SFNwlog9Czl07pCcM6BFBviwXVqV6xFB": {
       "date": "2026-02-10",
@@ -53245,12 +53245,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_FGqZM3xgbGoRKUuOCbV0sYFHI0UFsfH4VLWDgpWhBrQ": {
       "date": "2026-02-09",
@@ -53258,12 +53258,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_uV5pVWz7UkvJGrV9YRBUqTA23Uq1aWze1qT2Gx91Nj6": {
       "date": "2026-01-16",
@@ -53271,12 +53271,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_3aehjPhfcRIHS7oVdgUqB3fK4XsDT6MsszqdDq2K4Zw": {
       "date": "2026-01-16",
@@ -53284,12 +53284,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_cQQjw6G0LDQdxLIRO4vow04K0DN4yT21KHSErk2a5bq": {
       "date": "2025-12-18",
@@ -53297,12 +53297,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_6wOdWSXFVJaHgezMeG80hfaFiZseab5AlS22QGJixaE": {
       "date": "2026-02-03",
@@ -53310,12 +53310,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_Q2IpjtKOtPJAqcLNeDVSaIljXX5FFFtIUjDIAWYXNC2": {
       "date": "2026-01-23",
@@ -53323,12 +53323,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_60Xaw5lJ1W5GdbkGRqh0VFwGQQezhpU4V6lRWRefzXp": {
       "date": "2025-12-15",
@@ -53336,12 +53336,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_dODqmbefhjvSdmniRZGA6AxE3bUbiDzyTKwAkXPMAcN": {
       "date": "2025-12-15",
@@ -53349,12 +53349,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_T6OTxvmM0bJ85Jda9z5b6kjvtg8m7uqjzlepIVBMWw8": {
       "date": "2026-01-21",
@@ -53362,12 +53362,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_seb5sMWzcaMn9cTgLy4OTQL65EIywwzil7qo91pl1fQ": {
       "date": "2026-01-13",
@@ -53375,12 +53375,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_yM3TL2DOIHlzwbG6ZXKSuvedfvJZXGf0rgGRHiecUFg": {
       "date": "2026-01-21",
@@ -53388,12 +53388,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_teDEyn9ZDS5giwqz2JFalr58jMtLtiRNkgSNTHMH0j4": {
       "date": "2026-01-07",
@@ -53401,12 +53401,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_eEmVD43PoTrTrxOTApB9cv2u1dMA02jv7NRNKgQEkXe": {
       "date": "2026-01-08",
@@ -53414,12 +53414,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_1lTVD6cm2L17JYVFdy2wvL91KeMYOklzxnnlBfHn5TL": {
       "date": "2026-01-06",
@@ -53427,12 +53427,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_0o8yFMji3kB8qC3PwGqPlTNheBK9Z9RDf0S6grOzEwi": {
       "date": "2026-01-02",
@@ -53440,12 +53440,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_Y3jX98icyrSmM7u4UiPLAYvMIwpNvGmgErCEJOUf4MP": {
       "date": "2026-01-07",
@@ -53453,12 +53453,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_E42hLi4tdGDjbZ0PetgVQI6lxQMN5DEINdnqghNNljf": {
       "date": "2026-01-02",
@@ -53466,12 +53466,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_dxnonQcsQLxA5iHAM8jbjjTvCocqkgc7uIDqKRHP5IR": {
       "date": "2026-01-02",
@@ -53479,12 +53479,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_LR63cS9SAUCvpmrvRwdDBY36hF2GgvhZx2iUeBmDfHo": {
       "date": "2026-01-26",
@@ -53492,12 +53492,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_lkzFueyg3SA7MrF1Q3V7ofwmK5U4yj4rshMLHV6H9Nw": {
       "date": "2026-01-21",
@@ -53505,12 +53505,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_bcLnVSm70robPkBSedXpitoNs90cg1fppy2rJASgeM7": {
       "date": "2026-01-19",
@@ -53518,12 +53518,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_W1my151wL9VEv0PtYuGkM5jhhI99J5pejLbj6N8UzUC": {
       "date": "2026-01-20",
@@ -53531,12 +53531,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_cHamvlTLfgWOtTNbqjOJtnxPoTsaMSktjfO8oFXR7po": {
       "date": "2025-12-15",
@@ -53544,12 +53544,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_a0HjTcQgWRTyLKKSAFb0oXgRm4MRg0dMrzhGzHjIN5Z": {
       "date": "2025-12-18",
@@ -53557,12 +53557,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_R6GLDvU3uVbHU1qGe49Qwc7lfzCIPrzzaH6SmI0vBiF": {
       "date": "2026-01-22",
@@ -53570,12 +53570,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_MAsyxyA9WAh6EDJDSqaxDEpLO7HIZ0CMW4Vz8jAuqST": {
       "date": "2026-01-22",
@@ -53583,12 +53583,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_WA7C40lFt8Aqm3lCKm5AdoWofDwgBUUVQV0K6wHol3R": {
       "date": "2025-12-17",
@@ -53596,12 +53596,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_ifQO91745WtXNhcFH3GLJRH3P49Uhknjc3zWOwCYkrP": {
       "date": "2025-12-19",
@@ -53609,12 +53609,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_KxdcIyxwpMmt0jBgbDcG53DyZEJbnR0Ef1hTU4xvZgf": {
       "date": "2025-12-19",
@@ -53622,12 +53622,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_mFu6Ud6Z952SQ1uzkgMCuclO6JiL859g8au2IgDXSJD": {
       "date": "2025-12-17",
@@ -53635,12 +53635,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_wjsUrAzH1DG3AgBY44JGWJPwOCGhWJV6UaUQh00zZFi": {
       "date": "2025-12-18",
@@ -53648,12 +53648,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_4Et4czbdelqGY7diUgTbFVBqWK4HQZ8PcJJ2GIc3o8J": {
       "date": "2025-12-23",
@@ -53661,12 +53661,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_UHpqjmDRVNR80FAl64sAOJ7CiehjqiVE8lc2W1eOFj7": {
       "date": "2026-01-23",
@@ -53674,12 +53674,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_pLAn5WbMtspyirme6FQgcQEhW4QMkuMz8sUpNQ9omy5": {
       "date": "2026-01-21",
@@ -53687,12 +53687,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_ntjliuNp1PbfO8dNlK0mlpa6CpowYfMaUOeYSUCN1Kt": {
       "date": "2026-01-19",
@@ -53700,12 +53700,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Vince Bartolini",
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_XMOSUZAaearwIlIZA8aQiqml0GMdpMrRovjCehGOeRR": {
       "date": "2026-01-19",
@@ -53713,12 +53713,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_2xqeIWTh52uU45qdy4TMU8J7Y6yzvM7jFOuoKQLOi7e": {
       "date": "2026-01-14",
@@ -53726,12 +53726,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_ScXNsSpc25UUTIUhIGqgzeyzaToJixSali8WlFQer7H": {
       "date": "2026-01-14",
@@ -53739,12 +53739,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_rHTgT7VWC1kdhl3ut6UZEml9p0WhF4iy2G18z9OTWUd": {
       "date": "2026-01-13",
@@ -53768,12 +53768,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_l7tRpKtvspIle6XRmfb98vexgWW978XLGM1ZYMTdM60": {
       "date": "2026-01-13",
@@ -53781,12 +53781,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_9cKkID7E1BydT7fbHOkEV9x466QhQZbIst2XR7nQzrb": {
       "date": "2026-01-07",
@@ -53794,12 +53794,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_Bj7V6AlmdfgWE2wowUoesGeNqFxVA1MsurOnP1MM7IO": {
       "date": "2026-01-14",
@@ -53807,12 +53807,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_j5UKtURSBsWjR21ssDIl2F9mZUgljjMY6fnIir7q0gc": {
       "date": "2025-12-31",
@@ -53833,12 +53833,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_kW4Mmcee9wBObMO8l99djL7GJoiZV5Bx6a2REbnoc24": {
       "date": "2026-01-22",
@@ -53846,12 +53846,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_IESC9Vqzvt0EypNSsvI3Op5zhNOvWX9Wasqui7yoJEI": {
       "date": "2025-12-18",
@@ -53859,12 +53859,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_5HTwdvpd3dDhSvp8h6dj0FsTmOd3JYEcdkCFu0XZ7VX": {
       "date": "2025-09-18",
@@ -53872,12 +53872,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_WiYwaiXx7JdLD4srECfXVHNW9KteLnI8aed0nwMNC0s": {
       "date": "2025-08-28",
@@ -53885,12 +53885,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_jRWd8txMWwHrX22GRxn340nnE6v7bGZc80fiytWx2Vm": {
       "date": "2026-03-26",
@@ -54114,12 +54114,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Vince Bartolini",
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_N38JKymFOuPo84qOMaRZHHGrsQF1oaWELoBNibtnd4x": {
       "date": "2026-03-27",
@@ -54211,12 +54211,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_wxG1lz9iErsA4d0PB1b0Skjq1taN9RlVAp04YoMFVSP": {
       "date": "2026-03-30",
@@ -54305,9 +54305,8 @@
       "scraper": null,
       "post_webinar": "YES",
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -54318,9 +54317,8 @@
       "scraper": null,
       "post_webinar": "YES",
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -54355,12 +54353,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_Ngi3qSyUQaztgmsO0IDdMsUrnjqecmqzDXraq1u2SFa": {
       "date": null,
@@ -54736,12 +54734,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_Vp9sVgizvfVgWrzoiyjripm3ws1dymzzdNM815PGTZE": {
       "date": "2026-03-30",
@@ -54773,12 +54771,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_a0ntKyTbHKMuAbBogvgI5KLBER4xHCTZmIuaOb9wnVK": {
       "date": "2026-03-30",
@@ -55405,12 +55403,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_S2ig7UBNpgyIVWQtGmUbe0ocmja6ZwvI1HnFLxgLGii": {
       "date": "2026-03-30",
@@ -55545,9 +55543,8 @@
       "scraper": null,
       "post_webinar": "YES",
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -55655,12 +55652,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_UDuVBxwX0xCIvHyz72ibVlcpvlL5HBYAtZaJIsHw86d": {
       "date": "2026-04-01",
@@ -55680,12 +55677,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_JJvcFvXnxiRPca7vY5wuIaHBlXrhuTYDwqksl4TuL6T": {
       "date": "2026-04-02",
@@ -55693,12 +55690,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_IOtAznYQKSkVYtqvwCNnxBkxef0JBJAwpfTeltM99Xe": {
       "date": "2026-04-01",
@@ -55706,12 +55703,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_pdfOgGIwGfnGFh3oJVcIX7LT9trkzahrbs0qVZ3iDWV": {
       "date": "2026-04-02",
@@ -55719,12 +55716,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_mEfkRWzYF47H2T7xS9AIUpLMxFpGAfSCqQOPVjIKT2z": {
       "date": "2026-03-31",
@@ -55889,12 +55886,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_HZRpCOaVCcqfaiVT4HLNaGPH1KuxuMdaBmGLoiB6Ouy": {
       "date": "2026-04-03",
@@ -55902,12 +55899,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_AgEJEXMijqnaLOOP5C3ayre01esX5IC7FJE79I9W36v": {
       "date": "2026-04-02",
@@ -56597,12 +56594,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Charlie Ingram",
-      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
     },
     "lead_7h989EzS7j5ana9ut9Q9MKpFoVdQOjos0gKsBB0GNgU": {
       "date": "2026-04-03",
@@ -71936,14 +71933,15 @@
     "lead_mnKLChYOaoXUWJGUWwOwCIAwgdAnl5QrjdLHPB8UVWy": {
       "date": "2026-05-07",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_YRBw7sDuJj6R7zze6T8YNG9MrV1SkerKVOH2kiT0WWI": {
       "date": "2026-05-07",
@@ -91070,13 +91068,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
+      "reactivation": "Naria Torres",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null,
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
     },
     "lead_JQUkU8EB4PFOyhTvHg6n4OZaOEAsr0YIjbh2EEm5tF9": {
       "date": null,
@@ -95645,7 +95643,7 @@
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
-      "vendhub_date": null,
+      "vendhub_date": "2026-11-06",
       "quick_disc": null,
       "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
@@ -105268,13 +105266,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "William Nowak",
-      "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF",
+      "reactivation": null,
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": "VendHub Q&A Booking",
       "vendhub_date": "2026-08-13",
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF"
     },
     "lead_JWdE2YTaSiYZ3Rm1ZGhWk76NbbDu9yBdmtFHj7gcUEg": {
       "date": "2026-08-13",
@@ -106207,14 +106205,15 @@
     "lead_HGGeE27DxiD4TQLFOtzMK7FGuBLTwzTzWENU96LFFj3": {
       "date": "2026-08-17",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Naria Torres",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
     },
     "lead_8Jvr3N8hBehAS3koh8Sq8HoqrPXKzHRsJ0jIWm33ga5": {
       "date": "2026-08-17",
@@ -106222,12 +106221,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": "Yes"
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_bXRCKENrOKFWqPYJ7g67EL5EHmrCFFuXmME7Mpz354g": {
       "date": "2026-08-18",
@@ -109637,14 +109636,15 @@
     "lead_bsuKrH5Ahw8tnIkZK16GBBzXwq3KhS7uINuTjzfuI9l": {
       "date": "2025-11-26",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Naria Torres",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
     },
     "lead_0Qqc29F6mohs3SwOkHKJ1q5WBeVEHsgyULjOvkaQU5W": {
       "date": "2026-09-01",
@@ -112276,14 +112276,15 @@
     "lead_Piq4vKETr8JVvvn9UbKrUetWneLba4W3BDBXQRzTgGW": {
       "date": "2026-09-09",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Naria Torres",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
     },
     "lead_SYSiVlR3jeh4z7KQkyDPJBpmzi2j8Amca6PcHC6cilQ": {
       "date": "2026-09-08",
@@ -112337,14 +112338,15 @@
     "lead_xssCSIuI92bD1p3nGhZBiSqeemkavyMsFEZio1vXwk6": {
       "date": "2026-09-09",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Naria Torres",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
     },
     "lead_ToF9ycgwBVXsUXTrbrRjrinH1rYAXdYI0CqOPnImXWO": {
       "date": "2026-09-11",
@@ -112835,14 +112837,15 @@
     "lead_ZXvs8GX6aBdmLgb0ajTYkqNuLKolFhczIu2quuNMRjw": {
       "date": "2026-09-09",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Naria Torres",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
     },
     "lead_m4GITjthm8bdpuUbRCRjJYx6nv9RPeRbq4iFTOQJVdP": {
       "date": "2026-09-10",
@@ -113329,12 +113332,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Cassie Caraballo",
-      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": "Yes"
+      "quick_disc": null,
+      "reactivation_user": "user_Hoijs8g8hxab7NN7tMVvC4dpzwHcxSgkIuHeBRphyUL"
     },
     "lead_hBr5IMjVTjaxr6o6qDZWnNhSZHZu604rzbFajFngqC8": {
       "date": "2026-09-11",
@@ -113879,13 +113882,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Connor George",
+      "reactivation": "Naria Torres",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null,
-      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
     },
     "lead_e2UseNryR5afX6hQaiFysFAZbIDD6jyaOFb16STd72l": {
       "date": "2026-09-16",
@@ -114704,13 +114707,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Charlie Ingram",
+      "reactivation": "Naria Torres",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null,
-      "reactivation_user": "user_yZWJTiMjUBfJt8pUPQG6hS7QfKUxwt322aYEABSUrQb"
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
     },
     "lead_jbz3IV4OJKa2WG2AwMFCMSetob22ZlLoqAskYE82eis": {
       "date": "2026-09-17",
@@ -114980,14 +114983,15 @@
     "lead_FnDp931DNMInXR0wePGPyvCLuvqyTzV9SfgcwqIhR97": {
       "date": "2026-09-16",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Naria Torres",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
     },
     "lead_qv7ApQLCbnTJkz7lo1R5WfcrPwgJFT4GacgN15Bn30t": {
       "date": "2026-09-18",
@@ -115369,12 +115373,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Reactivation Scrapers",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_bYfwiMhzv4VJESEi4wmDtilTkQNW3CgQfpWeQryrW8s": {
       "date": "2026-09-17",
@@ -117756,12 +117760,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": "Yes"
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_oFXrcuh4lVNCQh9AN8aP8ic6dt6B7AflAaWUyvhwSeA": {
       "date": "2026-09-27",
@@ -118303,13 +118307,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Pearl Sathekge",
-      "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF",
+      "reactivation": null,
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF"
     },
     "lead_XfaDRuCrBSB2JWDMf3b4ot1pFRE4ngNTqESgx6ZTN1r": {
       "date": "2026-10-01",
@@ -118780,12 +118784,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": "Yes"
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_rjeBJu38jGIq2k9mDP8WoEoEgn1CX1gB0RlT0oqTj9t": {
       "date": "2026-10-02",
@@ -118921,12 +118925,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": "Yes"
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_55wMvVeXcqiuZZXiKFT8YUfRUfT50XxfgMsZ80IPyLw": {
       "date": "2026-09-29",
@@ -119050,12 +119054,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": "Yes"
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_X65czlWRaUdok3BnaaE9Aq4ZiSWKuKZchd1h6ddaBNl": {
       "date": "2026-09-30",
@@ -119205,12 +119209,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": "Yes"
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_wMKDW993Xb6Jv1LPSU1LSUMD7IYe3aoVlwbvoNq75t3": {
       "date": "2026-10-03",
@@ -119911,12 +119915,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": "Yes"
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_8YLGeACznVN4mZ0dDEdvDt5cjzHyGfKdfUIwXbjBna4": {
       "date": "2026-10-01",
@@ -120215,12 +120219,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": "Yes"
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_YVDiiGSz6VOYtPUPaHwYBfiOvqHogXvgVpk8IX4Tpn8": {
       "date": "2026-10-07",
@@ -120241,12 +120245,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": "Yes"
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_YMSQCZifElZtJJudw6ktMSdCvpYqRLdEGFPLTgpNodF": {
       "date": "2026-10-02",
@@ -122765,12 +122769,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "William Nowak",
-      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F",
       "reactivation_override_version": 1,
-      "funnel_name": "Internal Webinar",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_ZNKG1S9eI71qxhSozBK4jskTVtJqXzfNCPWqmADRR9F"
     },
     "lead_8JDOgWt4FO5dO9dv6WJwkTswzO45c8bPEbNUJBkBC3b": {
       "date": "2026-10-13",
@@ -126368,13 +126372,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO",
+      "reactivation": null,
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
     },
     "lead_9hKDgq4Jh1Z3CT38PLWtzvsC3XqTunlfvMDMhcvoyxo": {
       "date": "2026-10-23",
@@ -129539,17 +129543,17 @@
       "quick_disc": null
     },
     "lead_IuS8MCYib6J64MMDZJ7VJOpDelDtr9xjL44m3b1b493": {
-      "date": null,
+      "date": "2026-11-04",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
-      "reactivation_override_version": null,
-      "funnel_name": "YouTube",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
     },
     "lead_6nI2aN699yic2Zjl8gPH7Sf8CaWqYUKtJmyA54jivSH": {
       "date": "2026-11-05",
@@ -129737,14 +129741,15 @@
     "lead_1pyispvYtA7tWMXUT3FS1TSvkl7lJKBp2m0w3UhkqEd": {
       "date": "2026-11-06",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
     },
     "lead_RHZ1ST3FBpgsFY61lmgeplW6WqtWbAvf5J71Qsz0NJ0": {
       "date": "2026-11-05",
@@ -129865,8 +129870,619 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_aZfbbVGmCffStBOePt7EbGggJysAHzm4FevQefM5loC": {
+      "date": "2026-11-16",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_vw2xwmG2n6zLu3pjkuZHS7ZPNlg1dyImRUguk60YCbN"
+    },
+    "lead_NupqUUKF2iL6Aj3yHjHdeKRS11kJS4SvYRAqaGyzTfs": {
+      "date": "2026-11-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_vXNC7jO7Mzf3j1aVb6p3GsYs9DnVx3E8hf7WjILtZbf"
+    },
+    "lead_6M6pOfNTcEOZJCoZspt6m7BiWZC1XZ88Gk1CZSil4hR": {
+      "date": "2026-11-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_k5N56DWcVmoKcYIaXvKo0LP71gnhBX8VMqqEkLcbM91": {
+      "date": "2026-11-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_uWz01oqr7mPVe76dqcjJyI8Y2ehhUgm0zrk1mLBljJt": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e"
+    },
+    "lead_AN4Iy2DRhg5nOOldiRZiKoKeB0c3VilEhb4fRUAU8vr": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_gEEFKzd4CAcb4AbpVVkYCS7kAtx7JRSXuShKcATqGns": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e"
+    },
+    "lead_KsHtS9TWrBquwYPPBAGtUjW7XFEmNigdynVBgkpUUQv": {
+      "date": "2026-11-03",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_EMIR0xFVD7tCuHG65DZzNHRCw4TOuBT0oGFEWBo8mcz": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_mBREvRBl7BwyzzXrfkB0AYYKoT1fad1FW2Lcz4hVI5j": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_cAWWKgnPoOXyW09WLtUSyQ4SyERpbCrGclxHgCppQgq": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_YGkSZtb0rMTMDVaQtXMt349oYipenQ9IzMsD0kUrXhM": {
+      "date": "2026-11-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_bXBQFeroXJdkB3uWfw1Xt89xL3WeECN5QUo5b6dlQqe": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_0NC3JH1Y4wwmQoyagHWmzNHlRVwNShBDJh42FZ214CG": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e"
+    },
+    "lead_ncQ5L8BtpmVjNlKINx8NS1V09tvP8CEmOrFHckcxPrx": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_8i4SCc1Se9cfPl6ihlvKpzVeaVio9OAZ3LRMhoJG1NO": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e"
+    },
+    "lead_d7OiZJXlX8ctYjmsvDJgFcYOMviADuBjf7P6yJlC6JG": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_OlvOwHRlZd8iHBsLvEzgTG2nhSyG0VZ6sGt2PeJkAip": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_yPBAzyK3SKBWJUVhU8a5inzfu81tnVrxqi2a4QpXw52": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_6X6ViOQ6PytspdYz3IzD3qNONtFacGXb6K7ehPAIi51": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_9RvARf10jYAkyY1ca2xRE7BxBxv1J6ffLefzQSuY6Zs": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_VFwRELQ3t8yDDI65IBHweYD4zlvxxSgNejm4oNPZTYd"
+    },
+    "lead_40Ffdx8STWVYw5s0bqf97slneWdMghvpF5Nd690myLL": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_cYj9jcC1UVL5XIq6pSiXC1F9Jpl7NsqHdTqKJcmfbvZ"
+    },
+    "lead_ybGynkYnYs76R5n3C5ahqceYjuVkFVVUy8nxeFnRlaf": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_Skhc1Tm9B1WM0Tq9NiHHzgTKqRrEZd8qpCnSS9k3yMe"
+    },
+    "lead_7rjsSyBYpruHGARaWrIcTDN2hqjn1IUJMoosrWPGAWR": {
+      "date": "2026-11-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_Ji2ByFIp1Snyc9gfqUaFUcwGdRHUzbra0x17X5lpxeQ": {
+      "date": "2026-11-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e"
+    },
+    "lead_BWIxVGegS4jxuCLLYL1TrDAwkgK1eCmLQV7GRVE1S4U": {
+      "date": "2026-11-04",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_Skhc1Tm9B1WM0Tq9NiHHzgTKqRrEZd8qpCnSS9k3yMe"
+    },
+    "lead_GLzfjLQexHD538cEF8hAWGPChyTzbEzsdwlnw47rGnu": {
+      "date": "2026-11-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_cYj9jcC1UVL5XIq6pSiXC1F9Jpl7NsqHdTqKJcmfbvZ"
+    },
+    "lead_wndZzscA2OXRPUufeURTr94kycxlUvpKBsL14PJz48Z": {
+      "date": "2026-11-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_vw2xwmG2n6zLu3pjkuZHS7ZPNlg1dyImRUguk60YCbN"
+    },
+    "lead_6CAqu7KKlCm5kuPWMHj7o23zE5OmzND0I8vsse1q6rZ": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_wuxjcEQWoSFuAJ6IRd5VQMpHOhQK9ff1p6Ivj3Hs8Ww": {
+      "date": "2026-11-13",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e"
+    },
+    "lead_jmtEuoWTiCp8ymHxett4sRYiGgC9JuDw5b4miHHkz0O": {
+      "date": "2026-11-04",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e"
+    },
+    "lead_TqrH3YJ9omMHYM8FF53qYgbh07mKsd8nVoTtWpD2Csa": {
+      "date": "2026-11-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_Skhc1Tm9B1WM0Tq9NiHHzgTKqRrEZd8qpCnSS9k3yMe"
+    },
+    "lead_NXZmQpHH0hM06eNpNgg2523WXl2ZB1n4tZpFDFpjweg": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_bBA6Tl9clDkxrunQee6UDxFkqff54vg32MQyZOeqbQK": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_7C7ReCl4exFVAzM4lYn2yZGzjMH6ZHUEFmww4Vlz5bM": {
+      "date": "2026-11-04",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_PNPdfRpBx2YesjXWjjKkGbD3kEr1orTDm6Vzs1Bbq7T": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_y7bvyU3nY3C5MIdjzbdbFxSumcdUR3ghALQUV8coZXG": {
+      "date": "2026-11-06",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_XgHkN4hpnjZs5PVqhWcj4UjJHB4EWURHp3f5PIvQqqE": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_YOI2VVH5uozLrciQysyByCKW2mKIlAdJ4d97SErVFeU": {
+      "date": "2026-11-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_EIBAoowx5lmgV2MJKphgQc2AF1s2uBF6x1cF7fICf4H": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_gwEP3hJFQoy8UYIjvZVMBOpEqBlOjZ1yz52NsfNWCR0": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "August Young",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_wH5PGq1Wm84UW6KrKCt6YCioWocmlffYkbadH6rN43H"
+    },
+    "lead_raSoPqNkqZZ6KXrZM3ZDQfVfh3o0F8ZAwxoo2wCwF8t": {
+      "date": "2026-11-09",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_9xA5WexBfrZpyRZh5aI26wgVfrXa4RLevvXv3xq8acZ": {
+      "date": "2026-11-10",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Naria Torres",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
+    },
+    "lead_v8XvcqafMV8xqjC2JeFQ4WbUL42QCFQDXdhQeEv1GtB": {
+      "date": "2026-11-04",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_7O3f4V5KZMgBKPWxrbPGqLkmIVWkxThbh6lcHmCA8lY": {
+      "date": "2026-11-05",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_vXNC7jO7Mzf3j1aVb6p3GsYs9DnVx3E8hf7WjILtZbf"
+    },
+    "lead_w9gxqq1mVBIbTKyVx5gDBW2A70YEiiWWMFfYxPASZTV": {
+      "date": "2026-11-16",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_yRMb72DFJnySUSjrcdYL7FIUoQRLsqLyNcYMa7vPEOy": {
+      "date": "2026-11-03",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
     }
   },
-  "saved_at": "2026-11-06 20:44:28 UTC",
-  "count": 10933
+  "saved_at": "2026-11-06 21:11:20 UTC",
+  "count": 10980
 }
