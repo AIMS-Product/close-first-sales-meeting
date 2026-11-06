@@ -14,9 +14,9 @@ name: Meeting Outcome Sync
 
 on:
   workflow_dispatch:
-  # Schedule moved to cron-job.org; native trigger commented out to prevent duplicate runs.
-  # schedule:
-    # - cron: "7,37 * * * *"   # offset from update-field to avoid Close rate-limit overlap
+  schedule:
+    # Four daily passes leave time for the evidence sources and 180-minute grace window.
+    - cron: "37 0,6,12,18 * * *"
 
 concurrency:
   group: outcome-sync-${{ github.ref }}
@@ -45,7 +45,7 @@ jobs:
           ZOOM_REQUIRED: "1"
           # Flip to "0" after reviewing dry-run output in the Actions logs.
           DRY_RUN: "0"
-          LOOKBACK_DAYS: "7"
+          LOOKBACK_DAYS: "1"
           MIN_ATTEND_SECONDS: "300"
           HOST_MIN_SECONDS: "600"
           ZOOM_AUTO_NOSHOW: "0"
@@ -57,4 +57,4 @@ jobs:
         with:
           name: outcome-sync-report
           path: outcome_sync_report.json
-          retention-days: 14
+          retention-days: 90
