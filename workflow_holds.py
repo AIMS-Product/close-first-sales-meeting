@@ -8,6 +8,9 @@ import os
 from pathlib import Path
 import re
 import sqlite3
+import time
+
+GUARD_READ_ATTEMPTS = 6
 
 BATCH = 'cf_IruzyS5PO4dZsOKGQSYb4r7PhOEpw1C82FN17ZlmkQy'
 OWNER_SINCE = 'cf_2tuoNM0K9ND9na49hMsj02KI7732MuKSiFX2thJuIgU'
@@ -147,6 +150,31 @@ def blocked(lead, store=None):
     return 'STH1' in str(custom(lead, BATCH) or '') or bool(store and store.holds(lead['id']))
 
 
+def _guard_read(request, url, **kwargs):
+    """Retry throttled reads only; mutation outcomes must never be replayed."""
+    for attempt in range(GUARD_READ_ATTEMPTS):
+        response = request('GET', url, **kwargs)
+        if getattr(response, 'status_code', None) == 429 and attempt < GUARD_READ_ATTEMPTS - 1:
+            try:
+                wait = float(response.headers.get('Retry-After', 2 ** attempt))
+                if not 0 <= wait <= 60:
+                    wait = min(2 ** attempt, 60)
+            except (TypeError, ValueError):
+                wait = min(2 ** attempt, 60)
+            time.sleep(wait)
+            continue
+        if getattr(response, 'raise_for_status', None):
+            response.raise_for_status()
+        return response.json()
+
+
+def _custom_readback_matches(actual, expected):
+    # Close returns choice/user fields as lists even when a scalar was written.
+    if isinstance(expected, str) and isinstance(actual, list):
+        return len(actual) == 1 and actual[0] == expected
+    return actual == expected
+
+
 def guard_request(request):
     """Guard requests-style lead/opportunity mutations with one shared fence.
 
@@ -172,9 +200,9 @@ def guard_request(request):
         try:
             with lock():
                 read_kwargs = {key: kwargs[key] for key in ('auth','headers','timeout','verify') if key in kwargs}
-                target = request('GET', url, **read_kwargs).json()
+                target = _guard_read(request, url, **read_kwargs)
                 lead_url = url if match[1] == 'lead' else url.split('/opportunity/')[0] + '/lead/' + target['lead_id'] + '/'
-                current = target if match[1] == 'lead' else request('GET', lead_url, **read_kwargs).json()
+                current = target if match[1] == 'lead' else _guard_read(request, lead_url, **read_kwargs)
                 from close_status_policy import ORG
                 expected_lead = match[2] if match[1] == 'lead' else target['lead_id']
                 if store and (current.get('id') != expected_lead or current.get('organization_id') != ORG):
@@ -191,8 +219,9 @@ def guard_request(request):
                 write_id = store.intent(current['id'],'shared_writer',{'path':path,'patch':payload}) if store else None
                 response = request(method, url, **kwargs)
                 if getattr(response,'raise_for_status',None): response.raise_for_status()
-                after = request('GET', url, **read_kwargs).json()
-                if any((after.get(k) if not k.startswith('custom.') else custom(after,k[7:])) != v for k,v in payload.items()):
+                after = _guard_read(request, url, **read_kwargs)
+                if any((after.get(k) != v if not k.startswith('custom.') else
+                        not _custom_readback_matches(custom(after, k[7:]), v)) for k,v in payload.items()):
                     raise RuntimeError('Write readback differs; reconcile before retry')
                 if store: store.receipt(write_id)
                 return response

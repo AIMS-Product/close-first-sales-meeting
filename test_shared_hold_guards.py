@@ -5,6 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
+import requests
 
 from close_status_policy import OWNER, ORG
 from workflow_holds import BATCH, Store, guard_request
@@ -135,6 +136,61 @@ class SharedWriterGuardTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'Sales hold'):
             self.guarded('PUT', LEAD_URL, json={'custom.' + OWNER: 'user_rep'})
         self.assert_no_write()
+
+    def test_choice_readback_accepts_only_the_written_single_value(self):
+        field = 'custom.cf_fixture_choice'
+        for returned, accepted in [(['Yes'], True), (['No'], False), (['Yes', 'No'], False)]:
+            with self.subTest(returned=returned):
+                self.lead.pop(field, None)
+                def transport(method, url, **kwargs):
+                    response = self.transport(method, url, **kwargs)
+                    if method == 'PUT':
+                        self.lead[field] = returned
+                    return response
+                guarded = guard_request(transport)
+                if accepted:
+                    guarded('PUT', LEAD_URL, json={field: 'Yes'})
+                    self.assertEqual(self.unresolved(), [])
+                else:
+                    # Use a fresh intent registry so a previous uncertain outcome stays isolated.
+                    with patch.dict(os.environ, {'WORKFLOW_HOLDS_REQUIRED': '0', 'WORKFLOW_HOLD_DB': ''}):
+                        with self.assertRaisesRegex(RuntimeError, 'readback differs'):
+                            guarded('PUT', LEAD_URL, json={field: 'Yes'})
+
+    def test_throttled_guard_reads_retry_without_repeating_the_mutation(self):
+        for throttle_read in (1, 2):
+            with self.subTest(throttle_read=throttle_read):
+                read_count = 0
+                calls = []
+                def transport(method, url, **kwargs):
+                    nonlocal read_count
+                    calls.append(method)
+                    if method == 'GET':
+                        read_count += 1
+                        if read_count == throttle_read:
+                            response = requests.Response()
+                            response.status_code = 429
+                            response.headers['Retry-After'] = '0'
+                            response._content = b'<html>rate limited</html>'
+                            return response
+                    return self.transport(method, url, **kwargs)
+                with patch('workflow_holds.time.sleep') as pause:
+                    guard_request(transport)('PUT', LEAD_URL, json={'status_id': 'next'})
+                self.assertEqual(calls.count('PUT'), 1)
+                pause.assert_called_once_with(0)
+                self.assertEqual(self.unresolved(), [])
+
+    def test_failed_guard_read_never_admits_a_mutation(self):
+        for status in (403, 429):
+            with self.subTest(status=status):
+                response = requests.Response()
+                response.status_code = status
+                response._content = b'<html>rejected</html>'
+                transport = Mock(return_value=response)
+                with patch('workflow_holds.time.sleep'), self.assertRaises(requests.HTTPError):
+                    guard_request(transport)('PUT', LEAD_URL, json={'status_id': 'next'})
+                self.assertTrue(all(call.args[0] == 'GET' for call in transport.call_args_list))
+                self.assertEqual(transport.call_count, 6 if status == 429 else 1)
 
 
 if __name__ == '__main__':

@@ -194,10 +194,10 @@ def parse_dt(value):
 
 def custom_value(lead, field_id):
     direct = lead.get(f"custom.{field_id}")
-    if direct is not None:
-        return direct
-    custom = lead.get("custom") or {}
-    return custom.get(field_id) or custom.get(f"custom.{field_id}")
+    if direct is None:
+        custom = lead.get("custom") or {}
+        direct = custom.get(field_id) or custom.get(f"custom.{field_id}")
+    return direct[0] if isinstance(direct, list) and len(direct) == 1 else direct
 
 
 def normalize_name(value):

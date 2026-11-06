@@ -51,6 +51,9 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install requests
 
+      - name: Verify shared write guards and recovery choices
+        run: python -m unittest test_shared_hold_guards test_sales_dispatch_holds test_no_show_choice_values -q
+
       - name: Reconcile no-show recovery
         env:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
@@ -59,6 +62,7 @@ jobs:
           REACTIVATION_SETTER_ID: ${{ vars.REACTIVATION_SETTER_ID }}
           REACTIVATION_SETTER_NAME: ${{ vars.REACTIVATION_SETTER_NAME }}
         run: |
+          set -o pipefail
           ARGS="--apply"
           if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS=""; fi
           if [ -n "${{ inputs.window_hours }}" ]; then ARGS="$ARGS --window-hours ${{ inputs.window_hours }}"; fi

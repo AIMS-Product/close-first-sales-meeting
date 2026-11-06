@@ -197,7 +197,8 @@ class ReconcilerIntegrationTests(unittest.TestCase):
         with patch.object(sys, "argv", ["lane2_state.py", "--apply", "--max-writes", "3"]), \
              patch.object(self.reconciler, "reconcile_qa_triage_terminal", return_value=1) as terminal, \
              patch.object(routing, "run", return_value={"verified_writes": 2}) as handoff, \
-             patch.object(self.reconciler, "search") as search:
+             patch.object(self.reconciler, "search") as search, \
+             patch.object(self.reconciler, "refresh_owner_team_rosters"):
             self.reconciler.main()
         terminal.assert_called_once_with(apply=True, max_writes=3)
         self.assertEqual(handoff.call_args.kwargs, {"apply": True, "max_writes": 2})
