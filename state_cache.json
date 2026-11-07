@@ -117620,13 +117620,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Connor George",
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_YlAbrpKa9iKWFt351Dk1BC4Cmr4SXHKDsSDMG4hnVHi"
+      "quick_disc": null
     },
     "lead_PeN3pW9zf9gPoHVmTHPqPA6AtuusXB4gatEHZzXKrJ2": {
       "date": "2026-09-28",
@@ -130547,6 +130547,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-11-07 17:08:42 UTC",
+  "saved_at": "2026-11-07 17:39:12 UTC",
   "count": 10985
 }
