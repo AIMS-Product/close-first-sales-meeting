@@ -130573,8 +130573,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_twBQRnsfXPa3ylzYeIejyTeNh63WlGqS8ucyl0YLDTs": {
+      "date": "2026-11-12",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Meta Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-11-08 05:09:33 UTC",
-  "count": 10987
+  "saved_at": "2026-11-08 05:38:36 UTC",
+  "count": 10988
 }
