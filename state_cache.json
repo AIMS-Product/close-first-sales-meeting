@@ -130659,8 +130659,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_tCP65krVudszQzrAnQhsPHWX8oZArIo0Bkm7xlQLILS": {
+      "date": "2026-11-13",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": "Mariam Olufumi",
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Linkedin",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-11-09 15:39:30 UTC",
-  "count": 10994
+  "saved_at": "2026-11-09 16:09:59 UTC",
+  "count": 10995
 }
