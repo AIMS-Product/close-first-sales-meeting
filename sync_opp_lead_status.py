@@ -60,6 +60,7 @@ import requests
 from workflow_holds import guard_request
 
 BASE_URL = "https://api.close.com/api/v1"
+DNC_LEAD_STATUS_ID = "stat_U9MI7pqsvIjceTv3pCU7b1EghO8Q83h1HUcL6fGVyi6"
 
 # ---------------------------------------------------------------------------
 # Status maps -- built from the actual Sales Pipeline / Lead status lists.
@@ -188,6 +189,13 @@ class CloseClient:
         return False
 
     def set_lead_status(self, lead_id, status_id):
+        # A bulk scan may precede a new opt-out; recheck immediately before writing.
+        if status_id != DNC_LEAD_STATUS_ID:
+            current = self._request("GET", f"/lead/{lead_id}/", params={"_fields": "id,status_id"})
+            if current.get("id") != lead_id or not current.get("status_id"):
+                raise RuntimeError("Lead status identity could not be verified")
+            if current["status_id"] == DNC_LEAD_STATUS_ID:
+                return {**current, "_dnc_guarded": True}
         return self._request(
             "PUT", f"/lead/{lead_id}/", json={"status_id": status_id}
         )
@@ -256,6 +264,11 @@ def run(dry_run, limit, lookback_days):
                   f"ORPHAN_OPP_STATUS_IDS -- status lists may have changed in Close. Skipped.")
             continue
 
+        # Suppression takes precedence over opportunity sales outcomes, including wins.
+        if lead["status_id"] == DNC_LEAD_STATUS_ID and mapped_status_id != DNC_LEAD_STATUS_ID:
+            guarded += 1
+            continue
+
         if lead["status_id"] == mapped_status_id:
             already_correct += 1
             continue
@@ -302,6 +315,10 @@ def run(dry_run, limit, lookback_days):
         except requests.HTTPError as e:
             failed += 1
             print(f"ERROR updating lead {lead_id}: {e}")
+            continue
+
+        if result.get("_dnc_guarded"):
+            guarded += 1
             continue
 
         if result.get("status_id") != mapped_status_id:
