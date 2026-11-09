@@ -14,6 +14,12 @@ class CoverageTests(unittest.TestCase):
         with patch.object(sync, "read_outcome_backlog", return_value=[MEETING]):
             self.assertEqual([MEETING], sync.fetch_meetings_window(None, START-timedelta(days=1), START+timedelta(days=1)))
 
+    def test_explicit_calendar_declines_close_as_cancelled(self):
+        for status in ("declined-by-lead", "declined-by-org"):
+            result = sync.decide({**MEETING, "status": status}, [MEETING], "skip", START+timedelta(days=1))
+            self.assertEqual("cancelled", result[0])
+
+
     def test_bot_named_for_prospect_never_counts_as_attendance(self):
         self.assertEqual(None, sync.zoom_signal([{"name": "Jane Doe's AI Agent", "email": "jane@example.com", "seconds": 1200}], {"jane@example.com"}, set(), ["Jane Doe"])[0])
         self.assertTrue(sync.is_automation("Calendly Nоtеtаkеr"))

@@ -513,7 +513,7 @@ def pacific_date(dt_utc):
 
 def is_canceledish(meeting):
     title = (meeting.get("title") or "").strip().lower()
-    return meeting.get("status") == "canceled" or title.startswith("canceled")
+    return meeting.get("status") in {"canceled", "declined-by-lead", "declined-by-org"} or title.startswith("canceled")
 
 
 def later_similar_meeting_exists(meeting, lead_meetings):
