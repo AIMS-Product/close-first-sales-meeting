@@ -83,7 +83,7 @@ from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 import requests
-from close_outcome_backlog import read_outcome_backlog
+from close_outcome_backlog import read_outcome_backlog, confirmation_due_at, MANAGER_REVIEW_OWNER_ID
 from workflow_holds import guard_request
 
 # ---------------------------------------------------------------------------
@@ -961,9 +961,11 @@ def run():
                      "title": m.get("title"), "starts_at": m.get("starts_at"),
                      "provider": provider, "age_days": age_days,
                      "owner_id": m.get("user_id"),
+                     "manager_review_owner_id": MANAGER_REVIEW_OWNER_ID,
+                     "requires_confirmation": True,
                      "change_message_references": change_messages,
-                     "review_due_at": (est_end + timedelta(hours=48)).isoformat(),
-                     "overdue": now_utc >= est_end + timedelta(hours=48),
+                     "review_due_at": confirmation_due_at(est_end).isoformat(),
+                     "overdue": now_utc >= confirmation_due_at(est_end),
                      "reason": f"{source}: {detail}"})
                 print(f"  FLAG               {label} "
                       f"({source}: {detail}) [provider={provider} age={age_days}d]")

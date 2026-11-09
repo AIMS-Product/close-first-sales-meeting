@@ -36,3 +36,8 @@ Validation: `python -m unittest test_outcome_sync test_outcome_coverage test_nat
 Use workflow dispatch with `dry_run=1` for a read-only production-source replay.
 Rollback: restore the previous code and set `ZOOM_AUTO_NOSHOW=0`; preserve already
 recorded native outcomes and their receipts. No ledger records are modified.
+
+Historical confirmation cleanup is due November 11, 2026 at 9 AM Pacific;
+future appointments retain meeting-end-plus-48-hour deadlines. Original hosts
+own confirmations, with Anthony as the manager escalation owner. Uncertain
+outcomes stay pending until one confirms; no automatic Unknown outcome is used.
