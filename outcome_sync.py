@@ -8,11 +8,9 @@ Evidence hierarchy (v7):
 
   1. Zoom attendance             (participant report via Server-to-Server OAuth)
   2. Close meeting status        (canceled -> Rescheduled/Cancelled)
-  3. Phone conversation          (answered Close call >=5 min on the meeting's
-                                  day -> Completed when Zoom is inconclusive)
-  4. Lead status + RSVP          (status Canceled/No Show AND every external
-                                  attendee noreply/declined -> Cancelled/No Show)
-  5. Nothing conclusive          -> left blank + flagged in completeness report
+  3. Phone conversation          (same-host answered Close call >=5 min overlapping
+                                  the appointment -> Completed)
+  4. Nothing conclusive          -> left blank + flagged in completeness report
 
 v7 (2026-09-24) — REMOVED the "First Meeting Analysis custom activity
 exists -> Completed" rung. Two reasons:
@@ -60,7 +58,7 @@ ENV / SECRETS
   ZOOM_REQUIRED        "1" = fail before Close access if Zoom auth is unavailable
                        (set by the GitHub workflow; optional for local dry runs)
   DRY_RUN              "1" (default) = log only; "0" = write outcomes
-  LOOKBACK_DAYS        how far back to scan past meetings (default 7)
+  LOOKBACK_DAYS        how far back to scan past meetings (0 = all history, default)
   GRACE_MINUTES        skip meetings that ended less than this long ago
                        (default 180 — gives the Avoma tag first crack)
   MIN_ATTEND_SECONDS   prospect total time to count as attended (default 300)
@@ -79,11 +77,13 @@ import os
 import re
 import sys
 import time
+import unicodedata
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 import requests
+from close_outcome_backlog import read_outcome_backlog
 from workflow_holds import guard_request
 
 # ---------------------------------------------------------------------------
@@ -133,6 +133,7 @@ SALES_TITLE_RE = re.compile("|".join([
     r"vending (?:opportunity|discovery call)\s*-\s*next steps",
 ]), re.IGNORECASE)
 FOLLOWUP_TITLE_RE = re.compile(r"follow[\s-]?up|fallow up|f/u", re.IGNORECASE)
+OUTCOME_TITLE_RE = re.compile(r"vending|vendhub|acquisition[ -]?ace|\bAA\b|\bTLG\b|land[ -]?geek|\bPPA\b|publishing[ -]?profits", re.I)
 
 # v7: the "First Meeting Analysis CA exists -> Completed" rung was REMOVED
 # (see docstring). The CA type is still created — by the Avoma sync, which
@@ -203,7 +204,7 @@ def env_int(name, default):
         return default
 
 DRY_RUN = os.environ.get("DRY_RUN", "1") != "0"
-LOOKBACK_DAYS = env_int("LOOKBACK_DAYS", 7)
+LOOKBACK_DAYS = env_int("LOOKBACK_DAYS", 0)
 # v7: 90 -> 180. Avoma's Outcome tag (written to the meeting by
 # avoma_to_close_first_meeting_sync.py) can lag the meeting by a couple of
 # hours; waiting longer lets that transcript-grounded verdict land first,
@@ -272,33 +273,35 @@ def fetch_org_users(s):
 
 
 def fetch_meetings_window(s, since_dt, until_dt):
-    """
-    Paginate /activity/meeting/. NOTE (SYNC WITH update_field.py): Close
-    silently ignores date filters on this endpoint, so we paginate newest-first
-    and stop once a full page is older than the window.
-    """
     fields = ("id,lead_id,user_id,title,starts_at,ends_at,duration,status,"
               "outcome_id,attendees,note,location,source,date_created")
-    out, skip = [], 0
-    while True:
-        data = close_get(s, "/activity/meeting/",
-                         {"_skip": skip, "_limit": 100, "_fields": fields})
-        rows = data["data"]
-        if not rows:
-            break
-        page_all_old = True
-        for m in rows:
-            st = parse_dt(m.get("starts_at") or m.get("date_created"))
-            if st is None:
+    def search_page(payload):
+        for attempt in range(6):
+            response = s.post(f"{CLOSE_API}/data/search/", json=payload, timeout=60)
+            if response.status_code == 429:
+                time.sleep(min(30, float(response.headers.get("Retry-After", 2 ** attempt))))
                 continue
-            if st >= since_dt:
-                page_all_old = False
-                if st <= until_dt:
-                    out.append(m)
-        if page_all_old or not data.get("has_more"):
-            break
-        skip += 100
-    return out
+            response.raise_for_status()
+            time.sleep(0.6)
+            return response.json()
+        raise RuntimeError("Close outcome search remained rate limited")
+    meetings = read_outcome_backlog(search_page, lambda params: close_get(s, "/activity/meeting/", params), fields, datetime.now(timezone.utc))
+    return [meeting for meeting in meetings
+            if (start := parse_dt(meeting.get("starts_at"))) is not None
+            and since_dt <= start <= until_dt]
+
+
+def fetch_all_lead_meetings(s, lead_id):
+    meetings, skip = [], 0
+    while True:
+        data = close_get(s, "/activity/meeting/", {"lead_id": lead_id, "_limit": 100, "_skip": skip})
+        page = data.get("data", [])
+        meetings.extend(page)
+        if not data.get("has_more"):
+            return meetings
+        if not page:
+            raise RuntimeError("Close lead meeting pagination incomplete")
+        skip += len(page)
 
 
 def fetch_lead_brief(s, lead_id):
@@ -328,21 +331,79 @@ def fetch_attention_acts(s, lead_id):
 
 
 def fetch_lead_calls(s, lead_id):
-    """Native Close call activities on a lead -> [{'at','duration','disposition'}]."""
-    data = close_get(s, "/activity/call/", {
-        "lead_id": lead_id, "_limit": 100,
-        "_fields": "id,duration,disposition,activity_at,date_created"})
-    calls = []
-    for c in data.get("data", []):
-        at = parse_dt(c.get("activity_at") or c.get("date_created"))
-        if at:
-            calls.append({"at": at, "duration": int(c.get("duration") or 0),
-                          "disposition": c.get("disposition") or ""})
-    return calls
+    calls, skip = [], 0
+    while True:
+        data = close_get(s, "/activity/call/", {
+            "lead_id": lead_id, "_limit": 100, "_skip": skip,
+            "_fields": "id,user_id,duration,disposition,activity_at,date_created"})
+        page = data.get("data", [])
+        for call in page:
+            at = parse_dt(call.get("activity_at") or call.get("date_created"))
+            if at:
+                calls.append({"at": at, "duration": int(call.get("duration") or 0),
+                              "user_id": call.get("user_id"),
+                              "disposition": call.get("disposition") or ""})
+        if not data.get("has_more"):
+            return calls
+        if not page:
+            raise RuntimeError("Close call pagination incomplete")
+        skip += len(page)
 
 
-def set_meeting_outcome(s, meeting_id, outcome_id):
-    return close_put(s, f"/activity/meeting/{meeting_id}/", {"outcome_id": outcome_id})
+def meeting_change_messages(s, meeting, *, zoom_ids=None):
+    """Prospect change requests veto an automated negative; a reviewer settles meaning."""
+    start = parse_dt(meeting.get("starts_at"))
+    if start is None:
+        return []
+    references = []
+    for kind in ("sms", "email"):
+        skip = 0
+        while True:
+            data = close_get(s, f"/activity/{kind}/", {
+                "lead_id": meeting["lead_id"], "_limit": 100, "_skip": skip,
+                "date_created__gte": (start-timedelta(hours=24)).isoformat(),
+                "date_created__lte": (start+timedelta(hours=4)).isoformat()})
+            page = data.get("data", [])
+            for activity in page:
+                at = parse_dt(activity.get("activity_at") or activity.get("date_created"))
+                end = parse_dt(meeting.get("ends_at")) or start+timedelta(hours=1)
+                if zoom_ids is not None and kind == "sms" and activity.get("direction") == "outbound" and at is not None and start-timedelta(minutes=15) <= at <= end+timedelta(hours=1):
+                    zoom_ids.update(ZOOM_JOIN_RE.findall(activity.get("text") or ""))
+                if activity.get("direction") not in {"inbound", "incoming"}:
+                    continue
+                text = activity.get("text") or activity.get("body_text") or ""
+                # Ignore quoted reminders and calendar automation; they contain Cancel links.
+                text = re.split(r"\nOn .{10,200}wrote:|\n>", text, maxsplit=1)[0]
+                sender = (activity.get("sender") or "").casefold()
+                if kind == "email" and ("calendly" in sender or "calendar-notification" in sender):
+                    continue
+                if re.search(r"reschedul|cancel|can.?t (attend|make|join)|won.?t (be available|work)|could not attend|push it|free the spot", text, re.I):
+                    references.append({"activity_id": activity["id"], "type": kind})
+            if not data.get("has_more"):
+                break
+            if not page:
+                raise RuntimeError("Meeting change-message pagination incomplete")
+            skip += len(page)
+    return references
+
+
+def set_meeting_outcome(s, meeting, outcome_id, *, reviewed_from=None):
+    path = f"/activity/meeting/{meeting['id']}/"
+    fresh = close_get(s, path)
+    if any(fresh.get(key) != meeting.get(key)
+           for key in ("id", "lead_id", "user_id", "starts_at", "title", "status")):
+        raise RuntimeError("Meeting identity changed before outcome write")
+    current = fresh.get("outcome_id")
+    if current and current != OUTCOMES["scheduled"]:
+        reviewed_upgrade = (reviewed_from == OUTCOMES["no_show"] == current
+                            and outcome_id == OUTCOMES["completed"])
+        if not reviewed_upgrade:
+            return current
+    close_put(s, path, {"outcome_id": outcome_id})
+    verified = close_get(s, path)
+    if verified.get("outcome_id") != outcome_id:
+        raise RuntimeError("Meeting outcome readback did not match")
+    return outcome_id
 
 # ---------------------------------------------------------------------------
 # Zoom API helpers
@@ -394,49 +455,44 @@ class Zoom:
         return self._token
 
     def _get(self, path, params=None):
-        r = requests.get(f"{ZOOM_API}{path}", params=params,
-                         headers={"Authorization": f"Bearer {self.token()}"}, timeout=30)
-        if r.status_code == 404:
-            return None
-        if r.status_code == 429:
-            time.sleep(2)
-            return self._get(path, params)
-        r.raise_for_status()
-        return r.json()
+        for attempt in range(6):
+            response = requests.get(f"{ZOOM_API}{path}", params=params,
+                                    headers={"Authorization": f"Bearer {self.token()}"}, timeout=30)
+            if response.status_code == 404:
+                return None
+            if response.status_code == 429:
+                time.sleep(min(30, max(1, int(response.headers.get("Retry-After", 2 ** attempt)))))
+                continue
+            response.raise_for_status()
+            return response.json()
+        raise RuntimeError("Zoom read remained rate limited after six attempts")
 
     def participants_for(self, zoom_meeting_id, target_start_utc):
-        """
-        Participant list for the occurrence nearest target_start_utc.
-        Handles reused/recurring meeting IDs via /past_meetings/{id}/instances.
-        Returns list of {name, email, seconds} aggregated per participant, or None.
-        """
-        inst = self._get(f"/past_meetings/{zoom_meeting_id}/instances")
-        uuid = None
-        if inst and inst.get("meetings"):
-            best, best_gap = None, None
-            for occ in inst["meetings"]:
-                st = parse_dt(occ.get("start_time"))
-                if st is None:
-                    continue
-                gap = abs((st - target_start_utc).total_seconds())
-                if best_gap is None or gap < best_gap:
-                    best, best_gap = occ, gap
-            if best is not None and best_gap is not None and best_gap <= 6 * 3600:
-                uuid = best.get("uuid")
-        ident = uuid if uuid else str(zoom_meeting_id)
-        if uuid and (uuid.startswith("/") or "//" in uuid):
-            ident = requests.utils.quote(requests.utils.quote(uuid, safe=""), safe="")
-        data = self._get(f"/report/meetings/{ident}/participants",
-                         {"page_size": 300})
-        if data is None:
+        """Use one occurrence, all participant pages, and elapsed (not device) time."""
+        instances = self._get(f"/past_meetings/{zoom_meeting_id}/instances")
+        matches = [occ for occ in (instances or {}).get("meetings", [])
+                   if parse_dt(occ.get("start_time")) is not None
+                   and abs((parse_dt(occ["start_time"]) - target_start_utc).total_seconds()) <= 1800]
+        if len(matches) != 1 or not matches[0].get("uuid"):
             return None
-        agg = defaultdict(lambda: {"name": "", "email": "", "seconds": 0})
-        for p in data.get("participants", []):
-            key = (p.get("user_email") or p.get("name") or "?").lower()
-            agg[key]["name"] = p.get("name") or agg[key]["name"]
-            agg[key]["email"] = (p.get("user_email") or agg[key]["email"]).lower()
-            agg[key]["seconds"] += int(p.get("duration") or 0)
-        return list(agg.values())
+        uuid = matches[0]["uuid"]
+        ident = requests.utils.quote(uuid, safe="")
+        if uuid.startswith("/") or "//" in uuid:
+            ident = requests.utils.quote(ident, safe="")
+        rows, token, seen = [], "", set()
+        while True:
+            data = self._get(f"/report/meetings/{ident}/participants",
+                             {"page_size": 300, "next_page_token": token})
+            if data is None:
+                return None
+            rows.extend(data.get("participants", []))
+            token = data.get("next_page_token") or ""
+            if not token:
+                break
+            if token in seen:
+                raise RuntimeError("Zoom participant pagination repeated a token")
+            seen.add(token)
+        return aggregate_participants(rows, target_start_utc)
 
 # ---------------------------------------------------------------------------
 # Decision logic (pure — covered by --selftest)
@@ -496,29 +552,24 @@ def first_call_field_value(meeting, fscbd_str, outcome_id):
 
 
 def phone_evidence(meeting, calls, acts=()):
-    """
-    Phone conversation on the meeting's Pacific day (the Rashard case: prospect
-    misses the Zoom link, rep reaches them by phone — that IS the show).
-      answered call >= MIN_PHONE_SHOW_SECONDS   -> ("completed", detail)
-      answered call >= MIN_PHONE_REVIEW_SECONDS
-        or a dialer analysis that day            -> ("review", detail)
-      else                                       -> (None, None)
-    """
-    st = parse_dt(meeting.get("starts_at"))
-    if st is None:
+    """Only the same host's answered call overlapping this appointment is evidence."""
+    start = parse_dt(meeting.get("starts_at"))
+    if start is None:
         return None, None
-    day = pacific_date(st)
+    end = parse_dt(meeting.get("ends_at")) or start + timedelta(seconds=int(meeting.get("duration") or 3600))
     best = 0
-    for c in calls or ():
-        if pacific_date(c["at"]) == day and c["disposition"] == "answered":
-            best = max(best, c["duration"])
+    for call in calls or ():
+        call_end = call["at"] + timedelta(seconds=call["duration"])
+        same_host = meeting.get("user_id") and call.get("user_id") == meeting["user_id"]
+        if same_host and call["disposition"] == "answered" and (
+            call["at"] <= end + timedelta(minutes=15)
+            and call_end >= start - timedelta(minutes=10)
+        ):
+            best = max(best, call["duration"])
     if best >= MIN_PHONE_SHOW_SECONDS:
-        return "completed", f"answered call {best}s on meeting day"
-    dialer = any(a["type_id"] == ATTENTION_DIALER_TYPE_ID
-                 and pacific_date(a["at"]) == day for a in acts or ())
-    if best >= MIN_PHONE_REVIEW_SECONDS or dialer:
-        why = f"answered call {best}s" if best else "dialer analysis"
-        return "review", f"{why} on meeting day — review before no-show"
+        return "completed", f"same-host answered call {best}s overlapping appointment"
+    if best >= MIN_PHONE_REVIEW_SECONDS:
+        return "review", f"same-host answered call {best}s overlapping appointment"
     return None, None
 
 
@@ -568,6 +619,8 @@ def prospect_names_for(meeting, lead, org_emails):
         contact_name = (contact or {}).get("name") or ""
         if same_surname(contact_name, lead_name):
             names.append(contact_name)
+        if contact is not None and not contact_name and name_surname(lead_name):
+            names.append(lead_name)
     return unique_names(names)
 
 
@@ -600,35 +653,77 @@ def name_surname(name):
     return tokens[-1] if len(tokens) >= 2 else ""
 
 
-def zoom_signal(participants, prospect_emails, org_emails, prospect_names=()):
-    """
-    -> ("completed" | "no_show" | None, detail)
-    no_show requires host presence >= HOST_MIN_SECONDS and ZOOM_AUTO_NOSHOW.
-    """
+BOT_RE = re.compile(r"avoma|notetaker|notetaking|attention ai|fireflies|fathom|read[ .]ai|ai agent|calendly|otter[ .]ai", re.I)
+
+
+def is_automation(name):
+    # Known bot display names use confusable Cyrillic letters as well as ASCII.
+    normalized = unicodedata.normalize("NFKC", name or "").casefold()
+    normalized = normalized.translate(str.maketrans("аеорсхуікԁтн", "aeopcxyikdth"))
+    return bool(BOT_RE.search(normalized))
+
+
+def union_seconds(intervals):
+    merged = []
+    for start, end in sorted(intervals):
+        if end <= start:
+            continue
+        if merged and start <= merged[-1][1]:
+            merged[-1][1] = max(end, merged[-1][1])
+        else:
+            merged.append([start, end])
+    return sum(end - start for start, end in merged)
+
+
+def aggregate_participants(rows, target_start):
+    groups = {}
+    for row in rows:
+        if is_automation(row.get("name")) or row.get("status") == "in_waiting_room":
+            continue
+        start, end = parse_dt(row.get("join_time")), parse_dt(row.get("leave_time"))
+        if start is None or end is None:
+            # Missing timestamps cannot support negative inference.
+            return None
+        email = (row.get("user_email") or row.get("email") or "").casefold()
+        name = (row.get("name") or "").casefold()
+        key = email or name or row.get("user_id") or "unknown"
+        person = groups.setdefault(key, {"name": row.get("name") or "", "email": email, "intervals": []})
+        person["intervals"].append((max(start, target_start).timestamp(), end.timestamp()))
+    return [{**person, "seconds": union_seconds(person["intervals"])} for person in groups.values()]
+
+
+def zoom_signal(participants, prospect_emails, org_emails, prospect_names=(), host_names=()):
     if participants is None:
-        return None, "no zoom data"
-    prospect_secs, host_secs = 0, 0
-    pnames = [n.lower() for n in prospect_names if n]
-    for p in participants:
-        email, name, secs = p["email"], (p["name"] or "").lower(), p["seconds"]
-        if email and email in org_emails:
-            host_secs += secs
-        elif email and email in prospect_emails:
-            prospect_secs += secs
-        elif not email and pnames and any(
-                _name_match(name, pn) for pn in pnames):
-            prospect_secs += secs  # phone/renamed join matched by name
-        elif not email and not pnames:
-            pass
-    if prospect_secs >= MIN_ATTEND_SECONDS:
-        return "completed", f"prospect on for {prospect_secs}s"
-    if prospect_secs > 0:
-        return None, f"prospect joined only {prospect_secs}s — review"
-    if host_secs >= HOST_MIN_SECONDS and ZOOM_AUTO_NOSHOW:
-        return "no_show", f"host on {host_secs}s, prospect absent (auto no-show)"
-    if host_secs >= HOST_MIN_SECONDS:
-        return None, f"host on {host_secs}s, prospect absent — review (auto no-show off)"
-    return None, "neither host nor prospect found in zoom report — review"
+        return None, "missing or ambiguous Zoom occurrence/report — review"
+    prospect, host = [], []
+    prospect_seconds, host_seconds, unknown = 0, 0, False
+    for participant in participants:
+        if is_automation(participant.get("name")):
+            continue
+        email = (participant.get("email") or "").casefold()
+        name = (participant.get("name") or "").casefold()
+        seconds = participant.get("seconds", 0)
+        if (email and email in org_emails) or (name and name in {n.casefold() for n in host_names}):
+            host_seconds = max(host_seconds, seconds)
+            host.extend(participant.get("intervals", []))
+        elif (email and email in prospect_emails) or any(_name_match(name, pn.casefold()) for pn in prospect_names):
+            prospect_seconds = max(prospect_seconds, seconds)
+            prospect.extend(participant.get("intervals", []))
+        elif seconds > 0:
+            unknown = True
+    if prospect:
+        prospect_seconds = union_seconds(prospect)
+    if host:
+        host_seconds = union_seconds(host)
+    if prospect_seconds >= MIN_ATTEND_SECONDS:
+        return "completed", f"verified prospect attended {int(prospect_seconds)}s"
+    if prospect_seconds > 0:
+        return None, f"prospect joined only {int(prospect_seconds)}s — review"
+    if unknown:
+        return None, "unidentified human participant — review before no-show"
+    if host_seconds >= HOST_MIN_SECONDS and ZOOM_AUTO_NOSHOW:
+        return "no_show", f"identified host waited {int(host_seconds)}s after appointment start; no prospect/human"
+    return None, "insufficient identified host/prospect attendance — review"
 
 
 def _name_match(a, b):
@@ -650,11 +745,16 @@ def decide(meeting, lead_meetings, zoom_result, now_utc,
     # 1. Zoom attendance.
     zoom_detail = None
     if zoom_result != "skip":
-        participants, prospect_emails, org_emails, prospect_names = zoom_result
+        participants, prospect_emails, org_emails, prospect_names, *host_names = zoom_result
         z, zoom_detail = zoom_signal(participants, prospect_emails, org_emails,
-                                     prospect_names)
-        if z:
+                                     prospect_names, host_names[0] if host_names else ())
+        if z == "completed":
             return z, "zoom", zoom_detail
+    else:
+        z = None
+    ph, ph_detail = phone_evidence(meeting, calls, acts)
+    if ph == "completed":
+        return "completed", "phone", ph_detail
 
     # 2. Cancel / reschedule from Close's own state.
     if is_canceledish(meeting):
@@ -662,16 +762,11 @@ def decide(meeting, lead_meetings, zoom_result, now_utc,
             return "rescheduled", "close-status", "canceled + later booking exists"
         return "cancelled", "close-status", "canceled, no later booking"
 
-    # 3. Phone conversation on the meeting day.
-    ph, ph_detail = phone_evidence(meeting, calls, acts)
-    if ph == "completed":
-        return "completed", "phone", ph_detail
-
-    # 4. Lead status + attendee RSVP negative evidence.
-    sr, sr_detail = status_rsvp_signal(meeting, lead_status, ext_attendee_statuses)
-    if sr:
-        return sr, "status-rsvp", sr_detail
-
+    if ph == "review":
+        return None, "phone", ph_detail
+    if z == "no_show":
+        return z, "zoom", zoom_detail
+    # Current lead status/RSVP cannot prove attendance at a historical meeting.
     if zoom_detail is not None:
         return None, "zoom", zoom_detail
     return None, "none", "no signal available"
@@ -682,7 +777,8 @@ def decide(meeting, lead_meetings, zoom_result, now_utc,
 
 def run():
     now_utc = datetime.now(timezone.utc)
-    since = now_utc - timedelta(days=LOOKBACK_DAYS)
+    since = (now_utc - timedelta(days=LOOKBACK_DAYS) if LOOKBACK_DAYS > 0
+             else datetime(1970, 1, 1, tzinfo=timezone.utc))
     zoom = Zoom()
 
     print(f"outcome_sync: window={since:%Y-%m-%d}..{now_utc:%Y-%m-%d} "
@@ -719,6 +815,7 @@ def run():
               "auto_noshow": [], "field_writes": [], "errors": []}
 
     brief_cache, evidence_cache = {}, {}
+    first_projection_meeting = {}
 
     def get_brief(lead_id):
         if lead_id not in brief_cache:
@@ -727,13 +824,19 @@ def run():
 
     def get_evidence(lead_id):
         if lead_id not in evidence_cache:
-            evidence_cache[lead_id] = {"acts": fetch_attention_acts(s, lead_id),
+            evidence_cache[lead_id] = {"acts": [],
                                        "calls": fetch_lead_calls(s, lead_id)}
         return evidence_cache[lead_id]
 
     def project_first_call_field(meeting, lead_id, outcome_id):
         """Outcome -> First Call Show Up bridge. Overwrites (outcome is truth)."""
         brief = get_brief(lead_id)
+        if lead_id not in first_projection_meeting:
+            eligible = [candidate for candidate in by_lead[lead_id]
+                        if first_call_field_value(candidate, brief.get(CF_FSCBD), OUTCOMES["completed"]) is not None]
+            first_projection_meeting[lead_id] = min(eligible, key=lambda candidate: (candidate["starts_at"], candidate["id"]))["id"] if eligible else None
+        if meeting["id"] != first_projection_meeting[lead_id]:
+            return
         value = first_call_field_value(meeting, brief.get(CF_FSCBD), outcome_id)
         if value is None:
             return
@@ -751,14 +854,16 @@ def run():
               f"{current_val or '(blank)'} -> {value}  "
               f"(lead {lead_id}, mtg {meeting['id']})")
 
-    for m in meetings:
+    for m in sorted(meetings, key=lambda row: row.get("starts_at") or "", reverse=True):
+        if not OUTCOME_TITLE_RE.search(m.get("title") or ""):
+            continue
         st = parse_dt(m.get("starts_at"))
         if st is None or st > now_utc:
             continue  # future meetings keep their Scheduled default
         # Grace period: don't judge a meeting that is in progress or just
         # ended — Avoma's Outcome tag hasn't been written yet and Zoom's
         # participant report lags meeting end. A later run picks it up.
-        est_end = st + timedelta(seconds=int(m.get("duration") or 3600))
+        est_end = parse_dt(m.get("ends_at")) or st + timedelta(seconds=int(m.get("duration") or 3600))
         if now_utc < est_end + timedelta(minutes=GRACE_MINUTES):
             continue
         owner = users.get(m.get("user_id"), {})
@@ -771,7 +876,8 @@ def run():
             # the legacy First Call Show Up field in lockstep with it.
             report["skipped_terminal"] += 1
             try:
-                project_first_call_field(m, lead_id, current)
+                if st >= now_utc - timedelta(days=7):
+                    project_first_call_field(m, lead_id, current)
             except Exception as e:
                 report["errors"].append({"meeting": m.get("id"), "error": str(e)})
                 print(f"  ERROR {m.get('id')}: {e}", file=sys.stderr)
@@ -801,17 +907,44 @@ def run():
                     prospect_names = prospect_names_for(m, lead, org_emails)
                     participants = zoom.participants_for(zoom_meeting_id, st)
                     zoom_result = (participants, prospect_emails,
-                                   org_emails, prospect_names)
+                                   org_emails, prospect_names, [owner.get("name", "")])
 
+            lead_history = by_lead[lead_id]
+            if is_canceledish(m):
+                lead_history = fetch_all_lead_meetings(s, lead_id)
             outcome_key, source, detail = decide(
-                m, by_lead[lead_id], zoom_result, now_utc,
+                m, lead_history, zoom_result, now_utc,
                 acts=acts, calls=calls, lead_status=lead_status,
                 ext_attendee_statuses=ext_attendee_statuses)
 
+            change_messages = []
+            if outcome_key in {None, "no_show"}:
+                room_ids = set()
+                change_messages = meeting_change_messages(s, m, zoom_ids=room_ids)
+                alternate_rooms = room_ids - ({zoom_meeting_id} if zoom_meeting_id else set())
+                if change_messages or alternate_rooms:
+                    outcome_key, source, detail = None, "prospect-message", "appointment change or replacement room requires review"
+                neighboring_booking = any(other["id"] != m["id"] and parse_dt(other.get("starts_at")) is not None
+                                          and abs((parse_dt(other["starts_at"])-st).total_seconds()) <= 3600
+                                          for other in by_lead[lead_id])
+                if zoom.enabled and alternate_rooms and len(alternate_rooms) <= 3 and not neighboring_booking:
+                    emails = {(a.get("email") or "").casefold() for a in m.get("attendees", [])
+                              if a.get("email") and not a.get("user_id")}
+                    names = prospect_names_for(m, lead, org_emails)
+                    for room_id in sorted(alternate_rooms):
+                        participants = zoom.participants_for(room_id, st)
+                        candidate, candidate_detail = zoom_signal(participants, emails, org_emails, names, [owner.get("name", "")])
+                        if candidate == "completed":
+                            outcome_key, source, detail = candidate, "zoom-replacement-room", candidate_detail
+                            break
             label = f"{m['id']} '{(m.get('title') or '')[:40]}' {st:%m-%d %H:%M}"
             if outcome_key:
                 if not DRY_RUN:
-                    set_meeting_outcome(s, m["id"], OUTCOMES[outcome_key])
+                    actual = set_meeting_outcome(s, m, OUTCOMES[outcome_key])
+                    if actual != OUTCOMES[outcome_key]:
+                        report["skipped_terminal"] += 1
+                        project_first_call_field(m, lead_id, actual)
+                        continue
                 report["written"].append(
                     {"meeting": m["id"], "lead": lead_id,
                      "outcome": outcome_key, "source": source, "detail": detail})
@@ -827,13 +960,18 @@ def run():
                     {"meeting": m["id"], "lead": lead_id,
                      "title": m.get("title"), "starts_at": m.get("starts_at"),
                      "provider": provider, "age_days": age_days,
-                     "note_head": (m.get("note") or "")[:100],
+                     "owner_id": m.get("user_id"),
+                     "change_message_references": change_messages,
+                     "review_due_at": (est_end + timedelta(hours=48)).isoformat(),
+                     "overdue": now_utc >= est_end + timedelta(hours=48),
                      "reason": f"{source}: {detail}"})
                 print(f"  FLAG               {label} "
                       f"({source}: {detail}) [provider={provider} age={age_days}d]")
         except Exception as e:  # keep the run alive; report the failure
             report["errors"].append({"meeting": m.get("id"), "error": str(e)})
             print(f"  ERROR {m.get('id')}: {e}", file=sys.stderr)
+        with open("outcome_sync_report.json", "w") as stream:
+            json.dump({"generated_at": now_utc.isoformat(), "dry_run": DRY_RUN, **report}, stream, indent=2)
 
     # Completeness monitor: the logging guarantee.
     print("\n=== OUTCOME COMPLETENESS ===")
@@ -866,202 +1004,17 @@ def run():
                    **report}, fh, indent=2)
     print("\nreport: outcome_sync_report.json")
 
-    # Non-zero exit only on hard errors, so the workflow step can alert.
-    return 1 if report["errors"] else 0
+    # Missing attendance beyond its fixed deadline is an incomplete sync, not success.
+    return 1 if report["errors"] or any(f["overdue"] for f in report["flagged"]) else 0
 
 # ---------------------------------------------------------------------------
 # Selftest — pure decision logic, no network
 # ---------------------------------------------------------------------------
 
 def selftest():
-    now = datetime(2026, 7, 21, 20, 0, tzinfo=timezone.utc)
-
-    def mtg(id, title, start, status="completed", outcome=None, lead="lead_1"):
-        return {"id": id, "title": title, "starts_at": start, "status": status,
-                "outcome_id": outcome, "lead_id": lead}
-
-    m_first = mtg("m1", "Vending Strategy Call", "2026-07-20T16:00:00+00:00")
-    m_cancel = mtg("m2", "Canceled: Vending Strategy Call",
-                   "2026-07-19T16:00:00+00:00", status="canceled")
-    m_later = mtg("m3", "Vending Strategy Call", "2026-07-22T16:00:00+00:00",
-                  status="upcoming")
-    lead_meetings = [m_first, m_cancel, m_later]
-
-    checks = []
-
-    # 1. canceled + later booking -> rescheduled
-    r = decide(m_cancel, lead_meetings, "skip", now)
-    checks.append(("cancel->rescheduled", r[0] == "rescheduled" and r[1] == "close-status"))
-
-    # 2. canceled, no later booking -> cancelled
-    r = decide(m_cancel, [m_cancel], "skip", now)
-    checks.append(("cancel->cancelled", r[0] == "cancelled"))
-
-    # 3. zoom: prospect attended -> completed
-    parts = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 2400},
-             {"name": "Prospect", "email": "p@x.com", "seconds": 1800}]
-    z = (parts, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Prospect"])
-    r = decide(m_first, lead_meetings, z, now)
-    checks.append(("zoom attended", r[0] == "completed" and r[1] == "zoom"))
-
-    # 8. zoom: host present, prospect absent -> auto no_show (guarded)
-    parts = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 1800}]
-    z = (parts, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Prospect"])
-    r = decide(m_first, lead_meetings, z, now)
-    checks.append(("zoom auto-noshow", r[0] == "no_show"))
-
-    # 9. zoom: host barely present -> flag, never no_show
-    parts = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 120}]
-    z = (parts, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Prospect"])
-    r = decide(m_first, lead_meetings, z, now)
-    checks.append(("zoom absent-host flag", r[0] is None))
-
-    # 10. zoom: prospect joined 90s -> flag for review, not completed/no_show
-    parts = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 1800},
-             {"name": "Prospect", "email": "p@x.com", "seconds": 90}]
-    z = (parts, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Prospect"])
-    r = decide(m_first, lead_meetings, z, now)
-    checks.append(("zoom brief join flag", r[0] is None))
-
-    # 11. phone join matched by fuzzy first name + exact surname -> completed
-    parts = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 1800},
-             {"name": "steve kelley", "email": "", "seconds": 1500}]
-    z = (parts, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Steven Kelley"])
-    r = decide(m_first, lead_meetings, z, now)
-    checks.append(("zoom name match", r[0] == "completed"))
-
-    # 11b. fuzzy-looking name with a different surname never matches.
-    parts = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 1800},
-             {"name": "lowell gilliland", "email": "", "seconds": 1500}]
-    z = (parts, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Lowell Gill"])
-    r = decide(m_first, lead_meetings, z, now)
-    checks.append(("zoom surname guard", r[0] == "no_show"))
-
-    # 12. no signal at all -> flag
-    r = decide(m_first, lead_meetings, "skip", now)
-    checks.append(("no signal flag", r[0] is None and r[1] == "none"))
-
-    mstart = parse_dt(m_first["starts_at"])
-
-    # 13. v7: a meeting-analysis CA is NOT evidence any more — a meeting with
-    #     no other signal still flags, even with acts present, because the CA
-    #     also gets created for analyzed no-shows (Avoma records the rep
-    #     waiting). Avoma's tag now reaches the outcome via its own sync.
-    fake_ca = [{"type_id": "actitype_7Hnq4Sw2S223adPFUmTarD",
-                "at": mstart + timedelta(minutes=30)}]
-    r = decide(m_first, lead_meetings, "skip", now, acts=fake_ca)
-    checks.append(("v7: CA existence not evidence", r[0] is None))
-
-    # 16. Zoom no-show outranks an answered 400s phone call.
-    calls = [{"at": mstart + timedelta(hours=2), "duration": 400,
-              "disposition": "answered"}]
-    parts = [{"name": "Rep", "email": "rep@vendingpreneurs.com", "seconds": 1800}]
-    z = (parts, {"p@x.com"}, {"rep@vendingpreneurs.com"}, ["Prospect"])
-    r = decide(m_first, lead_meetings, z, now, calls=calls)
-    checks.append(("zoom noshow beats phone show", r[0] == "no_show"
-                   and r[1] == "zoom"))
-
-    # 17. Zoom no-show also outranks a shorter answered phone call.
-    calls_short = [{"at": mstart + timedelta(hours=2), "duration": 150,
-                    "disposition": "answered"}]
-    r = decide(m_first, lead_meetings, z, now, calls=calls_short)
-    checks.append(("zoom noshow beats short phone", r[0] == "no_show"
-                   and r[1] == "zoom"))
-
-    # 18. phone: unanswered call does NOT block auto no-show
-    calls_na = [{"at": mstart + timedelta(hours=2), "duration": 0,
-                 "disposition": "no-answer"}]
-    r = decide(m_first, lead_meetings, z, now, calls=calls_na)
-    checks.append(("unanswered call ignored", r[0] == "no_show"))
-
-    # 18b. phone show fills in when Zoom is inconclusive
-    r = decide(m_first, lead_meetings, "skip", now, calls=calls)
-    checks.append(("phone show when no zoom", r[0] == "completed"
-                   and r[1] == "phone"))
-
-    # 19. status+rsvp: Canceled (by Lead) + attendee noreply -> cancelled (Ruben fix)
-    r = decide(m_first, lead_meetings, "skip", now,
-               lead_status="🔻 Canceled (by Lead)",
-               ext_attendee_statuses=["noreply"])
-    checks.append(("status-rsvp cancelled", r[0] == "cancelled"
-                   and r[1] == "status-rsvp"))
-
-    # 20. status+rsvp: ghost/no-show status + noreply -> no_show
-    r = decide(m_first, lead_meetings, "skip", now,
-               lead_status="👻 No Show", ext_attendee_statuses=["noreply", "no"])
-    checks.append(("status-rsvp noshow", r[0] == "no_show"))
-
-    # 21. status+rsvp requires ALL-negative RSVPs — an accepted invite blocks it
-    r = decide(m_first, lead_meetings, "skip", now,
-               lead_status="🔻 Canceled (by Lead)",
-               ext_attendee_statuses=["yes"])
-    checks.append(("rsvp yes blocks status rung", r[0] is None))
-
-    # --- First Call Show Up projection ---
-    # m_first starts 2026-07-20T16:00Z = 2026-07-20 Pacific (9am PDT)
-    # 22. first sales call + Completed -> Yes
-    v = first_call_field_value(m_first, "2026-07-20", OUTCOMES["completed"])
-    checks.append(("project Yes", v == "Yes"))
-
-    # 23. first sales call + No Show -> No
-    v = first_call_field_value(m_first, "2026-07-20", OUTCOMES["no_show"])
-    checks.append(("project No", v == "No"))
-
-    # 24. wrong FSCBD date -> no projection (a later re-booked sales call
-    #     must NOT overwrite the first call's verdict)
-    v = first_call_field_value(m_first, "2026-07-01", OUTCOMES["completed"])
-    checks.append(("project date guard", v is None))
-
-    # 25. follow-up / non-sales titles -> no projection
-    m_fu = mtg("mf", "Vending Strategy Call Follow-Up", "2026-07-20T16:00:00+00:00")
-    v = first_call_field_value(m_fu, "2026-07-20", OUTCOMES["completed"])
-    m_rand = mtg("mr", "Random sync", "2026-07-20T16:00:00+00:00")
-    v2 = first_call_field_value(m_rand, "2026-07-20", OUTCOMES["completed"])
-    checks.append(("project title guard", v is None and v2 is None))
-
-    # 26. rescheduled/cancelled outcomes never project
-    v = first_call_field_value(m_first, "2026-07-20", OUTCOMES["rescheduled"])
-    checks.append(("project outcome guard", v is None))
-
-    # 27. scraper title variants project too (incl. 'Call - Next Steps')
-    m_scr = mtg("msc", "Vendingpreneurs Call - Next Steps with Phil",
-                "2026-07-20T16:00:00+00:00")
-    v = first_call_field_value(m_scr, "2026-07-20", OUTCOMES["completed"])
-    checks.append(("project scraper title", v == "Yes"))
-
-    # 28. attendee contact name fills a missing attendee name.
-    meeting_with_contact = {
-        "attendees": [{"email": "debbie@example.com", "name": None,
-                       "contact_id": "contact_1"}]
-    }
-    debbie = {
-        "display_name": "Debbie Barca",
-        "contacts": [{"id": "contact_1", "name": "Debbie Barca",
-                      "emails": [{"email": "debbie@example.com"}]}],
-    }
-    names = prospect_names_for(meeting_with_contact, debbie,
-                               {"rep@vendingpreneurs.com"})
-    checks.append(("contact name fallback", names == ["Debbie Barca"]))
-
-    # 29. an attached contact with a different surname is a different person.
-    ashley = {
-        "display_name": "Ashley Trybus",
-        "contacts": [{"id": "contact_1", "name": "Ashley Hoeger",
-                      "emails": [{"email": "ashley@example.com"}]}],
-    }
-    names = prospect_names_for(meeting_with_contact, ashley,
-                               {"rep@vendingpreneurs.com"})
-    checks.append(("contact surname guard", names == []))
-
-    # 30. obvious Zoom age metadata does not become a surname.
-    checks.append(("zoom name metadata",
-                   _name_match("Chelsea Streeter 37 YO", "Chelsea Streeter")))
-
-    failed = [name for name, ok in checks if not ok]
-    for name, ok in checks:
-        print(f"  {'PASS' if ok else 'FAIL'}  {name}")
-    print(f"\n{len(checks) - len(failed)}/{len(checks)} passed")
-    return 1 if failed else 0
+    import unittest
+    suite = unittest.defaultTestLoader.loadTestsFromNames(["test_outcome_sync", "test_outcome_coverage"])
+    return 0 if unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful() else 1
 
 
 if __name__ == "__main__":

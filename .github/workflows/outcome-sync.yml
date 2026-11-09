@@ -14,6 +14,15 @@ name: Meeting Outcome Sync
 
 on:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Read-only evidence replay (1) or normal writes (0)'
+        default: '0'
+        required: false
+      lookback_days:
+        description: 'Past meeting scope; 0 retains the complete backlog'
+        default: '0'
+        required: false
   schedule:
     # Four daily passes leave time for the evidence sources and 180-minute grace window.
     - cron: "37 0,6,12,18 * * *"
@@ -35,8 +44,11 @@ jobs:
 
       - run: pip install requests
 
+      - name: Test outcome evidence and write guards
+        run: python -m unittest test_outcome_sync test_outcome_coverage test_native_outcome_backlog
+
       - name: Run outcome sync
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || inputs.dry_run == '1'
         env:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
           ZOOM_ACCOUNT_ID: ${{ secrets.ZOOM_ACCOUNT_ID }}
@@ -44,15 +56,15 @@ jobs:
           ZOOM_CLIENT_SECRET: ${{ secrets.ZOOM_CLIENT_SECRET }}
           ZOOM_REQUIRED: "1"
           # Flip to "0" after reviewing dry-run output in the Actions logs.
-          DRY_RUN: "0"
-          LOOKBACK_DAYS: "1"
+          DRY_RUN: ${{ inputs.dry_run || '0' }}
+          LOOKBACK_DAYS: ${{ inputs.lookback_days || '0' }}
           MIN_ATTEND_SECONDS: "300"
           HOST_MIN_SECONDS: "600"
-          ZOOM_AUTO_NOSHOW: "0"
+          ZOOM_AUTO_NOSHOW: "1"
         run: python outcome_sync.py
 
       - name: Upload run report
-        if: always() && github.ref == 'refs/heads/main'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: outcome-sync-report
