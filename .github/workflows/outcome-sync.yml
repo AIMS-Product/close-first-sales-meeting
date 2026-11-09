@@ -20,8 +20,8 @@ on:
         default: '0'
         required: false
       lookback_days:
-        description: 'Past meeting scope; 0 retains the complete backlog'
-        default: '0'
+        description: 'Rolling meeting lookback in days (must be positive)'
+        default: '1'
         required: false
   schedule:
     # Four daily passes leave time for the evidence sources and 180-minute grace window.
@@ -45,7 +45,7 @@ jobs:
       - run: pip install requests
 
       - name: Test outcome evidence and write guards
-        run: python -m unittest test_outcome_sync test_outcome_coverage test_native_outcome_backlog
+        run: python -m unittest test_outcome_sync test_outcome_coverage test_meeting_window
 
       - name: Run outcome sync
         if: github.ref == 'refs/heads/main' || inputs.dry_run == '1'
@@ -57,7 +57,7 @@ jobs:
           ZOOM_REQUIRED: "1"
           # Flip to "0" after reviewing dry-run output in the Actions logs.
           DRY_RUN: ${{ inputs.dry_run || '0' }}
-          LOOKBACK_DAYS: ${{ inputs.lookback_days || '0' }}
+          LOOKBACK_DAYS: ${{ inputs.lookback_days || '1' }}
           MIN_ATTEND_SECONDS: "300"
           HOST_MIN_SECONDS: "600"
           ZOOM_AUTO_NOSHOW: "1"

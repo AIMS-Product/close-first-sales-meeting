@@ -11,7 +11,7 @@ MEETING = {"id": "meeting", "lead_id": "lead", "user_id": "rep", "title": "Vendi
 
 class CoverageTests(unittest.TestCase):
     def test_unordered_close_page_does_not_hide_later_booking(self):
-        with patch.object(sync, "read_outcome_backlog", return_value=[MEETING]):
+        with patch.object(sync, "read_meeting_window", return_value=[MEETING]):
             self.assertEqual([MEETING], sync.fetch_meetings_window(None, START-timedelta(days=1), START+timedelta(days=1)))
 
     def test_explicit_calendar_declines_close_as_cancelled(self):

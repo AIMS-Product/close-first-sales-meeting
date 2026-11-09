@@ -58,7 +58,7 @@ ENV / SECRETS
   ZOOM_REQUIRED        "1" = fail before Close access if Zoom auth is unavailable
                        (set by the GitHub workflow; optional for local dry runs)
   DRY_RUN              "1" (default) = log only; "0" = write outcomes
-  LOOKBACK_DAYS        how far back to scan past meetings (0 = all history, default)
+  LOOKBACK_DAYS        how far back to scan past meetings (default 7)
   GRACE_MINUTES        skip meetings that ended less than this long ago
                        (default 180 — gives the Avoma tag first crack)
   MIN_ATTEND_SECONDS   prospect total time to count as attended (default 300)
@@ -83,7 +83,7 @@ from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 import requests
-from close_outcome_backlog import read_outcome_backlog, confirmation_due_at, MANAGER_REVIEW_OWNER_ID
+from close_meeting_window import read_meeting_window
 from workflow_holds import guard_request
 
 # ---------------------------------------------------------------------------
@@ -204,7 +204,7 @@ def env_int(name, default):
         return default
 
 DRY_RUN = os.environ.get("DRY_RUN", "1") != "0"
-LOOKBACK_DAYS = env_int("LOOKBACK_DAYS", 0)
+LOOKBACK_DAYS = env_int("LOOKBACK_DAYS", 7)
 # v7: 90 -> 180. Avoma's Outcome tag (written to the meeting by
 # avoma_to_close_first_meeting_sync.py) can lag the meeting by a couple of
 # hours; waiting longer lets that transcript-grounded verdict land first,
@@ -285,7 +285,7 @@ def fetch_meetings_window(s, since_dt, until_dt):
             time.sleep(0.6)
             return response.json()
         raise RuntimeError("Close outcome search remained rate limited")
-    meetings = read_outcome_backlog(search_page, lambda params: close_get(s, "/activity/meeting/", params), fields, datetime.now(timezone.utc))
+    meetings = read_meeting_window(search_page, fields, since_dt, until_dt)
     return [meeting for meeting in meetings
             if (start := parse_dt(meeting.get("starts_at"))) is not None
             and since_dt <= start <= until_dt]
@@ -777,8 +777,9 @@ def decide(meeting, lead_meetings, zoom_result, now_utc,
 
 def run():
     now_utc = datetime.now(timezone.utc)
-    since = (now_utc - timedelta(days=LOOKBACK_DAYS) if LOOKBACK_DAYS > 0
-             else datetime(1970, 1, 1, tzinfo=timezone.utc))
+    if LOOKBACK_DAYS <= 0:
+        raise ValueError("LOOKBACK_DAYS must be positive; unbounded historical scans are disabled")
+    since = now_utc - timedelta(days=LOOKBACK_DAYS)
     zoom = Zoom()
 
     print(f"outcome_sync: window={since:%Y-%m-%d}..{now_utc:%Y-%m-%d} "
@@ -961,11 +962,7 @@ def run():
                      "title": m.get("title"), "starts_at": m.get("starts_at"),
                      "provider": provider, "age_days": age_days,
                      "owner_id": m.get("user_id"),
-                     "manager_review_owner_id": MANAGER_REVIEW_OWNER_ID,
-                     "requires_confirmation": True,
                      "change_message_references": change_messages,
-                     "review_due_at": confirmation_due_at(est_end).isoformat(),
-                     "overdue": now_utc >= confirmation_due_at(est_end),
                      "reason": f"{source}: {detail}"})
                 print(f"  FLAG               {label} "
                       f"({source}: {detail}) [provider={provider} age={age_days}d]")
@@ -1006,8 +1003,8 @@ def run():
                    **report}, fh, indent=2)
     print("\nreport: outcome_sync_report.json")
 
-    # Missing attendance beyond its fixed deadline is an incomplete sync, not success.
-    return 1 if report["errors"] or any(f["overdue"] for f in report["flagged"]) else 0
+    # Ambiguous cases stay unchanged; only source/write errors fail the run.
+    return 1 if report["errors"] else 0
 
 # ---------------------------------------------------------------------------
 # Selftest — pure decision logic, no network

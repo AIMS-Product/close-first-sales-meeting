@@ -1,43 +1,20 @@
-# Native meeting outcome reconciliation
+# Native meeting outcome backup
 
-The durable backlog covers Anthony's exact 320 historical Lane 2 activities plus
-all supported meetings from November 1, 2026 onward. This fixed start never moves
-forward, so new unresolved meetings cannot age out. Native Close search cursors
-select open outcomes and recent terminal meetings for field projection; the
-historical seed is always re-read. `LOOKBACK_DAYS=0` keeps that entire scope.
-Positive values are for bounded read-only investigation. The broader 2024–2025
-organization history is deliberately outside this historical repair.
+The proposed persistent unresolved backlog has been removed. LOOKBACK_DAYS is
+positive and rolling (code default 7; workflow default 1, matching production).
+There is no historical activity seed, fixed November cutoff, permanent backlog,
+or automated confirmation deadline. Ambiguous cases stay unchanged and reported;
+only source/write errors fail the job. No confirmation messages or tasks are sent.
 
-Avoma tags normally get the first three hours after a meeting ends. The Zoom
-backup then uses one unambiguous occurrence within 30 minutes of the appointment,
-all participant pages, and unioned attendance intervals. It ignores known bots
-and waiting-room entries, and counts only time after the scheduled start. A
-verified prospect attending five minutes establishes Completed. A host waiting
-at least ten minutes can establish No Show only with no identified prospect or
-unidentified human, and no meeting-proximate answered phone evidence. A short
-prospect join or unknown human requires review. Missing Zoom data is not absence.
-Current lead status and RSVP are not proof of attendance at a historical meeting.
-Prospect change requests block an automated no-show and carry the source activity
-IDs into review. Replacement Zoom rooms sent during the appointment can recover
-verified attendance, but never establish an automated negative.
+The review candidate retains guarded Zoom evidence: one unambiguous occurrence,
+complete participant pagination, encoded UUIDs, unioned device time, exclusion of
+bots/waiting rooms/pre-appointment waiting, and a veto for unknown humans or
+prospect change requests. Replacement room links can recover verified attendance.
+Same-host meeting-proximate answered phone calls can establish attendance. Current
+lead status and RSVP cannot establish historical attendance. Explicit calendar
+declines map to cancellation/rescheduling. Fresh identity/outcome guards and
+readback protect recorded outcomes; first-call projection remains deterministic.
 
-Only blank/Scheduled native outcomes are written. The writer re-reads meeting
-identity and the outcome immediately before PUT and verifies readback afterward.
-Existing terminal outcomes, future bookings and qualification remain protected.
-First Call Show Up projects only from the earliest eligible first-call outcome.
+Validation: python -m unittest test_outcome_sync test_outcome_coverage test_meeting_window
 
-Reports retain meeting ID, host ID, reason, and a fixed deadline of meeting end
-plus 48 hours. Overdue review or source/write errors return a nonzero exit;
-a successful API run cannot conceal an incomplete attendance backlog. Original
-hosts are the evidence owners; managers must reassign former hosts' reviews.
-No Unknown outcome or payout eligibility is inferred from missing evidence.
-
-Validation: `python -m unittest test_outcome_sync test_outcome_coverage test_native_outcome_backlog`.
-Use workflow dispatch with `dry_run=1` for a read-only production-source replay.
-Rollback: restore the previous code and set `ZOOM_AUTO_NOSHOW=0`; preserve already
-recorded native outcomes and their receipts. No ledger records are modified.
-
-Historical confirmation cleanup is due November 11, 2026 at 9 AM Pacific;
-future appointments retain meeting-end-plus-48-hour deadlines. Original hosts
-own confirmations, with Anthony as the manager escalation owner. Uncertain
-outcomes stay pending until one confirms; no automatic Unknown outcome is used.
+These safety improvements remain on a review branch, pending deployment approval.
