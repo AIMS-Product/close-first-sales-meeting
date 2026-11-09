@@ -1,5 +1,14 @@
 # Attendance at the released-lead handoff
 
+The November 9 [QA lifecycle extension](QA_LIFECYCLE_2026-11-09.md) is implemented
+behind coordinated Railway configuration and `qa_lifecycle_deployment.json`.
+When enabled, closer-marked Lost uses its own
+48-hour/allowed-reason handoff, and normal shown QA admissions atomically stamp
+the existing QA entry/contact/outcome fields. Its five-business-day clock skips
+weekends and observed U.S. federal holidays. The runner reuses Railway's existing
+database credentials; GitHub delegates QA handoffs and retires the old Lost router.
+The source switch is disabled pending the documented activation gates.
+
 The existing Lane 1 service continues to start the 30-day clock at the first
 scheduled closer meeting, including a canceled or no-show booking. Its existing
 eligibility checks, owner-stint evidence, release journal and release tags stay

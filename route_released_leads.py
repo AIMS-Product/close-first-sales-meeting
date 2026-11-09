@@ -178,6 +178,8 @@ class HandoffReader:
 
 
 def run(reader, *, apply=False, max_writes=None):
+    from qa_lifecycle_runtime import railway_owns_qa
+    delegated = railway_owns_qa()
     candidates = reader.candidates()
     if candidates:
         reader.preflight()
@@ -195,6 +197,8 @@ def run(reader, *, apply=False, max_writes=None):
             plan = handoff_plan(snapshot, now=datetime.now(timezone.utc),
                                 terminal_statuses=reader.lane2.QA_TRIAGE_RELEASE_STATUSES,
                                 suppressed_statuses=reader.lane2.SUPPRESS_STATUSES)
+            if delegated and (plan['destination'] == 'qa' or snapshot['lead'].get('status_id') == reader.lane2.S_LOST):
+                plan = {'destination': 'held', 'reason': 'qa_handoff_owned_by_railway', 'changes': {}}
         except (RuntimeError, requests.RequestException) as error:
             hold_read(error)
             continue

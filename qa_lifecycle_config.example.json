@@ -1,0 +1,11 @@
+{
+  "policy_version": "qa-lost-48h-five-federal-business-days-v1",
+  "organization_id": "orga_Qwbx9tyUrl7Jdjurg9xJ8N6w1MN4PD2NQOgIhd8r7rC",
+  "enabled": false,
+  "authorization_reference": "November 9 user-approved QA Lost and five-day rules",
+  "calendar": "entry_day_zero_same_central_time_observed_us_federal",
+  "launched_at": null,
+  "lost_events_since": null,
+  "backlog_lead_ids": [],
+  "max_writes": 50
+}

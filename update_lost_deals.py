@@ -245,6 +245,10 @@ def create_task(lead_id, lead_name, sales_call_date_iso, assignee_user_id):
 
 
 def main():
+    from qa_lifecycle_runtime import railway_owns_qa
+    if railway_owns_qa():
+        print('Prior-day Lost reassignment retired: the Railway QA lifecycle owns closer Lost handoffs.')
+        return
     if DRY_RUN:
         print("=" * 60)
         print("  DRY RUN MODE — no writes will be made")

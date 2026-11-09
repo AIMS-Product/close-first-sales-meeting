@@ -1,0 +1,43 @@
+diff --git a/release/src/release/recurringRelease.ts b/release/src/release/recurringRelease.ts
+index 151abf02..48db5ff3 100644
+--- a/release/src/release/recurringRelease.ts
++++ b/release/src/release/recurringRelease.ts
+@@ -17,6 +17,8 @@ export interface RecurringReleasePolicy {
+   manualExclusionPolicyReference: string | null
+   maximumOwnershipScanAgeMs: number
+   stagingOwnerId: typeof RELEASE_STAGING_OWNER
++  /** Coordinated cutover: explicit Lost belongs to the 48-hour QA lifecycle. */
++  closedLostHandledByQaLifecycle?: boolean
+ }
+ export interface RecurringReleaseCandidate {
+   leadId: string
+@@ -78,6 +80,8 @@ export function planRecurringRelease(raw: FirstCallEvidence, policy: RecurringRe
+     const base = evaluateRelease(snapshot,{...policy.eligibility,
+       exceptionPolicyConfirmed:!!policy.manualExclusionPolicyReference},capturedAt)
+     const blocked = new Set(base.blockedReasons.filter(reason => reason !== 'ownership_under_30_days'))
++    if (policy.closedLostHandledByQaLifecycle && row.lead.status_id === policy.eligibility.lostStatusId)
++      blocked.add('closer_lost_uses_48_hour_qa_handoff')
+     const unknown = new Set(base.unknownReasons)
+     const scanAt = timestamp((raw as FirstCallEvidence & {ownershipScanAt?:string}).ownershipScanAt)
+     const scanAge = scanAt === null ? NaN : Date.parse(capturedAt)-Date.parse(scanAt)
+diff --git a/release/tests/recurringRelease.test.ts b/release/tests/recurringRelease.test.ts
+index 9cb7be6a..1a6e7d64 100644
+--- a/release/tests/recurringRelease.test.ts
++++ b/release/tests/recurringRelease.test.ts
+@@ -15,6 +15,16 @@ const raw = () => {
+   return r
+ }
+ describe('recurring first-meeting release under temporary Dom staging', () => {
++  it('delegates current Lost leads to the 48-hour lifecycle at coordinated cutover', () => {
++    const r=raw(),p=policy()
++    r.rows[0].lead.status_id='stat_lost';r.rows[0].fresh={...r.rows[0].lead}
++    p.closedLostHandledByQaLifecycle=true
++    const row=planRecurringRelease(r,p)[0]
++    expect(row.gates).toContain('closer_lost_uses_48_hour_qa_handoff')
++    expect(row.releasePlan).toBeNull()
++    r.rows[0].lead.status_id='stat_followup';r.rows[0].fresh={...r.rows[0].lead}
++    expect(planRecurringRelease(r,p)[0].releasePlan).not.toBeNull()
++  })
+   it('reuses verified genuine ownership, selects explicit target and plans only owner/tag', () => {
+     const row=planRecurringRelease(raw(),policy())[0]
+     expect(row.release.decision).toBe('eligible');expect(row.release.targetDealId).toBe('oppo_target')
