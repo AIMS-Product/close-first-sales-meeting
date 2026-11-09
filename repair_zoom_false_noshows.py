@@ -95,11 +95,18 @@ def evaluate_target(session, zoom, org_emails, meeting_id, expected_lead_id):
 
 
 def apply_target(session, planned):
-    production.set_meeting_outcome(
-        session,
-        planned["meeting_id"],
-        production.OUTCOMES["completed"],
+    meeting_id = planned["meeting_id"]
+    if meeting_id not in REPAIR_TARGETS:
+        raise ValueError("Meeting is outside the reviewed repair allowlist")
+    fresh = production.close_get(session, f"/activity/meeting/{meeting_id}/")
+    if fresh.get("lead_id") != planned["lead_id"] or fresh.get("starts_at") != planned["starts_at"]:
+        raise RuntimeError("Reviewed repair meeting identity changed")
+    actual = production.set_meeting_outcome(
+        session, fresh, production.OUTCOMES["completed"],
+        reviewed_from=production.OUTCOMES["no_show"],
     )
+    if actual != production.OUTCOMES["completed"]:
+        return
     field_value = planned.get("first_call_field")
     if field_value and field_value != planned.get("current_first_call_field"):
         production.set_lead_field(
