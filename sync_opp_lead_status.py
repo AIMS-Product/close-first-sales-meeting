@@ -3,7 +3,8 @@
 sync_opp_lead_status.py
 
 Keeps each Lead's native status in sync with its Opportunity status.
-Opportunity is the source of truth.
+Opportunity is the source of truth for sales progression.
+A Do Not Contact lead is protected from all non-DNC sync targets.
 
 Rule set:
   - If a lead has more than one opportunity, the opportunity that was

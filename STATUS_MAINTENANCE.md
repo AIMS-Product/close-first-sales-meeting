@@ -104,3 +104,13 @@ specific equivalent pair semantically only when `timezone_source` is
 `inferred_from_phone_number`. It still detects manual timezone changes, other
 timezone differences, source changes, contact version changes, and all other
 business fields. No contact fields are written by this worker.
+
+## Opt-out precedence — November 9, 2026
+
+Opportunity-to-lead synchronization preserves a lead already marked Do Not Contact,
+even when its opportunity remains Closed/Won. Before writing any non-DNC target,
+it reads the current lead status again so an opt-out received after the initial
+scan is respected. Existing booking protection and HOT evidence rules still apply.
+The SMS opt-out worker now aligns all non-won Sales Pipeline opportunities to DNC
+while preserving won deals; its audit and deployment details are maintained in
+`SMS_OPTOUTS_DNC.md` in the opt-out worker's source checkout.
