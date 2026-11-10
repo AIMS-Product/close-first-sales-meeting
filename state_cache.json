@@ -114991,12 +114991,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Naria Torres",
+      "reactivation_user": "user_RYUSwXoy5dCwwN1tIuMQV9ZyGvn8JqYORGI4l2QGLa5",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
+      "quick_disc": null
     },
     "lead_qv7ApQLCbnTJkz7lo1R5WfcrPwgJFT4GacgN15Bn30t": {
       "date": "2026-09-18",
@@ -123361,11 +123361,12 @@
     "lead_AAzLfHNz7PzmILzScvTwHSbYhs5FQ45tOWS84Z3hnPC": {
       "date": "2026-10-11",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -131022,8 +131023,34 @@
       "vendhub_date": null,
       "quick_disc": null,
       "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_UHQwkLKQhCeMx6fATha3oENHsTnLio72WSsnaWe7haX": {
+      "date": "2026-11-19",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_vw2xwmG2n6zLu3pjkuZHS7ZPNlg1dyImRUguk60YCbN",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_DAKvrD6nFdtF6PumCcZ8LweEHpVnyiFejZJ8Yb3pdvC": {
+      "date": "2026-11-11",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-11-10 18:39:27 UTC",
-  "count": 11022
+  "saved_at": "2026-11-10 19:10:49 UTC",
+  "count": 11024
 }
