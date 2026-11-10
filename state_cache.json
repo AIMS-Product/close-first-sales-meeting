@@ -110448,11 +110448,12 @@
     "lead_Vl39C9ySeMmqYwEriKio5dO9TSxIXztFVsjPER2EsUJ": {
       "date": "2026-09-01",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -131066,6 +131067,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-11-10 20:10:25 UTC",
+  "saved_at": "2026-11-10 20:40:01 UTC",
   "count": 11025
 }
