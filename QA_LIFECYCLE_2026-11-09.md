@@ -75,6 +75,8 @@ is November 17 at the same Central time, skipping Veterans Day and the weekend.
 Initialization proceeds through the durable queue. Redeployment, batch limits
 and retries do not change this cohort or its clock. Individual no-show recovery,
 source-evidence and competing-work protections still apply.
+By November 10, all 353 one-time backlog resets have verified write receipts;
+the original launch timestamp and deadline remain unchanged.
 
 Live handoffs have been independently checked against Close owner, QA state,
 entry timestamp and preserved batch attribution. Normal processing is bounded
@@ -123,6 +125,13 @@ historical-credit safeguards. Do not treat the earlier preparation or this
 follow-up note as authorization for the blocked remote upload/test.
 
 ## November 10 cancellation/reschedule release correction
+
+The user explicitly approved publication and deployment of the reviewed fix.
+The protection code is published on main and deployed to the existing Railway
+QA service. All 104 focused tests passed; native read-only inspection confirmed
+that status-only cleanup retains the current QA candidate, and replaying the
+reported lead's native meetings preserved all three recovery states without
+changing the lead. No configuration, launch-clock or schedule change was made.
 
 The status-only QA terminal cleaner is now observation-only for every QA lead,
 including bookings whose current owner is a closer. The existing Railway QA
