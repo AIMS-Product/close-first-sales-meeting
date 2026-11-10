@@ -23,8 +23,9 @@ Implements the user's November 9 clarification of the October 19 QA policy.
   verified lifecycle receipts prevent readmission after a later closer Lost or
   30-day release. Previously released closer-owned leads with uncertain QA
   history remain held for review rather than risking another pass.
-- A no-show from Naria's QA booking stays with her for recovery. Neither the
-  five-day fallback nor the older terminal cleaner may immediately release it.
+- No-shows, cancellations and reschedules from Naria's QA bookings retain
+  recovery protection for 30 elapsed days from the last scheduled meeting.
+  Neither the five-day fallback nor the older terminal cleaner may release them.
 - At expiry, only complete no-connection evidence permits normal Lane 2 intake.
   Preserve the release tag. A connection or human disposition prevents automatic
   timeout. Ready/education cases retain their existing human/provider handoff;
@@ -120,3 +121,26 @@ saved candidate against then-current reporting bindings, and complete its own
 qualification before installing it. Preserve cancellation, duplicate-booking and
 historical-credit safeguards. Do not treat the earlier preparation or this
 follow-up note as authorization for the blocked remote upload/test.
+
+## November 10 cancellation/reschedule release correction
+
+The status-only QA terminal cleaner is now observation-only for every QA lead,
+including bookings whose current owner is a closer. The existing Railway QA
+lifecycle is the sole owner of initial no-contact expiry and its coordinated
+tier handoff. Canceled initial QA intakes with complete no-connection evidence
+retain the five-business-day Central-time window; cancellation never shortens it.
+
+Native meeting creation time distinguishes bookings after QA admission from old
+meetings that preceded initial outreach. Missed QA bookings use their scheduled
+meeting time plus 30 elapsed days, including native cancellation/reschedule
+outcomes and opportunity Reschedule Requested signals before lead status sync.
+Changed timestamps or delayed status updates do not restart the clock. Legacy
+records with unknown entry/booking evidence remain held for review. A verified
+booking cannot be erased by a later No connection disposition.
+
+At the recovery deadline the lead remains excluded from five-day tier intake and
+is explicitly held for the separate Non-responsive/90-day-rest terminal handoff.
+This protection fix does not activate that deferred handoff or the seven-day
+communication sequence, create messages, repair prior assignments, or change
+reporting attribution. The existing launch clock, cohort, shared holds, exact
+write receipts, cadence and completion notifications are preserved.

@@ -273,6 +273,10 @@ def plan_qa_exit(snapshot, *, suppressed_statuses, activation_at):
         return held('qa_entry_outside_activation')
     if snapshot.get('own_qa_hold_verified') is not True:
         return held('qa_episode_hold_unverified')
+    from qa_booking_recovery import recovery_hold
+    recovery = recovery_hold(snapshot)
+    if recovery is not None:
+        return recovery
     outcome = custom(lead, QA_OUTCOME)
     if outcome not in (None, '', *QA_OUTCOMES):
         return held('qa_outcome_unverified')

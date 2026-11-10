@@ -390,8 +390,6 @@ def choose_plan(reader, snapshot):
             'signal': {'id': staged['digest'], 'closer_id': staged['originalCloserId'], 'kind': 'staged'},
             'changes': admission_changes(lead, entered, signal_id=staged['digest'])}
     if custom(lead, OWNER_FIELD) == NARIA_ID:
-        if lead.get('status_id') == getattr(reader.lane2, 'S_NOSHOW', None) and has_qa_history(lead):
-            return held('qa_booking_no_show_recovery')
         if lead['id'] in config['backlog_lead_ids'] and '[QA2 ' not in str(custom(lead, BATCH_FIELD)):
             return plan_backlog_window(snapshot, backlog_lead_ids=config['backlog_lead_ids'], launched_at=config['launched_at'])
         return plan_qa_exit(snapshot, suppressed_statuses=reader.lane2.SUPPRESS_STATUSES,

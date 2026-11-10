@@ -699,12 +699,12 @@ def _near_duplicates(counter):
 
 
 def qa_triage_terminal_plan():
-    """Return QA Triage no-show/cancellation leads and their Lane 2 states."""
+    """Inspect terminal QA statuses without bypassing lifecycle-owned clocks."""
     status_q = status_in(sorted(QA_TRIAGE_RELEASE_STATUSES))
     state_q = {"type": "field_condition", "negate": False,
                "field": {"type": "custom_field", "custom_field_id": F_STATE},
                "condition": {"type": "term", "values": [QA_TRIAGE_STATE]}}
-    from route_released_leads import QA_ASSIGNED, QA_OUTCOME, QA_CONTACTED, BATCH_FIELD, has_qa_history, NARIA_ID
+    from route_released_leads import QA_ASSIGNED, QA_OUTCOME, QA_CONTACTED, BATCH_FIELD
     candidates = search(
         _wrap(status_q, state_q),
         fields=["id", "display_name", "status_id", f"custom.{F_STATE}",
@@ -713,29 +713,18 @@ def qa_triage_terminal_plan():
     if len(candidates) >= SKIP_CAP:
         raise CloseError("QA Triage terminal query reached Close's result cap; refusing an incomplete release")
 
-    # Anthony: Naria owns her QA-booking no-show recovery through day 30.
-    releasable = [lead for lead in candidates if cf(lead, F_OVERRIDE) != "Yes"
-        and not (lead['status_id'] == S_NOSHOW and cf(lead, F_OWNER) == NARIA_ID and has_qa_history(lead))]
-    state_of = {}
-    for _label, state, query in BUCKETS:
-        scoped = add_condition(add_condition(query, status_q), state_q)
-        ids = {lead["id"] for lead in search(scoped, fields=["id"], limit=SKIP_CAP)}
-        for lead_id in ids - set(state_of):
-            state_of[lead_id] = state
-    for lead in releasable:
-        state_of.setdefault(lead["id"], FALLTHROUGH)
-        # Terminal QA outcomes must enter Lane 2's assignable queue even when
-        # the normal booking protection would mark them as Booked.
-        if state_of[lead["id"]] == "Booked":
-            state_of[lead["id"]] = "Active-Nurture"
-    return candidates, releasable, state_of
+    # QA Triage exits belong to the lifecycle worker. It owns the five-business-
+    # day no-contact clock and booked-lead recovery; status alone cannot release
+    # a QA lead, including when a booking moved Lead Owner to a closer.
+    releasable = []
+    return candidates, releasable, {}
 
 
 def reconcile_qa_triage_terminal(*, apply=False, max_writes=None):
-    """Release terminal outcomes from QA Triage to the normal Lane 2 assigner."""
+    """Compatibility entry point; QA lifecycle owns every QA exit decision."""
     candidates, releasable, state_of = qa_triage_terminal_plan()
     print(f"QA Triage terminal candidates: {len(candidates):,}")
-    print(f"Released to Lane 2: {len(releasable):,} (manual overrides skipped: {len(candidates)-len(releasable):,})")
+    print(f"Held for QA lifecycle: {len(candidates)-len(releasable):,}; status-only releases disabled.")
     print("  By status:")
     for status_id, count in Counter(lead["status_id"] for lead in releasable).items():
         label = "No Show" if status_id == S_NOSHOW else "Canceled"

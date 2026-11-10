@@ -154,7 +154,7 @@ class HandoffReader:
     def snapshot(self, lead_id):
         before = self.get(f"/lead/{lead_id}/", {"_fields": ",".join(READ_FIELDS)})
         meetings = self.related("/activity/meeting/", lead_id,
-                                "id,lead_id,starts_at,ends_at,status,outcome_id")
+                                "id,lead_id,date_created,starts_at,ends_at,status,outcome_id")
         opportunities = self.related("/opportunity/", lead_id, "id,lead_id,status_id,status_type")
         ids = {"type": "id", "value": lead_id}
         state = self.lane2.FALLTHROUGH

@@ -313,9 +313,10 @@ class NativeAdapterTests(unittest.TestCase):
 
     def test_qa_booking_no_show_keeps_naria_for_recovery(self):
         value = qa_snapshot()
-        value['lead']['status_id'] = 'stat_noshow'
-        reader = SimpleNamespace(config=config(), lane2=SimpleNamespace(S_LOST=LOST, S_NOSHOW='stat_noshow'))
-        self.assertEqual(runtime.choose_plan(reader, value)['reason'], 'qa_booking_no_show_recovery')
+        from qa_booking_recovery import RECOVERY_LEAD_STATUSES
+        value['lead']['status_id'] = sorted(RECOVERY_LEAD_STATUSES)[0]
+        reader = SimpleNamespace(config=config(), lane2=SimpleNamespace(S_LOST=LOST, SUPPRESS_STATUSES=PROTECTED))
+        self.assertEqual(runtime.choose_plan(reader, value)['reason'], 'qa_booking_recovery_provenance_unverified')
 
     def test_only_native_event_envelopes_accept_offsetless_utc(self):
         self.assertEqual(runtime.native_event_time('2026-11-09T18:00:00'), NOW.isoformat())

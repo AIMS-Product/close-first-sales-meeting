@@ -31,3 +31,9 @@ templates, sender identities and stop conditions. Rep calls are tasks, not
 automated calls. Use durable cycle identities, owner checks and single-attempt
 delivery receipts so retries do not send duplicate outreach. Preserve the missed
 meeting's original timestamp; unrelated edits must not restart the 30-day clock.
+
+November 10 protection correction: the same booking protection now covers
+cancellations and reschedules as well as no-shows. Status-only cleanup cannot
+clear QA ownership. Initial uncontacted QA leads still use the five-business-day
+window; booked recovery never falls through to that initial outreach timer.
+At 30 days, terminal handling remains a distinct held handoff as documented above.
