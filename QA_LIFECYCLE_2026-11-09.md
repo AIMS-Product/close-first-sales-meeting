@@ -59,15 +59,35 @@ before activation. Its Jason/Ryan routing cannot compete with the 48-hour handof
 Native source contracts: [Close event provenance](https://developer.close.com/api/resources/events)
 and [cursor pagination](https://developer.close.com/api/resources/events/list).
 
-## Build and activation status
+## Production activation — November 9, 2026 Pacific
 
-The source build is disabled by default. Local policy/adapter tests and read-only
-native previews cover the fresh backlog window and the human Lost admission gates.
-Verification: 139 Python tests passed; the exact packaged producer sources passed
-TypeScript checking/build and 43 targeted release tests. The native previews made
-no lead or workflow-store changes.
-The shared Lost Reason dropdown now includes `Need to think`; existing choices
-were preserved. No lead has been migrated or reassigned by this build.
+The user approved public source publication and the Railway cutover. The QA
+deployment switch is enabled on public main, and the existing Railway release
+service runs the Python QA wrapper in apply mode. Its schedule remains
+`7,22,37,52 * * * *` (every 15 minutes, seven days a week). The former GitHub
+Lost router is disabled; the original closer-release producer delegates current
+Lost leads to this handler and retains the existing open-lead 30-day policy.
+
+The private launch cohort contains 353 QA leads. Their one-time fresh clock is
+fixed at November 9, 2026, 9:16:10.934 p.m. Central; the five-business-day deadline
+is November 17 at the same Central time, skipping Veterans Day and the weekend.
+Initialization proceeds through the durable queue. Redeployment, batch limits
+and retries do not change this cohort or its clock. Individual no-show recovery,
+source-evidence and competing-work protections still apply.
+
+Live handoffs have been independently checked against Close owner, QA state,
+entry timestamp and preserved batch attribution. Normal processing is bounded
+to 50 writes, 100 examined leads and four minutes per pass, resuming from its
+saved position. This is an asynchronous queue, not a claim that every eligible
+lead was processed at activation. Datetime writes use Close's millisecond
+precision. The native receipt ledger retains uncertain writes for reconciliation
+without replaying the CRM update.
+
+Verification: 148 targeted Python tests passed; the exact packaged producer
+sources passed TypeScript checking/build and 43 targeted release tests. The
+shared Lost Reason dropdown includes `Need to think`, with existing choices
+preserved. Customer IDs, the private cohort and credentials are excluded from
+the public source and deployment bundle.
 
 `deploy/build_qa_railway_bundle.py` produces a private context from the pinned
 existing Railway sources and import-reachable Python support. It excludes launch
@@ -75,10 +95,12 @@ cohort IDs and environment files. The wrapper shares the existing cohort fence,
 then runs the original closer release with its original safeguards. The producer
 patch delegates current Lost leads to this lifecycle only when its policy flag is on.
 
-Activation requires a fresh private saved-view cohort, matched enabled deployment
-switches in GitHub/Railway, the producer's delegation flag and recomputed existing
-configuration digests. Do not reuse the preview's launch timestamp. The legacy
-Lost router stops before any API/write operation once the deployment switch is on.
+The activation used a fresh private saved-view cohort, matched enabled deployment
+switches, the producer delegation flag and recomputed configuration digests.
+Preserve the existing live launch timestamp during maintenance. To stop future
+QA writes, disable the QA runtime before changing routing ownership; keep the
+legacy router disabled and preserve receipts and in-flight holds. Re-enabling a
+competing router is not a safe rollback for leads already admitted to QA.
 
 ## Deferred follow-up — booking-credit reporting
 
