@@ -704,14 +704,18 @@ def qa_triage_terminal_plan():
     state_q = {"type": "field_condition", "negate": False,
                "field": {"type": "custom_field", "custom_field_id": F_STATE},
                "condition": {"type": "term", "values": [QA_TRIAGE_STATE]}}
+    from route_released_leads import QA_ASSIGNED, QA_OUTCOME, QA_CONTACTED, BATCH_FIELD, has_qa_history, NARIA_ID
     candidates = search(
         _wrap(status_q, state_q),
         fields=["id", "display_name", "status_id", f"custom.{F_STATE}",
-                f"custom.{F_OWNER}", f"custom.{F_OVERRIDE}"])
+                f"custom.{F_OWNER}", f"custom.{F_OVERRIDE}", f"custom.{BATCH_FIELD}",
+                f"custom.{QA_ASSIGNED}", f"custom.{QA_OUTCOME}", f"custom.{QA_CONTACTED}"])
     if len(candidates) >= SKIP_CAP:
         raise CloseError("QA Triage terminal query reached Close's result cap; refusing an incomplete release")
 
-    releasable = [lead for lead in candidates if cf(lead, F_OVERRIDE) != "Yes"]
+    # Anthony: Naria owns her QA-booking no-show recovery through day 30.
+    releasable = [lead for lead in candidates if cf(lead, F_OVERRIDE) != "Yes"
+        and not (lead['status_id'] == S_NOSHOW and cf(lead, F_OWNER) == NARIA_ID and has_qa_history(lead))]
     state_of = {}
     for _label, state, query in BUCKETS:
         scoped = add_condition(add_condition(query, status_q), state_q)

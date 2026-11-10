@@ -29,6 +29,15 @@ def plan(value):
 
 
 class AttendanceRoutingTests(unittest.TestCase):
+    def test_prior_qa_is_not_admitted_again_after_closer_release(self):
+        for field in (routing.QA_ASSIGNED, routing.QA_OUTCOME, routing.QA_CONTACTED):
+            value = snapshot(routing.COMPLETED_OUTCOME)
+            value['lead']['custom.' + field] = 'prior QA evidence'
+            self.assertEqual(plan(value)['reason'], 'already_passed_through_qa')
+        value = snapshot(routing.COMPLETED_OUTCOME)
+        value['prior_qa_verified'] = True
+        self.assertEqual(plan(value)['reason'], 'already_passed_through_qa')
+
     def test_native_completed_routes_to_naria_without_recency_limit(self):
         result = plan(snapshot(routing.COMPLETED_OUTCOME, starts_at="2025-01-01T15:00:00Z"))
         self.assertEqual(result["destination"], "qa")
@@ -120,8 +129,13 @@ class AttendanceRoutingTests(unittest.TestCase):
 
 
 class ReadAndWriteTests(unittest.TestCase):
+    def setUp(self):
+        self.delegation = patch('qa_lifecycle_runtime.railway_owns_qa', return_value=False)
+        self.delegation.start()
+        self.addCleanup(self.delegation.stop)
+
     def reader(self, values):
-        reader = SimpleNamespace(lane2=SimpleNamespace(QA_TRIAGE_RELEASE_STATUSES=TERMINAL, SUPPRESS_STATUSES=PROTECTED),
+        reader = SimpleNamespace(lane2=SimpleNamespace(QA_TRIAGE_RELEASE_STATUSES=TERMINAL, SUPPRESS_STATUSES=PROTECTED, S_LOST='lost'),
                                  preflight=Mock(), candidates=Mock(return_value=[{"id": "lead_a"}]),
                                  snapshot=Mock(side_effect=values), write_once=Mock())
         return reader
@@ -192,6 +206,15 @@ class ReconcilerIntegrationTests(unittest.TestCase):
         with patch.dict(os.environ, {"CLOSE_API_KEY": "offline-test-key"}):
             import lane2_state
         self.reconciler = lane2_state
+
+    def test_qa_booking_no_show_is_not_immediately_released(self):
+        lead = {'id': 'lead_recovery', 'status_id': self.reconciler.S_NOSHOW,
+            'custom.' + routing.STATE_FIELD: 'QA Triage', 'custom.' + routing.OWNER_FIELD: routing.NARIA_ID,
+            'custom.' + routing.QA_ASSIGNED: '2026-11-09T18:00:00Z'}
+        with patch.object(self.reconciler, 'search', side_effect=[[lead]] + [[]] * len(self.reconciler.BUCKETS)):
+            candidates, releasable, _ = self.reconciler.qa_triage_terminal_plan()
+        self.assertEqual(len(candidates), 1)
+        self.assertEqual(releasable, [])
 
     def test_budget_is_shared_with_terminal_cleanup_and_handoff(self):
         with patch.object(sys, "argv", ["lane2_state.py", "--apply", "--max-writes", "3"]), \

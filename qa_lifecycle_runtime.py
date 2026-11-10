@@ -20,7 +20,7 @@ from qa_lifecycle_policy import (ALLOWED_LOST_REASONS, EXCLUSION, LOST_REASON,
     admission_changes, plan_backlog_window, plan_lost_admission, plan_qa_exit,
     held, qa_deadline, possible_call_connection)
 from route_released_leads import (BATCH_FIELD, HandoffReader, NARIA_ID, ORGANIZATION_ID,
-    DOM_ID, OWNER_FIELD, STATE_FIELD, custom, instant, handoff_plan)
+    DOM_ID, OWNER_FIELD, STATE_FIELD, custom, instant, handoff_plan, has_qa_history)
 
 MAX_WRITES = 50
 MAX_SOURCE_AGE = timedelta(seconds=60)
@@ -151,7 +151,7 @@ class QaLifecycleReader(HandoffReader):
         phase = self.config.get('observe_phase')
         query = self.lane2._wrap(lost_query if phase == 'lost' else qa_query if phase == 'backlog'
             else {'type': 'or', 'queries': [lost_query, qa_query, staged_query]})
-        rows = self.lane2.search(query, fields=['id'], limit=self.lane2.SKIP_CAP)
+        rows = self.lane2.search(query, fields=['id', 'status_id', f'custom.{OWNER_FIELD}'], limit=self.lane2.SKIP_CAP)
         if len(rows) >= self.lane2.SKIP_CAP or len({r['id'] for r in rows}) != len(rows):
             raise RuntimeError('qa_candidate_census_incomplete')
         return rows
@@ -210,13 +210,31 @@ class QaLifecycleReader(HandoffReader):
             return {'lead': before, 'as_of': now, 'complete': False,
                     'inspection_reason': 'lost_reason_not_qa_workable'}
         contact_suppressed = self.contact_suppression(before)
-        base = super().snapshot(lead_id)
+        owner = custom(before, OWNER_FIELD)
+        if owner in (NARIA_ID, DOM_ID):
+            base = super().snapshot(lead_id)
+        else:
+            # Lost admission does not use Lane 2's derived intake bucket. Avoid
+            # recomputing every bucket or reading QA calls for closer-owned leads.
+            base = {'meetings': self.related('/activity/meeting/', lead_id,
+                    'id,lead_id,starts_at,ends_at,status,outcome_id'),
+                    'lane2_state': custom(before, STATE_FIELD) or self.lane2.FALLTHROUGH}
         base['lead'] = before
         base['opportunities'] = self.related('/opportunity/', lead_id,
             'id,organization_id,lead_id,status_id,status_label,status_type,user_id,custom')
         events = self.events(lead_id, 'lead') + self.events(lead_id, 'opportunity')
+        receipts = self.store.connection.execute(
+            "SELECT payload FROM workflow_write WHERE lead_id=? AND state='verified'", (lead_id,)).fetchall()
+        prior_qa = any(has_qa_history(event.get(version) or {}) for event in events
+                       if event.get('object_type') == 'lead' for version in ('data', 'previous_data'))
+        for receipt in receipts:
+            payload = receipt['payload']
+            if isinstance(payload, str):
+                payload = json.loads(payload)
+            prior_qa = prior_qa or (payload.get('policy_version') == POLICY_VERSION
+                and payload.get('destination') in ('qa', 'backlog_window'))
         calls = self.related('/activity/call/', lead_id,
-            'id,lead_id,user_id,date_created,activity_at,direction,status,disposition,duration')
+            'id,lead_id,user_id,date_created,activity_at,direction,status,disposition,duration') if owner == NARIA_ID else []
         scoped = {'type': 'id', 'value': lead_id}
         workflows = self.lane2.search(self.lane2._wrap(scoped, active_workflow_query()), fields=['id'], limit=2)
         if any(row.get('id') != lead_id for row in workflows):
@@ -270,6 +288,7 @@ class QaLifecycleReader(HandoffReader):
                     staged_closer = plan.get('originalCloserId')
                     staged_plan = plan
         return {**base, 'lead': after, 'events': events, 'events_complete': True,
+            'prior_qa_verified': prior_qa,
             'calls': qa_calls, 'calls_complete': True, 'possible_connection': possible_connection,
             'qa_outcome_verified': outcome_verified, 'workflow_active': bool(workflows),
             'shared_holds_verified': True, 'competing_hold': competing, 'holds': holds,
@@ -370,6 +389,8 @@ def choose_plan(reader, snapshot):
             'signal': {'id': staged['digest'], 'closer_id': staged['originalCloserId'], 'kind': 'staged'},
             'changes': admission_changes(lead, entered, signal_id=staged['digest'])}
     if custom(lead, OWNER_FIELD) == NARIA_ID:
+        if lead.get('status_id') == getattr(reader.lane2, 'S_NOSHOW', None) and has_qa_history(lead):
+            return held('qa_booking_no_show_recovery')
         if lead['id'] in config['backlog_lead_ids'] and '[QA2 ' not in str(custom(lead, BATCH_FIELD)):
             return plan_backlog_window(snapshot, backlog_lead_ids=config['backlog_lead_ids'], launched_at=config['launched_at'])
         return plan_qa_exit(snapshot, suppressed_statuses=reader.lane2.SUPPRESS_STATUSES,
@@ -408,7 +429,10 @@ def run(reader, *, apply=False, max_writes=None, tier_allocator=None):
     cursor_row = reader.store.connection.execute('SELECT value FROM workflow_meta WHERE key=?', (cursor_key,)).fetchone()
     cursor = cursor_row['value'] if cursor_row else ''
     backlog = set(config['backlog_lead_ids'])
-    order_key = lambda row: ('0' if row['id'] in backlog else '1') + '|' + row['id']
+    # Start with closer Lost, then initialize the approved backlog; the saved
+    # cursor rotates the complete population without restarting any QA clock.
+    order_key = lambda row: ('0' if row.get('status_id') == reader.lane2.S_LOST
+        and custom(row, OWNER_FIELD) in reader.closers else '1' if row['id'] in backlog else '2') + '|' + row['id']
     candidates = sorted(reader.candidates(), key=order_key)
     candidates = [row for row in candidates if order_key(row) > cursor] + [row for row in candidates if order_key(row) <= cursor]
     examined = 0

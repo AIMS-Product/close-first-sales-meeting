@@ -18,13 +18,17 @@ BATCH_FIELD = "cf_IruzyS5PO4dZsOKGQSYb4r7PhOEpw1C82FN17ZlmkQy"
 OWNER_FIELD = "cf_gOfS9pFwext58oberEegLyix8hZzeHrxhCZOVh3P3rd"
 STATE_FIELD = "cf_hKcyx4tQSMvHd7llfLX363bx3LGXMxVEmFHEtjpR5C2"
 OVERRIDE_FIELD = "cf_6PnYz6aaAkLzHMU3Faxz7kFurBEfadqlfGiBgfhjaVC"
+QA_ASSIGNED = 'cf_PTKwT43eUFf8fVIwd4ScmyyWNxCcU5ftss3pjq3GLje'
+QA_OUTCOME = 'cf_HUTa2ZuyQSz5aft9Ob5Tu4wTXn3iAJTXZo3052tvEOM'
+QA_CONTACTED = 'cf_YOCYZ08NZRvvZnT7BiQd20HMbyXK8zRT6Ewz82lYZN4'
 COMPLETED_OUTCOME = "outcome_032Djn4dfeNuEoCunojA7K"
 WON_OPPORTUNITY_STATUSES = {
     "stat_WnFc0uhjcjV0cc3bVzdFVqDz7av6rbsOmOvHUsO6s03",
     "stat_ZA4DFlp3JeGCpqLVoQxIEGfd3WNxAqdM5RrHQrzrpm6",
 }
 READ_FIELDS = ["id", "organization_id", "status_id", "date_updated", "num_upcoming_meetings"] + [
-    f"custom.{field}" for field in (OWNER_FIELD, STATE_FIELD, OVERRIDE_FIELD, BATCH_FIELD)
+    f"custom.{field}" for field in (OWNER_FIELD, STATE_FIELD, OVERRIDE_FIELD, BATCH_FIELD,
+                                   QA_ASSIGNED, QA_OUTCOME, QA_CONTACTED)
 ]
 
 
@@ -39,6 +43,13 @@ def has_release_marker(batch):
                if part.strip().startswith("Released - ")
                and part.strip()[len("Released - "):].strip()]
     return len(markers) == 1
+
+
+def has_qa_history(lead):
+    """Retained QA evidence is permanent admission exclusion, not a new timer."""
+    return (custom(lead, STATE_FIELD) == 'QA Triage'
+        or '[QA2 ' in str(custom(lead, BATCH_FIELD) or '')
+        or any(custom(lead, field) not in (None, '') for field in (QA_ASSIGNED, QA_OUTCOME, QA_CONTACTED)))
 
 
 def instant(value):
@@ -96,6 +107,8 @@ def handoff_plan(snapshot, *, now, terminal_statuses, suppressed_statuses):
     if state in ("QA Triage", "Suppressed"):
         return held("protected_lane2_state")
     if attended and not terminal:
+        if has_qa_history(lead) or snapshot.get('prior_qa_verified'):
+            return held('already_passed_through_qa')
         return {"destination": "qa", "reason": "confirmed_completed_meeting",
                 "changes": {f"custom.{OWNER_FIELD}": NARIA_ID,
                             f"custom.{STATE_FIELD}": "QA Triage"}}

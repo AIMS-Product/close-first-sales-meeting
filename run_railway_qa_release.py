@@ -32,7 +32,7 @@ def cohort_fence():
 
 
 def launch_mode(env):
-    mode = env.get('CLOSER_RELEASE_MODE')
+    mode = env.get('QA_LIFECYCLE_MODE', env.get('CLOSER_RELEASE_MODE'))
     if mode not in ('observe', 'apply'):
         raise ValueError('qa_release_mode_invalid')
     config = load_configuration(env)

@@ -88,6 +88,16 @@ class CalendarTests(unittest.TestCase):
 
 
 class LostTests(unittest.TestCase):
+    def test_any_retained_prior_qa_evidence_prevents_second_pass(self):
+        for field, value in ((policy.QA_ASSIGNED, '2026-10-01T18:00:00Z'),
+                             (policy.QA_OUTCOME, 'Qualified and ready to book'), (policy.QA_CONTACTED, 'Yes')):
+            item = snapshot(); item['lead'][f'custom.{field}'] = value
+            self.assertEqual(lost_plan(item)['reason'], 'existing_qa_episode')
+        item = snapshot(); item['prior_qa_verified'] = True
+        self.assertEqual(lost_plan(item)['reason'], 'existing_qa_episode')
+        item = snapshot(); item['lead'][f'custom.{BATCH_FIELD}'] = 'Released - Original Closer'
+        self.assertEqual(lost_plan(item)['reason'], 'prior_release_history_requires_review')
+
     def test_at_48_hours_admits_without_thirty_day_wait(self):
         value = snapshot()
         before = copy.deepcopy(value)
@@ -261,6 +271,12 @@ class FakeReader:
 
 
 class NativeAdapterTests(unittest.TestCase):
+    def test_qa_booking_no_show_keeps_naria_for_recovery(self):
+        value = qa_snapshot()
+        value['lead']['status_id'] = 'stat_noshow'
+        reader = SimpleNamespace(config=config(), lane2=SimpleNamespace(S_LOST=LOST, S_NOSHOW='stat_noshow'))
+        self.assertEqual(runtime.choose_plan(reader, value)['reason'], 'qa_booking_no_show_recovery')
+
     def test_only_native_event_envelopes_accept_offsetless_utc(self):
         self.assertEqual(runtime.native_event_time('2026-11-09T18:00:00'), NOW.isoformat())
         self.assertEqual(runtime.native_event_time('2026-11-09T12:00:00-06:00'), NOW.isoformat())
@@ -314,6 +330,9 @@ class NativeAdapterTests(unittest.TestCase):
                 launch.launch_mode(env)
         with patch.object(launch, 'railway_owns_qa', return_value=True):
             self.assertEqual(launch.launch_mode(env), 'apply')
+            env['QA_LIFECYCLE_MODE'] = 'observe'
+            self.assertEqual(launch.launch_mode(env), 'observe')
+            del env['QA_LIFECYCLE_MODE']
             env['CLOSER_RELEASE_MODE'] = 'unknown'
             with self.assertRaisesRegex(ValueError, 'mode_invalid'):
                 launch.launch_mode(env)

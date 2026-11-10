@@ -19,6 +19,12 @@ Implements the user's November 9 clarification of the October 19 QA policy.
 - The launch captures the current QA backlog as an exact ID cohort and starts
   one fresh window at launch, preserving prior contact/outcome history. Subsequent
   passes cannot restart it. New admissions use their actual handoff time.
+- A lead gets only one QA pass. Retained QA fields, native event evidence and
+  verified lifecycle receipts prevent readmission after a later closer Lost or
+  30-day release. Previously released closer-owned leads with uncertain QA
+  history remain held for review rather than risking another pass.
+- A no-show from Naria's QA booking stays with her for recovery. Neither the
+  five-day fallback nor the older terminal cleaner may immediately release it.
 - At expiry, only complete no-connection evidence permits normal Lane 2 intake.
   Preserve the release tag. A connection or human disposition prevents automatic
   timeout. Ready/education cases retain their existing human/provider handoff;

@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 from route_released_leads import (BATCH_FIELD, COMPLETED_OUTCOME, DOM_ID, NARIA_ID,
     ORGANIZATION_ID, OWNER_FIELD, OVERRIDE_FIELD, STATE_FIELD, WON_OPPORTUNITY_STATUSES,
-    custom, has_release_marker, instant)
+    custom, has_release_marker, has_qa_history, instant)
 
 QA_ASSIGNED = 'cf_PTKwT43eUFf8fVIwd4ScmyyWNxCcU5ftss3pjq3GLje'
 QA_OUTCOME = 'cf_HUTa2ZuyQSz5aft9Ob5Tu4wTXn3iAJTXZo3052tvEOM'
@@ -222,8 +222,10 @@ def plan_lost_admission(snapshot, *, closers, lost_status, suppressed_statuses, 
     closer_id = snapshot.get('verified_staged_closer_id') or custom(lead, OWNER_FIELD)
     if closer_id not in closers or lead.get('status_id') != lost_status:
         return held('not_current_closer_lost')
-    if custom(lead, STATE_FIELD) == 'QA Triage' or '[QA2 ' in str(custom(lead, BATCH_FIELD)):
+    if has_qa_history(lead) or snapshot.get('prior_qa_verified'):
         return held('existing_qa_episode')
+    if has_release_marker(custom(lead, BATCH_FIELD)) and custom(lead, OWNER_FIELD) != DOM_ID:
+        return held('prior_release_history_requires_review')
     reason = common_protection(snapshot, suppressed_statuses)
     if reason:
         return held(reason)
