@@ -10,6 +10,7 @@ import requests
 
 from close_status_policy import COMPANY, ORG
 from qa_lifecycle_runtime import load_configuration, railway_owns_qa, run_configured
+from qa_slack_notifications import deliver_configured
 
 
 @contextmanager
@@ -55,6 +56,8 @@ def main():
     # retains all original owner-history, census and staging checks.
     subprocess.run(['node', '--import', 'tsx', 'src/release/runCloserReleaseJob.ts'],
                    cwd=Path(__file__).resolve().parent.parent / 'release', check=True)
+    if mode == 'apply':
+        deliver_configured()
 
 
 if __name__ == '__main__':

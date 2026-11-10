@@ -21,6 +21,7 @@ from qa_lifecycle_policy import (ALLOWED_LOST_REASONS, EXCLUSION, LOST_REASON,
     held, qa_deadline, qa_field_time, possible_call_connection)
 from route_released_leads import (BATCH_FIELD, HandoffReader, NARIA_ID, ORGANIZATION_ID,
     DOM_ID, OWNER_FIELD, STATE_FIELD, custom, instant, handoff_plan, has_qa_history)
+from qa_slack_notifications import configuration as notification_configuration, record_completed_run
 
 MAX_WRITES = 50
 MAX_SOURCE_AGE = timedelta(seconds=60)
@@ -420,6 +421,7 @@ def run(reader, *, apply=False, max_writes=None, tier_allocator=None):
     if apply and (not config['enabled'] or config.get('observe_phase')
                   or os.environ.get('WORKFLOW_HOLD_BACKEND') != 'postgres'):
         raise PermissionError('qa_apply_requires_enabled_policy_and_shared_postgres')
+    notifications = notification_configuration() if apply else None
     reader.preflight()
     budget = min(config['max_writes'], max_writes if max_writes is not None else config['max_writes'])
     counts, written = Counter(), 0
@@ -515,6 +517,8 @@ def run(reader, *, apply=False, max_writes=None, tier_allocator=None):
     result = {'policy_version': POLICY_VERSION, 'mode': 'apply' if apply else 'observe',
               'verified_writes': written, 'counts': dict(counts), 'examined': examined,
               'remaining_in_pass': len(candidates) - examined}
+    if notifications is not None:
+        record_completed_run(reader.store, result, completed_at=reader.clock(), config=notifications)
     print(json.dumps(result, sort_keys=True))
     return result
 
