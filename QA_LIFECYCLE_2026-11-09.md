@@ -74,11 +74,18 @@ switches in GitHub/Railway, the producer's delegation flag and recomputed existi
 configuration digests. Do not reuse the preview's launch timestamp. The legacy
 Lost router stops before any API/write operation once the deployment switch is on.
 
-Clean-slate reporting remains a separate activation gate: this build preserves
-original-closer tags and writes verified admission receipts, and supplies a tested
-new-booking eligibility predicate. It does **not** change the actual SteelTrap
-720-hour/other reporting consumers or certify booking credit. Those consumers must
-use verified release receipts and distinct post-entry booking identities before
-claiming that clean-slate reporting is live. Ready/education outcomes also continue
-to require the actual booking/event-registration handoff; setting a dropdown alone
-does not complete either outcome.
+The user's subsequent instruction removes the 30-day booking-credit guard for
+Naria. The matched private reporting release now implements that exception in the
+actual configured v5 evaluator and registered v3/v4 adapters, preserving existing
+title/roster attribution, cancellations and duplicate-appointment checks. This is
+a Naria-specific reporting policy; it does not change the open-closer lead timer.
+All six reporting packages and the three-route paired certification/publication
+bindings are prepared and locally qualified, including count/list parity.
+
+The final native synthetic qualification is prepared but awaits approval: automatic
+approval review rejected uploading the internal reporting source archive and
+submitting a remote test job without explicit authorization. No upload, production
+reporting change or QA activation occurred. After native qualification, install
+and independently verify the matched reporting bindings before enabling routing.
+Ready/education outcomes continue to require the actual booking/event-registration
+handoff; setting a dropdown alone does not complete either outcome.
