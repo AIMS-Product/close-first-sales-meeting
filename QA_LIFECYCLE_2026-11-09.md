@@ -74,18 +74,21 @@ switches in GitHub/Railway, the producer's delegation flag and recomputed existi
 configuration digests. Do not reuse the preview's launch timestamp. The legacy
 Lost router stops before any API/write operation once the deployment switch is on.
 
-The user's subsequent instruction removes the 30-day booking-credit guard for
-Naria. The matched private reporting release now implements that exception in the
-actual configured v5 evaluator and registered v3/v4 adapters, preserving existing
-title/roster attribution, cancellations and duplicate-appointment checks. This is
-a Naria-specific reporting policy; it does not change the open-closer lead timer.
-All six reporting packages and the three-route paired certification/publication
-bindings are prepared and locally qualified, including count/list parity.
+## Deferred follow-up — booking-credit reporting
 
-The final native synthetic qualification is prepared but awaits approval: automatic
-approval review rejected uploading the internal reporting source archive and
-submitting a remote test job without explicit authorization. No upload, production
-reporting change or QA activation occurred. After native qualification, install
-and independently verify the matched reporting bindings before enabling routing.
-Ready/education outcomes continue to require the actual booking/event-registration
-handoff; setting a dropdown alone does not complete either outcome.
+On November 9 the user explicitly deferred the separate SteelTrap booking-credit
+change until after the QA automation work. Preserve the prepared private Naria
+30-day credit-exception candidate for that follow-up. Its remote upload/test is
+not approved, and no reporting installation or activation has occurred.
+
+This reporting work is **not a prerequisite for the QA automation release**.
+The QA release scope is the 48-hour workable-Lost handoff, five-business-day QA
+window, one-time fresh backlog window and existing outcome paths. The 30-day
+lead-routing clock remains for open closer leads; eligible closer-marked Lost
+leads bypass it after their separate 48-hour cooling period.
+
+When resuming reporting, verify Naria's exact intended credit scope, rebase the
+saved candidate against then-current reporting bindings, and complete its own
+qualification before installing it. Preserve cancellation, duplicate-booking and
+historical-credit safeguards. Do not treat the earlier preparation or this
+follow-up note as authorization for the blocked remote upload/test.
