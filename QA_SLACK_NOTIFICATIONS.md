@@ -42,6 +42,14 @@ notification is never silently redirected if the configured channel changes.
 
 ## Activation status
 
-Implemented and covered by synthetic acceptance tests. Private-channel bot
-membership requires the user's action-time confirmation before activation.
-No live notification has been sent by this change yet.
+Enabled November 10, 2026 on the existing 15-minute QA worker after the user
+explicitly approved private-channel membership and activation. The existing
+Steel Trap Notifier bot's membership, exact workspace identity and `chat:write`
+permission were verified. The routing policy, backlog launch clock and schedule
+were preserved. The release passed 132 targeted Python tests, including the
+notification acceptance and QA routing regression checks.
+
+Live notifications begin with future completed runs that add new QA leads;
+activation does not fabricate a lead count or replay prior runs. Runtime
+`qa_slack_delivery` summaries record successful, pending and uncertain delivery
+counts without printing credentials or customer records.
