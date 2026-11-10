@@ -379,6 +379,25 @@ class NativeAdapterTests(unittest.TestCase):
 
 
 class CoordinatorTests(unittest.TestCase):
+    def test_next_pass_resumes_remaining_lead_after_write_budget(self):
+        first = snapshot()
+        second = copy.deepcopy(first)
+        second['lead']['id'] = 'lead_two'
+        second['events'][0].update(lead_id='lead_two', object_id='lead_two')
+        second['events'][0]['data']['id'] = 'lead_two'
+        second['meetings'][0]['lead_id'] = 'lead_two'
+        class MultipleReader(FakeReader):
+            def candidates(self): return [{'id': key} for key in self.values]
+            def snapshot(self, key):
+                self.value = self.values[key]
+                return super().snapshot(key)
+        reader = MultipleReader(first, self.store)
+        reader.values = {'lead_one': first, 'lead_two': second}
+        self.assertEqual(runtime.run(reader, apply=True, max_writes=1)['verified_writes'], 1)
+        self.assertEqual(custom(second['lead'], OWNER_FIELD), CLOSER)
+        self.assertEqual(runtime.run(reader, apply=True, max_writes=1)['verified_writes'], 1)
+        self.assertEqual(custom(second['lead'], OWNER_FIELD), NARIA_ID)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.store = Store(Path(self.temp.name) / 'holds.sqlite')

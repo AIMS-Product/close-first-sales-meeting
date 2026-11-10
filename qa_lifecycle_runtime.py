@@ -444,6 +444,8 @@ def run(reader, *, apply=False, max_writes=None, tier_allocator=None):
                     'ON CONFLICT(key) DO UPDATE SET value=excluded.value', (cursor_key, order_key(row)))
 
     for row in candidates:
+        if apply and written >= budget:
+            break
         if examined >= config.get('max_examined', MAX_EXAMINED) or reader.clock() - started >= MAX_PASS_TIME:
             break
         examined += 1
