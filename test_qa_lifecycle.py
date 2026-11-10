@@ -67,6 +67,20 @@ def exit_plan(value):
 
 
 class CalendarTests(unittest.TestCase):
+    def test_native_qa_entry_uses_exact_stored_millisecond_precision(self):
+        self.assertEqual(policy.qa_field_time('2026-11-10T03:19:12.922403Z'),
+                         '2026-11-10T03:19:12.922000+00:00')
+        lead = snapshot()['lead']
+        changes = policy.admission_changes(lead, '2026-11-10T03:19:12.922403Z',
+            original_closer='Original Closer', signal_id='ev_fixture')
+        self.assertEqual(changes[f'custom.{policy.QA_ASSIGNED}'], '2026-11-10T03:19:12.922000+00:00')
+
+    def test_backlog_launch_precision_does_not_place_entry_before_activation(self):
+        value = qa_snapshot('2026-11-01T18:00:00.123456Z')
+        result = policy.plan_qa_exit(value, suppressed_statuses=PROTECTED,
+            activation_at='2026-11-01T18:00:00.123456Z')
+        self.assertNotEqual(result['reason'], 'qa_entry_outside_activation')
+
     def test_entry_day_zero_skips_veterans_day(self):
         self.assertEqual(policy.qa_deadline('2026-11-09T18:00:00Z').isoformat(), '2026-11-17T18:00:00+00:00')
 
@@ -271,6 +285,32 @@ class FakeReader:
 
 
 class NativeAdapterTests(unittest.TestCase):
+    def test_write_readback_accepts_only_close_datetime_storage_precision(self):
+        lead = {'id': 'lead_one', 'organization_id': ORGANIZATION_ID,
+                f'custom.{policy.QA_ASSIGNED}': '2026-11-10T03:19:12.922000Z'}
+        reader = SimpleNamespace(lane2=SimpleNamespace(BASE='https://api.close.com/api/v1', AUTH=('fixture','')),
+                                 get=Mock(return_value=lead))
+        changes = {f'custom.{policy.QA_ASSIGNED}': '2026-11-10T03:19:12.922403Z'}
+        with patch.object(runtime.requests, 'put'):
+            self.assertEqual(runtime.QaLifecycleReader.write_once(reader, 'lead_one', changes), lead)
+            lead[f'custom.{policy.QA_ASSIGNED}'] = '2026-11-10T03:19:12.923000Z'
+            with self.assertRaisesRegex(RuntimeError, 'readback_mismatch'):
+                runtime.QaLifecycleReader.write_once(reader, 'lead_one', changes)
+
+    def test_launch_capture_retries_only_read_transport_on_rate_limit(self):
+        from qa_lifecycle_setup import SetupClient
+        client = SetupClient.__new__(SetupClient)
+        client.session = Mock()
+        limited = Mock(status_code=429, headers={'Retry-After': '1'})
+        accepted = Mock(status_code=200)
+        accepted.json.return_value = {'data': []}
+        client.session.request.side_effect = [limited, accepted]
+        with patch('qa_lifecycle_setup.time.sleep') as sleep:
+            self.assertEqual(client.read('/data/search/', {'query': {}}), {'data': []})
+        sleep.assert_called_once_with(1)
+        self.assertEqual(client.session.request.call_count, 2)
+        client.session.put.assert_not_called()
+
     def test_qa_booking_no_show_keeps_naria_for_recovery(self):
         value = qa_snapshot()
         value['lead']['status_id'] = 'stat_noshow'

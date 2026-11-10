@@ -8,10 +8,11 @@ from datetime import datetime, timedelta, timezone
 import json
 import os
 from pathlib import Path
+import time
 
 import requests
 
-from qa_lifecycle_policy import LOST_REASON, ORGANIZATION_ID, POLICY_VERSION
+from qa_lifecycle_policy import LOST_REASON, ORGANIZATION_ID, POLICY_VERSION, qa_field_time
 
 QA_VIEW = 'save_im68DOFza11Qjg23wGV93WdyoyUdmirUeckrrwH6Yh1'
 
@@ -30,10 +31,20 @@ class SetupClient:
         self.session.auth = (os.environ['CLOSE_API_KEY'], '')
 
     def read(self, path, body=None):
-        response = self.session.request('POST' if body is not None else 'GET',
-            'https://api.close.com/api/v1' + path, json=body, timeout=45)
-        response.raise_for_status()
-        return response.json()
+        # These are GETs or the read-only native search POST. Mutations below
+        # retain their single-attempt behavior, including uncertain PUTs.
+        for attempt in range(4):
+            response = self.session.request('POST' if body is not None else 'GET',
+                'https://api.close.com/api/v1' + path, json=body, timeout=45)
+            if (response.status_code == 429 or response.status_code >= 500) and attempt < 3:
+                try:
+                    delay = float(response.headers.get('Retry-After', 2 ** (attempt + 1)))
+                except ValueError:
+                    delay = 2 ** (attempt + 1)
+                time.sleep(min(15, max(1, delay)))
+                continue
+            response.raise_for_status()
+            return response.json()
 
     def append_need_to_think(self):
         path = f'/custom_field/shared/{LOST_REASON}/'
@@ -90,7 +101,7 @@ class SetupClient:
         config = {'policy_version': POLICY_VERSION, 'organization_id': ORGANIZATION_ID,
             'enabled': True, 'authorization_reference': 'User-approved QA rules and fresh backlog window, 2026-11-09',
             'calendar': 'entry_day_zero_same_central_time_observed_us_federal',
-            'launched_at': now.isoformat(), 'lost_events_since': (now - timedelta(days=30)).isoformat(),
+            'launched_at': qa_field_time(now.isoformat()), 'lost_events_since': (now - timedelta(days=30)).isoformat(),
             'backlog_lead_ids': ids, 'max_writes': 50}
         output = Path(output)
         output.parent.mkdir(parents=True, exist_ok=True, mode=0o700)

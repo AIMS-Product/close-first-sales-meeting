@@ -58,6 +58,12 @@ def qa_deadline(entered_at):
     return deadline.astimezone(timezone.utc)
 
 
+def qa_field_time(value):
+    """Close's custom datetime storage preserves milliseconds, not microseconds."""
+    parsed = instant(value)
+    return parsed.replace(microsecond=parsed.microsecond // 1000 * 1000).isoformat()
+
+
 def held(reason):
     return {'destination': 'held', 'reason': reason, 'changes': {}}
 
@@ -177,6 +183,7 @@ def manual_lost_signal(snapshot, closer_id, lost_status, since):
 
 
 def admission_changes(lead, entered_at, *, original_closer=None, signal_id=None):
+    entered_at = qa_field_time(entered_at)
     batch = custom(lead, BATCH_FIELD) or ''
     if original_closer:
         tag = f'Released - {original_closer}'
@@ -209,7 +216,7 @@ def plan_backlog_window(snapshot, *, backlog_lead_ids, launched_at):
     launch = instant(launched_at)
     if launch > snapshot['as_of']:
         return held('launch_not_started')
-    entered = launch.isoformat()
+    entered = qa_field_time(launch.isoformat())
     marker = receipt_id(lead['id'], 'backlog:' + entered)
     return {'destination': 'backlog_window', 'reason': 'one_time_fresh_backlog_window',
             'deadline': qa_deadline(entered).isoformat(),
@@ -262,7 +269,7 @@ def plan_qa_exit(snapshot, *, suppressed_statuses, activation_at):
         entered = instant(custom(lead, QA_ASSIGNED))
     except (ValueError, TypeError):
         return held('qa_entry_time_unverified')
-    if not instant(activation_at) <= entered <= now:
+    if not instant(qa_field_time(activation_at)) <= entered <= now:
         return held('qa_entry_outside_activation')
     if snapshot.get('own_qa_hold_verified') is not True:
         return held('qa_episode_hold_unverified')

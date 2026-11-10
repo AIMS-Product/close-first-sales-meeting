@@ -18,7 +18,7 @@ import requests
 from qa_lifecycle_policy import (ALLOWED_LOST_REASONS, EXCLUSION, LOST_REASON,
     LEGACY_DNC, POLICY_VERSION, QA_ASSIGNED, QA_CONTACTED, QA_OUTCOME, QA_OUTCOMES,
     admission_changes, plan_backlog_window, plan_lost_admission, plan_qa_exit,
-    held, qa_deadline, possible_call_connection)
+    held, qa_deadline, qa_field_time, possible_call_connection)
 from route_released_leads import (BATCH_FIELD, HandoffReader, NARIA_ID, ORGANIZATION_ID,
     DOM_ID, OWNER_FIELD, STATE_FIELD, custom, instant, handoff_plan, has_qa_history)
 
@@ -69,7 +69,7 @@ def load_configuration(env=None):
         raise ValueError('invalid_qa_lifecycle_configuration')
     if not config['enabled']:
         return config
-    instant(config['launched_at'])
+    config['launched_at'] = qa_field_time(config['launched_at'])
     instant(config['lost_events_since'])
     if instant(config['lost_events_since']) > instant(config['launched_at']):
         raise ValueError('lost_cutoff_after_launch')
@@ -309,7 +309,7 @@ class QaLifecycleReader(HandoffReader):
         for key, expected in changes.items():
             got = custom(actual, key[7:]) if key.startswith('custom.') else actual.get(key)
             if key == f'custom.{QA_ASSIGNED}' and got is not None and expected is not None:
-                matches = instant(got) == instant(expected)
+                matches = instant(got) == instant(qa_field_time(expected))
             else:
                 matches = got == expected
             if not matches:
