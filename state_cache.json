@@ -91218,8 +91218,8 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Jacob Hepner",
-      "reactivation_user": "user_IeWR2TlhpjqoXy3K6jX7u9C8c83iBnHXSIvFZpotF3z",
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
@@ -131078,8 +131078,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_WsckP5JIODUdDTGmTpohU3Yn171butVEMEBUwuf8dbK": {
+      "date": "2026-11-11",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-11-10 21:09:58 UTC",
-  "count": 11026
+  "saved_at": "2026-11-10 21:39:14 UTC",
+  "count": 11027
 }
