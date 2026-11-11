@@ -31157,13 +31157,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
+      "reactivation": "Naria Torres",
+      "reactivation_user": "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY",
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null,
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+      "quick_disc": null
     },
     "lead_I8PmbhF03GhQ8ndez3Ma3s6Fx0W2gJPmodxElAL1Y22": {
       "date": "2026-01-14",
@@ -131499,6 +131499,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-11-11 19:10:37 UTC",
+  "saved_at": "2026-11-11 19:39:44 UTC",
   "count": 11060
 }
