@@ -131391,7 +131391,6 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
       "funnel_name": null,
       "vendhub": null,
@@ -131399,6 +131398,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-11-11 07:09:25 UTC",
+  "saved_at": "2026-11-11 07:39:22 UTC",
   "count": 11052
 }
