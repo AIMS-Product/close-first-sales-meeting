@@ -1,0 +1,48 @@
+name: Refresh Close Lead Tier
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: Update only Lead Tier; false previews changes
+        type: boolean
+        default: false
+  schedule:
+    - cron: '20 11 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: close-lead-tier-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check classifier and field-only writes
+        run: python -m unittest test_lead_tier_refresh -v
+      - name: Refresh Lead Tier
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+          APPLY: ${{ github.event_name == 'schedule' || inputs.apply }}
+        run: |
+          if [ "$APPLY" = "true" ]; then
+            python sync_lead_tier_tags.py --apply
+          else
+            python sync_lead_tier_tags.py --dry-run
+          fi
+      - name: Retain run evidence privately
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lead-tier-refresh-${{ github.run_id }}
+          path: outputs/lead_tier_sync_*
+          retention-days: 14
+          if-no-files-found: ignore
