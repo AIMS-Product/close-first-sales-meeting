@@ -19,6 +19,7 @@ doesn't collide with update_field.py at :00 / :30).
 """
 
 import json
+import math
 import os
 import re
 import sys
@@ -53,6 +54,9 @@ EXCLUDED_OWNERS = {"Stephen Olivas", "Ahmad Bukhari"}
 SETTER_OWNERS = {"Kristin Nelson", "Spencer Reynolds"}
 
 REQUEST_TIMEOUT = 60
+MAX_RATE_LIMIT_RETRIES = 8
+MAX_RATE_LIMIT_BACKOFF = 60
+RATE_LIMIT_BUFFER = 0.5
 
 # ────────────────────────────────────────────────────────────────────────────
 # Title classification patterns
@@ -165,14 +169,59 @@ def is_qualifying_first_sales_call(title: str, owner_name: str) -> bool:
 
 session = requests.Session()
 session.auth = (CLOSE_API_KEY, "")
-session.request = guard_request(session.request)
+
+
+def rate_limit_delay(resp, attempt: int) -> float:
+    """Honor Close's reset headers; back off if they are absent or invalid."""
+    reset = re.search(
+        r"(?:^|,)\s*reset\s*=\s*([^,]+)",
+        resp.headers.get("RateLimit", ""),
+        re.IGNORECASE,
+    )
+    for value in (
+        resp.headers.get("Retry-After"),
+        reset.group(1) if reset else None,
+        resp.headers.get("X-Rate-Limit-Reset"),
+    ):
+        try:
+            seconds = float(value)
+        except (TypeError, ValueError):
+            continue
+        if math.isfinite(seconds) and seconds >= 0:
+            return seconds + RATE_LIMIT_BUFFER
+    return min(2 ** attempt, MAX_RATE_LIMIT_BACKOFF) + RATE_LIMIT_BUFFER
+
+
+def request_with_rate_limit(method: str, url: str, **kwargs):
+    """Retry a throttled request in place without advancing the caller's state."""
+    for attempt in range(MAX_RATE_LIMIT_RETRIES + 1):
+        resp = session.request(
+            method, url, **kwargs
+        )
+        if resp.status_code != 429 or attempt == MAX_RATE_LIMIT_RETRIES:
+            resp.raise_for_status()
+            return resp
+        delay = rate_limit_delay(resp, attempt)
+        resp.close()
+        print(
+            f"      Rate limited: {method} {url}; waiting {delay:.1f}s "
+            f"before retry {attempt + 1}/{MAX_RATE_LIMIT_RETRIES}",
+            flush=True,
+        )
+        time.sleep(delay)
+
+
+# Retry individual requests inside the existing hold and write-verification fence.
+guarded_request = guard_request(request_with_rate_limit)
+
+
+def request_close(method: str, path: str, **kwargs):
+    return guarded_request(method, f"{BASE_URL}{path}", timeout=REQUEST_TIMEOUT, **kwargs)
 
 
 def fetch_users() -> dict:
     """Return {user_id: display_name} for owner-name lookup."""
-    url = f"{BASE_URL}/user/"
-    resp = session.get(url, timeout=REQUEST_TIMEOUT)
-    resp.raise_for_status()
+    resp = request_close("GET", "/user/")
     users = resp.json().get("data", [])
     out = {}
     for u in users:
@@ -203,12 +252,10 @@ def fetch_all_meetings() -> list:
     while True:
         page += 1
         params = {"_limit": limit, "_skip": skip}
-        resp = session.get(
-            f"{BASE_URL}/activity/meeting/",
+        resp = request_close(
+            "GET", "/activity/meeting/",
             params=params,
-            timeout=REQUEST_TIMEOUT,
         )
-        resp.raise_for_status()
         data = resp.json()
         batch = data.get("data", [])
         meetings.extend(batch)
@@ -227,8 +274,7 @@ def get_lead_followup_fields(lead_id: str) -> dict:
     lead GET response, so we read from that path. The returned dict
     is keyed by the bare 'cf_xxx' ID for internal consistency.
     """
-    resp = session.get(f"{BASE_URL}/lead/{lead_id}/", timeout=REQUEST_TIMEOUT)
-    resp.raise_for_status()
+    resp = request_close("GET", f"/lead/{lead_id}/")
     lead = resp.json()
     return {f: lead.get(f"custom.{f}") for f in FOLLOWUP_FIELDS}
 
@@ -241,8 +287,7 @@ def patch_lead(lead_id: str, updates: dict) -> None:
     rekey at the API boundary.
     """
     payload = {f"custom.{k}": v for k, v in updates.items()}
-    resp = session.put(f"{BASE_URL}/lead/{lead_id}/", json=payload, timeout=REQUEST_TIMEOUT)
-    resp.raise_for_status()
+    request_close("PUT", f"/lead/{lead_id}/", json=payload)
 
 
 # ────────────────────────────────────────────────────────────────────────────
