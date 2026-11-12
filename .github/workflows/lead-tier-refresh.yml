@@ -45,11 +45,14 @@ jobs:
           else
             python sync_lead_tier_tags.py --dry-run "${ARGS[@]}"
           fi
-      - name: Retain run evidence privately
+      - name: Prepare aggregate run evidence
+        if: always()
+        run: python summarize_lead_tier_refresh.py
+      - name: Retain aggregate run evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lead-tier-refresh-${{ github.run_id }}
-          path: outputs/lead_tier_sync_*
+          path: outputs/lead_tier_sync_*.aggregate.json
           retention-days: 14
           if-no-files-found: ignore

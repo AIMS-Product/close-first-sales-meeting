@@ -55,4 +55,13 @@ class TierRefreshTests(TestCase):
     def test_unrelated_policy_writes_stay_disabled(self):
         with self.assertRaises(RuntimeError):require_dry_run(True)
 
+    def test_published_evidence_excludes_prospect_records(self):
+        from summarize_lead_tier_refresh import aggregate_summary
+        source={'mode':'apply','changes_proposed':1,'csv':'sensitive.csv','actions':[
+            {'action_id':'bulkedit_example','new_tier':'Ramp','lead_ids':['lead_private'],'name':'Private Prospect'}]}
+        result=aggregate_summary(source)
+        self.assertEqual(result['changes_proposed'],1)
+        self.assertEqual(result['actions'],[{'action_id':'bulkedit_example','new_tier':'Ramp'}])
+        self.assertNotIn('csv',result)
+
 if __name__=='__main__':unittest.main()
