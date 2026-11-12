@@ -131856,8 +131856,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_alJwsNKLe1Opyw5l22t8gRFj9KTJcECmnvMfefrY9QA": {
+      "date": "2026-11-17",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Anthony IG",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-11-12 19:39:16 UTC",
-  "count": 11088
+  "saved_at": "2026-11-12 20:10:01 UTC",
+  "count": 11089
 }
