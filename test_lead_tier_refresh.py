@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timezone, timedelta
 from unittest import TestCase, mock
 import unittest
 import sync_lead_tier_tags as refresh
@@ -40,10 +40,17 @@ class TierRefreshTests(TestCase):
             with self.assertRaises(RuntimeError):refresh.imported_lead_ids('secret',[{'id':'lead_one'}])
 
     def test_stale_apply_is_rejected_before_network(self):
-        for args in [['--apply','--run-date','2020-01-01'],['--apply','--export-id','expo_old']]:
+        for args in [['--apply','--run-date','2020-01-01']]:
             with mock.patch.object(refresh,'request_json') as request:
                 with self.assertRaises(SystemExit):refresh.main(args)
                 request.assert_not_called()
+
+    def test_resumed_export_must_be_recent_same_day_and_timezone_aware(self):
+        now=datetime(2026,11,12,20,tzinfo=timezone.utc)
+        refresh.require_fresh_export({'date_created':(now-timedelta(minutes=10)).isoformat()},now)
+        for created in [None,'2026-11-12T19:00:00Z','2026-11-12T21:00:00Z','2026-11-12T19:59:00']:
+            with self.assertRaises((RuntimeError,ValueError)):
+                refresh.require_fresh_export({'date_created':created},now)
 
     def test_unrelated_policy_writes_stay_disabled(self):
         with self.assertRaises(RuntimeError):require_dry_run(True)

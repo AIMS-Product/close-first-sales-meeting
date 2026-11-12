@@ -374,6 +374,18 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writerows(rows)
 
 
+def require_fresh_export(export, now):
+    value = export.get('date_created')
+    if not isinstance(value, str):
+        raise RuntimeError('Export creation timestamp is unavailable')
+    created = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    if created.tzinfo is None:
+        raise RuntimeError('Export creation timestamp must include its timezone')
+    age = (now - created).total_seconds()
+    if not 0 <= age <= 1800 or created.astimezone(PACIFIC).date() != now.astimezone(PACIFIC).date():
+        raise RuntimeError('Apply requires a same-day export less than 30 minutes old')
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
@@ -383,8 +395,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--run-date", help="override the Pacific run date (YYYY-MM-DD), mainly for review")
     parser.add_argument("--chunk-size", type=int, default=CHUNK_SIZE, help=f"leads per bulk edit (default {CHUNK_SIZE})")
     args = parser.parse_args(argv)
-    if args.apply and (args.run_date or args.export_id):
-        parser.error("Apply requires a fresh export and today's Pacific date")
+    if args.apply and args.run_date:
+        parser.error("Apply requires today's Pacific date")
     (ROOT / "outputs").mkdir(exist_ok=True)
     if not 1 <= args.chunk_size <= 500:
         parser.error("--chunk-size must be between 1 and 500")
@@ -400,6 +412,8 @@ def main(argv: list[str] | None = None) -> int:
         raise RuntimeError(f"Lead Tier choices do not match the approved values: {schema_choices}")
 
     leads, export = export_all_leads(api_key, args.export_id)
+    if args.apply:
+        require_fresh_export(export, datetime.now(timezone.utc))
     rows = classify_leads(leads, run_date, imported_lead_ids(api_key, leads))
     timestamp = datetime.now(PACIFIC).strftime("%Y%m%dT%H%M%S%z")
     report_path = ROOT / "outputs" / f"lead_tier_sync_{timestamp}.csv"
@@ -436,6 +450,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if datetime.now(PACIFIC).date() != run_date:
         raise RuntimeError("Pacific date changed during capture; refresh before applying")
+    require_fresh_export(export, datetime.now(timezone.utc))
     if review_rows:
         raise RuntimeError("Unclassified leads require review before applying")
 

@@ -7,6 +7,10 @@ on:
         description: Update only Lead Tier; false previews changes
         type: boolean
         default: false
+      export_id:
+        description: Optional fresh export from the reviewed preview; same day and under 30 minutes old
+        type: string
+        default: ''
   schedule:
     - cron: '20 11 * * *'
 
@@ -32,11 +36,14 @@ jobs:
         env:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
           APPLY: ${{ github.event_name == 'schedule' || inputs.apply }}
+          EXPORT_ID: ${{ inputs.export_id }}
         run: |
+          ARGS=()
+          if [ -n "$EXPORT_ID" ]; then ARGS+=(--export-id "$EXPORT_ID"); fi
           if [ "$APPLY" = "true" ]; then
-            python sync_lead_tier_tags.py --apply
+            python sync_lead_tier_tags.py --apply "${ARGS[@]}"
           else
-            python sync_lead_tier_tags.py --dry-run
+            python sync_lead_tier_tags.py --dry-run "${ARGS[@]}"
           fi
       - name: Retain run evidence privately
         if: always()
