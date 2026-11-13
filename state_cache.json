@@ -122302,13 +122302,13 @@
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
-      "reactivation": "Vince Bartolini",
-      "reactivation_user": "user_vw2xwmG2n6zLu3pjkuZHS7ZPNlg1dyImRUguk60YCbN",
+      "reactivation": null,
       "reactivation_override_version": 1,
       "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_vw2xwmG2n6zLu3pjkuZHS7ZPNlg1dyImRUguk60YCbN"
     },
     "lead_lhgrig80q8LBaG2GjmQ4AWn9l3sAS2mQJB0rNntBez1": {
       "date": "2026-10-11",
@@ -131940,7 +131940,6 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
       "funnel_name": null,
       "vendhub": null,
@@ -131948,6 +131947,6 @@
       "quick_disc": null
     }
   },
-  "saved_at": "2026-11-13 16:38:43 UTC",
+  "saved_at": "2026-11-13 17:10:11 UTC",
   "count": 11095
 }
