@@ -1,5 +1,10 @@
 # Attendance at the released-lead handoff
 
+**Current staffing, November 16:** New QA handoffs go to Tara Hall. The existing
+QA book transfers without a new admission or clock reset; historical Naria
+references below describe the original rollout. See
+[QA staffing handoff](QA_REP_HANDOFF_2026-11-16.md).
+
 The November 9 [QA lifecycle extension](QA_LIFECYCLE_2026-11-09.md) is implemented
 behind coordinated Railway configuration and `qa_lifecycle_deployment.json`.
 When enabled, closer-marked Lost uses its own

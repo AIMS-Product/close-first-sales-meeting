@@ -1,5 +1,10 @@
 # Next milestone: QA booking no-show recovery
 
+**Current staffing, November 16:** Tara Hall is the QA rep and takes over the
+existing QA book. Historical bookings retain their actual booking rep's credit;
+this staffing handoff does not activate the deferred communication sequence
+below. See [QA staffing handoff](QA_REP_HANDOFF_2026-11-16.md).
+
 User-requested order: first activate the closer-marked Lost handoff and existing
 QA lifecycle. Start this recovery milestone after that cutover is live.
 
