@@ -132216,14 +132216,13 @@
       "scraper": null,
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": null,
       "reactivation_override_version": null,
-      "funnel_name": "Google Ads",
+      "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-11-15 23:39:01 UTC",
+  "saved_at": "2026-11-16 00:09:09 UTC",
   "count": 11116
 }
