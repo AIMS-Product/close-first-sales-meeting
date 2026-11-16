@@ -14,10 +14,11 @@ import requests
 
 from close_status_policy import COMPANY, ORG
 from qa_lifecycle_policy import POLICY_VERSION
+from qa_identity import QA_SLACK_ID, LEGACY_QA_SLACK_ID
 
 PREFIX = 'qa-slack-completion-v1|'
 QA_LIST_URL = 'https://app.close.com/leads/save_im68DOFza11Qjg23wGV93WdyoyUdmirUeckrrwH6Yh1/'
-NARIA_SLACK_ID = 'U0BSCGYRZ2M'
+NARIA_SLACK_ID = LEGACY_QA_SLACK_ID
 PACIFIC = ZoneInfo('America/Los_Angeles')
 MAX_DELIVERIES = 10
 DEFINITE_REJECTIONS = frozenset((
@@ -57,6 +58,7 @@ def record_completed_run(store, result, *, completed_at, config=None):
         raise ValueError('qa_slack_completion_timezone_required')
     run_id = str(uuid4())
     record = {'run_id': run_id, 'channel': config['channel'], 'count': count,
+              'recipient_slack_id': QA_SLACK_ID,
               'completed_at': completed_at.astimezone(timezone.utc).isoformat(), 'state': 'pending'}
     with store.serialized():
         _save(store, PREFIX + run_id, record)
@@ -67,7 +69,11 @@ def message(record):
     count = record['count']
     completed = datetime.fromisoformat(record['completed_at']).astimezone(PACIFIC)
     noun, verb = ('lead', 'was') if count == 1 else ('leads', 'were')
-    return (f'<@{NARIA_SLACK_ID}> *QA automation completed*\n'
+    # Old pending completions retain their original recipient.
+    recipient = record.get('recipient_slack_id', LEGACY_QA_SLACK_ID)
+    if recipient not in (QA_SLACK_ID, LEGACY_QA_SLACK_ID):
+        raise ValueError('qa_slack_recipient_invalid')
+    return (f'<@{recipient}> *QA automation completed*\n'
             f'*{count} new {noun}* {verb} added to your QA list.\n'
             f'<{QA_LIST_URL}|Open your QA list>\n'
             f'Completed {completed:%b %d, %I:%M %p %Z}.')

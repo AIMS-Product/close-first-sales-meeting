@@ -2,13 +2,18 @@
 
 The existing QA Railway worker can notify the configured Slack channel after a
 successful completed run. A notification counts only `verified_qa` admissions:
-actual new assignments to Naria with successful Close readback. Backlog clock
+actual new assignments to Tara with successful Close readback. Backlog clock
 resets, tier returns, attempted writes, holds, observe runs and zero-addition
 runs do not produce a message.
 
-The message mentions Naria, reports the new-lead count, links to her existing QA
+The message mentions Tara, reports the new-lead count, links to her existing QA
 list and shows the completion time in Pacific time. It contains no customer
 names or lead IDs. No historical runs are backfilled when this is enabled.
+
+The November 16 staffing handoff pins the recipient in each new completion
+record. Existing queued records retain Naria as their original recipient; the
+ownership transfer does not generate a new-admission alert. See
+[QA staffing handoff](QA_REP_HANDOFF_2026-11-16.md).
 
 ## Configuration and delivery
 

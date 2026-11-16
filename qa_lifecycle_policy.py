@@ -4,7 +4,8 @@ import re
 from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
-from route_released_leads import (BATCH_FIELD, COMPLETED_OUTCOME, DOM_ID, NARIA_ID,
+from qa_identity import QA_REP_ID, QA_ACTOR_IDS
+from route_released_leads import (BATCH_FIELD, COMPLETED_OUTCOME, DOM_ID,
     ORGANIZATION_ID, OWNER_FIELD, OVERRIDE_FIELD, STATE_FIELD, WON_OPPORTUNITY_STATUSES,
     custom, has_release_marker, has_qa_history, instant)
 
@@ -193,7 +194,7 @@ def admission_changes(lead, entered_at, *, original_closer=None, signal_id=None)
         raise ValueError('original_closer_marker_required')
     episode = receipt_id(lead['id'], signal_id or entered_at)
     marker = f'[QA2 {episode}]'
-    return {f'custom.{OWNER_FIELD}': NARIA_ID, f'custom.{STATE_FIELD}': 'QA Triage',
+    return {f'custom.{OWNER_FIELD}': QA_REP_ID, f'custom.{STATE_FIELD}': 'QA Triage',
             f'custom.{QA_ASSIGNED}': entered_at, f'custom.{QA_OUTCOME}': None,
             f'custom.{QA_CONTACTED}': None, f'custom.{BATCH_FIELD}': f'{batch} | {marker}'}
 
@@ -202,7 +203,7 @@ def plan_backlog_window(snapshot, *, backlog_lead_ids, launched_at):
     """One explicit launch cohort; preserve prior outcome and contact evidence."""
     lead = snapshot['lead']
     if (lead.get('organization_id') != ORGANIZATION_ID or lead.get('id') not in backlog_lead_ids
-            or custom(lead, OWNER_FIELD) != NARIA_ID or custom(lead, STATE_FIELD) != 'QA Triage'):
+            or custom(lead, OWNER_FIELD) not in QA_ACTOR_IDS or custom(lead, STATE_FIELD) != 'QA Triage'):
         return held('not_launch_backlog')
     if snapshot.get('complete') is not True or snapshot.get('shared_holds_verified') is not True:
         return held('backlog_source_unverified')
@@ -260,8 +261,8 @@ def plan_lost_admission(snapshot, *, closers, lost_status, suppressed_statuses, 
 
 def plan_qa_exit(snapshot, *, suppressed_statuses, activation_at):
     lead, now = snapshot['lead'], snapshot['as_of']
-    if custom(lead, OWNER_FIELD) != NARIA_ID or custom(lead, STATE_FIELD) != 'QA Triage':
-        return held('not_current_naria_qa')
+    if custom(lead, OWNER_FIELD) not in QA_ACTOR_IDS or custom(lead, STATE_FIELD) != 'QA Triage':
+        return held('not_current_qa')
     batch = custom(lead, BATCH_FIELD)
     if not has_release_marker(batch) or not isinstance(batch, str) or not re.search(r'\[QA2 [a-f0-9]{24}\]', batch):
         return held('legacy_qa_entry_requires_explicit_backlog_policy')
@@ -316,7 +317,7 @@ def new_qa_booking_credit(lead, meeting, *, booking_rep_id, booking_actor_verifi
         entered, booked = instant(custom(lead, QA_ASSIGNED)), instant(meeting['date_created'])
     except (ValueError, TypeError, KeyError):
         return False
-    return bool(booking_actor_verified is True and booking_rep_id == NARIA_ID
+    return bool(booking_actor_verified is True and booking_rep_id in QA_ACTOR_IDS
         and has_release_marker(custom(lead, BATCH_FIELD)) and '[QA2 ' in str(custom(lead, BATCH_FIELD))
         and meeting.get('organization_id') == ORGANIZATION_ID and meeting.get('lead_id') == lead.get('id')
         and isinstance(meeting.get('id'), str) and meeting['id'].startswith('acti_') and booked > entered)

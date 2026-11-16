@@ -1,5 +1,9 @@
 # QA Lost handoff and five-business-day work window
 
+**Current staffing, November 16:** Tara Hall replaces Naria Torres as QA rep,
+including the existing QA book. See [staffing handoff](QA_REP_HANDOFF_2026-11-16.md).
+The historical activation and deadlines below remain unchanged.
+
 Implements the user's November 9 clarification of the October 19 QA policy.
 
 ## Accepted behavior

@@ -60,7 +60,7 @@ class NotificationTests(unittest.TestCase):
         self.assertNotIn('47', text)
         self.assertIn(alerts.QA_LIST_URL, text)
         self.assertIn('12:37 PM PST', text)
-        self.assertIn('<@' + alerts.NARIA_SLACK_ID + '>', text)
+        self.assertIn('<@' + alerts.QA_SLACK_ID + '>', text)
 
     def test_singular_count_and_malformed_completion(self):
         self.record(completed(1))

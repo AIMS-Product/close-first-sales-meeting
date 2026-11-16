@@ -11,8 +11,10 @@ import requests
 from collections import Counter
 from datetime import datetime, timezone
 
+from qa_identity import QA_REP_ID, LEGACY_QA_REP_ID
+
 DOM_ID = "user_hqv8aEy844FqW29HDFof8hPyBiJx1XBxaDkdUtqc1Qp"
-NARIA_ID = "user_PBMfAYkPSkMaYK58gXuG70Vu1SLd2bsG3Mvys6RZNgY"
+NARIA_ID = LEGACY_QA_REP_ID  # Historical identity; new admissions use QA_REP_ID.
 ORGANIZATION_ID = "orga_Qwbx9tyUrl7Jdjurg9xJ8N6w1MN4PD2NQOgIhd8r7rC"
 BATCH_FIELD = "cf_IruzyS5PO4dZsOKGQSYb4r7PhOEpw1C82FN17ZlmkQy"
 OWNER_FIELD = "cf_gOfS9pFwext58oberEegLyix8hZzeHrxhCZOVh3P3rd"
@@ -110,7 +112,7 @@ def handoff_plan(snapshot, *, now, terminal_statuses, suppressed_statuses):
         if has_qa_history(lead) or snapshot.get('prior_qa_verified'):
             return held('already_passed_through_qa')
         return {"destination": "qa", "reason": "confirmed_completed_meeting",
-                "changes": {f"custom.{OWNER_FIELD}": NARIA_ID,
+                "changes": {f"custom.{OWNER_FIELD}": QA_REP_ID,
                             f"custom.{STATE_FIELD}": "QA Triage"}}
     if state == "Booked":
         state = "Active-Nurture"
@@ -175,7 +177,7 @@ class HandoffReader:
         organization = self.get(f"/organization/{ORGANIZATION_ID}/")
         members = {member.get("user_id", (member.get("user") or {}).get("id"))
                    for member in organization.get("memberships", [])}
-        if not {DOM_ID, NARIA_ID}.issubset(members):
+        if not {DOM_ID, QA_REP_ID}.issubset(members):
             raise RuntimeError("handoff_membership_unverified")
 
     def write_once(self, lead_id, changes):

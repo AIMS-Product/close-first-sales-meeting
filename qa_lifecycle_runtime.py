@@ -19,7 +19,8 @@ from qa_lifecycle_policy import (ALLOWED_LOST_REASONS, EXCLUSION, LOST_REASON,
     LEGACY_DNC, POLICY_VERSION, QA_ASSIGNED, QA_CONTACTED, QA_OUTCOME, QA_OUTCOMES,
     admission_changes, plan_backlog_window, plan_lost_admission, plan_qa_exit,
     held, qa_deadline, qa_field_time, possible_call_connection)
-from route_released_leads import (BATCH_FIELD, HandoffReader, NARIA_ID, ORGANIZATION_ID,
+from qa_identity import QA_REP_ID, QA_ACTOR_IDS
+from route_released_leads import (BATCH_FIELD, HandoffReader, ORGANIZATION_ID,
     DOM_ID, OWNER_FIELD, STATE_FIELD, custom, instant, handoff_plan, has_qa_history)
 from qa_slack_notifications import configuration as notification_configuration, record_completed_run
 
@@ -128,7 +129,7 @@ class QaLifecycleReader(HandoffReader):
         definition = self.get(f'/custom_field/lead/{QA_ASSIGNED}/')
         if definition.get('type') != 'datetime':
             raise RuntimeError('qa_assigned_at_field_type_mismatch')
-        if not set(self.closers) or NARIA_ID in self.closers:
+        if not set(self.closers) or QA_ACTOR_IDS.intersection(self.closers):
             raise RuntimeError('active_closer_roster_unverified')
 
     def candidates(self):
@@ -136,7 +137,7 @@ class QaLifecycleReader(HandoffReader):
                  'condition': {'type': 'reference', 'reference_type': 'user',
                     'object_ids': sorted(self.closers if self.config.get('observe_phase') == 'lost' else [*self.closers, DOM_ID])}}
         qa_owner = {'type': 'field_condition', 'field': {'type': 'custom_field', 'custom_field_id': OWNER_FIELD},
-                    'condition': {'type': 'reference', 'reference_type': 'user', 'object_ids': [NARIA_ID]}}
+                    'condition': {'type': 'reference', 'reference_type': 'user', 'object_ids': sorted(QA_ACTOR_IDS)}}
         qa_state = {'type': 'field_condition', 'field': {'type': 'custom_field', 'custom_field_id': STATE_FIELD},
                     'condition': {'type': 'term', 'values': ['QA Triage']}}
         lost = self.lane2.status_in([self.lane2.S_LOST])
@@ -146,16 +147,26 @@ class QaLifecycleReader(HandoffReader):
         staged_owner = {'type': 'field_condition', 'field': {'type': 'custom_field', 'custom_field_id': OWNER_FIELD},
                         'condition': {'type': 'reference', 'reference_type': 'user', 'object_ids': [DOM_ID]}}
         staged_marker = {'type': 'field_condition', 'field': {'type': 'custom_field', 'custom_field_id': BATCH_FIELD},
-                         'condition': {'type': 'text', 'mode': 'full_words', 'value': 'Released'}}
+                         # Close indexes this custom text as a complete value;
+                         # prefix discovery finds Released - <closer>. The fresh
+                         # handoff still validates the exact release marker.
+                         'condition': {'type': 'text', 'mode': 'beginning_of_words', 'value': 'Released'}}
         staged_query = {'type': 'and', 'queries': [staged_owner, staged_marker]}
         qa_query = {'type': 'and', 'queries': [qa_owner, qa_state]}
         phase = self.config.get('observe_phase')
         query = self.lane2._wrap(lost_query if phase == 'lost' else qa_query if phase == 'backlog'
             else {'type': 'or', 'queries': [lost_query, qa_query, staged_query]})
-        rows = self.lane2.search(query, fields=['id', 'status_id', f'custom.{OWNER_FIELD}'], limit=self.lane2.SKIP_CAP)
-        if len(rows) >= self.lane2.SKIP_CAP or len({r['id'] for r in rows}) != len(rows):
-            raise RuntimeError('qa_candidate_census_incomplete')
-        return rows
+        for attempt in range(2):
+            rows = self.lane2.search(query, fields=['id', 'status_id', f'custom.{OWNER_FIELD}'], limit=self.lane2.SKIP_CAP)
+            if len(rows) >= self.lane2.SKIP_CAP:
+                raise RuntimeError('qa_candidate_census_incomplete')
+            if len({r['id'] for r in rows}) == len(rows):
+                return rows
+            if attempt == 0:
+                # A changing provider index can repeat a row across pages. Read
+                # the entire census again; never silently deduplicate a partial list.
+                print(json.dumps({'event': 'qa_candidate_census_read_retry', 'verified_writes': 0}))
+        raise RuntimeError('qa_candidate_census_incomplete')
 
     def events(self, lead_id, object_type):
         rows, seen, cursor = [], set(), None
@@ -193,7 +204,7 @@ class QaLifecycleReader(HandoffReader):
             raise RuntimeError('qa_lead_scope_mismatch')
         now = self.clock()
         batch = str(custom(before, BATCH_FIELD) or '')
-        if (custom(before, OWNER_FIELD) == NARIA_ID and custom(before, STATE_FIELD) == 'QA Triage'
+        if (custom(before, OWNER_FIELD) in QA_ACTOR_IDS and custom(before, STATE_FIELD) == 'QA Triage'
                 and lead_id in self.config['backlog_lead_ids'] and '[QA2 ' not in batch):
             # Starting an explicitly approved backlog window changes only its
             # timestamp/episode marker; prior conversations and outcomes survive.
@@ -203,7 +214,7 @@ class QaLifecycleReader(HandoffReader):
                 raise RuntimeError('qa_backlog_changed_during_read')
             return {'lead': after, 'as_of': now, 'complete': True,
                     'shared_holds_verified': True, 'competing_hold': bool(holds), 'holds': holds}
-        if custom(before, OWNER_FIELD) == NARIA_ID and not custom(before, QA_OUTCOME):
+        if custom(before, OWNER_FIELD) in QA_ACTOR_IDS and not custom(before, QA_OUTCOME):
             entry = custom(before, QA_ASSIGNED)
             if entry and now < qa_deadline(entry):
                 return {'lead': before, 'as_of': now, 'complete': False, 'inspection_reason': 'qa_window_open'}
@@ -212,7 +223,7 @@ class QaLifecycleReader(HandoffReader):
                     'inspection_reason': 'lost_reason_not_qa_workable'}
         contact_suppressed = self.contact_suppression(before)
         owner = custom(before, OWNER_FIELD)
-        if owner in (NARIA_ID, DOM_ID):
+        if owner in (*QA_ACTOR_IDS, DOM_ID):
             base = super().snapshot(lead_id)
         else:
             # Lost admission does not use Lane 2's derived intake bucket. Avoid
@@ -235,7 +246,7 @@ class QaLifecycleReader(HandoffReader):
             prior_qa = prior_qa or (payload.get('policy_version') == POLICY_VERSION
                 and payload.get('destination') in ('qa', 'backlog_window'))
         calls = self.related('/activity/call/', lead_id,
-            'id,lead_id,user_id,date_created,activity_at,direction,status,disposition,duration') if owner == NARIA_ID else []
+            'id,lead_id,user_id,date_created,activity_at,direction,status,disposition,duration') if owner in QA_ACTOR_IDS else []
         scoped = {'type': 'id', 'value': lead_id}
         workflows = self.lane2.search(self.lane2._wrap(scoped, active_workflow_query()), fields=['id'], limit=2)
         if any(row.get('id') != lead_id for row in workflows):
@@ -255,7 +266,7 @@ class QaLifecycleReader(HandoffReader):
             entered = now
         # Positive-duration/answered calls are possible human connections. Only
         # exact QA-actor calls in this admission window affect the fallback.
-        qa_calls = [call for call in calls if call.get('user_id') == NARIA_ID
+        qa_calls = [call for call in calls if call.get('user_id') in QA_ACTOR_IDS
                     and instant(call.get('activity_at') or call['date_created']) >= entered]
         possible_connection = possible_call_connection(qa_calls)
         outcome = custom(before, QA_OUTCOME)
@@ -263,7 +274,7 @@ class QaLifecycleReader(HandoffReader):
         outcome_events = [e for e in events if e.get('object_id') == lead_id
                           and outcome_key in e.get('changed_fields', [])]
         latest_outcome = max(outcome_events, key=lambda e: instant(e['date_updated']), default={})
-        outcome_verified = bool(latest_outcome and latest_outcome.get('user_id') == NARIA_ID
+        outcome_verified = bool(latest_outcome and latest_outcome.get('user_id') in QA_ACTOR_IDS
             and 'api_key_id' in latest_outcome and latest_outcome['api_key_id'] is None
             and custom(latest_outcome.get('data') or {}, QA_OUTCOME) == outcome
             and entered <= instant(latest_outcome['date_updated']) <= now)
@@ -333,7 +344,7 @@ class ExistingTierAllocator:
         roster, _ = capture_roster(lead_ids=[snapshot['lead']['id']])
         rep_ids = tuple(sorted({account['provider_user_id'] for row in roster['rows']
             if row['status'] == 'active' for account in row.get('close_accounts') or []
-            if account.get('provider_user_id') and account.get('provider_user_id') != NARIA_ID}))
+            if account.get('provider_user_id') and account.get('provider_user_id') not in QA_ACTOR_IDS}))
         if not rep_ids:
             raise RuntimeError('qa_tier_active_reps_unavailable')
         scope = SimpleNamespace(rep_ids=rep_ids, lead_ids=(snapshot['lead']['id'],))
@@ -389,7 +400,7 @@ def choose_plan(reader, snapshot):
         return {'destination': 'qa', 'reason': 'thirty_day_shown_release',
             'signal': {'id': staged['digest'], 'closer_id': staged['originalCloserId'], 'kind': 'staged'},
             'changes': admission_changes(lead, entered, signal_id=staged['digest'])}
-    if custom(lead, OWNER_FIELD) == NARIA_ID:
+    if custom(lead, OWNER_FIELD) in QA_ACTOR_IDS:
         if lead['id'] in config['backlog_lead_ids'] and '[QA2 ' not in str(custom(lead, BATCH_FIELD)):
             return plan_backlog_window(snapshot, backlog_lead_ids=config['backlog_lead_ids'], launched_at=config['launched_at'])
         return plan_qa_exit(snapshot, suppressed_statuses=reader.lane2.SUPPRESS_STATUSES,

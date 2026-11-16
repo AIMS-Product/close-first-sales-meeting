@@ -41,7 +41,7 @@ class AttendanceRoutingTests(unittest.TestCase):
     def test_native_completed_routes_to_naria_without_recency_limit(self):
         result = plan(snapshot(routing.COMPLETED_OUTCOME, starts_at="2025-01-01T15:00:00Z"))
         self.assertEqual(result["destination"], "qa")
-        self.assertEqual(result["changes"], {"custom." + routing.OWNER_FIELD: routing.NARIA_ID,
+        self.assertEqual(result["changes"], {"custom." + routing.OWNER_FIELD: routing.QA_REP_ID,
                                              "custom." + routing.STATE_FIELD: "QA Triage"})
 
     def test_calendar_completed_alone_is_not_attendance(self):
@@ -93,7 +93,7 @@ class AttendanceRoutingTests(unittest.TestCase):
             self.assertEqual(plan(value)["destination"], "held")
 
     def test_existing_naria_leads_other_owners_and_qa_holds_untouched(self):
-        for owner in (routing.NARIA_ID, "closer", None):
+        for owner in (routing.QA_REP_ID, "closer", None):
             value = snapshot();value["lead"]["custom." + routing.OWNER_FIELD] = owner
             self.assertEqual(plan(value)["changes"], {})
         value = snapshot();value["lead"]["custom." + routing.STATE_FIELD] = "QA Triage"
@@ -209,7 +209,7 @@ class ReconcilerIntegrationTests(unittest.TestCase):
 
     def test_qa_booking_no_show_is_not_immediately_released(self):
         lead = {'id': 'lead_recovery', 'status_id': self.reconciler.S_NOSHOW,
-            'custom.' + routing.STATE_FIELD: 'QA Triage', 'custom.' + routing.OWNER_FIELD: routing.NARIA_ID,
+            'custom.' + routing.STATE_FIELD: 'QA Triage', 'custom.' + routing.OWNER_FIELD: routing.QA_REP_ID,
             'custom.' + routing.QA_ASSIGNED: '2026-11-09T18:00:00Z'}
         with patch.object(self.reconciler, 'search', side_effect=[[lead]] + [[]] * len(self.reconciler.BUCKETS)):
             candidates, releasable, _ = self.reconciler.qa_triage_terminal_plan()

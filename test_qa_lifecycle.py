@@ -8,9 +8,10 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
 
+from qa_identity import QA_REP_ID
 import qa_lifecycle_policy as policy
 import qa_lifecycle_runtime as runtime
-from route_released_leads import (BATCH_FIELD, COMPLETED_OUTCOME, DOM_ID, NARIA_ID, ORGANIZATION_ID,
+from route_released_leads import (BATCH_FIELD, COMPLETED_OUTCOME, DOM_ID, ORGANIZATION_ID,
     OWNER_FIELD, STATE_FIELD, custom)
 from workflow_holds import Store
 
@@ -117,7 +118,7 @@ class LostTests(unittest.TestCase):
         before = copy.deepcopy(value)
         result = lost_plan(value)
         self.assertEqual(result['destination'], 'qa')
-        self.assertEqual(result['changes'][f'custom.{OWNER_FIELD}'], NARIA_ID)
+        self.assertEqual(result['changes'][f'custom.{OWNER_FIELD}'], QA_REP_ID)
         self.assertEqual(result['changes'][f'custom.{policy.QA_ASSIGNED}'], NOW.isoformat())
         self.assertIn('Released - Original Closer', result['changes'][f'custom.{BATCH_FIELD}'])
         self.assertEqual(value, before)
@@ -248,10 +249,10 @@ class QaWindowTests(unittest.TestCase):
     def test_clean_slate_applies_only_to_verified_new_booking_after_admission(self):
         value = qa_snapshot(); meeting = {'id': 'acti_rebook', 'lead_id': 'lead_one',
             'organization_id': ORGANIZATION_ID, 'date_created': '2026-11-02T18:00:00Z'}
-        self.assertTrue(policy.new_qa_booking_credit(value['lead'], meeting, booking_rep_id=NARIA_ID, booking_actor_verified=True))
+        self.assertTrue(policy.new_qa_booking_credit(value['lead'], meeting, booking_rep_id=QA_REP_ID, booking_actor_verified=True))
         self.assertFalse(policy.new_qa_booking_credit(value['lead'], meeting, booking_rep_id=CLOSER, booking_actor_verified=True))
         meeting['date_created'] = '2026-11-01T18:00:00Z'
-        self.assertFalse(policy.new_qa_booking_credit(value['lead'], meeting, booking_rep_id=NARIA_ID, booking_actor_verified=True))
+        self.assertFalse(policy.new_qa_booking_credit(value['lead'], meeting, booking_rep_id=QA_REP_ID, booking_actor_verified=True))
 
 
 class FakeReader:
@@ -311,7 +312,7 @@ class NativeAdapterTests(unittest.TestCase):
         self.assertEqual(client.session.request.call_count, 2)
         client.session.put.assert_not_called()
 
-    def test_qa_booking_no_show_keeps_naria_for_recovery(self):
+    def test_qa_booking_no_show_keeps_qa_owner_for_recovery(self):
         value = qa_snapshot()
         from qa_booking_recovery import RECOVERY_LEAD_STATUSES
         value['lead']['status_id'] = sorted(RECOVERY_LEAD_STATUSES)[0]
@@ -397,7 +398,7 @@ class CoordinatorTests(unittest.TestCase):
         self.assertEqual(runtime.run(reader, apply=True, max_writes=1)['verified_writes'], 1)
         self.assertEqual(custom(second['lead'], OWNER_FIELD), CLOSER)
         self.assertEqual(runtime.run(reader, apply=True, max_writes=1)['verified_writes'], 1)
-        self.assertEqual(custom(second['lead'], OWNER_FIELD), NARIA_ID)
+        self.assertEqual(custom(second['lead'], OWNER_FIELD), QA_REP_ID)
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -440,7 +441,7 @@ class CoordinatorTests(unittest.TestCase):
         allocator = SimpleNamespace(target=Mock(side_effect=RuntimeError('unavailable')))
         result = runtime.run(reader, apply=True, tier_allocator=allocator)
         self.assertEqual(result['verified_writes'], 0)
-        self.assertEqual(custom(reader.value['lead'], OWNER_FIELD), NARIA_ID)
+        self.assertEqual(custom(reader.value['lead'], OWNER_FIELD), QA_REP_ID)
 
     def test_verified_tier_transfer_preserves_release_and_releases_only_own_hold(self):
         reader = FakeReader(qa_snapshot(), self.store)

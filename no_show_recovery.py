@@ -78,6 +78,7 @@ LANE2_REP_NAMES = [
     "Connor George",
     "Dana Lesiuk",
     "Naria Torres",
+    "Tara Hall",
     "Melia King",
 ]
 
