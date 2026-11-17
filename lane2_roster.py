@@ -322,6 +322,12 @@ LANE2_ROSTER = [
         "ready_for_leads": False,
         "title_patterns": [r"vendingpren[eu]+rs?\s+aspire\s*-?\s*next\s+steps"],
     },
+    {
+        "rep": "Sepideh Mivehchin", "start_date": "2026-11-16",
+        "user_id": "user_FhWQ4g3svUwQXACxG21CeNfzavroD04rDik0rR7COuZ",
+        "offer": OFFER_VP, "ready_for_leads": False,
+        "title_patterns": [r"vendingpren[eu]+rs?\s+aurora\s*-?\s*next\s+steps"],
+    },
 ]
 
 # Owner Team role is still distinct from offer and certification. Keep its role
@@ -370,6 +376,7 @@ SCRAPER_TITLE_MAP = [
 # one source of truth. These are intentionally workflow-specific: the two older
 # reports have different historical attributions for some identical titles.
 MEETING_COUNT_TITLE_MAP = [
+    (re.compile(r"vendingpren[eu]+rs?\s+aurora\s*-?\s*next\s+steps", re.IGNORECASE), "Sepideh Mivehchin"),
     (re.compile(r"vendingpren[eu]+rs?\s+aspire\s*-?\s*next\s+steps", re.IGNORECASE), "Katie Meloche"),
     (re.compile(r"vendingpren[eu]+rs?\s+apex\s*-?\s*next\s+steps", re.IGNORECASE), "Adam Linn"),
     (re.compile(r"vendingpren[eu]+rs?\s+venture\s*-?\s*next\s+steps", re.IGNORECASE), "Rosita Purwaningsih"),
@@ -429,6 +436,7 @@ MEETING_COUNT_TITLE_MAP = [
 ]
 
 MISSING_LEAD_RECONCILIATION_TITLE_MAP = [
+    (re.compile(r"vendingpren[eu]+rs?\s+aurora\s*-?\s*next\s+steps", re.IGNORECASE), "Sepideh Mivehchin"),
     (re.compile(r"vendingpren[eu]+rs?\s+aspire\s*-?\s*next\s+steps", re.IGNORECASE), "Katie Meloche"),
     (re.compile(r"vendingpren[eu]+rs?\s+apex\s*-?\s*next\s+steps", re.IGNORECASE), "Adam Linn"),
     (re.compile(r"vendingpren[eu]+rs?\s+venture\s*-?\s*next\s+steps", re.IGNORECASE), "Rosita Purwaningsih"),
