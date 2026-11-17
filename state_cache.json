@@ -128881,11 +128881,12 @@
     "lead_SLSCsz3TYsjAQ9y2dTrdXwKqH3peDZ96GnicIgI1tN6": {
       "date": "2026-10-30",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -132655,6 +132656,6 @@
       "reactivation_user": "user_K4Bd8ZXYjoeM8rDuezL8yCiF9936JoBWAKpJd2yt5w6"
     }
   },
-  "saved_at": "2026-11-17 23:09:17 UTC",
+  "saved_at": "2026-11-17 23:39:13 UTC",
   "count": 11150
 }
