@@ -132483,8 +132483,34 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_51aC0u9bEobJhS82dHXNDiuudCZy5D6ZWNiE05lAZo7": {
+      "date": "2026-11-23",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_vUzr77Ut7mEXo72bEMMQOs6bf7fnmJpu6zVZsgKoWpf": {
+      "date": "2026-11-23",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-11-17 17:39:20 UTC",
-  "count": 11137
+  "saved_at": "2026-11-17 18:10:40 UTC",
+  "count": 11139
 }
