@@ -74,6 +74,8 @@ FIELD_REACTIVATION_USER_KEY = f"custom.{FIELD_REACTIVATION_USER_ID}"
 # Funnel Name DEAL — lead field (NOT opportunity)
 FIELD_FUNNEL_ID       = "cf_xqDQE8fkPsWa0RNEve7hcaxKblCe6489XeZGRDzyPdX"
 FIELD_FUNNEL_KEY      = f"custom.{FIELD_FUNNEL_ID}"
+FIELD_ORIGINAL_SOURCE_ID = 'cf_74IE1CpFKVCifR0ifK18wsOidWhQQ3s7UxiwczUTtyg'
+FIELD_ORIGINAL_SOURCE_KEY = f"custom.{FIELD_ORIGINAL_SOURCE_ID}"
 
 FIELD_QUICK_DISC_ID       = "cf_vnmSl0VGK8n42T3sFPchgQ0Q320fr8oDIeqCP46m5Am"
 FIELD_QUICK_DISC_KEY      = f"custom.{FIELD_QUICK_DISC_ID}"
@@ -81,7 +83,7 @@ FIELD_VENDHUB_ID          = "cf_2oYFNCsi4dcrjcIS6xFvGf37RGtraixl8jHYinwta9m"
 FIELD_VENDHUB_KEY         = f"custom.{FIELD_VENDHUB_ID}"
 FIELD_VENDHUB_DATE_ID     = "cf_qScR8i96dqsMDMirfPqPn8woMkeJrpl41mc4TmoU78q"
 FIELD_VENDHUB_DATE_KEY    = f"custom.{FIELD_VENDHUB_DATE_ID}"
-FIELDS_PARAM           = f"id,display_name,{FIELD_DATE_KEY},{FIELD_LATEST_DATE_KEY},{FIELD_CALLTYPE_KEY},{FIELD_SCRAPER_KEY},{FIELD_POSTWEBINAR_KEY},{FIELD_REACTIVATION_KEY},{FIELD_REACTIVATION_USER_KEY},{FIELD_FUNNEL_KEY},{FIELD_VENDHUB_KEY},{FIELD_VENDHUB_DATE_KEY},{FIELD_QUICK_DISC_KEY}"
+FIELDS_PARAM           = f"id,display_name,{FIELD_DATE_KEY},{FIELD_LATEST_DATE_KEY},{FIELD_CALLTYPE_KEY},{FIELD_SCRAPER_KEY},{FIELD_POSTWEBINAR_KEY},{FIELD_REACTIVATION_KEY},{FIELD_REACTIVATION_USER_KEY},{FIELD_FUNNEL_KEY},{FIELD_ORIGINAL_SOURCE_KEY},{FIELD_VENDHUB_KEY},{FIELD_VENDHUB_DATE_KEY},{FIELD_QUICK_DISC_KEY}"
 LATEST_CANCELED_STATUSES = ("canceled", "cancelled", "declined")
 
 # Reactivation dropdown — Close accepts label strings directly for choice fields
@@ -822,14 +824,16 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
     cur_funnel = current.get("funnel_name")
     new_funnel = desired.get("funnel_name")
 
-    if new_funnel == "Reactivation Scrapers":
-        # Always override — scraper attribution wins
-        if cur_funnel != new_funnel:
-            payload[FIELD_FUNNEL_KEY] = new_funnel
-    elif new_funnel == "VSL":
-        # Only write if currently blank — do not override existing funnel
-        if not cur_funnel:
-            payload[FIELD_FUNNEL_KEY] = new_funnel
+    # Booking attribution belongs in Booked By / setter fields, never origin.
+    # Keep the legacy origin field for downstream readers and preserve any
+    # explicit Original Source; do not infer an origin from a scraper title.
+    cur_original_source = current.get("original_source")
+    origin = cur_funnel if cur_funnel not in (None, "", "Reactivation Scrapers", "Unknown (Needs Review)") else None
+    if new_funnel == "VSL" and not cur_funnel and not cur_original_source:
+        payload[FIELD_FUNNEL_KEY] = new_funnel
+        origin = new_funnel
+    if not cur_original_source and origin:
+        payload[FIELD_ORIGINAL_SOURCE_KEY] = origin
 
     # ── VendHub Call field ───────────────────────────────────────────────────
     cur_vendhub = current.get("vendhub")
@@ -874,6 +878,8 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
         changes.append(f"reactivation: {cur_reactivation or 'blank'} → {new_reactivation_label}")
     if FIELD_REACTIVATION_USER_KEY in payload:
         changes.append(f"reactivation user: {cur_reactivation_user or 'blank'} → {desired_reactivation_user}")
+    if FIELD_ORIGINAL_SOURCE_KEY in payload:
+        changes.append(f"original source: {payload[FIELD_ORIGINAL_SOURCE_KEY]}")
     if FIELD_FUNNEL_KEY in payload:
         changes.append(f"funnel: {cur_funnel or 'blank'} → {new_funnel}")
     if FIELD_VENDHUB_KEY in payload:
@@ -1025,6 +1031,7 @@ def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict,
                 "reactivation": lead_data.get(FIELD_REACTIVATION_KEY),
                 "reactivation_user": lead_data.get(FIELD_REACTIVATION_USER_KEY),
                 "funnel_name":  lead_data.get(FIELD_FUNNEL_KEY),
+                "original_source": lead_data.get(FIELD_ORIGINAL_SOURCE_KEY),
                 "vendhub":      lead_data.get(FIELD_VENDHUB_KEY),
                 "vendhub_date": lead_data.get(FIELD_VENDHUB_DATE_KEY),
                 "quick_disc":   lead_data.get(FIELD_QUICK_DISC_KEY),
@@ -1094,6 +1101,7 @@ def backfill(desired_state: dict, already_processed: set, users_by_name: dict) -
                 "reactivation": lead_data.get(FIELD_REACTIVATION_KEY),
                 "reactivation_user": lead_data.get(FIELD_REACTIVATION_USER_KEY),
                 "funnel_name":  lead_data.get(FIELD_FUNNEL_KEY),
+                "original_source": lead_data.get(FIELD_ORIGINAL_SOURCE_KEY),
                 "vendhub":      lead_data.get(FIELD_VENDHUB_KEY),
                 "vendhub_date": lead_data.get(FIELD_VENDHUB_DATE_KEY),
                 "quick_disc":   lead_data.get(FIELD_QUICK_DISC_KEY),
