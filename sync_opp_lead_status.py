@@ -9,12 +9,14 @@ A Do Not Contact lead is protected from all non-DNC sync targets.
 Rule set:
   - If a lead has more than one opportunity, the opportunity that was
     updated most recently (date_updated) wins.
-  - 17 Opportunity statuses have a direct label-matched Lead status
-    (see STATUS_MAP) and are synced automatically.
-  - 8 Opportunity statuses have no Lead-status equivalent (see
-    ORPHAN_OPP_STATUS_IDS) -- when the winning opportunity is in one of
-    these, the lead's status is left untouched and the lead is logged
+  - Every current Sales Pipeline Opportunity status has an explicit Lead
+    status mapping (see STATUS_MAP) and is synced automatically.
+  - Historical Opportunity statuses without a safe Lead-status equivalent
+    are listed in ORPHAN_OPP_STATUS_IDS; when the winning opportunity is in one
+    of these, the lead's status is left untouched and the lead is logged
     as a flag for manual review.
+  - Other unknown Opportunity statuses are also skipped and flagged, so new
+    statuses cannot silently pass through without a mapping.
   - Leads with zero opportunities are skipped entirely (nothing to sync
     against).
   - Re-runs are idempotent: a lead whose status already matches the
@@ -91,10 +93,14 @@ STATUS_MAP = {
     "stat_SJL06q8F8GOcHyX6RBclkQHLDh1tHaRm9KR4R35nOXA": "stat_FRlJpzeReKIGHnEHmf5UYcwUgCJJsGj465UsM5heCi9",  # Scraper No-Show
     "stat_FP0Obs2SMeD84gKU2WsjpRQH9JYEiArHniVdbc5drsc": "stat_5vONRb3xsup9faV8qqesxLTRhmQTw94YJMTJ5R2ZvON",  # Scraper Canceled
     "stat_oPfsZCwCCEadif8uzCSCcb6TroB3Gu5FKxnUPdJlWTM": "stat_3RYd0LpypFaOBbRBMSw9fnTdyooJZTVcCVCKS4fXi5z",  # Scraper Rescheduled
+    "stat_3VNxVWofQCXjEYd8riBKreGN1BBQBs3GCMcpUjXClKt": "stat_dcRNgzrM0Vb1V8mMEdM4NoiniRRa7kl6LNhxndJcPVd",  # Active Member
+    "stat_lUlfKfrCjfQED6ezwUdX4bcegS688DkIInHGqcEjDoE": "stat_fWncnMCEJqRCNKAwjHokK1DwEHEhKipkjIJmeB8w0Vr",  # Upsell
+    "stat_S3eSc8BNZnFqG7oJxnBHj6F1NUZHIcQ8ANAE26dnEZT": "stat_p3oblSTnbsyDAw4rWqZDePGYMOlKBgV2FjbqIMDrfvF",  # Not Qualified -> Disqualified
+    "stat_LbsuNBimzj2Fa3RCBpTz6kEDeokz3O97LwUorSpDhVp": "stat_aR2jBa8YnTNZmHAnPsnlQuinBdaXpSBCkZGP3UvoBlV",  # Closed Lost -> Lost
 }
 
-# Opportunity statuses with no Lead-status equivalent. When the winning
-# opportunity is in one of these, we do NOT touch the lead's status.
+# Historical Opportunity statuses with no safe Lead-status equivalent. When
+# the winning opportunity is in one of these, we do NOT touch the lead status.
 ORPHAN_OPP_STATUS_IDS = {
     "stat_ZA4DFlp3JeGCpqLVoQxIEGfd3WNxAqdM5RrHQrzrpm6": "OLD Deal Won (Prior to 2026 Migration)",
     "stat_xJYl3faVfshDeuaL1w1Rogh3JA64eLJqNVJL1navPWf": "Meeting Scheduled",
@@ -102,8 +108,31 @@ ORPHAN_OPP_STATUS_IDS = {
     "stat_NGfzbFQkI46nagRbqrRPyaAm8z8gdqHa8AhJnjEwdQq": "Proposal Presented",
     "stat_lIge79IrriROLh2ocwM1Xm6oS74vSPJx0epwL465hxN": "Commitment Pending",
     "stat_8XbH25IjXYGT3b1g07d9AFNCb6WbqVjd6Yjz0ykd3NQ": "Nurture",
-    "stat_LbsuNBimzj2Fa3RCBpTz6kEDeokz3O97LwUorSpDhVp": "Closed Lost",
     "stat_G331FCVhaJeCFYRDNEfRBwOqnx13hNo2o6p2cvwrWwe": "Discovery Call",
+}
+
+# Live statuses returned by Close for the Sales Pipeline on 2026-11-17.
+# Keep this set current with Close; the self-test requires every one to map.
+CURRENT_SALES_PIPELINE_OPP_STATUS_IDS = {
+    "stat_S4cxvnfOWWi8jOqTPtGoq34BzuU8ah9fKTPPfO5P9Yi",  # Call Booked
+    "stat_mApYfeCdMszhTCCp6TJMWBRCRtmMilVyvaMpVlzbZZR",  # HOT - Follow Up
+    "stat_jHE5Cu3ciWfejf9F9mf5HwMOdB8VhogiLVTIqg3a2Xy",  # WARM - Follow Up
+    "stat_oyR6irMMbv9KIigS8VEmX44DmXMhUut3EL57pFsExPF",  # GENERAL Follow Up
+    "stat_2VATuVC6m5LfYjJv3jTNCbpryNn3aGCyCwptrt5cZtj",  # Deposit Collected
+    "stat_csQPyVHTXpTFBSDAK8kx10yGCtX40H0ONbD4QNXbJBI",  # Contract Sent
+    "stat_fiEyGOvVizCBUKbW691nwHwpDcKCQJMRy3I7h76js3T",  # Reschedule Requested
+    "stat_cqwPKIAezUGp8sJ4May80zRjJAlzCQzVXtAc4P9xyPd",  # Rescheduled Call
+    "stat_NCXVjokjo3VXirJx2eSAcRoKlEDg1WsO1sjeLfU8udO",  # No Show
+    "stat_WnFc0uhjcjV0cc3bVzdFVqDz7av6rbsOmOvHUsO6s03",  # Closed / Won
+    "stat_bBWcww9IflskaleadKuK2E4SGFF4qy3IuBucrqo7H4u",  # Lost
+    "stat_9ae2fCnLhMKoWq15dKkAEb5drDFPXgV1PZHJegl3fuq",  # Canceled (by Lead)
+    "stat_E9LE4YrRUQvQIIs7GoaWA4eOFqzs1GtsoV4qKWmvbYN",  # Outside the US
+    "stat_bhmaw9aSACxeEIW9wjdE9dnSBMyQEWpZBSZZRdg0fcK",  # Non-responsive
+    "stat_P9TLh4NNjKZztUlaUI533dcxhSCXmfoL7DuC2gIuIzM",  # Do Not Contact
+    "stat_LbsuNBimzj2Fa3RCBpTz6kEDeokz3O97LwUorSpDhVp",  # Closed Lost
+    "stat_3VNxVWofQCXjEYd8riBKreGN1BBQBs3GCMcpUjXClKt",  # Active Member
+    "stat_lUlfKfrCjfQED6ezwUdX4bcegS688DkIInHGqcEjDoE",  # Upsell
+    "stat_S3eSc8BNZnFqG7oJxnBHj6F1NUZHIcQ8ANAE26dnEZT",  # Not Qualified
 }
 
 
@@ -373,16 +402,26 @@ def selftest():
     check("booked statuses are real STATUS_MAP targets", BOOKED_LEAD_STATUS_IDS <= set(STATUS_MAP.values()))
 
     # STATUS_MAP integrity
-    check("STATUS_MAP has 20 entries", len(STATUS_MAP) == 20)
-    check("ORPHAN_OPP_STATUS_IDS has 8 entries", len(ORPHAN_OPP_STATUS_IDS) == 8)
+    check("every current Sales Pipeline opportunity status is mapped",
+          CURRENT_SALES_PIPELINE_OPP_STATUS_IDS <= set(STATUS_MAP))
+    check("STATUS_MAP has 24 entries", len(STATUS_MAP) == 24)
+    check("ORPHAN_OPP_STATUS_IDS has 7 entries", len(ORPHAN_OPP_STATUS_IDS) == 7)
     check("no overlap between STATUS_MAP and ORPHAN_OPP_STATUS_IDS",
           set(STATUS_MAP.keys()).isdisjoint(ORPHAN_OPP_STATUS_IDS.keys()))
     check("all STATUS_MAP values look like status ids",
           all(v.startswith("stat_") for v in STATUS_MAP.values()))
     check("all STATUS_MAP keys look like status ids",
           all(k.startswith("stat_") for k in STATUS_MAP.keys()))
-    check("no duplicate Lead status_id targets in STATUS_MAP",
-          len(set(STATUS_MAP.values())) == len(STATUS_MAP))
+    target_sources = defaultdict(set)
+    for opp_status_id, lead_status_id in STATUS_MAP.items():
+        target_sources[lead_status_id].add(opp_status_id)
+    duplicate_targets = {target: sources for target, sources in target_sources.items() if len(sources) > 1}
+    lost_target = "stat_aR2jBa8YnTNZmHAnPsnlQuinBdaXpSBCkZGP3UvoBlV"
+    check("duplicate Lead targets are limited to equivalent Lost statuses",
+          duplicate_targets == {lost_target: {
+              "stat_bBWcww9IflskaleadKuK2E4SGFF4qy3IuBucrqo7H4u",
+              "stat_LbsuNBimzj2Fa3RCBpTz6kEDeokz3O97LwUorSpDhVp",
+          }})
 
     print(f"\n{'PASSED' if failures == 0 else f'{failures} FAILURE(S)'}")
     sys.exit(1 if failures else 0)
