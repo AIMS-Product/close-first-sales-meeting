@@ -132601,8 +132601,60 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_PsSmyc1aKbTHgN1wcMZWY22BlUsyp7OAqsUJdldOg4n": {
+      "date": "2026-11-19",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_v9fTG7jTVB8rfZuopqceim99v9DPqeWiUQ1F5BsrbtW",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_Ko5fxOFj5VBm01nVB62MFgrwopu1U1BAYr5FRSYGw3l": {
+      "date": "2026-11-23",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_xNKHgse6l4Vild8jtW9eJZNSDxJ2A8hANLnCRJ6Cjyb"
+    },
+    "lead_cEtnW0srNVtLrKsx4zbI9rl1b51NHvpIfZTEPAt4gsD": {
+      "date": "2026-11-23",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
+    },
+    "lead_itKIxVZ1EPwtrCgQwsWlvqkPOpcXxhIedBlshAcC2Vr": {
+      "date": "2026-11-24",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_K4Bd8ZXYjoeM8rDuezL8yCiF9936JoBWAKpJd2yt5w6"
     }
   },
-  "saved_at": "2026-11-17 21:09:51 UTC",
-  "count": 11146
+  "saved_at": "2026-11-17 22:09:33 UTC",
+  "count": 11150
 }
