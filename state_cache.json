@@ -132381,8 +132381,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_QmWi398IzLauwzpgpb6rXcRudxgAQY9eOPiv4BCTqhF": {
+      "date": "2026-11-20",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Instagram",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-11-17 03:39:35 UTC",
-  "count": 11129
+  "saved_at": "2026-11-17 04:09:26 UTC",
+  "count": 11130
 }
