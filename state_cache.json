@@ -82786,11 +82786,12 @@
     "lead_u5z6p7ETec6eMhtm1A1jTp9IlHaXI6r1Fb6vKF1TOZP": {
       "date": "2026-06-02",
       "call_type": "Closer",
-      "scraper": null,
+      "scraper": "YES",
       "post_webinar": null,
-      "reactivation": null,
-      "reactivation_override_version": null,
-      "funnel_name": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
+      "reactivation_override_version": 1,
+      "funnel_name": "LTF - In-House",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
@@ -132669,7 +132670,7 @@
       "quick_disc": null
     },
     "lead_oMSk8mn3nkYyZaFXmG8JWJ3b9qA6T5FxKzl0jwrHPRf": {
-      "date": "2026-11-23",
+      "date": "2026-11-19",
       "call_type": "Closer",
       "scraper": "YES",
       "post_webinar": null,
@@ -132705,8 +132706,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_PWLk3kcsL40znx8v1sWGLBhfNAvlFGCXBOk3SeOzgAc": {
+      "date": "2026-11-19",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Website",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-11-18 01:39:18 UTC",
-  "count": 11154
+  "saved_at": "2026-11-18 02:09:59 UTC",
+  "count": 11155
 }
