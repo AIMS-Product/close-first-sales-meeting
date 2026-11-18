@@ -132926,14 +132926,40 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e",
       "reactivation_override_version": 1,
-      "funnel_name": null,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_EFC1i27RBcUIQ2G23l2aJST8lv090CfSKYUdX9E9x9e"
+    },
+    "lead_OnadbmKcQ1nL7Z7e3zUSBQfmNoQcAZUK0DgmYmQMByd": {
+      "date": "2026-11-23",
+      "call_type": "Closer",
+      "scraper": null,
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": null,
+      "reactivation_override_version": null,
+      "funnel_name": "Instagram",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
+    },
+    "lead_d32IOhCHjpkrruRgXU6mPp7HOExqkXCVg7n1uqfO6cV": {
+      "date": "2026-11-20",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_cYj9jcC1UVL5XIq6pSiXC1F9Jpl7NsqHdTqKJcmfbvZ",
+      "reactivation_override_version": 1,
+      "funnel_name": "Internal Webinar",
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
     }
   },
-  "saved_at": "2026-11-18 19:10:48 UTC",
-  "count": 11172
+  "saved_at": "2026-11-18 19:39:18 UTC",
+  "count": 11174
 }
