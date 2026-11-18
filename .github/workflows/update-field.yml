@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
+      - name: Verify source preservation and sales-call dates
+        run: python3 -m unittest test_update_field_latest test_original_source -q
+
       - name: Run field updater
         env:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
