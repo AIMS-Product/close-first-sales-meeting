@@ -15,9 +15,23 @@ on:
         type: string
         default: ""
 
+      lead_id:
+        description: "Single Close lead for preview or canary"
+        type: string
+        default: ""
+      preview_replacement:
+        description: "Run the replacement in read-only mode"
+        type: boolean
+        default: false
+
+concurrency:
+  group: close-opportunity-owner-sync
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
 
@@ -26,17 +40,36 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install requests "psycopg[binary]>=3.2,<4"
 
       - name: Run sync
         env:
           CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+          LAKEBASE_HOST: ${{ secrets.LAKEBASE_HOST }}
+          LAKEBASE_DATABASE: ${{ secrets.LAKEBASE_DATABASE }}
+          LAKEBASE_USER: ${{ secrets.LAKEBASE_USER }}
+          LAKEBASE_PASSWORD: ${{ secrets.LAKEBASE_PASSWORD }}
+          CLOSE_OWNER_SYNC_MODE: ${{ vars.CLOSE_OWNER_SYNC_MODE }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          INPUT_LIMIT: ${{ inputs.limit }}
+          INPUT_LEAD_ID: ${{ inputs.lead_id }}
+          INPUT_PREVIEW: ${{ inputs.preview_replacement }}
         run: |
-          ARGS=""
-          if [ "${{ inputs.dry_run }}" = "true" ]; then
-            ARGS="$ARGS --dry-run"
+          args=()
+          if [[ "$INPUT_DRY_RUN" == true || "$INPUT_PREVIEW" == true ]]; then
+            args+=(--dry-run)
           fi
-          if [ -n "${{ inputs.limit }}" ]; then
-            ARGS="$ARGS --limit ${{ inputs.limit }}"
+          if [[ -n "$INPUT_LIMIT" ]]; then
+            args+=(--limit "$INPUT_LIMIT")
           fi
-          python sync_lead_owner_to_opp.py $ARGS
+          if [[ "$INPUT_PREVIEW" == true || "$CLOSE_OWNER_SYNC_MODE" == live || -n "$INPUT_LEAD_ID" ]]; then
+            export WORKFLOW_HOLD_BACKEND=postgres
+            if [[ -n "$INPUT_LEAD_ID" ]]; then
+              args+=(--lead-id "$INPUT_LEAD_ID")
+            fi
+            python run_owner_sync_replacement.py "${args[@]}"
+          elif [[ "$CLOSE_OWNER_SYNC_MODE" == canary ]]; then
+            echo "Waiting for explicit cutover canary"
+          else
+            python sync_lead_owner_to_opp.py "${args[@]}"
+          fi

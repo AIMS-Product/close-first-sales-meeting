@@ -158,6 +158,10 @@ class CloseClient:
             skip += page_size
 
     def set_opportunity_owner(self, opp_id, user_id):
+        from owner_sync_replacement import WORKFLOW_ID
+        native = self._request("GET", f"/sequence/{WORKFLOW_ID}/")
+        if native.get("id") != WORKFLOW_ID or native.get("status") != "active":
+            raise RuntimeError("Legacy owner sync is gated off after the native workflow is paused")
         return self._request(
             "PUT", f"/opportunity/{opp_id}/", json={"user_id": user_id}
         )
