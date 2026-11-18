@@ -146,3 +146,21 @@ class ExecutorTests(ReplacementTests):
         self.assertEqual(call(), ('awaiting_opportunity', 0, 0))
         self.assertEqual(effects, [])
         store.intent.assert_not_called()
+
+    def test_explicit_throttle_records_rejection_and_defers(self):
+        from types import SimpleNamespace
+        from run_owner_sync_replacement import RateLimited
+
+        def throttle(_):
+            raise RateLimited(SimpleNamespace(headers={'Retry-After': '4'}))
+
+        call, effects, store = self.run_executor(self.lead, readback=False, before_write=throttle)
+        store.intent.return_value = 7
+        store.connection.execute.return_value.fetchone.return_value = {'id': 7}
+        with self.assertRaises(RateLimited) as exc:
+            call()
+        self.assertEqual(exc.exception.delay, 4)
+        self.assertEqual(len(effects), 1)
+        self.assertEqual(store.connection.execute.call_args.args[1],
+                         ('rate_limited', 7, 'owner_sync_replacement', 'uncertain'))
+        store.receipt.assert_not_called()

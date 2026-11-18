@@ -6,6 +6,7 @@ from datetime import date, datetime, timedelta, timezone
 import json
 import os
 import re
+import time
 from urllib.parse import urlencode
 
 import requests
@@ -19,6 +20,18 @@ from owner_sync_replacement import (
 from sync_lead_owner_to_opp import BASE_URL
 from tier_assignment import field, regular
 from workflow_holds import BATCH, OWNER_SINCE, custom, open_store
+
+WRITE_TOKEN = 'owner_sync_replacement'
+WRITE_SPACING_SECONDS = 3
+
+
+class RateLimited(Exception):
+    def __init__(self, response):
+        try:
+            self.delay = max(0, min(float(response.headers.get('Retry-After', 15)), 60))
+        except ValueError:
+            self.delay = 15
+
 
 LEAD_FIELDS = [
     'id', 'organization_id', 'status_id', 'opportunities', 'num_upcoming_meetings',
@@ -132,8 +145,19 @@ def reconcile(client, store, lead_id, closer_ids, exclusions, write, *, budget):
             latest = read_lead(client, lead_id, store)
             if latest != current:
                 return 'lead_snapshot_changed_during_sync', planned, written
-            receipt = store.intent(lead_id, 'owner_sync_replacement', {'path': path, 'patch': patch})
-            write(path, patch)
+            receipt = store.intent(lead_id, WRITE_TOKEN, {'path': path, 'patch': patch})
+            try:
+                write(path, patch)
+            except RateLimited as rejected:
+                row = store.connection.execute(
+                    "UPDATE workflow_write SET state=? WHERE id=? AND token=? AND state=? RETURNING id",
+                    ('rate_limited', receipt, WRITE_TOKEN, 'uncertain'),
+                ).fetchone()
+                if not row or row['id'] != receipt:
+                    raise RuntimeError('Could not record the provider rejection')
+                rejected.written = written
+                rejected.planned = planned
+                raise
             verified = client.request('GET', path)
             if verified.get('id') != path.split('/')[2] or verified.get('organization_id') != ORG:
                 raise RuntimeError('Write readback identity mismatch')
@@ -193,6 +217,8 @@ def run(args):
 
         def write(path, patch):
             response = session.put(BASE_URL + path, json=patch, timeout=45)
+            if response.status_code == 429:
+                raise RateLimited(response)
             response.raise_for_status()
     roster = load_roster(now)
     exclusions = load_exclusions()
@@ -205,12 +231,21 @@ def run(args):
         )
         print(json.dumps({'scanned':counts['scanned'],'candidate_leads':len(leads)}),flush=True)
         for lead_id in leads:
-            reason, planned, written = reconcile(
-                client, store, lead_id, roster.closer_ids, exclusions, write,
-                budget=args.max_writes - counts['verified_writes'],
-            )
+            try:
+                reason, planned, written = reconcile(
+                    client, store, lead_id, roster.closer_ids, exclusions, write,
+                    budget=args.max_writes - counts['verified_writes'],
+                )
+            except RateLimited as rejected:
+                counts.update(proposed_writes=rejected.planned, verified_writes=rejected.written,
+                              rate_limited=1)
+                # Defer only this lead until a fresh future pass. Wait outside the shared fence.
+                time.sleep(max(WRITE_SPACING_SECONDS, rejected.delay))
+                continue
             counts.update(proposed_writes=planned, verified_writes=written)
             counts[reason] += 1
+            if write and written:
+                time.sleep(WRITE_SPACING_SECONDS)
             if counts['verified_writes'] >= args.max_writes:
                 break
         print(json.dumps({'dry_run': args.dry_run, 'native_status': native_workflow(client)['status'],
