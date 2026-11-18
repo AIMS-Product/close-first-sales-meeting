@@ -1,6 +1,7 @@
 """Scheduled Close ownership sync. This runner has no workflow or assignment write path."""
 import argparse
 from collections import Counter
+from itertools import islice
 from datetime import date, datetime, timedelta, timezone
 import json
 import os
@@ -153,6 +154,26 @@ def reconcile(client, store, lead_id, closer_ids, exclusions, write, *, budget):
         return reason, planned, written
 
 
+def discover_batch(client, store, roster, exclusions, now, *, limit, max_items, counts):
+    # Exhaust the required search pages before mutation. Provider cursors expire
+    # while a page of verified writes is in progress.
+    held = {row['lead_id'] for row in store.connection.execute(
+        "SELECT lead_id FROM sales_hold UNION SELECT lead_id FROM workflow_write WHERE state='uncertain'"
+    )}
+    selected = []
+    for lead in islice(candidates(client, now), limit):
+        counts['scanned'] += 1
+        if lead['id'] in held:
+            counts['shared_or_unconfirmed_write_hold'] += 1
+            continue
+        _, opps, mirror = replacement_plan(project_meeting(lead), roster.closer_ids, exclusions)
+        if opps or mirror:
+            selected.append(lead['id'])
+            if len(selected) >= max_items:
+                break
+    return selected
+
+
 def run(args):
     now = datetime.now(timezone.utc)
     api_key = os.environ['CLOSE_API_KEY']
@@ -178,22 +199,19 @@ def run(args):
     counts = Counter()
     store = open_store()
     try:
-        leads = [{'id': args.lead_id}] if args.lead_id else candidates(client, now)
-        for lead in leads:
-            if not args.lead_id:
-                _, opps, mirror = replacement_plan(project_meeting(lead), roster.closer_ids, exclusions)
-                counts['scanned'] += 1
-                if not opps and not mirror:
-                    if args.limit and counts['scanned'] >= args.limit:
-                        break
-                    continue
+        leads = [args.lead_id] if args.lead_id else discover_batch(
+            client, store, roster, exclusions, now, limit=args.limit,
+            max_items=args.max_writes * 3, counts=counts,
+        )
+        print(json.dumps({'scanned':counts['scanned'],'candidate_leads':len(leads)}),flush=True)
+        for lead_id in leads:
             reason, planned, written = reconcile(
-                client, store, lead['id'], roster.closer_ids, exclusions, write,
+                client, store, lead_id, roster.closer_ids, exclusions, write,
                 budget=args.max_writes - counts['verified_writes'],
             )
             counts.update(proposed_writes=planned, verified_writes=written)
             counts[reason] += 1
-            if (args.limit and counts['scanned'] >= args.limit) or counts['verified_writes'] >= args.max_writes:
+            if counts['verified_writes'] >= args.max_writes:
                 break
         print(json.dumps({'dry_run': args.dry_run, 'native_status': native_workflow(client)['status'],
                           'lead_id': args.lead_id, **counts}, sort_keys=True), flush=True)
