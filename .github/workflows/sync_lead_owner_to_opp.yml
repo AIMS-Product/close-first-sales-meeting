@@ -50,6 +50,7 @@ jobs:
           LAKEBASE_USER: ${{ secrets.LAKEBASE_USER }}
           LAKEBASE_PASSWORD: ${{ secrets.LAKEBASE_PASSWORD }}
           CLOSE_OWNER_SYNC_MODE: ${{ vars.CLOSE_OWNER_SYNC_MODE }}
+          CLOSE_OWNER_SYNC_RETIRED_WORKFLOW_ID: ${{ vars.CLOSE_OWNER_SYNC_RETIRED_WORKFLOW_ID }}
           INPUT_DRY_RUN: ${{ inputs.dry_run }}
           INPUT_LIMIT: ${{ inputs.limit }}
           INPUT_LEAD_ID: ${{ inputs.lead_id }}

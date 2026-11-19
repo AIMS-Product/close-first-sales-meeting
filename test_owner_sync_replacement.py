@@ -1,10 +1,51 @@
 from copy import deepcopy
+import os
 import unittest
+from unittest.mock import Mock, patch
+
+import requests
 
 from close_status_policy import ORG, OWNER
 from lane2_policy import F_OVERRIDE, F_STATE
 from owner_sync_replacement import OPPORTUNITY_OWNER_MIRROR, legacy_opportunity_plans, replacement_plan
 from workflow_holds import BATCH
+
+
+class NativeRetirementTests(unittest.TestCase):
+    def verify_retirement(self, status, configured_id, organization_id=ORG):
+        from owner_sync_replacement import WORKFLOW_ID
+        from run_owner_sync_replacement import require_inactive_native_workflow
+
+        response = requests.Response()
+        response.status_code = status
+        client = Mock()
+        client.request.side_effect = [
+            requests.HTTPError(response=response), {'id': organization_id},
+        ]
+        settings = {'CLOSE_OWNER_SYNC_RETIRED_WORKFLOW_ID': configured_id or ''}
+        with patch.dict(os.environ, settings):
+            require_inactive_native_workflow(client)
+        client.request.assert_any_call('GET', f'/sequence/{WORKFLOW_ID}/')
+        client.request.assert_called_with('GET', f'/organization/{ORG}/?_fields=id')
+
+    def test_explicit_retirement_and_same_organization_permit_missing_sequence(self):
+        from owner_sync_replacement import WORKFLOW_ID
+
+        self.verify_retirement(404, WORKFLOW_ID)
+
+    def test_unexpected_not_found_or_permission_error_stays_blocked(self):
+        from owner_sync_replacement import WORKFLOW_ID
+
+        for status, configured_id in ((404, None), (404, 'seq_other'), (403, WORKFLOW_ID)):
+            with self.subTest(status=status, configured_id=configured_id):
+                with self.assertRaises(requests.HTTPError):
+                    self.verify_retirement(status, configured_id)
+
+    def test_retirement_requires_matching_organization(self):
+        from owner_sync_replacement import WORKFLOW_ID
+
+        with self.assertRaisesRegex(ValueError, 'organization identity mismatch'):
+            self.verify_retirement(404, WORKFLOW_ID, 'orga_other')
 
 
 class ReplacementTests(unittest.TestCase):

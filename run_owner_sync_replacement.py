@@ -42,15 +42,25 @@ LEAD_FIELDS = [
 
 
 def native_workflow(client):
-    state = client.request('GET', f'/sequence/{WORKFLOW_ID}/')
+    try:
+        state = client.request('GET', f'/sequence/{WORKFLOW_ID}/')
+    except requests.HTTPError as error:
+        if (error.response is None or error.response.status_code != 404
+                or os.environ.get('CLOSE_OWNER_SYNC_RETIRED_WORKFLOW_ID') != WORKFLOW_ID):
+            raise
+        organization = client.request('GET', f'/organization/{ORG}/?_fields=id')
+        if organization.get('id') != ORG:
+            raise ValueError('Close organization identity mismatch during workflow retirement')
+        return None
     if state.get('id') != WORKFLOW_ID or state.get('organization_id') != ORG:
         raise ValueError('Native workflow identity mismatch')
     return state
 
 
-def require_paused(client):
+def require_inactive_native_workflow(client):
     state = native_workflow(client)
-    if state.get('status') != 'paused' or state['subscription_counts_by_status']['active'] != 0:
+    if state is not None and (state.get('status') != 'paused'
+                              or state['subscription_counts_by_status']['active'] != 0):
         raise RuntimeError('Custom writes require the native workflow paused and drained')
 
 
@@ -131,7 +141,7 @@ def reconcile(client, store, lead_id, closer_ids, exclusions, write, *, budget):
         while opps or mirror:
             if written >= planned:
                 raise RuntimeError('Live plan expanded during ownership sync')
-            require_paused(client)
+            require_inactive_native_workflow(client)
             if opps:
                 target, owner = next(iter(opps.items()))
                 path, patch = f'/opportunity/{target}/', {'user_id': owner}
@@ -209,7 +219,7 @@ def run(args):
     if not args.dry_run:
         if mode not in ('canary', 'live') or (mode == 'canary' and not args.lead_id):
             raise RuntimeError('Ownership sync has no write authority for this invocation')
-        require_paused(client)
+        require_inactive_native_workflow(client)
         # We hold the same tenant fence ourselves and persist exact write intents.
         # Use an unwrapped transport only for these two private, hard-coded patch shapes.
         session = requests.Session()
@@ -248,7 +258,8 @@ def run(args):
                 time.sleep(WRITE_SPACING_SECONDS)
             if counts['verified_writes'] >= args.max_writes:
                 break
-        print(json.dumps({'dry_run': args.dry_run, 'native_status': native_workflow(client)['status'],
+        native = native_workflow(client)
+        print(json.dumps({'dry_run': args.dry_run, 'native_status': native['status'] if native else 'retired',
                           'lead_id': args.lead_id, **counts}, sort_keys=True), flush=True)
         if args.lead_id and write and not counts['verified_writes']:
             raise RuntimeError('Canary made zero verified writes')
