@@ -133139,8 +133139,21 @@
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_IzQENOCvG2vhv1Xtxe6NnLa1PouB0fkkdJM86iBo1Sm": {
+      "date": "2026-11-19",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": "Vince Bartolini",
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
+      "reactivation_override_version": 1,
+      "funnel_name": "Meta Ads",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null
     }
   },
-  "saved_at": "2026-11-19 13:09:54 UTC",
-  "count": 11188
+  "saved_at": "2026-11-19 13:39:07 UTC",
+  "count": 11189
 }
