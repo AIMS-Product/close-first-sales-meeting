@@ -6,8 +6,8 @@ Daily (weekday) round-robin reassignment of two Lane 2 lead buckets in Close CRM
 Buckets (driven by Close Smart Views, owner-filtered to Lane 1 reps):
   - Bucket 1  "L2 Handoff: 14-days No Comms"  -> Lane 2 Handraiser = "No Activity / Past 14 Days"
   - Bucket 2  "L2 Handoff: 30 Days since Booking" -> RELEASE: clears Lead Owner only
-              (skips Recapture State Booked / Suppressed). The Lane 2 reconciler
-              and assign_lane2_leads.py handle everything after that.
+              (skips approved exclusions and Recapture State Booked / Suppressed).
+              The Lane 2 reconciler and assign_lane2_leads.py handle everything after that.
 
 For each lead pulled from a round-robin view (Bucket 1), the script:
   1. Assigns the lead to the next Lane 2 rep in a round-robin rotation
@@ -39,7 +39,7 @@ import json
 import time
 import argparse
 import requests
-from workflow_holds import guard_request
+from workflow_holds import custom, guard_request
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
@@ -72,6 +72,7 @@ REP_IDS = {rid for _, rid in REPS}
 LEAD_OWNER_FIELD       = "cf_gOfS9pFwext58oberEegLyix8hZzeHrxhCZOVh3P3rd"
 LANE2_HANDRAISER_FIELD = "cf_Q1hRv8It46xsAEmpv4PRKdI1y0sPJnrnQrgRbIlF8uL"
 LEAD_OWNER_DISPLAY     = "Lead Owner"  # how Close keys it on reads
+APPROVED_RELEASE_EXCLUSION_FIELD = "cf_dOgbJRRRYimvIh9POsEsQpGhX7rI3Dm8gz0RheQeL73"
 
 # Bucket definitions. Processed in PROCESS_ORDER (Bucket 2 wins overlaps).
 BUCKETS = {
@@ -389,10 +390,26 @@ def read_recapture_state(lead):
     return cust.get(RECAPTURE_STATE_FIELD) or cust.get("Recapture State")
 
 
+class ApprovedReleaseExcluded(Exception):
+    """The lead has an approved exclusion from release."""
+
+
+def check_approved_release_exclusion(lead):
+    value = custom(lead, APPROVED_RELEASE_EXCLUSION_FIELD)
+    if value is None:
+        value = (lead.get("custom") or {}).get("Approved_Release_Exclusion")
+    if value in ("Yes", ["Yes"]):
+        raise ApprovedReleaseExcluded
+
+
 def release_lead(lead_id, *, expected_owner):
     """Clear Lead Owner so the Lane 2 assigner can deal the lead. Verifies it took."""
-    updated = close_request("PUT", f"{BASE}/lead/{lead_id}/",
-                            json={f"custom.{LEAD_OWNER_FIELD}": None}, expected_owner=expected_owner).json()
+    updated = close_request(
+        "PUT", f"{BASE}/lead/{lead_id}/",
+        json={f"custom.{LEAD_OWNER_FIELD}": None},
+        expected_owner=expected_owner,
+        check_current_lead=check_approved_release_exclusion,
+    ).json()
     if read_lead_owner(updated):
         raise RuntimeError(f"Lead {lead_id}: owner clear did not take "
                            f"(still {read_lead_owner(updated)!r}).")
@@ -459,6 +476,12 @@ def main():
             continue
 
         node = extract_query_node(blob)
+        if b.get("action") == "release":
+            node = {"type": "and", "negate": False, "queries": [node, {
+                "type": "field_condition", "negate": True,
+                "field": {"type": "custom_field", "custom_field_id": APPROVED_RELEASE_EXCLUSION_FIELD},
+                "condition": {"type": "term", "values": ["Yes"]},
+            }]}
         if b.get("no_comms_days"):
             lead_ids = resolve_no_comms_bucket(node, b["no_comms_days"], debug=dry_run)
         else:
@@ -466,6 +489,7 @@ def main():
         print(f"View returned {len(lead_ids)} lead(s)")
 
         assigned = skipped_overlap = skipped_owned = 0
+        skipped_exclusion = 0
 
         for lead_id in lead_ids:
             if lead_id in handled:
@@ -482,11 +506,16 @@ def main():
                     skipped_owned += 1
                     print(f"  SKIP ({state_val})  {name}")
                     continue
-                if dry_run:
-                    print(f"  WOULD RELEASE  {name}  (Recapture State: {state_val})")
-                else:
-                    release_lead(lead_id, expected_owner=read_lead_owner(lead))
-                    print(f"  RELEASED  {name}  (Recapture State: {state_val})")
+                try:
+                    check_approved_release_exclusion(lead)
+                    if not dry_run:
+                        release_lead(lead_id, expected_owner=read_lead_owner(lead))
+                except ApprovedReleaseExcluded:
+                    skipped_exclusion += 1
+                    print(f"  SKIP (Approved_Release_Exclusion)  {name}")
+                    continue
+                action = "WOULD RELEASE" if dry_run else "RELEASED"
+                print(f"  {action}  {name}  (Recapture State: {state_val})")
                 handled.add(lead_id)
                 assigned += 1
                 continue
@@ -527,7 +556,7 @@ def main():
         if b.get("action") == "release":
             print(f"  {b['label']}: released {assigned}, "
                   f"overlap-skipped {skipped_overlap}, "
-                  f"Booked/Suppressed-skipped {skipped_owned}")
+                  f"Booked/Suppressed-skipped {skipped_owned}, exclusion-skipped {skipped_exclusion}")
         else:
             print(f"  {b['label']}: assigned {assigned}, "
                   f"overlap-skipped {skipped_overlap}, already-owned-skipped {skipped_owned}")

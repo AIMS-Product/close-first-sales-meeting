@@ -178,12 +178,14 @@ def _custom_readback_matches(actual, expected):
 def guard_request(request):
     """Guard requests-style lead/opportunity mutations with one shared fence.
 
-    Callers pass expected_owner for planned assignments/releases. Durable intents
-    prevent automatic retry after a timeout, crash or uncertain readback.
+    Callers pass expected_owner for planned assignments/releases and can check the
+    fresh lead before a write with check_current_lead. Durable intents prevent
+    automatic retry after a timeout, crash or uncertain readback.
     """
     def guarded(method, url, **kwargs):
         expected_owner = kwargs.pop('expected_owner', ...)
         expected_since = kwargs.pop('expected_owner_since', ...)
+        check_current_lead = kwargs.pop('check_current_lead', None)
         from sales_dispatch_holds import is_dispatch_mutation, guard_dispatch
         if is_dispatch_mutation(method, url, kwargs.get('json') or {}):
             return guard_dispatch(request, method, url, **kwargs)
@@ -207,6 +209,8 @@ def guard_request(request):
                 expected_lead = match[2] if match[1] == 'lead' else target['lead_id']
                 if store and (current.get('id') != expected_lead or current.get('organization_id') != ORG):
                     raise ValueError('Shared writer lead tenant/scope mismatch')
+                if check_current_lead is not None:
+                    check_current_lead(current)
                 if blocked(current, store): raise RuntimeError('Sales hold: write excluded')
                 if store and store.uncertain(current['id']): raise RuntimeError('Uncertain write: reconcile before retry')
                 current_owner = custom(current,'cf_gOfS9pFwext58oberEegLyix8hZzeHrxhCZOVh3P3rd')
