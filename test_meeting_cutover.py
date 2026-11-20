@@ -79,6 +79,20 @@ class CombinedMeetingTests(unittest.TestCase):
                 self.assertEqual(state[0].last_full, END)
                 self.close.meetings.assert_called_once_with()
 
+    def test_sales_hold_deferred_lead_is_retried_after_events_are_deduplicated(self):
+        self.close.event_changes.return_value = CloseChanges(set(), set(), {}, frozenset())
+
+        def held(*args, deferred, **kwargs):
+            deferred.add("lead_fixture")
+            return EMPTY, {}, {}
+
+        self.evaluate.side_effect = held
+        progress = Progress(self.progress.cutoff, self.progress.last_full, deferred=frozenset({"lead_fixture"}))
+        summary, state = self.run_combined(progress, apply=True)
+        self.close.meetings.assert_called_once_with("lead_fixture")
+        self.assertEqual(summary["deferred_sales_holds"], 1)
+        self.assertEqual(state[0].deferred, {"lead_fixture"})
+
     def test_empty_targeted_result_prunes_only_its_scoped_cache(self):
         raw = {"lead_a": {"value": 1}, "lead_b": {"value": 2}, "lead_c": {"value": 3}}
         result = merge_cache(raw, {"lead_b": {"value": 4}}, {"lead_a", "lead_b"})

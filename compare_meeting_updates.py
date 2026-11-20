@@ -20,6 +20,7 @@ import requests
 from close_status_policy import COMPANY, ORG
 from close_status_reader import CloseClient
 from meeting_change_reader import Checkpoint, DatabricksSQL, SteelTrapMeetingReader, Window, lead_id, utc
+from workflow_holds import SalesHold
 
 MEETING_FIELDS = "id,organization_id,lead_id,title,starts_at,status,user_id,date_updated"
 MEETING_ACTIONS = ("created", "updated", "deleted", "scheduled", "started", "completed", "canceled")
@@ -172,10 +173,12 @@ class WriterInputs:
     choices: frozenset[str] = frozenset()
 
 
-def evaluate_writers(first, follow, snapshots, rows, latest, scope=None, *, apply=False):
+def evaluate_writers(first, follow, snapshots, rows, latest, scope=None, *, apply=False, deferred=None):
     def select(items):
         return items if scope is None else {k: v for k, v in items.items() if k in scope}
 
+    if deferred is None:
+        deferred = set()
     first_job, follow_job = first.job, follow.job
     desired = first_job.calculate_desired_state(rows, first.users)
     first_job.suppress_invalid_reactivation_choices(desired, first.choices)
@@ -188,7 +191,11 @@ def evaluate_writers(first, follow, snapshots, rows, latest, scope=None, *, appl
                 not payload.keys() <= set(first_job.FIELDS_PARAM.split(",")) - {"id", "display_name"}):
             raise ValueError("Unexpected first-sales-meeting write proposal")
         if apply:
-            first_job.api_put(path, payload)
+            try:
+                first_job.api_put(path, payload)
+            except SalesHold:
+                deferred.add(match[1])
+                raise
         proposals["first_sales_meeting"][match[1]] = payload.copy()
 
     def follow_read(identity):
@@ -206,12 +213,15 @@ def evaluate_writers(first, follow, snapshots, rows, latest, scope=None, *, appl
         if apply:
             try:
                 follow_job.patch_lead(identity, updates)
+            except SalesHold as error:
+                deferred.add(identity)
+                raise requests.HTTPError("Close sales hold deferred this field update") from error
             except requests.HTTPError as error:
                 raise RuntimeError("The guarded follow-up write failed") from error
         proposals["follow_up_dates"][identity] = {f"custom.{k}": v for k, v in updates.items()}
 
     def require_success(error):
-        if not isinstance(error, MissingLead):
+        if not isinstance(error, (MissingLead, SalesHold)):
             raise RuntimeError("First Sales Meeting Field comparison was incomplete") from error
 
     first_cache = first_job.routine_update(desired, select(first.cache), first.users, select(latest),

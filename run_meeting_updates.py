@@ -19,7 +19,7 @@ from compare_meeting_updates import (
 )
 from close_status_policy import ORG
 from close_status_reader import CloseClient
-from meeting_change_reader import OVERLAP, Window, utc
+from meeting_change_reader import OVERLAP, Window, lead_id, utc
 
 # A daily complete read repairs non-meeting edits and catches omissions in discovery.
 FULL_INTERVAL = timedelta(days=1)
@@ -32,6 +32,7 @@ class Progress:
     cutoff: datetime
     last_full: datetime
     revisions: frozenset[str] = frozenset()
+    deferred: frozenset[str] = frozenset()
 
     @classmethod
     def load(cls, path):
@@ -41,14 +42,18 @@ class Progress:
         revisions = value.get("accepted_revisions", [])
         if not isinstance(revisions, list) or any(not isinstance(item, str) or len(item) != 64 for item in revisions):
             raise ValueError("Invalid meeting update revision checkpoint")
-        result = cls(utc(value["cutoff"]), utc(value["last_full"]), frozenset(revisions))
+        deferred = value.get("deferred_leads", [])
+        if not isinstance(deferred, list):
+            raise ValueError("Invalid meeting update deferred hold checkpoint")
+        result = cls(utc(value["cutoff"]), utc(value["last_full"]), frozenset(revisions),
+                     frozenset(lead_id(identity) for identity in deferred))
         if result.last_full > result.cutoff:
             raise ValueError("Invalid meeting updater checkpoint")
         return result
 
     def json(self):
         return {"cutoff": self.cutoff.isoformat(), "last_full": self.last_full.isoformat(),
-                "accepted_revisions": sorted(self.revisions)}
+                "accepted_revisions": sorted(self.revisions), "deferred_leads": sorted(self.deferred)}
 
 
 def current_first_dates(snapshots, first_job, affected):
@@ -92,7 +97,8 @@ def execute(close, end, progress, first_job, follow_job, *, verify, apply, force
     if verify or not full_due:
         try:
             changes = close.event_changes(Window(start, end), progress.revisions if progress else frozenset())
-            affected, revisions = changes.leads, changes.revisions
+            affected = changes.leads | (progress.deferred if progress else set())
+            revisions = changes.revisions
             targeted = [meeting for identity in sorted(affected) for meeting in close.meetings(identity)]
         except (requests.RequestException, RuntimeError, ValueError):
             if verify:
@@ -131,16 +137,17 @@ def execute(close, end, progress, first_job, follow_job, *, verify, apply, force
     rows, scope = (full, None) if full_due else (targeted, affected)
     execution_snapshot = lead_snapshot(close, first_job, follow_job) if verify else snapshots
     latest = full_latest if full_due else targeted_latest
+    deferred = set()
     proposals, first_cache, follow_cache = evaluate_writers(
-        first, follow, execution_snapshot, rows, latest, scope, apply=apply
+        first, follow, execution_snapshot, rows, latest, scope, apply=apply, deferred=deferred
     )
     summary.update({"mode": "full" if full_due else "incremental", "applied": apply,
                     "proposals": {name: len(items) for name, items in proposals.items()},
-                    "close_requests": sum(close.calls.values())})
+                    "close_requests": sum(close.calls.values()), "deferred_sales_holds": len(deferred)})
     if not apply:
         return summary, None
     return summary, (
-        Progress(end, end if full_due else progress.last_full, revisions),
+        Progress(end, end if full_due else progress.last_full, revisions, frozenset(deferred)),
         merge_cache(first.cache, first_cache, scope),
         merge_cache(follow.cache, follow_cache, scope),
     )

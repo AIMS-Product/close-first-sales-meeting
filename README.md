@@ -100,7 +100,8 @@ proposals and affected histories match. It uses the existing guarded writer
 functions and commits both caches and the checkpoint together. Afterwards, use
 `--apply` for the normal cycle. It uses Close's Event Log with a two-hour overlap,
 deduplicates previously evaluated event revisions, and fetches affected lead
-histories once for both field writers. A full reconciliation runs daily and on
+histories once for both field writers. Leads deferred by the shared sales-hold
+guard are reconsidered on the next run. A full reconciliation runs daily and on
 incomplete discovery. `--apply --full` forces the complete scan.
 
 The `Update Close Meeting Fields` workflow is dispatch-only. For cutover, stop both

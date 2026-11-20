@@ -11,8 +11,9 @@ from urllib.parse import parse_qs, urlsplit
 
 import requests
 
-from compare_meeting_updates import CloseReads, LeadSnapshot, WriterInputs, capture_proposals, compare, proposal_diff, run
+from compare_meeting_updates import CloseReads, LeadSnapshot, WriterInputs, capture_proposals, compare, evaluate_writers, proposal_diff, run
 from meeting_change_reader import ChangeSet, Checkpoint, SteelTrapMeetingReader, Window, utc
+from workflow_holds import SalesHold
 
 with patch.dict(os.environ, {"CLOSE_API_KEY": "offline-fixture"}):
     import update_field as first
@@ -126,6 +127,25 @@ class ComparisonTests(unittest.TestCase):
         self.assertEqual(baseline["follow_up_dates"]["lead_fixture"], {f"custom.{follow.FIELD_FOLLOWUP_1}": None})
         empty = {writer: {} for writer in baseline}
         self.assertFalse(proposal_diff(baseline, empty, set())["follow_up_dates"]["lead_fixture"]["in_incremental_scope"])
+
+    def test_both_existing_guards_can_defer_writes_without_advancing_their_caches(self):
+        close = Mock(organization=ORG)
+        close.get.return_value = {"organization_id": ORG, "id": "lead_fixture",
+                                  f"custom.{follow.FIELD_FOLLOWUP_1}": "2026-11-08"}
+        first_inputs = WriterInputs(first, {"lead_fixture": {"date": None}}, {})
+        follow_inputs = WriterInputs(follow, {"lead_fixture": {follow.FIELD_FOLLOWUP_1: "2026-11-08"}}, {})
+        rows = [{"lead_id": "lead_fixture", "title": "Vendingpreneur Next Steps",
+                 "starts_at": "2026-11-02T18:00:00Z", "status": "completed"}]
+        snapshots = LeadSnapshot(close, ())
+        deferred = set()
+        with patch.object(first, "api_put", side_effect=SalesHold("held")), patch.object(
+                follow, "patch_lead", side_effect=SalesHold("held")):
+            proposals, first_cache, follow_cache = evaluate_writers(first_inputs, follow_inputs,
+                snapshots, rows, {}, apply=True, deferred=deferred)
+        self.assertEqual(deferred, {"lead_fixture"})
+        self.assertEqual(proposals, {"first_sales_meeting": {}, "follow_up_dates": {}})
+        self.assertEqual(first_cache, first_inputs.cache)
+        self.assertEqual(follow_cache, follow_inputs.cache)
 
     def test_only_a_404_is_skippable(self):
         close = Mock(organization=ORG)
