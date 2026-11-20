@@ -222,7 +222,10 @@ def request_close(method: str, path: str, **kwargs):
 def fetch_users() -> dict:
     """Return {user_id: display_name} for owner-name lookup."""
     resp = request_close("GET", "/user/")
-    users = resp.json().get("data", [])
+    return build_user_map(resp.json().get("data", []))
+
+
+def build_user_map(users: list) -> dict:
     out = {}
     for u in users:
         uid = u.get("id")
@@ -329,21 +332,7 @@ def save_state_cache(state: dict) -> None:
 # Main
 # ────────────────────────────────────────────────────────────────────────────
 
-def main():
-    print("=" * 72)
-    print(f"Follow-Up Updater — started {datetime.now(PACIFIC).isoformat()}")
-    print("=" * 72)
-
-    print("\n[1/5] Fetching users (for owner-name lookup)...")
-    user_map = fetch_users()
-    print(f"      {len(user_map)} users")
-
-    print("\n[2/5] Fetching all meetings (paginated)...")
-    t0 = time.time()
-    meetings = fetch_all_meetings()
-    print(f"      {len(meetings)} meetings fetched in {time.time() - t0:.1f}s")
-
-    print("\n[3/5] Classifying meetings per lead...")
+def calculate_desired_state(meetings: list, user_map: dict) -> dict:
     by_lead = {}
     for m in meetings:
         lead_id = m.get("lead_id")
@@ -410,9 +399,14 @@ def main():
     print(f"      First sales calls found: {leads_with_fsc}")
     print(f"      Leads with no first sales call (skipped): {leads_without_fsc}")
     print(f"      Leads with at least one qualifying follow-up: {leads_with_followups}")
+    return desired_state
 
-    print("\n[4/5] Comparing to state cache...")
-    state = load_state_cache()
+
+def routine_update(desired_state: dict, state: dict, *, read_fields=None, write_fields=None) -> tuple[dict, int, int]:
+    read_fields = read_fields or get_lead_followup_fields
+    write_fields = write_fields or patch_lead
+    desired_state = dict(desired_state)
+    state = dict(state)
 
     # Detect leads that previously had follow-ups but no longer do
     # (e.g. all follow-ups were canceled). These need fields cleared.
@@ -439,7 +433,7 @@ def main():
     for lead_id, desired in changed:
         # Fetch current to send a minimal diff
         try:
-            current = get_lead_followup_fields(lead_id)
+            current = read_fields(lead_id)
         except requests.HTTPError as e:
             print(f"      ✗ {lead_id}: failed to fetch — {e}")
             failed += 1
@@ -456,7 +450,7 @@ def main():
             continue
 
         try:
-            patch_lead(lead_id, updates)
+            write_fields(lead_id, updates)
             state[lead_id] = desired
             succeeded += 1
             summary = ", ".join(
@@ -473,6 +467,28 @@ def main():
         for lid, vals in state.items()
         if any(vals.get(f) for f in FOLLOWUP_FIELDS)
     }
+    return state, succeeded, failed
+
+
+def main():
+    print("=" * 72)
+    print(f"Follow-Up Updater — started {datetime.now(PACIFIC).isoformat()}")
+    print("=" * 72)
+
+    print("\n[1/5] Fetching users (for owner-name lookup)...")
+    user_map = fetch_users()
+    print(f"      {len(user_map)} users")
+
+    print("\n[2/5] Fetching all meetings (paginated)...")
+    t0 = time.time()
+    meetings = fetch_all_meetings()
+    print(f"      {len(meetings)} meetings fetched in {time.time() - t0:.1f}s")
+
+    print("\n[3/5] Classifying meetings per lead...")
+    desired_state = calculate_desired_state(meetings, user_map)
+
+    print("\n[4/5] Comparing to state cache...")
+    state, succeeded, failed = routine_update(desired_state, load_state_cache())
     save_state_cache(state)
 
     print("\n" + "=" * 72)

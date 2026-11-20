@@ -175,6 +175,10 @@ def _custom_readback_matches(actual, expected):
     return actual == expected
 
 
+class SalesHold(RuntimeError):
+    """The shared write guard excluded a lead from mutation."""
+
+
 def guard_request(request):
     """Guard requests-style lead/opportunity mutations with one shared fence.
 
@@ -211,7 +215,7 @@ def guard_request(request):
                     raise ValueError('Shared writer lead tenant/scope mismatch')
                 if check_current_lead is not None:
                     check_current_lead(current)
-                if blocked(current, store): raise RuntimeError('Sales hold: write excluded')
+                if blocked(current, store): raise SalesHold('Sales hold: write excluded')
                 if store and store.uncertain(current['id']): raise RuntimeError('Uncertain write: reconcile before retry')
                 current_owner = custom(current,'cf_gOfS9pFwext58oberEegLyix8hZzeHrxhCZOVh3P3rd')
                 if expected_owner is not ... and current_owner != expected_owner:

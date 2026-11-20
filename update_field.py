@@ -288,14 +288,15 @@ def user_field_id(value) -> str | None:
     return None
 
 
-def fetch_close_users() -> list:
+def fetch_close_users(*, get=None) -> list:
     print("Fetching Close users for reactivation setter mapping...", flush=True)
+    get = get or api_get
     users = []
     skip = 0
     limit = 100
 
     while True:
-        data = api_get("/user/", params={"_skip": skip, "_limit": limit})
+        data = get("/user/", params={"_skip": skip, "_limit": limit})
         batch = data.get("data", [])
         users.extend(batch)
         if not data.get("has_more") or not batch:
@@ -528,7 +529,7 @@ def load_state_cache() -> dict:
         return {}
 
 
-def save_state_cache(state: dict) -> None:
+def save_state_cache(state: dict, *, push=True) -> None:
     data = {
         "state":    state,
         "saved_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
@@ -536,7 +537,8 @@ def save_state_cache(state: dict) -> None:
     }
     with open(STATE_CACHE_FILE, "w") as f:
         json.dump(data, f, indent=2)
-    git_commit_and_push(STATE_CACHE_FILE, f"state cache: {len(state)} leads tracked")
+    if push:
+        git_commit_and_push(STATE_CACHE_FILE, f"state cache: {len(state)} leads tracked")
     print(f"State cache saved: {len(state)} leads.", flush=True)
 
 
@@ -668,8 +670,9 @@ def fetch_all_meetings() -> list:
     return all_meetings
 
 
-def fetch_leads_with_first_date() -> dict:
+def fetch_leads_with_first_date(*, search=None) -> dict:
     """Read live first/latest dates for the cohort that needs latest-date upkeep."""
+    search = search or api_post
     query = {
         "type": "and", "negate": False,
         "queries": [
@@ -692,7 +695,7 @@ def fetch_leads_with_first_date() -> dict:
         }
         if cursor:
             body["cursor"] = cursor
-        result = api_post("/data/search/", body)
+        result = search("/data/search/", body)
         pages += 1
         batch = result.get("data")
         if not isinstance(batch, list) or (result.get("cursor") and not batch):
@@ -732,7 +735,7 @@ def normalized_yes_flag(value):
     return 'YES' if isinstance(value, str) and value.casefold() == 'yes' else value
 
 
-def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users_by_name: dict) -> dict | None:
+def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users_by_name: dict, *, put=None) -> dict | None:
     """
     Compares current vs desired state for one lead and writes only what changed.
 
@@ -861,7 +864,7 @@ def write_lead(lead_id: str, lead_name: str, current: dict, desired: dict, users
     if not payload:
         return None  # Nothing to write
 
-    api_put(f"/lead/{lead_id}/", payload)
+    (put or api_put)(f"/lead/{lead_id}/", payload)
 
     changes = []
     if FIELD_DATE_KEY in payload:
@@ -935,8 +938,10 @@ def suppress_invalid_reactivation_choices(desired_state: dict, allowed_choices: 
     return skipped
 
 
-def reconcile_latest_only(desired_state: dict, live_first_leads: dict, excluded_ids: set) -> tuple[int, int]:
+def reconcile_latest_only(desired_state: dict, live_first_leads: dict, excluded_ids: set, *, get=None, put=None, on_error=None) -> tuple[int, int]:
     """Write only LSCBD for otherwise unchanged leads in the live first-date cohort."""
+    get = get or api_get
+    put = put or api_put
     candidates = {
         lead_id: desired_state.get(lead_id, {}).get("latest_meeting_date") or (live.get("first") or "")[:10]
         for lead_id, live in live_first_leads.items()
@@ -952,7 +957,7 @@ def reconcile_latest_only(desired_state: dict, live_first_leads: dict, excluded_
     errors = 0
     for i, lead_id in enumerate(mismatches, 1):
         try:
-            lead = api_get(
+            lead = get(
                 f"/lead/{lead_id}/",
                 params={"_fields": f"id,{FIELD_DATE_KEY},{FIELD_LATEST_DATE_KEY}"},
             )
@@ -966,20 +971,23 @@ def reconcile_latest_only(desired_state: dict, live_first_leads: dict, excluded_
             payload = {FIELD_LATEST_DATE_KEY: proposed}
             if set(payload) != {FIELD_LATEST_DATE_KEY}:
                 raise RuntimeError("Latest-only write contains another field")
-            api_put(f"/lead/{lead_id}/", payload)
+            put(f"/lead/{lead_id}/", payload)
             updated += 1
             print(f"  Latest date: {lead_id} | {current or 'blank'} → {proposed}", flush=True)
         except Exception as e:
+            if on_error:
+                on_error(e)
             errors += 1
             print(f"  [{i}/{len(mismatches)}] ERROR updating latest date on {lead_id}: {e}", flush=True)
     return updated, errors
 
 
-def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict, live_first_leads: dict | None = None) -> dict:
+def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict, live_first_leads: dict | None = None, *, get=None, put=None, on_error=None) -> dict:
     """
     Compare desired vs cached in memory.
     Only fetch + update leads where something changed.
     """
+    get = get or api_get
     cached_desired = {lead_id: cacheable_state(desired) for lead_id, desired in desired_state.items()}
 
     # Leads where the original cached fields differ; LSCBD uses the live scan below.
@@ -1020,7 +1028,7 @@ def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict,
 
     for i, (lead_id, desired) in enumerate(all_changes.items(), 1):
         try:
-            lead_data = api_get(f"/lead/{lead_id}/", params={"_fields": FIELDS_PARAM})
+            lead_data = get(f"/lead/{lead_id}/", params={"_fields": FIELDS_PARAM})
             lead_name = lead_data.get("display_name", lead_id)
             current   = {
                 "date":         lead_data.get(FIELD_DATE_KEY),
@@ -1037,7 +1045,7 @@ def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict,
                 "quick_disc":   lead_data.get(FIELD_QUICK_DISC_KEY),
             }
 
-            result = write_lead(lead_id, lead_name, current, desired, users_by_name)
+            result = write_lead(lead_id, lead_name, current, desired, users_by_name, put=put)
             if result:
                 updated += 1
                 new_cache[lead_id] = result
@@ -1045,6 +1053,8 @@ def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict,
                 new_cache[lead_id] = cacheable_state(desired)
 
         except Exception as e:
+            if on_error:
+                on_error(e)
             errors += 1
             print(f"  [{i}/{len(all_changes)}] ERROR on {lead_id}: {e}", flush=True)
 
@@ -1052,7 +1062,7 @@ def routine_update(desired_state: dict, cached_state: dict, users_by_name: dict,
             print(f"  [{i}/{len(all_changes)}] still processing... ({updated} updated so far)", flush=True)
 
     latest_updated, latest_errors = reconcile_latest_only(
-        desired_state, live_first_leads or {}, set(all_changes)
+        desired_state, live_first_leads or {}, set(all_changes), get=get, put=put, on_error=on_error
     )
     print(
         f"\nRoutine run complete. Cached-field updates: {updated} | "

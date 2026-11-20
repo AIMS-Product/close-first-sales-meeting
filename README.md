@@ -85,6 +85,70 @@ Trigger the workflow manually via GitHub Actions → Run workflow. The first run
 
 ---
 
+## Combined meeting field updater
+
+`run_meeting_updates.py` runs First Sales Meeting Field and Follow-Up Dates together.
+Use `--verify` to compare exact full-scan and incremental proposals, including cleared
+values. This is a read-only command unless `--apply` is supplied.
+
+```sh
+python3 run_meeting_updates.py --verify
+```
+
+The first live invocation requires `--verify --apply` and applies only after the
+proposals and affected histories match. It uses the existing guarded writer
+functions and commits both caches and the checkpoint together. Afterwards, use
+`--apply` for the normal cycle. It uses Close's Event Log with a two-hour overlap,
+deduplicates previously evaluated event revisions, and fetches affected lead
+histories once for both field writers. Leads deferred by the shared sales-hold
+guard are reconsidered on the next run. A full reconciliation runs daily and on
+incomplete discovery. `--apply --full` forces the complete scan.
+
+The `Update Close Meeting Fields` workflow is dispatch-only. For cutover, stop both
+legacy cron triggers and let any active runs finish. Dispatch the combined workflow
+once with `apply=true` and `verify=true`. After a successful initial run, retain the
+`:00/:30` cadence on one cron trigger with `apply=true` and `verify=false`.
+For rollback, pause the combined trigger and restore the two legacy triggers.
+
+---
+
+## Meeting update shadow comparison
+
+Run this on a host with Python 3.11 or newer, `requests`, the Databricks CLI, a read-capable
+Close API key, and read access to the SteelTrap Silver meeting-event ledger. Use a
+persistent, private directory for the SQLite checkpoint and reports. Use the latest
+production copies of `state_cache.json` and `followups_state_cache.json` through
+`--cache-dir` when the shadow code and production checkout are separate.
+
+```sh
+install -d -m 700 "$HOME/.local/state/close-meeting-shadow"
+python3 compare_meeting_updates.py \
+  --warehouse "$DATABRICKS_WAREHOUSE_ID" \
+  --state-db "$HOME/.local/state/close-meeting-shadow/shadow.sqlite"
+```
+
+The first run reads two hours of meeting changes. Subsequent runs replay two hours
+before the previous cutoff through the new cutoff and also read Delta inserts since the
+previous committed ledger version. This captures events delivered after the earlier
+run, even when their source timestamps are older than the overlap. Both lead IDs are
+included when a meeting moves. The Close Event Log is a separate discovery control.
+Each affected Close lead's full meeting history is fetched once and reused across both
+writers. The full scan remains the baseline for finding work outside the discovered set.
+
+The comparison records exact proposals before the transport and hold checks. The
+shadow runner uses read-only Close calls and leaves both production caches to the
+scheduled writers. Only aggregate counts print to stdout. The private SQLite
+`runs` table holds exact proposal values and difference details, including lead IDs.
+Review source differences, history changes during capture, and any full-scan proposal
+outside the incremental set before counting a run as a clean comparison.
+
+A completed comparison saves its report and checkpoint in one transaction. A failed
+or overlapping run cannot advance the checkpoint. `--replay-until` accepts a
+timezone-qualified ISO 8601 cutoff for a two-hour historical discovery replay. It
+uses current Close histories and lead values and keeps the live checkpoint intact.
+
+---
+
 ## Performance
 
 | Step | API calls |

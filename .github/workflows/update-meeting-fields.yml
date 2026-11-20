@@ -1,0 +1,54 @@
+name: Update Close Meeting Fields
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: Apply field changes through the existing Close writers
+        type: boolean
+        default: false
+      verify:
+        description: Compare with a full scan before applying
+        type: boolean
+        default: true
+      full:
+        description: Force full reconciliation
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: close-meeting-fields
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install requests
+      - name: Verify writer rules
+        run: python -m unittest -q test_meeting_shadow test_meeting_cutover test_update_field_latest test_update_followups test_original_source
+      - name: Run shared updater
+        env:
+          CLOSE_API_KEY: ${{ secrets.CLOSE_API_KEY }}
+          APPLY: ${{ inputs.apply }}
+          VERIFY: ${{ inputs.verify }}
+          FULL: ${{ inputs.full }}
+        run: |
+          args=()
+          if [[ "$APPLY" == "true" ]]; then args+=(--apply); fi
+          if [[ "$VERIFY" == "true" ]]; then args+=(--verify); fi
+          if [[ "$FULL" == "true" ]]; then args+=(--full); fi
+          python -u run_meeting_updates.py "${args[@]}"
