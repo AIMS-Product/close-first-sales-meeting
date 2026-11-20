@@ -133366,12 +133366,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": "Vince Bartolini",
-      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy",
       "reactivation_override_version": 1,
-      "funnel_name": null,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_dQi0iL0igjCKtEXPSsv8ALDZMAz9orJxL60O7Q921jy"
     },
     "lead_xj9h0dcoWvMFhwCpkCABytAviOhQDMXmbnkOX1EvZci": {
       "date": "2026-11-17",
@@ -133379,12 +133379,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": "user_Skhc1Tm9B1WM0Tq9NiHHzgTKqRrEZd8qpCnSS9k3yMe",
       "reactivation_override_version": 1,
-      "funnel_name": null,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_Skhc1Tm9B1WM0Tq9NiHHzgTKqRrEZd8qpCnSS9k3yMe"
     },
     "lead_1xRP97CgqZjpbYooIdwOpttRUFfx6ffjmZIMgjt6ona": {
       "date": "2026-11-20",
@@ -133392,12 +133392,12 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": "user_Skhc1Tm9B1WM0Tq9NiHHzgTKqRrEZd8qpCnSS9k3yMe",
       "reactivation_override_version": 1,
-      "funnel_name": null,
+      "funnel_name": "Reactivation Scrapers",
       "vendhub": null,
       "vendhub_date": null,
-      "quick_disc": null
+      "quick_disc": null,
+      "reactivation_user": "user_Skhc1Tm9B1WM0Tq9NiHHzgTKqRrEZd8qpCnSS9k3yMe"
     },
     "lead_SL0K1LHDgF59UXQcY0AH9Hbix0eROkEBj0sIkAh9DXw": {
       "date": "2026-11-12",
@@ -133405,14 +133405,66 @@
       "scraper": "YES",
       "post_webinar": null,
       "reactivation": null,
-      "reactivation_user": "user_Skhc1Tm9B1WM0Tq9NiHHzgTKqRrEZd8qpCnSS9k3yMe",
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_Skhc1Tm9B1WM0Tq9NiHHzgTKqRrEZd8qpCnSS9k3yMe"
+    },
+    "lead_FMMnisy7RymLVCv6bbV65c03qPD53pUaMVmwidYvwII": {
+      "date": "2026-11-24",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO",
       "reactivation_override_version": 1,
       "funnel_name": null,
       "vendhub": null,
       "vendhub_date": null,
       "quick_disc": null
+    },
+    "lead_5BEzu7TFA2FqFVj1MiENjXnzhPQkNpW4uhTgK0y7UsM": {
+      "date": "2026-11-25",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_tHMtKbedDWxifmL790NZIzaZWt4lSN82p1BGSqtPR1q": {
+      "date": "2026-11-25",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_eX4cSEZl12Xns7Bvce6738CEXt9f81MiPkSPkYx1tgO"
+    },
+    "lead_9AXGD892pCf9HosjsRbatVwEmMZ7fQh8IPzE00i9P4G": {
+      "date": "2026-11-23",
+      "call_type": "Closer",
+      "scraper": "YES",
+      "post_webinar": null,
+      "reactivation": null,
+      "reactivation_override_version": 1,
+      "funnel_name": "Reactivation Scrapers",
+      "vendhub": null,
+      "vendhub_date": null,
+      "quick_disc": null,
+      "reactivation_user": "user_iYReXOSE5Mx1NlCsyASyZMBP5orKZjVFSvKonrtQRhF"
     }
   },
-  "saved_at": "2026-11-19 22:10:50 UTC",
-  "count": 11209
+  "saved_at": "2026-11-20 00:39:06 UTC",
+  "count": 11213
 }
